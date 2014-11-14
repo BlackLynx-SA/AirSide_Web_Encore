@@ -1,0 +1,106 @@
+﻿    <!-- Left panel : Navigation area -->
+<!-- Note: This width of the aside area can be adjusted through LESS variables -->
+<aside id="left-panel">
+
+    <!-- User info -->
+    @{ Html.RenderPartial("_CurrentUser"); }
+    <!-- end user info -->
+    <!-- NAVIGATION : This navigation is also responsive
+
+    To make this navigation dynamic please make sure to link the node
+    (the reference to the nav > ul) after page load. Or the navigation
+    will not initialize.
+    -->
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
+
+        <ul>
+            <li class="@Html.RouteIf("index", "active")">
+                <a href="@Url.Action("index", "home")" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+            </li>
+
+            <li class="@Html.RouteIf("airportmap", "active")">
+                <a href="@Url.Action("airportmap", "map")" title="Dashboard"><i class="fa fa-lg fa-fw fa-map-marker"></i> <span class="menu-item-parent">Geo Information</span></a>
+            </li>
+          
+            @* Shift Planning *@
+            <li class="@Html.RouteIf("shifts", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Shift Planning</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("calendar", "active")">
+                        <a href="@Url.Action("calendar", "shifts")">Calendar View</a>
+                    </li>
+                    <li class="@Html.RouteIf("AllShifts", "active")">
+                        <a href="@Url.Action("AllShifts", "shifts")">All Events</a>
+                    </li>
+                </ul>
+            </li>
+
+            @* Inspection *@
+            <li class="@Html.RouteIf("inspection", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Inspection</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("normal", "active")">
+                        <a href="@Url.Action("normal", "tables")">Surveyor&trade; Anomalies</a>
+                    </li>
+                    <li class="@Html.RouteIf("jqgrid", "active")">
+                        <a href="@Url.Action("jqgrid", "tables")">Movement Areas</a>
+                    </li>
+                </ul>
+            </li>
+
+            @* Assets *@
+            <li class="@Html.RouteIf("AssetClass", "active") @Html.RouteIf("Asset", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-lightbulb-o"></i> <span class="menu-item-parent">Assets</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("AssetClasses", "active")">
+                        <a href="@Url.Action("AssetClasses", "AssetClass")">Asset Types</a>
+                    </li>
+                    <li class="@Html.RouteIf("Assets", "active")">
+                        <a href="@Url.Action("Assets", "Asset")">Loaded Assets</a>
+                    </li>
+                </ul>
+            </li>
+
+            @* Users *@
+            <li class="@Html.RouteIf("Users", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">System Users</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("viewallusers", "active")">
+                        <a href="@Url.Action("viewallusers", "users")">View All Users</a>
+                    </li>
+                    <li class="@Html.RouteIf("register", "active")">
+                        <a href="@Url.Action("register", "users")">Create New User</a>
+                    </li>
+                    <li class="@Html.RouteIf("techniciangroups", "active")">
+                        <a href="@Url.Action("techniciangroups", "users")">Technician Groups</a>
+                    </li>
+                </ul>
+            </li>
+            
+            @* Settings *@
+            <li class="@Html.RouteIf("Settings", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">System Settings</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("viewallusers", "active")">
+                        <a href="@Url.Action("viewallusers", "Settings")">AirSide&trade; Tools</a>
+                    </li>
+                    <li class="@Html.RouteIf("register", "active")">
+                        <a href="@Url.Action("register", "Settings")">Email and SMS</a>
+                    </li>
+                    <li class="@Html.RouteIf("ImageLibrary", "active")">
+                        <a href="@Url.Action("ImageLibrary", "Settings")">Image Library</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <span class="minifyme" data-action="minifyMenu">
+        <i class="fa fa-arrow-circle-left hit"></i>
+    </span>
+
+</aside>
+<!-- END NAVIGATION -->

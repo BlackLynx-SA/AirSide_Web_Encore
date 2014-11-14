@@ -1,0 +1,911 @@
+﻿<div id="content">
+    <div class="row hidden-mobile">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-calendar"></i>
+                Shift Planning <span>
+                    >
+                    Calendar View
+                </span>
+            </h1>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <div class="well well-sm" id="event-container">
+                <form>
+                    <fieldset>
+                        <legend>
+                            Technician Groups
+                        </legend>
+
+                        <ul id='technician-events' class="list-unstyled"></ul>
+                    </fieldset>
+                </form>
+                <form>
+                    <fieldset>
+                        <legend>
+                            User Events
+                        </legend>
+
+                        <ul id='external-events' class="list-unstyled"></ul>
+                    </fieldset>
+                </form>
+                <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="eventsLoader" style="height:20px;" />
+
+            </div>
+
+            <!-- new widget -->
+            <div class="jarviswidget jarviswidget-color-blueDark">
+                <header>
+                    <h2> Add Events </h2>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <div class="widget-body">
+                        <!-- content goes here -->
+
+                        <form id="add-event-form">
+                            <fieldset>
+
+                                <div class="form-group">
+                                    <label>Select Event Icon</label>
+                                    <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
+                                        <label class="btn btn-default active">
+                                            <input type="radio" name="iconselect" id="icon-1" value="fa-info" checked>
+                                            <i class="fa fa-info text-muted"></i>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input type="radio" name="iconselect" id="icon-2" value="fa-warning">
+                                            <i class="fa fa-warning text-muted"></i>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input type="radio" name="iconselect" id="icon-3" value="fa-check">
+                                            <i class="fa fa-check text-muted"></i>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input type="radio" name="iconselect" id="icon-4" value="fa-user">
+                                            <i class="fa fa-user text-muted"></i>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input type="radio" name="iconselect" id="icon-5" value="fa-lock">
+                                            <i class="fa fa-lock text-muted"></i>
+                                        </label>
+                                        <label class="btn btn-default">
+                                            <input type="radio" name="iconselect" id="icon-6" value="fa-clock-o">
+                                            <i class="fa fa-clock-o text-muted"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Event Title</label>
+                                    <input class="form-control" id="title" name="title" maxlength="40" type="text" placeholder="Event Title">
+                                </div>
+                                <div class="form-group">
+                                    <label>Event Description</label>
+                                    <textarea class="form-control" placeholder="Please be brief" rows="3" maxlength="40" id="description"></textarea>
+                                    <p class="note">Maxlength is set to 40 characters</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Select Event Color</label>
+                                    <div class="btn-group btn-group-justified btn-select-tick" data-toggle="buttons">
+                                        <label class="btn bg-color-darken active">
+                                            <input type="radio" name="priority" id="option1" value="bg-color-darken txt-color-white" checked>
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                        <label class="btn bg-color-blue">
+                                            <input type="radio" name="priority" id="option2" value="bg-color-blue txt-color-white">
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                        <label class="btn bg-color-orange">
+                                            <input type="radio" name="priority" id="option3" value="bg-color-orange txt-color-white">
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                        <label class="btn bg-color-greenLight">
+                                            <input type="radio" name="priority" id="option4" value="bg-color-greenLight txt-color-white">
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                        <label class="btn bg-color-blueLight">
+                                            <input type="radio" name="priority" id="option5" value="bg-color-blueLight txt-color-white">
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                        <label class="btn bg-color-red">
+                                            <input type="radio" name="priority" id="option6" value="bg-color-red txt-color-white">
+                                            <i class="fa fa-check txt-color-white"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="checkbox style-0" id="privateChk">
+                                            <span>Make Private</span>
+                                        </label>
+                                        <div class="note"><strong>Note:</strong> When selected this event is only viewable by you.</div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-default" type="button" id="add-event">
+                                            Add Event
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- end content -->
+                    </div>
+
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+
+
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+
+            <!-- new widget -->
+            <div class="jarviswidget jarviswidget-color-blueDark">
+
+                <!-- widget options:
+                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                data-widget-colorbutton="false"
+                data-widget-editbutton="false"
+                data-widget-togglebutton="false"
+                data-widget-deletebutton="false"
+                data-widget-fullscreenbutton="false"
+                data-widget-custombutton="false"
+                data-widget-collapsed="true"
+                data-widget-sortable="false"
+
+                -->
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+                    <h2> AirSide&trade; Events </h2>
+                    <div class="widget-toolbar">
+                        <!-- add: non-hidden - to disable auto hide -->
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                                Showing <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu js-status-update pull-right">
+                                <li>
+                                    <a href="javascript:void(0);" id="mt">Month</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="ag">Agenda</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="td">Today</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- widget div-->
+                <div>
+
+                    <div class="widget-body no-padding">
+                        <!-- content goes here -->
+                        <div class="widget-body-toolbar">
+
+                            <div id="calendar-buttons">
+
+                                <div class="btn-group">
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="calendar"></div>
+
+                        <!-- end content -->
+                    </div>
+
+                </div>
+                <!-- end widget div -->
+            </div>
+            <!-- end widget -->
+
+        </div>
+
+    </div>
+
+    <!--Modal for add Technician Shift-->
+    <div class="modal fade" id="techModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="techModalLabel"><i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift - </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="smart-form">
+                        <div class="row">
+                            <fieldset>
+                                <section class="col col-6">
+                                    <label class="label">Select a date</label>
+                                    <label class="input">
+                                        <i class="fa fa-calendar icon-prepend"></i>
+                                        <input type="text" id="shiftdate" placeholder="Select a date" class="form-control datepicker" data-dateformat="dd/mm/yy" style="z-index:1051;">
+                                    </label>
+                                </section>
+                                <section class="col col-6">
+                                    <label class="label">Time of shift</label>
+                                    <label class="input">
+                                        <i class="fa fa-clock-o icon-prepend"></i>
+                                        <input class="form-control" id="timepicker" type="text" placeholder="Select time" style="background:#fff;">
+                                    </label>
+                                </section>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <section class="col col-6">
+                                    <label class="label">Work Permit Number</label>
+                                    <label class="input">
+                                        <i class="fa fa-road icon-prepend"></i>
+                                        <input class="form-control" id="workpermitTxt" type="text" placeholder="Enter a Work Permit">
+                                    </label>
+                                    <div class="note"><strong>Note:</strong> If a permit was issued to go airside, please fill it in.</div>
+                                </section>
+                                <section class="col col-6">
+                                    <label class="label">Recuring Shift</label>
+                                    <label class="select">
+                                        <select id="recuring">
+                                            <option value="0">Choose Time Frame</option>
+                                            <option value="1">Weekly</option>
+                                            <option value="2">Monthly</option>
+                                        </select><i></i>
+                                    </label>
+                                    <div class="note"><strong>Note:</strong> Monthly recuring will be for a maximum of 6 months, and weekly for a maximum of 10 weeks.</div>
+                                </section>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <section class="col col-6">
+                                    <label class="label">Maintenance Area</label>
+                                    <label class="select">
+                                        <select id="areaSelect"></select><i></i>
+                                    </label>
+                                </section>
+                                <section class="col col-6">
+                                    <label class="label">Sub Area</label>
+                                    <label class="select">
+                                        <select id="subAreaSelect"></select><i></i>
+                                    </label>
+                                </section>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader" style="height:20px; display:none;" />
+                    <button class="btn btn-primary" onclick="addNewShift();"><i class="fa fa-plus"></i> Add Shift</button>
+                    <button class="btn btn-danger" onclick="$('#techModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal for add Technician Shift-->
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="eventModalLabel"><i class="fa fa-calendar txt-color-blueDark"></i> Create New Event - </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="smart-form">
+                        <div class="row">
+                            <fieldset>
+                                <section class="col col-6">
+                                    <label class="label">Select a date</label>
+                                    <label class="input">
+                                        <i class="fa fa-calendar icon-prepend"></i>
+                                        <input type="text" id="eventDate" placeholder="Select a date" class="form-control datepicker" data-dateformat="dd/mm/yy" style="z-index:1051;">
+                                    </label>
+                                </section>
+                                <section class="col col-6">
+                                    <label class="label">Time of shift</label>
+                                    <label class="input">
+                                        <i class="fa fa-clock-o icon-prepend"></i>
+                                        <input class="form-control" id="timepicker2" type="text" placeholder="Select time" style="background:#fff;">
+                                    </label>
+                                </section>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <section class="col col-6">
+                                    <label class="label">Recuring Shift</label>
+                                    <label class="select">
+                                        <select id="recuring2">
+                                            <option value="0">Choose Time Frame</option>
+                                            <option value="1">Weekly</option>
+                                            <option value="2">Monthly</option>
+                                        </select><i></i>
+                                    </label>
+                                    <div class="note"><strong>Note:</strong> Monthly recuring will be for a maximum of 6 months, and weekly for a maximum of 10 weeks.</div>
+                                </section>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader2" style="height:20px; display:none;" />
+                    <button class="btn btn-primary" onclick="addNewEvent();"><i class="fa fa-plus"></i> Add Event</button>
+                    <button class="btn btn-danger" onclick="$('#eventModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- end row -->
+@section pagespecific{
+    <script src="~/scripts/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
+    <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
+    <script src="~/scripts/plugin/date/date.js"></script>
+
+    <script type="text/javascript">
+        //Global Variables
+        var currentEvent = null;
+        var techGroups = [];
+        var eventGroups = [];
+
+        function requestAllShifts() {
+            $.ajax({
+                url: "../../shifts/getAllShifts",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.each(json, function (i, v) {
+                        var dateTime = Date.parseExact(v.dateTime, "dd-MM-yyyy h:mm tt");
+                        var newEvent = { allDay: false, className: 'bg-color-blue txt-color-white', icon: 'fa-users', description: v.description, start: dateTime, title: v.groupName };
+                        $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                    });
+                    requestAllEvents();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Failed to load shifts",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#modalLoader").fadeOut(500);
+                }
+            });
+        }
+
+        function requestAllEvents() {
+            $.ajax({
+                url: "../../shifts/getUserActiveEvents",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.each(json, function (i, v) {
+                        var dateTime = Date.parseExact(v.start, "dd-MM-yyyy h:mm tt");
+                        var newEvent = { allDay: false, className: v.color, icon: v.icon, description: v.description, start: dateTime, title: v.title };
+                        $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Failed to load events",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#modalLoader").fadeOut(500);
+                }
+            });
+        }
+
+        function addNewEvent() {
+            $("#modalLoader2").fadeIn(500);
+            var dateTxt = $('#eventDate').val();
+            var timeTxt = $('#timepicker2').val();
+            var recuring = $('#recuring2').val();
+            var selectedGroup = getEventGroupId(currentEvent.title);
+
+            var dateTimeTxt = dateTxt + ' ' + timeTxt;
+            var time = Date.parseExact(dateTimeTxt, "dd/MM/yyyy h:mm tt");
+
+            currentEvent.start = time;
+
+            //Submit to Server
+            $.ajax({
+                url: "../../shifts/insertUserEvent?dateTime=" + dateTimeTxt + '&recuring=' + recuring + '&groupId=' + selectedGroup,
+                type: "POST",
+                dataType: "json",
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                success: function (json) {
+                    $("#modalLoader2").fadeOut(500);
+                    $('#eventModal').modal('hide');
+                    $('#calendar').fullCalendar('renderEvent', currentEvent, true);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Event Creation Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#modalLoader2").fadeOut(500);
+                }
+            });
+        }
+
+        function addNewShift() {
+            $("#modalLoader").fadeIn(500);
+            var dateTxt = $('#shiftdate').val();
+            var timeTxt = $('#timepicker').val();
+            var workPermit = $('#workpermitTxt').val();
+            var recuring = $('#recuring').val();
+            var subArea = $('#subAreaSelect').val();
+            var area = $('#areaSelect').val();
+            var selectedGroup = getTechGroupId(currentEvent.title);
+
+            var dateTimeTxt = dateTxt + ' ' + timeTxt;
+            var time = Date.parseExact(dateTimeTxt, "dd/MM/yyyy h:mm tt");
+
+            currentEvent.start = time;
+            currentEvent.description = "Area: " + $('#areaSelect option[value="' + area + '"').text() + '(' + $('#subAreaSelect option[value="' + subArea + '"').text() + ')';
+            if (workPermit === '') workPermit = '---';
+
+            //Submit to Server
+            $.ajax({
+                url: "../../shifts/insertNewShift?dateTime=" + dateTimeTxt + '&workpermit=' + workPermit + '&recuring=' + recuring + '&groupId=' + selectedGroup + '&subAreaId=' + subArea,
+                type: "POST",
+                dataType: "json",
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                success: function (json) {
+                    $("#modalLoader").fadeOut(500);
+                    $('#techModal').modal('hide');
+                    $('#calendar').fullCalendar('renderEvent', currentEvent, true);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Shift Creation Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#modalLoader").fadeOut(500);
+                }
+            });
+
+        }
+
+        function getTechGroupId(desc) {
+            var id = 0;
+            $.each(techGroups, function (i, v) {
+                if (v.vc_groupName === desc)
+                    id = v.i_groupId;
+            });
+            return id;
+        }
+
+        function getEventGroupId(desc) {
+            var id = 0;
+            $.each(eventGroups, function (i, v) {
+                if (v.vc_title === desc)
+                    id = v.i_eventId;
+            });
+            return id;
+        }
+
+        function requestTechnicianGroups() {
+            //Submit New Group Assosiation
+            $.ajax({
+                url: "../../shifts/getAllTechnicianGroups",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    techGroups = json;
+                    var html = "";
+                    $.each(json, function (i, v) {
+                        html += '<li data-event-type="0"><span class="bg-color-blue txt-color-white" data-description="' + v.vc_groupName + ' Team" data-icon="fa-users" >' + v.vc_groupName + '</span></li>'
+                    });
+                    $('#eventsLoader').fadeOut(500);
+                    $('#technician-events').html(html);
+
+                    var initDrag = function (e) {
+                        var eventObject = {
+                            title: $.trim(e.children().text()), // use the element's text as the event title
+                            description: $.trim(e.children('span').attr('data-description')),
+                            icon: $.trim(e.children('span').attr('data-icon')),
+                            className: $.trim(e.children('span').attr('class')) // use the element's children as the event class
+                        };
+                        // store the Event Object in the DOM element so we can get to it later
+                        e.data('eventObject', eventObject);
+
+                        // make the event draggable using jQuery UI
+                        e.draggable({
+                            zIndex: 999,
+                            revert: true, // will cause the event to go back to its
+                            revertDuration: 0 //  original position after the drag
+                        });
+                    };
+
+                    //Init Drag
+                    $('#technician-events > li').each(function () {
+                        initDrag($(this));
+                    });
+
+                    getUserEvents();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Technician Groups Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        function getUserEvents() {
+            var initDrag = function (e) {
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+
+                var eventObject = {
+                    title: $.trim(e.children().text()), // use the element's text as the event title
+                    description: $.trim(e.children('span').attr('data-description')),
+                    icon: $.trim(e.children('span').attr('data-icon')),
+                    className: $.trim(e.children('span').attr('class')) // use the element's children as the event class
+                };
+                // store the Event Object in the DOM element so we can get to it later
+                e.data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                e.draggable({
+                    zIndex: 999,
+                    revert: true, // will cause the event to go back to its
+                    revertDuration: 0 //  original position after the drag
+                });
+            };
+
+            var addEvent = function (title, priority, description, icon) {
+                title = title.length === 0 ? "Untitled Event" : title;
+                description = description.length === 0 ? "No Description" : description;
+                icon = icon.length === 0 ? " " : icon;
+                priority = priority.length === 0 ? "label label-default" : priority;
+
+                var html = $('<li data-event-type="1"><span class="' + priority + '" data-description="' + description + '" data-icon="' +
+                    icon + '">' + title + '</span></li>').prependTo('ul#external-events').hide().fadeIn();
+
+                //$("#event-container").effect("highlight", 800);
+
+                initDrag(html);
+            };
+
+            $.ajax({
+                url: "../../shifts/getUserEvents",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    eventGroups = json;
+                    $.each(json, function (i, v) {
+                        addEvent(v.vc_title, v.vc_color, v.vc_description, v.vc_icon);
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "User Events didn't load",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        function requestMainAreas() {
+            $('#modalLoader').fadeIn(500);
+            $.ajax({
+                url: "../../map/getMainAreas",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var id = 0;
+                    $.each(json, function (i, v) {
+                        if (i === 0) id = v.i_areaId;
+                        html += '<option value="' + v.i_areaId + '">' + v.vc_description + '</option>';
+                    });
+                    $('#modalLoader').fadeOut(500);
+                    $('#areaSelect').html(html);
+                    requestSubAreas(id);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Maintenance Areas Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        function requestSubAreas(id) {
+            $('#modalLoader').fadeIn(500);
+            $.ajax({
+                url: "../../map/getSubAreas?areaId=" + id,
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var id = 0;
+                    $.each(json, function (i, v) {
+                        if (i === 0) id = v.i_areaId;
+                        html += '<option value="' + v.i_areaSubId + '">' + v.vc_description + '</option>';
+                    });
+                    $('#modalLoader').fadeOut(500);
+                    $('#subAreaSelect').html(html);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Maintenance Areas Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#timepicker').timepicker();
+            $('#timepicker2').timepicker();
+
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            var hdr = {
+                left: 'title',
+                center: 'month,agendaWeek,agendaDay',
+                right: 'prev,today,next'
+            };
+
+            var initDrag = function (e) {
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+
+                var eventObject = {
+                    title: $.trim(e.children().text()), // use the element's text as the event title
+                    description: $.trim(e.children('span').attr('data-description')),
+                    icon: $.trim(e.children('span').attr('data-icon')),
+                    className: $.trim(e.children('span').attr('class')) // use the element's children as the event class
+                };
+                // store the Event Object in the DOM element so we can get to it later
+                e.data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                e.draggable({
+                    zIndex: 999,
+                    revert: true, // will cause the event to go back to its
+                    revertDuration: 0 //  original position after the drag
+                });
+            };
+
+            var addEvent = function (title, priority, description, icon) {
+                title = title.length === 0 ? "Untitled Event" : title;
+                description = description.length === 0 ? "No Description" : description;
+                icon = icon.length === 0 ? " " : icon;
+                priority = priority.length === 0 ? "label label-default" : priority;
+
+                var html = $('<li><span class="' + priority + '" data-description="' + description + '" data-icon="' +
+                    icon + '">' + title + '</span></li>').prependTo('ul#external-events').hide().fadeIn();
+
+                $("#event-container").effect("highlight", 800);
+
+                initDrag(html);
+            };
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            $('#add-event').click(function () {
+                var title = $('#title').val(),
+                    priority = $('input:radio[name=priority]:checked').val(),
+                    description = $('#description').val(),
+                    icon = $('input:radio[name=iconselect]:checked').val(),
+                    privateFlag = $('#privateChk').prop("checked");
+
+                if (title == "") {
+                    $.smallBox({
+                        title: "No Title",
+                        content: "Please enter a valid title",
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                } else {
+                    $.ajax({
+                        url: "../../shifts/insertUserDefinedEvent?description=" + description + "&title=" + title + "&color=" + priority + "&icon=" + icon + "&userSpesific=" + privateFlag,
+                        type: "POST",
+                        data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                        dataType: "json",
+                        success: function (json) {
+                            addEvent(title, priority, description, icon);
+                        },
+                        error: function (err) {
+                            $.smallBox({
+                                title: "Failed to add user event",
+                                content: err.responseText,
+                                color: "#f51414",
+                                timeout: 5000,
+                                icon: "fa fa-bell swing animated"
+                            });
+                        }
+                    });
+                }
+            });
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+
+            $('#calendar').fullCalendar({
+
+                header: hdr,
+                buttonText: {
+                    prev: '<i class="fa fa-chevron-left"></i>',
+                    next: '<i class="fa fa-chevron-right"></i>'
+                },
+
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+
+                drop: function (date, allDay) { // this function is called when something is dropped
+                    // retrieve the dropped element's stored Event Object
+                    var typeEvent = $(this).attr('data-event-type');
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    if (typeEvent == "0") {
+                        var $datepicker = $("#shiftdate");
+                        $datepicker.datepicker();
+
+                        var newDate = new Date(date);
+                        $datepicker.datepicker('setDate', 
+                            new Date(
+                            newDate.getFullYear(),
+                            newDate.getMonth(),
+                            newDate.getDate()));
+
+                        $('#techModalLabel').html('<i class="fa ' + copiedEventObject.icon + ' txt-color-blue"></i> Create New Shift - ' + copiedEventObject.title);
+                        $('#techModal').modal('show');
+
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        copiedEventObject.allDay = false;
+
+                        currentEvent = copiedEventObject;
+                    } else if (typeEvent == "1") {
+                        var $datepicker = $("#eventDate");
+                        $datepicker.datepicker();
+                        var newDate = new Date(date);
+                        $datepicker.datepicker('setDate', new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()));
+
+                        $('#eventModalLabel').html('<i class="fa ' + copiedEventObject.icon + ' txt-color-blue"></i> Create New Shift - ' + copiedEventObject.title);
+                        $('#eventModal').modal('show');
+
+                        // assign it the date that was reported
+                        copiedEventObject.start = date;
+                        copiedEventObject.allDay = false;
+
+                        currentEvent = copiedEventObject;
+                    }
+
+                },
+
+                select: function (start, end, allDay) {
+                    var title = prompt('Event Title:');
+                    if (title) {
+                        calendar.fullCalendar('renderEvent', {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        }, true // make the event "stick"
+                        );
+                    }
+                    calendar.fullCalendar('unselect');
+                },
+
+                eventRender: function (event, element, icon) {
+                    if (!event.description == "") {
+                        element.find('.fc-event-title').append("<br/><span class='ultra-light'>" + event.description +
+                            "</span>");
+                    }
+                    if (!event.icon == "") {
+                        element.find('.fc-event-title').append("<i class='air air-top-right fa " + event.icon +
+                            " '></i>");
+                    }
+                },
+
+                windowResize: function (event, ui) {
+                    $('#calendar').fullCalendar('render');
+                }
+            });
+
+            /* hide default buttons */
+            $('.fc-header-right, .fc-header-center').hide();
+
+
+            $('#calendar-buttons #btn-prev').click(function () {
+                $('.fc-button-prev').click();
+                return false;
+            });
+
+            $('#calendar-buttons #btn-next').click(function () {
+                $('.fc-button-next').click();
+                return false;
+            });
+
+            $('#calendar-buttons #btn-today').click(function () {
+                $('.fc-button-today').click();
+                return false;
+            });
+
+            $('#mt').click(function () {
+                $('#calendar').fullCalendar('changeView', 'month');
+            });
+
+            $('#ag').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaWeek');
+            });
+
+            $('#td').click(function () {
+                $('#calendar').fullCalendar('changeView', 'agendaDay');
+            });
+
+            requestTechnicianGroups();
+            requestAllShifts();
+            requestMainAreas();
+
+            $('#areaSelect').on('change', function () {
+                var areaId = $(this).val();
+                requestSubAreas(areaId);
+            });
+
+        });
+    </script>
+}

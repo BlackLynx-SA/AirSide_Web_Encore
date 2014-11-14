@@ -1,0 +1,281 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-calendar"></i>
+                Shift Planning <span>
+                    >
+                    All Events
+                </span>
+            </h1>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
+            <div class="page-title">
+                <a href="~/Shifts/Calendar" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> Add New Event</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="myTab1" class="nav nav-tabs bordered">
+                <li class="active">
+                    <a href="#s1" id="activeShiftTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-cogs"></i> Active Shifts <span id="activeBadge" class="badge bg-color-blue txt-color-white hiddenbadge">0</span></a>
+                </li>
+                <li class="">
+                    <a href="#s2" id="completedShiftTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-wrench"></i> Completed Shifts <span id="completeBadge" class="badge bg-color-blue txt-color-white hiddenbadge">0</span></a>
+                </li>
+                <li class="">
+                    <a href="#s3" id="eventsTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-clock-o"></i> Other Events <span id="eventsBadge" class="badge bg-color-blue txt-color-white hiddenbadge">0</span></a>
+                </li>
+            </ul>
+
+            <div id="myTabContent1" class="tab-content padding-10">
+                <div class="tab-pane fade active in" id="s1">
+                    <table id="dt_shifts" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
+                        <thead>
+                            <tr>
+                                <th data-hide="phone,tablet" data-class="expand" style="width:100px;"><i class="fa fa-fw fa-list-ol txt-color-blue hidden-md hidden-sm hidden-xs"></i> Event Type</th>
+                                <th data-class="expand"><i class="fa fa-fw fa-users txt-color-blue hidden-md hidden-sm hidden-xs"></i> Team</th>
+                                <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Start Date</th>
+                                <th data-hide="phone,tablet" data-class="expand">Maint. Area</th>
+                                <th data-hide="phone,tablet" data-class="expand">Sub Area</th>
+                                <th data-hide="phone,tablet"><i class="fa fa-fw fa-line-chart txt-color-blue hidden-md hidden-sm hidden-xs"></i> Progress</th>
+
+                                <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <img id="adbloader" src="~/content/img/adb_img/adb_loader.gif" />
+                </div>
+                <div class="tab-pane fade" id="s2">
+                    <table id="dt_shiftsComplete" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
+                        <thead>
+                            <tr>
+                                <th data-class="expand" style="width:100px;"><i class="fa fa-fw fa-list-ol txt-color-blue hidden-md hidden-sm hidden-xs"></i> Event Type</th>
+                                <th data-class="expand"><i class="fa fa-fw fa-users txt-color-blue hidden-md hidden-sm hidden-xs"></i> Team</th>
+                                <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Start Date</th>
+                                <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Completion</th>
+                                <th data-hide="phone,tablet" data-class="expand">Maint. Area</th>
+                                <th data-hide="phone,tablet" data-class="expand">Sub Area</th>
+                                <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <img id="adbloader2" src="~/content/img/adb_img/adb_loader.gif" />
+                </div>
+                <div class="tab-pane fade" id="s3">
+                    <table id="dt_events" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
+                        <thead>
+                            <tr>
+                                <th data-hide="expand" style="width:50px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                                <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Start Date</th>
+                                <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Title</th>
+                                <th data-hide="phone,tablet"><i class="fa fa-fw fa-users txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
+                                <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <img id="adbloader3" src="~/content/img/adb_img/adb_loader.gif" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section pagespecific{
+    <script src="~/scripts/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/scripts/plugin/datatables/dataTables.colVis.min.js"></script>
+    <script src="~/scripts/plugin/datatables/dataTables.tableTools.min.js"></script>
+    <script src="~/scripts/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/scripts/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+    <!-- Fancy Box Scripts-->
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.js"></script>
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+    <!--Google Maps-->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+    </script>
+    <script src="~/scripts/plugin/googlemaps/gmap3.min.js"></script>
+
+    <script type="text/javascript">
+        //Global Variables
+        var responsiveHelper_dt_basic = null;
+
+        var $shiftsTbl = $('#dt_shifts');
+        var $shiftsCompleteTbl = $('#dt_shiftsComplete');
+        var $eventsTbl = $('#dt_events');
+
+        var breakpointDefinition = {
+            tablet: 1024,
+            phone: 480
+        };
+
+        //Functions
+        function setDataTable(table) {
+            table.dataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "autoWidth": true,
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (responsiveHelper_dt_basic === null) {
+                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper(table, breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                }
+            });
+        }
+
+        function requestAllActiveShifts() {
+            $("#adbloader").fadeIn(500);
+            $.ajax({
+                url: "../../shifts/getShifts?active=true",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var i = 0;
+                    $.each(json, function (i, v) {
+                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
+                        html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
+                        html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
+                        html += '<td></td></tr>';
+                        i++;
+                        $('#activeBadge').html(i);
+                        $('#activeBadge').removeClass('hiddenbadge');
+                    });
+
+                    $('#dt_shifts tbody').html(html);
+                    if ($.fn.dataTable.isDataTable($shiftsTbl)) {
+                        var table = $shiftsTbl.DataTable();
+                        table.destroy();
+                    }
+                    setDataTable($shiftsTbl);
+                    $("#adbloader").hide();
+                    $shiftsTbl.fadeIn(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Failed to active shifts",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#adbloader").fadeOut(500);
+                }
+            });
+        }
+
+        function requestAllCompletedShifts() {
+            $("#adbloader2").fadeIn(500);
+            $.ajax({
+                url: "../../shifts/getShifts?active=false",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var i = 0;
+                    $.each(json, function (i, v) {
+                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.completed + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td><td></td></tr>";
+                        i++;
+                        $('#completeBadge').html(i);
+                        $('#completeBadge').removeClass('hiddenbadge');
+                    });
+
+                    $('#dt_shiftsComplete tbody').html(html);
+                    if ($.fn.dataTable.isDataTable($shiftsCompleteTbl)) {
+                        var table = $shiftsCompleteTbl.DataTable();
+                        table.destroy();
+                    }
+                    setDataTable($shiftsCompleteTbl);
+                    $("#adbloader2").hide();
+                    $shiftsCompleteTbl.fadeIn(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Failed to active shifts",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#adbloader2").fadeOut(500);
+                }
+            });
+        }
+
+        function requestAllEvents() {
+            $.ajax({
+                url: "../../shifts/getUserActiveEvents",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var i = 0;
+                    $.each(json, function (i, v) {
+                        html += '<tr><td class="' + v.color + '"><i class="fa ' + v.icon + '"></i> User</td><td>' + v.start + "</td><td>" + v.title + "</td><td>" + v.description + "</td><td></td></tr>";
+                        i++;
+                        $('#eventsBadge').html(i);
+                        $('#eventsBadge').removeClass('hiddenbadge');
+                    });
+
+                    $('#dt_events tbody').html(html);
+                    if ($.fn.dataTable.isDataTable($eventsTbl)) {
+                        var table = $eventsTbl.DataTable();
+                        table.destroy();
+                    }
+                    setDataTable($eventsTbl);
+                    $("#adbloader3").hide();
+                    $eventsTbl.fadeIn(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Failed to active shifts",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $("#adbloader2").fadeOut(500);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            //Clear Badges Count
+            $('span.badge').html('0');
+            $('span.badge').addClass('hiddenbadge');
+
+            requestAllActiveShifts();
+
+            //Set listeners for tab changes
+            $('#activeShiftTab').on('click', function () {
+                requestAllActiveShifts();
+            });
+
+            $('#completedShiftTab').on('click', function () {
+                requestAllCompletedShifts();
+            });
+
+            $('#eventsTab').on('click', function () {
+                requestAllEvents();
+            });
+        });
+    </script>
+}
+

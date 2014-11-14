@@ -1,0 +1,64 @@
+﻿<!-- MAIN CONTENT -->
+<div id="content">
+    <div id="map_canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
+    &nbsp;
+    </div>
+</div>
+
+@section pagespecific{
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+    </script>
+    
+    <script>
+        var globalMap
+        function resize() {
+            $('#map_canvas').css('height', Math.round($(window).height() * 0.83));
+            google.maps.event.trigger(globalMap, 'resize');
+        }
+
+        $(document).ready(function () {
+            
+
+            var pagefunction = function () {
+                function initMap() {
+                    globalMap = new GMaps({
+                        div: '#map_canvas',
+                        lat: -12.043333,
+                        lng: -77.028333
+                    });
+
+                    globalMap.setContextMenu({
+                        control: 'map',
+                        options: [{
+                            title: 'Add marker',
+                            name: 'add_marker',
+                            action: function (e) {
+                                this.addMarker({
+                                    lat: e.latLng.lat(),
+                                    lng: e.latLng.lng(),
+                                    title: 'New marker'
+                                });
+                            }
+                        }, {
+                            title: 'Center here',
+                            name: 'center_here',
+                            action: function (e) {
+                                this.setCenter(e.latLng.lat(), e.latLng.lng());
+                            }
+                        }]
+                    });
+                }
+
+                initMap();
+                resize();
+            };
+
+            pagefunction();
+            
+            $(window).resize(function () { resize() });
+        });
+    </script>
+
+    <script src="~/Scripts/plugin/gmapjs/gmapjs.js"></script>
+}

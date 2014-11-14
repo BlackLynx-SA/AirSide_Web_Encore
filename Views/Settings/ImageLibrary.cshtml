@@ -1,0 +1,228 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-picture-o"></i>
+                Image Library <span>
+                    >
+                    AirSide&trade; Library
+                </span>
+            </h1>
+        </div>
+    </div>
+    <hr />
+    <!-- row -->
+    <div class="row">
+        <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" />
+        <!-- SuperBox -->
+        <div class="superbox col-sm-12" id="imgSuperBox">
+
+        </div>
+
+        <div class="superbox-show" style="height:300px; display: none"></div>
+
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h1><i class="fa fa-upload"></i> Upload File</h1>
+            <form class="dropzone" id="mydropzone"></form>
+        </div>
+    </div>
+</div>
+
+@section pagestyles{
+    <link href="~/Scripts/plugin/fancybox/jquery.fancybox.css" rel="stylesheet" />
+}
+
+@section pagespecific{
+    <script src="~/scripts/plugin/superbox/superbox.js"></script>
+    <script src="~/scripts/plugin/dropzone/dropzone.min.js"></script>
+
+    <!-- Fancy Box Scripts-->
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.js"></script>
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+    <script type="text/javascript">
+        //Global Variables
+        function reloadClientImages() {
+            $('#adbloader').fadeIn(500);
+            $.ajax({
+                url: "getAllAirSideImages",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    $.each(json, function (i, value) {
+                        if (value.i_fileType === 3) {
+                            html += '<div class="superbox-list" data-nonadb="false" data-imgid="' + value.i_pictureId + '">';
+                        } else {
+                            html += '<div class="superbox-list" data-nonadb="true" data-imgid="' + value.i_pictureId + '">';
+                        }
+                        html += '<img style="height:100px; width:auto;" src="../..' + value.vc_fileLocation + '" data-img="../..' + value.vc_fileLocation + '" alt="' + value.vc_description + '" title="' + value.vc_description + '" class="superbox-img">';
+                        html += '</div>';
+                    });
+
+                    html += '<div class="superbox-float"></div>';
+                    $('#imgSuperBox').html(html);
+                    $('#imgSuperBox').SuperBox();
+                    $('#adbloader').fadeOut(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Client Images",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#adbloader').fadeOut(500);
+                }
+            });
+        }
+
+        function deleteImage(id) {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-times fa-lg txt-color-red"></i> Delete File?',
+                content: "This will delete the file from the server. Continue?",
+                buttons: '[No][Yes]'
+            }, function (ButtonPressed) {
+                if (ButtonPressed === "Yes") {
+                    $('.superbox-list').removeClass('active');
+                    $('.superbox-current-img').animate({ opacity: 0 }, 200, function () {
+                        $('.superbox-show').slideUp();
+                    });
+
+                    $.ajax({
+                        url: "DeleteImage?imageId=" + id,
+                        type: "POST",
+                        dataType: "json",
+                        success: function (json) {
+                            $.smallBox({
+                                title: "Image Deleted",
+                                content: "The image was deleted.",
+                                color: "#5384AF",
+                                timeout: 4000,
+                                icon: "fa fa-thumbs-up"
+                            });
+                            $('.superbox').empty();
+                            reloadClientImages();
+                        },
+                        error: function (err) {
+                            $.smallBox({
+                                title: "Error Deleting the Image",
+                                content: err.responseText,
+                                color: "#f51414",
+                                timeout: 5000,
+                                icon: "fa fa-bell swing animated"
+                            });
+                        }
+                    });
+                }
+                if (ButtonPressed === "No") {
+
+                }
+
+            });
+            // e.preventDefault();
+        }
+
+        function editImage(id) {
+            var title = $('div [data-imgid=' + id + '] > img').attr('alt');
+            $.SmartMessageBox({
+                title: "Edit the Title",
+                content: "Please enter a title for the file",
+                buttons: "[Cancel][Accept]",
+                input: "text",
+                inputValue: title,
+                placeholder: "File Title"
+            }, function (ButtonPress, Value) {
+                if (ButtonPress === "Accept") {
+                    $.ajax({
+                        url: "EditImage?imageId=" + id + "&description=" + Value,
+                        type: "POST",
+                        dataType: "json",
+                        success: function (json) {
+                            $.smallBox({
+                                title: "Image Updated",
+                                content: "The image was edited.",
+                                color: "#5384AF",
+                                timeout: 5000,
+                                icon: "fa fa-thumbs-up"
+                            });
+                            reloadClientImages();
+                        },
+                        error: function (err) {
+                            $.smallBox({
+                                title: "Error Updating the Image",
+                                content: err.responseText,
+                                color: "#f51414",
+                                timeout: 5000,
+                                icon: "fa fa-bell swing animated"
+                            });
+                        }
+                    });
+                }
+            });
+
+            //e.preventDefault();
+        }
+
+        $(document).ready(function () {
+            var myDropZone = new Dropzone("#mydropzone", {
+                url: "uploadClientImage?description=New",
+                addRemoveLinks: true,
+                maxFilesize: 3,
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictResponseError: 'Error uploading file!',
+                maxFiles: 1,
+                accept: function (file, done) {
+                    $.SmartMessageBox({
+                        title: "File Description",
+                        content: "Please enter a title for the file",
+                        buttons: "[Cancel][Accept]",
+                        input: "text",
+                        inputValue: "",
+                        placeholder: "File Title"
+                    }, function (ButtonPress, Value) {
+                        if (ButtonPress === "Accept") {
+                            if (Value != "") {
+                                myDropZone.options.url = 'uploadClientImage?description=' + Value;
+                                done();
+                            } else
+                            {
+                                done("No file description was provided.")
+                            }
+                        } else {
+                            done("File upload cancelled.")
+                        }
+                    });
+                }
+            });
+
+            //FancyBox Init
+            $(".fancybox").fancybox();
+
+            //Init DropZone
+            Dropzone.autoDiscover = false;
+
+            myDropZone.on("complete", function (file) {
+                if (file.accepted) {
+                    $.smallBox({
+                        title: "File Uploaded",
+                        content: "The image was uploaded.",
+                        color: "#5384AF",
+                        timeout: 4000,
+                        icon: "fa fa-thumbs-up"
+                    });
+                    reloadClientImages();
+                    myDropZone.removeAllFiles();
+                }
+            });
+
+            reloadClientImages();
+        });
+    </script>
+}
+

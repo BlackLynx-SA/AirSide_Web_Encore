@@ -1,0 +1,287 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-th"></i>
+                Asset Types <span>
+                    >
+                    Create New Asset Type
+                </span>
+            </h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <form id="checkout-form" class="smart-form" novalidate="novalidate">
+
+                <fieldset>
+                    <div class="row">
+                        <section class="col col-6">
+                            <label>Asset Description</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-pencil-square-o"></i>
+                                <input type="text" name="description" id="description" placeholder="Description" class="invalid">
+                            </label>
+
+                        </section>
+                        <section class="col col-6">
+                            <label>Manufacturer</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-wrench"></i>
+                                <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" class="invalid">
+                            </label>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col col-6">
+                            <label>Model</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-cube"></i>
+                                <input type="text" name="model" id="model" placeholder="Model" class="invalid">
+                            </label>
+                        </section>
+                        <section class="col col-6">
+                            <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
+                            <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader2" style="zoom:0.5;" />
+                            <div id="frequencySlider"></div>
+                            <div class="note">
+                                <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
+                            </div>
+                        </section>
+                    </div>
+                    <hr /><br />
+                    <div class="row">
+                        <section class="col col-6">
+                            <label>Asset Picture</label>
+                            <div id="assetPic" class="dd-container" style="display:none;"></div>
+                            <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom:0.5;" />
+                            <div class="note">
+                                <strong>Hint: </strong> You can load up additional images into the library.
+                            </div>
+
+                        </section>
+                    </div>
+                </fieldset>
+
+                <footer>
+                    <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> Go Back</a>
+                    <a id="createBtn" class="btn btn-success"><i class="fa fa-plus"></i> Add Asset Type</a>
+
+                </footer>
+                <div class="row">
+                    <div class="col-md-12 text-align-right">
+                        <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader3" style="zoom:0.7; display:none;" />
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section pagespecific{
+    <script src="~/scripts/plugin/ddslick/jquery.ddslick.min.js"></script>
+
+    <script type="text/javascript">
+        //Global variables
+        var $freqSlider = $('#frequencySlider');
+        var frequencyVal = 0;
+
+        $(document).ready(function () {
+            //Get Available Pictures from Library
+            $.ajax({
+                url: "getPictures",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $('#assetPic').ddslick({
+                        data: json,
+                        width: 300,
+                        height: 500,
+                        imagePosition: "left",
+                        selectText: "Select Picture",
+                        onSelected: function (data) {
+                            console.log(data);
+                        }
+                    });
+
+                    $('#adbloader').fadeOut(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Pictures",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#adbloader').fadeOut(300);
+                    $('#assetPic').fadeIn(500);
+                }
+            });
+
+            //Get available frequencies
+            $.ajax({
+                url: "getFrequencies",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var min = 0;
+                    var max = 0;
+                    var last = 0;
+                    $.each(json, function (i, v) {
+                        if (i === 0) {
+                            min = v.frequency;
+                            max = v.frequency;
+                        } else {
+                            if (min > v.frequency) min = v.frequency;
+                            if (max < v.frequency) max = v.frequency;
+                        }
+                        last = v.frequency;
+                    });
+
+                    frequencyVal = last;
+
+                    $freqSlider.slider({
+                        value: last,
+                        min: min,
+                        max: max,
+                        step: 15
+                    })
+
+                    $('#adbloader2').fadeOut(300);
+                    $('#frequencyLbl').html('<i class="fa fa-history"></i> Maintenance Frequency (' + last + ' days)');
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Frequencies",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#adbloader2').fadeOut(300);
+                    $('#frenquencySlider').fadeIn(500);
+                }
+            });
+
+            //Listen for slide event
+            $freqSlider.on("slide", function (ui) {
+                $('#frequencyLbl').html('<i class="fa fa-history"></i> Maintenance Frequency (' + ui.value + ' days)');
+                frequencyVal = ui.value;
+            });
+
+            //Listen for click event
+            $('#createBtn').on('click', function () {
+                createAssetClass();
+            });
+
+            //Listen for click event on back button
+            $('#backBtn').on('click', function () {
+                window.history.back();
+            });
+        });
+
+        function createAssetClass(e) {
+            $('#adbloader3').fadeIn(300);
+            var flag = true;
+            var assetPic = $('.dd-selected-value').val();
+            var description = $('#description').val();
+            var manufacturer = $('#manufacturer').val();
+            var model = $('#model').val();
+
+            if (assetPic === "" && flag) {
+                $.smallBox({
+                    title: "No Picture Selected",
+                    content: "Please select a picture",
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                flag = false;
+            }
+
+            if (description === "" && flag) {
+                $.smallBox({
+                    title: "No Description",
+                    content: "Please enter a description",
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                flag = false;
+            }
+
+            if (manufacturer === "" && flag) {
+                $.smallBox({
+                    title: "No Manufacturer",
+                    content: "Please enter a manufacturer",
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                flag = false;
+            }
+
+            if (model === "" && flag) {
+                $.smallBox({
+                    title: "No Model",
+                    content: "Please enter a model",
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                flag = false;
+            }
+
+            if (flag) {
+                $.SmartMessageBox({
+                    title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Add New Asset Class?',
+                    content: "Do you want to add " + description + " (" + model + "). Continue?",
+                    buttons: '[No][Yes]'
+                }, function (ButtonPressed) {
+
+                    if (ButtonPressed === "Yes") {
+                        //URL For Call
+                        var url = "insertUpdateAssetClass?description=" + description + "&manufacturer=" + manufacturer + "&model=" + model + "&pictureId=" + assetPic + "&frequency=" + frequencyVal + "&assetClassId=0";
+
+                        $.ajax({
+                            url: url,
+                            type: "POST",
+                            dataType: "json",
+                            data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                            success: function (json) {
+                                $.smallBox({
+                                    title: "Asset Class was created.",
+                                    content: json,
+                                    color: "#5384AF",
+                                    timeout: 4000,
+                                    icon: "fa fa-thumbs-up"
+                                });
+                                $('#adbloader3').fadeOut(300);
+                            },
+                            error: function (err) {
+                                $.smallBox({
+                                    title: "Error Adding the Asset Class",
+                                    content: err.responseText,
+                                    color: "#f51414",
+                                    timeout: 5000,
+                                    icon: "fa fa-bell swing animated"
+                                });
+                                $('#adbloader3').fadeOut(300);
+                            }
+                        });
+                    }
+                    if (ButtonPressed === "No") {
+                        $('#adbloader3').fadeOut(300);
+                    }
+                });
+            } else {
+                $('#adbloader3').fadeOut(300);
+            }
+        }
+    </script>
+}
+

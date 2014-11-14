@@ -1,0 +1,211 @@
+﻿@section PageStyles{
+    <link href="~/js/plugin/fancybox/jquery.fancybox.css" rel="stylesheet" />
+}
+
+<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-th"></i>
+                Assets<span>
+                    >
+                    Loaded Assets
+                </span>
+            </h1>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
+            <div class="page-title">
+                <a href="~/Asset/CreateAsset" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> New Asset</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <table id="dt_assets" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
+                <thead>
+                    <tr>
+                        <th data-hide="expand" style="width:20px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                        <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Asset Type</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Previous</th>
+                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Next</th>
+                        <th data-hide="expand"><i class="fa fa-fw fa-history txt-color-blue hidden-md hidden-sm hidden-xs"></i> Frequency</th>
+                        <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+            <img id="adbloader" src="~/content/img/adb_img/adb_loader.gif" />
+        </div>
+    </div>
+
+    <!--Fancy Box Popups-->
+    <div id="mapBox" style="display:none; width:500px; height:500px;">
+        <div id="map-canvas"></div>
+    </div>
+</div>
+@section pagespecific{
+    <script src="~/js/plugin/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/js/plugin/datatables/dataTables.colVis.min.js"></script>
+    <script src="~/js/plugin/datatables/dataTables.tableTools.min.js"></script>
+    <script src="~/js/plugin/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
+
+    <!-- Fancy Box Scripts-->
+    <script src="~/js/plugin/fancybox/jquery.fancybox.js"></script>
+    <script src="~/js/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+    <!--Google Maps-->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+    </script>
+    <script src="~/js/plugin/googlemaps/gmap3.min.js"></script>
+
+    <script type="text/javascript">
+        //Global Variables
+        var responsiveHelper_dt_basic = null;
+        var $assetClassTbl = $('#dt_assets');
+        var Assets = new AllAssets();
+        var markers = [];
+        var size = 500;
+        var map;
+
+        var breakpointDefinition = {
+            tablet: 1024,
+            phone: 480
+        };
+
+        //Functions
+        function setDataTable() {
+            $assetClassTbl.dataTable({
+                "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                    "t" +
+                    "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "autoWidth": true,
+                "preDrawCallback": function () {
+                    // Initialize the responsive datatables helper once.
+                    if (responsiveHelper_dt_basic === null) {
+                        responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($assetClassTbl, breakpointDefinition);
+                    }
+                },
+                "rowCallback": function (nRow) {
+                    responsiveHelper_dt_basic.createExpandIcon(nRow);
+                },
+                "drawCallback": function (oSettings) {
+                    responsiveHelper_dt_basic.respond();
+                }
+            });
+        }
+
+        function AllAssets() {
+            this.jsonData = {};
+        }
+
+        function requestAllAssetData() {
+            $.ajax({
+                url: '../../Map/getAllAssets',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    Assets.jsonData = json;
+
+                    $.each(json, function (i, v) {
+                        var cycle = "";
+                        if (v.maintenanceCycle === 0) cycle = "btn-primary";
+                        else if (v.maintenanceCycle === 1) cycle = "bg-color-lime";
+                        else if (v.maintenanceCycle === 2) cycle = "bg-color-yellow";
+                        else if (v.maintenanceCycle === 3) cycle = "bg-color-orange"
+                        else if (v.maintenanceCycle === 4) cycle = "bg-color-red"
+
+                        var html = "";
+                        html += '<tr id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
+                        html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
+                        html += '<td><img src="../..' + v.picture.fileLocation + '" style="height:50px; width:auto;"/></td>';
+                        html += '<td>' + v.previousDate + '</td><td>' + v.nextDate + '</td><td>' + v.frequency.frequencyValue + '</td>';
+                        html += '<td style="line-height:2;"><a href="#mapBox" class="fancybox" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a><br/><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></td></tr>';
+
+                        //Append to DOM
+                        $('#dt_assets tbody').append(html);
+                    });
+
+                    $('#adbloader').fadeOut(500);
+                    setDataTable();
+                    var table = $('#dt_assets').DataTable();
+                    table.columns.adjust().draw();
+                    $('#dt_assets').fadeIn(500);
+
+                    //Set Sparklines
+                    $('.sparkline').sparkline('html', { type: 'bullet' });
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            requestAllAssetData();
+            $('.fancybox').fancybox();
+
+
+
+
+        });
+
+        //Gmap3 Asset Map
+        function showAssetLocation(id, lat, long, maintain) {
+            //Get the right marker
+            var image = getImage(maintain);
+
+            //Clear Marker
+            $('#map-canvas').gmap3({
+                clear: {
+                    name: ["marker"],
+                    last: true
+                }
+            });
+
+            $('#map-canvas').width("500px").height("500px").gmap3({
+                map: {
+                    options: {
+                        center: [lat, long],
+                        zoom: 14,
+                        mapTypeId: google.maps.MapTypeId.HYBRID,
+                        mapTypeControl: false,
+                        navigationControl: false,
+                        scrollwheel: true,
+                        streetViewControl: false
+                    }
+                },
+                marker: {
+                    latLng: [lat, long],
+                    options: {
+                        icon: new google.maps.MarkerImage(image)
+                    }
+                }
+            });
+        }
+
+        function getImage(value) {
+            var image;
+            switch (value) {
+                case 0: image = '/assets/images/icons/map_icon_grey.png';
+                    break;
+                case 1: image = '/assets/images/icons/map_icon_green.png';
+                    break;
+                case 2: image = '/assets/images/icons/map_icon_yellow.png';
+                    break;
+                case 3: image = '/assets/images/icons/map_icon_orange.png';
+                    break;
+                case 4: image = '/assets/images/icons/map_icon_red.png';
+                    break;
+
+                default:
+                    break;
+            }
+
+            return image;
+        }
+    </script>
+}

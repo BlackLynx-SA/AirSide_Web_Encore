@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Cache Rebuild";
+    ViewBag.breadIcon = "fa-home";
+    ViewBag.Menu = "Dashboard";
+    ViewBag.SubMenu = "Home";
+    ViewBag.Map = false;
+    ViewBag.ThirdLevelFlag = false;
+    ViewBag.SubMenuLink = "";
+    ViewBag.ThirdMenu = "";
+}
+
+<div class="row">
+    <div class="col-md-12" style="color:#808080;">
+        <h4 style="text-decoration:underline;">Cache Update Results:</h4>
+        @if (ViewBag.AssetRebuild == true)
+        {
+            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
+            <label>The Asset Cache has been recreated.</label><br />
+        }
+        else
+        {
+            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
+            <label>The Asset Cache failed to recreate. Please have a look at the logs.</label><br />
+        }
+
+        @if (ViewBag.AssetClassRebuild == true)
+        {
+            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
+            <label>The Asset Class Cache has been recreated.</label><br />
+        }
+        else
+        {
+            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
+            <label>The Asset Class Cache failed to recreate. Please have a look at the logs.</label><br />
+        }
+
+        @if (ViewBag.AssetFullDownload == true)
+        {
+            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
+            <label>The All Assets Download Cache has been recreated.</label><br />
+        }
+        else
+        {
+            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
+            <label>The All Assets Download Cache failed to recreate. Please have a look at the logs.</label><br />
+        }
+    </div>
+</div>
+
