@@ -12,10 +12,11 @@ namespace ADB.AirSide.Encore.V1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_maintenanceProfile
+    public partial class as_assetClassMaintenanceProfile
     {
+        public int i_assetMaintenanceId { get; set; }
+        public int i_assetClassId { get; set; }
         public int i_maintenanceId { get; set; }
-        public string vc_description { get; set; }
-        public int i_maintenanceCategoryId { get; set; }
+        public int i_frequencyId { get; set; }
     }
 }

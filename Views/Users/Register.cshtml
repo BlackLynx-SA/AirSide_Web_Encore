@@ -1,21 +1,4 @@
-﻿@model ADB.AirSide.Encore.Models.RegisterModel
-
-@{
-    ViewBag.Title = "Create New User";
-    ViewBag.BCFirst = "System Users";
-    ViewBag.BCSecond = "Create New User";
-    ViewBag.BCThird = "";
-}
-
-@section SetMenu{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#dashboardMenu').removeClass('active');
-            $('#systemUsersMenu').addClass('active open');
-            $('#createNewUserMenu').addClass('active');
-        });
-    </script>
-}
+﻿@model ADB.AirSide.Encore.V1.Models.RegisterModel
 
 <style>
     .validationMsg {
@@ -23,132 +6,134 @@
     }
 </style>
 
-<div class="row hidden-mobile">
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <h1 class="page-title txt-color-blueDark">
-            <i class="fa-fw fa fa-user"></i>
-            System Users <span>
-                >
-                Create New User
-            </span>
-        </h1>
-    </div>
-</div>
-<hr />
-
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-        <div class="alert alert-block alert-success">
-            <a class="close" data-dismiss="alert" href="#">×</a>
-            <h4 class="alert-heading"><i class="fa fa-wrench"></i> Technician Users!</h4>
-            <p>
-                When loading a technician, the sysem will user the following combination for the username: Firstname + 3 Characters of the Surname. A default access code of 1234 will also be allocated for the AirSide&trade; iPad application. The technician can change it 
-                inside the application.
-            </p>
+<div id="content">
+    <div class="row hidden-mobile">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-user"></i>
+                System Users <span>
+                    >
+                    Create New User
+                </span>
+            </h1>
         </div>
-        @using (Html.BeginForm("Register", "Users", FormMethod.Post, new { @class = "form-horizontal smart-form", @role = "form" }))
-        {
-            @Html.AntiForgeryToken()
+    </div>
+    <hr />
 
-            if (!Html.ViewData.ModelState.IsValid)
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="alert alert-block alert-success">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <h4 class="alert-heading"><i class="fa fa-wrench"></i> Technician Users!</h4>
+                <p>
+                    When loading a technician, the sysem will user the following combination for the username: Firstname + 3 Characters of the Surname. A default access code of 1234 will also be allocated for the AirSide&trade; iPad application. The technician can change it
+                    inside the application.
+                </p>
+            </div>
+            @using (Html.BeginForm("Register", "Users", FormMethod.Post, new { @class = "form-horizontal smart-form", @role = "form" }))
             {
-                <div class="alert alert-error">
-                    @Html.ValidationSummary()
+                @Html.AntiForgeryToken()
+
+                if (!Html.ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-error">
+                        @Html.ValidationSummary()
+                    </div>
+                }
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="FirstName"> First Name </label>
+
+                        <label class="input">
+                            <i class="icon-prepend fa fa-user"></i>
+                            <input type="text" id="FirstName" name="FirstName" placeholder="First Name" />
+                        </label>
+                    </section>
                 </div>
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="LastName"> Last Name </label>
+
+                        <label class="input">
+                            <i class="icon-prepend fa fa-user"></i>
+                            <input type="text" id="LastName" name="LastName" placeholder="Last Name" />
+                        </label>
+                    </section>
+                </div>
+
+                <input type="hidden" id="UserName" name="UserName" placeholder="Username" />
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="EmailAddress"> Email Address </label>
+
+                        <label class="input">
+                            <i class="icon-prepend fa fa-envelope-o"></i>
+                            <input type="email" id="EmailAddress" name="EmailAddress" placeholder="Email Address" />
+                        </label>
+                    </section>
+                </div>
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="Password"> Password </label>
+
+                        <label class="input">
+                            <i class="icon-prepend fa fa-lock"></i>
+                            <input type="password" id="Password" name="Password" placeholder="Password" />
+                        </label>
+                    </section>
+                </div>
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="ConfirmPassword"> Confirm Password </label>
+
+                        <label class="input">
+                            <i class="icon-prepend fa fa-lock"></i>
+                            <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm" />
+                        </label>
+                    </section>
+                </div>
+
+                <div class="field-set">
+                    <section>
+                        <label class="label" for="accessLevel"> Access Level </label>
+
+                        <label class="select">
+                            @Html.DropDownList("accessLevel", null, "Select a Access Level")
+                            <i></i>
+                            <div class="note">
+                                <strong>Note:</strong> When you register a technician a default password of "1234" will be assigned, they can change it on the iPad.
+                            </div>
+                        </label>
+                    </section>
+
+                </div>
+
+                <div class="field-set">
+                    <section>
+                        @Html.LabelFor(m => m.i_airPortId, new { @class = "label" })
+
+                        <label class="select">
+                            @Html.DropDownList("i_airPortId", null, "Select an Airport")
+                            <i></i>
+                        </label>
+                    </section>
+                </div>
+
+                <footer>
+                    <input type="submit" value="Register" class="btn btn-primary" />
+                </footer>
+
             }
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="FirstName"> First Name </label>
-
-                    <label class="input">
-                        <i class="icon-prepend fa fa-user"></i>
-                        <input type="text" id="FirstName" name="FirstName" placeholder="First Name" />
-                    </label>
-                </section>
-            </div>
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="LastName"> Last Name </label>
-
-                    <label class="input">
-                        <i class="icon-prepend fa fa-user"></i>
-                        <input type="text" id="LastName" name="LastName" placeholder="Last Name" />
-                    </label>
-                </section>
-            </div>
-
-            <input type="hidden" id="UserName" name="UserName" placeholder="Username" />
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="EmailAddress"> Email Address </label>
-
-                    <label class="input">
-                        <i class="icon-prepend fa fa-envelope-o"></i>
-                        <input type="email" id="EmailAddress" name="EmailAddress" placeholder="Email Address" />
-                    </label>
-                </section>
-            </div>
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="Password"> Password </label>
-
-                    <label class="input">
-                        <i class="icon-prepend fa fa-lock"></i>
-                        <input type="password" id="Password" name="Password" placeholder="Password" />
-                    </label>
-                </section>
-            </div>
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="ConfirmPassword"> Confirm Password </label>
-
-                    <label class="input">
-                        <i class="icon-prepend fa fa-lock"></i>
-                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm" />
-                    </label>
-                </section>
-            </div>
-
-            <div class="field-set">
-                <section>
-                    <label class="label" for="accessLevel"> Access Level </label>
-
-                    <label class="select">
-                        @Html.DropDownList("accessLevel", null, "Select a Access Level")
-                        <i></i>
-                        <div class="note">
-                            <strong>Note:</strong> When you register a technician a default password of "1234" will be assigned, they can change it on the iPad.
-                        </div>
-                    </label>
-                </section>
-
-            </div>
-
-            <div class="field-set">
-                <section>
-                    @Html.LabelFor(m => m.i_airPortId, new { @class = "label" })
-
-                    <label class="select">
-                        @Html.DropDownList("i_airPortId", null, "Select an Airport")
-                        <i></i>
-                    </label>
-                </section>
-            </div>
-
-            <footer>
-                <input type="submit" value="Register" class="btn btn-primary" />
-            </footer>
-
-        }
+        </div>
     </div>
 </div>
 
-@section PageScripts{
+@section pagespecific{
     <script type="text/javascript">
         $(document).ready(function () {
             $(document).on('change', '#EmailAddress', function () {

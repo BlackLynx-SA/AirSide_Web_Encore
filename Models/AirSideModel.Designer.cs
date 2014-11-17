@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Bernard\Documents\Visual Studio 2013\Projects\Adb.AirSide.Encore.V1\webapp\Models\AirSideModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Bernard\Documents\GitHub\AirSide_Web\Models\AirSideModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

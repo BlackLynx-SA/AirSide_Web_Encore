@@ -1238,6 +1238,9 @@
     <Compile Include="Models\as_areaSubProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\as_assetClassMaintenanceProfile.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\as_assetClassProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
@@ -1283,7 +1286,16 @@
     <Compile Include="Models\as_logProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\as_maintenanceCategory.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\as_maintenanceProfile.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceValidation.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceValidationProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_nodeRegionProfile.cs">

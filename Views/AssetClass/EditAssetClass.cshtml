@@ -10,86 +10,162 @@
 }
 
 <div id="content">
-<div class="row ">
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-        <h1 class="page-title txt-color-blueDark">
-            <i class="fa-fw fa fa-th"></i>
-            Asset Types <span>
-                >
-                Edit Asset Type
-            </span>
-        </h1>
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-th"></i>
+                Asset Types <span>
+                    >
+                    Edit Asset Type
+                </span>
+            </h1>
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-6">
-        <form id="checkout-form" class="smart-form" novalidate="novalidate">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6">
+            <form id="checkout-form" class="smart-form" novalidate="novalidate">
 
-            <fieldset>
-                <div class="row">
-                    <section class="col col-6">
-                        <label>Asset Description</label>
-                        <label class="input">
-                            <i class="icon-prepend fa fa-pencil-square-o"></i>
-                            <input type="text" name="description" id="description" placeholder="Description" class="invalid" value="@ViewBag.description">
-                        </label>
+                <fieldset>
+                    <div class="row">
+                        <section class="col col-6">
+                            <label>Asset Description</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-pencil-square-o"></i>
+                                <input type="text" name="description" id="description" placeholder="Description" class="invalid" value="@ViewBag.description">
+                            </label>
 
-                    </section>
-                    <section class="col col-6">
-                        <label>Manufacturer</label>
-                        <label class="input">
-                            <i class="icon-prepend fa fa-wrench"></i>
-                            <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" class="invalid" value="@ViewBag.manufacturer">
-                        </label>
-                    </section>
+                        </section>
+                        <section class="col col-6">
+                            <label>Manufacturer</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-wrench"></i>
+                                <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" class="invalid" value="@ViewBag.manufacturer">
+                            </label>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        <section class="col col-6">
+                            <label>Model</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-cube"></i>
+                                <input type="text" name="model" id="model" placeholder="Model" class="invalid" value="@ViewBag.model">
+                            </label>
+                        </section>
+                        <section class="col col-6">
+                            <label>Asset Picture</label>
+                            <div id="assetPic" class="dd-container" style="display:none;"></div>
+                            <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom:0.5;" />
+                            <div class="note">
+                                <strong>Hint: </strong> You can load up additional images into the library.
+                            </div>
+
+                        </section>
+                        @*<section class="col col-6">
+                                <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
+                                <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader2" style="zoom:0.5;" />
+                                <div id="frequencySlider"></div>
+                                <div class="note">
+                                    <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
+                                </div>
+                            </section>*@
+                    </div>
+                </fieldset>
+            </form>
+
+
+
+            <hr />
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <h2 class="page-title"><i class="fa fa-wrench"></i> Assosiated Maintenance Tasks</h2>
                 </div>
 
-                <div class="row">
-                    <section class="col col-6">
-                        <label>Model</label>
-                        <label class="input">
-                            <i class="icon-prepend fa fa-cube"></i>
-                            <input type="text" name="model" id="model" placeholder="Model" class="invalid" value="@ViewBag.model">
-                        </label>
-                    </section>
-                    <section class="col col-6">
-                        <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
-                        <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader2" style="zoom:0.5;" />
-                        <div id="frequencySlider"></div>
-                        <div class="note">
-                            <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
-                        </div>
-                    </section>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
+                    <button id="addTaskBtn" class="btn btn-default page-title"><i class="fa fa-plus"></i> Add Maintenance Task</button>
                 </div>
-                <hr /><br />
-                <div class="row">
-                    <section class="col col-6">
-                        <label>Asset Picture</label>
-                        <div id="assetPic" class="dd-container" style="display:none;"></div>
-                        <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom:0.5;" />
-                        <div class="note">
-                            <strong>Hint: </strong> You can load up additional images into the library.
-                        </div>
+            </div>
 
-                    </section>
-                </div>
-            </fieldset>
+            <table id="dt_maintenanceTasks" class="table table-striped table-bordered table-hover" width="100%">
+                <thead>
+                    <tr>
+                        <th data-class="expand"><i class="fa fa-fw fa-wrench txt-color-blue hidden-md hidden-sm hidden-xs"></i> Maintenance Task</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-history txt-color-blue hidden-md hidden-sm hidden-xs"></i> Frequency</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-eye txt-color-blue hidden-md hidden-sm hidden-xs"></i> Validation</th>
+                        <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
 
-            <footer>
-                <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> Go Back</a>
-                <a id="createBtn" class="btn btn-success"><i class="fa fa-pencil-square-o"></i> Edit Asset Type</a>
-
-            </footer>
+            </table>
+            <img id="adbloader4" src="~/content/img/adb_img/adb_loader.gif" />
+            <hr />
+            <form class="smart-form">
+                <footer>
+                    <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> Go Back</a>
+                    <a id="createBtn" class="btn btn-success"><i class="fa fa-pencil-square-o"></i> Edit Asset Type</a>
+                </footer>
+            </form>
             <div class="row">
                 <div class="col-md-12 text-align-right">
                     <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader3" style="zoom:0.7; display:none;" />
                 </div>
             </div>
 
-        </form>
+        </div>
     </div>
-</div>
+
+    <!--Modal for add Technician Shift-->
+    <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="techModalLabel"><i class="fa fa-wrench txt-color-blueDark"></i> Add Maintenance Task</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="smart-form">
+                        <div class="row">
+                            <fieldset>
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        <label>Select the Task</label>
+                                        <select multiple style="width:100%" class="select2" id="taskSelect"></select>
+                                    </div><br />
+
+                                    <hr /><br />
+
+                                    <div class="form-group">
+                                        <label>Select the Validation Tasks</label>
+                                        <select multiple style="width:100%" class="select2" id="validationSelect"></select>
+                                    </div><br />                                  
+
+                                    <hr /><br />
+
+                                    <div class="form-group">
+                                        <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
+                                        <img src="~/img/adb_loader.GIF" id="adbloader2" style="zoom:0.5;" />
+                                        <div id="frequencySlider"></div>
+                                        <div class="note">
+                                            <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader" style="height:20px; display:none;" />
+                    <button class="btn btn-primary" onclick="addNewTask();"><i class="fa fa-plus"></i> Add Task</button>
+                    <button class="btn btn-danger" onclick="$('#taskModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section pagespecific{
@@ -101,70 +177,211 @@
     var frequencyVal = 0;
     var pictureId = @ViewBag.picture;
 
-    $(document).ready(function () {
+        function addNewTask()
+        {
+            var allTasks = $('#taskSelect').val();
+            var assetClassId = window.location.pathname.toString().split("/",5)[3];
+            $.each(allTasks, function(i,v){
+                var maintenanceId = allTasks[i];
+                var frequencyId = frequencyVal;
+                var validationIds = $('#validationSelect').val();
+                var url = "../../assetclass/insertMaintenanceTask?assetClassId=" + assetClassId + "&maintenanceId=" + maintenanceId +"&frequencyId=" + frequencyId;
+                $.each(validationIds, function(i,v){
+                    url += "&validationIds=" + v;
+                });
 
-        //Get Available Pictures from Library
-        $.ajax({
-            url: "../../assetclass/getPictures",
-            type: "POST",
-            dataType: "json",
-            success: function (json) {
-                var index = -1;
-
-                $.each(json, function(i,v){
-                    if(v.value === pictureId)
-                    {
-                        index = i;
+                $.ajax({
+                    url: url,
+                    data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                    type: "POST",
+                    dataType: "json",
+                    success: function (json) {
+                        $('#taskModal').modal('hide');
+                    },
+                    error: function (err) {
+                        $.smallBox({
+                            title: "Error Retrieving Tasks",
+                            content: err.responseText,
+                            color: "#f51414",
+                            timeout: 5000,
+                            icon: "fa fa-bell swing animated"
+                        });
                     }
                 });
+            });
+        }
 
-                $('#assetPic').ddslick({
-                    data: json,
-                    width: 300,
-                    height: 500,
-                    imagePosition: "left",
-                    selectText: "Select Picture",
-                });
+        function getAssosiatedTasks()
+        {
+            var assetClassId = window.location.pathname.toString().split("/",5)[3];
+            $.ajax({
+                url: "../../assetclass/getAssosiatedMaintenanceTasks?assetClassId=" + assetClassId,
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    console.log(json);
+                    $('#adbloader4').fadeOut(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Assosiated Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
 
-                $('#assetPic').ddslick('select', {index:index});
+        function getValidators()
+        {
+            $.ajax({
+                url: "../../assetclass/getAllMaintenanceValidators",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    $.each(json, function (i, v) {
+                        html += '<option value="' + json[i].i_maintenanceValidationId + '">' + json[i].vc_validationName + '</option>';
+                    });
 
-                $('#adbloader').fadeOut(500);
-            },
-            error: function (err) {
-                $.smallBox({
-                    title: "Error Retrieving Pictures",
-                    content: err.responseText,
-                    color: "#f51414",
-                    timeout: 5000,
-                    icon: "fa fa-bell swing animated"
-                });
-                $('#adbloader').fadeOut(300);
-                $('#assetPic').fadeIn(500);
-            }
-        });
+                    $('#validationSelect').html(html);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
 
-        //Get available frequencies
-        $.ajax({
-            url: "../../assetclass/getFrequencies",
-            type: "POST",
-            dataType: "json",
-            success: function (json) {
-                var min = 0;
-                var max = 0;
-                var last = 0;
-                $.each(json, function (i, v) {
-                    if (i === 0)
-                    {
-                        min = v.frequency;
-                        max = v.frequency;
-                    } else
-                    {
-                        if (min > v.frequency) min = v.frequency;
-                        if (max < v.frequency) max = v.frequency;
-                    }
-                });
+        function getAllMaintenanceTasks()
+        {
+            $.ajax({
+                url: "../../assetclass/getAllMaintenanceTasks",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    $.each(json, function (i, v) {
+                        html = '<option value="' + json[i].i_maintenanceId + '">' + json[i].vc_description + '</option>';
+                        $('#optgrp_' + json[i].i_maintenanceCategoryId).append(html);
+                    });
+                    getValidators();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
 
-                last = @ViewBag.frequency;
+        $(document).ready(function () {
+
+            //Catch Click event for task modal
+            $(document).on('click', '#addTaskBtn', function () {
+                $('#taskModal').modal('show');
+            });
+
+            getAssosiatedTasks();
+
+            //Get All Tasks and Categories
+            $.ajax({
+                url: "../../assetclass/getAllMaintenanceCategories",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    $.each(json, function (i, v) {
+                        html += '<optgroup label="' + json[i].vc_maintenanceCategory + '" id="optgrp_' + json[i].i_maintenanceCategoryId + '"></optgroup>';
+                    });
+
+                    $('#taskSelect').html(html);
+                    getAllMaintenanceTasks();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Categories",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+
+            //Get Available Pictures from Library
+            $.ajax({
+                url: "../../assetclass/getPictures",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var index = -1;
+
+                    $.each(json, function(i,v){
+                        if(v.value === pictureId)
+                        {
+                            index = i;
+                        }
+                    });
+
+                    $('#assetPic').ddslick({
+                        data: json,
+                        width: 300,
+                        height: 500,
+                        imagePosition: "left",
+                        selectText: "Select Picture",
+                    });
+
+                    $('#assetPic').ddslick('select', {index:index});
+
+                    $('#adbloader').fadeOut(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Pictures",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#adbloader').fadeOut(300);
+                    $('#assetPic').fadeIn(500);
+                }
+            });
+
+            //Get available frequencies
+            $.ajax({
+                url: "../../assetclass/getFrequencies",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var min = 0;
+                    var max = 0;
+                    var last = 0;
+                    $.each(json, function (i, v) {
+                        if (i === 0)
+                        {
+                            min = v.frequency;
+                            max = v.frequency;
+                        } else
+                        {
+                            if (min > v.frequency) min = v.frequency;
+                            if (max < v.frequency) max = v.frequency;
+                        }
+                    });
+
+                    last = @ViewBag.frequency;
                 frequencyVal = @ViewBag.frequency;
 
                 $freqSlider.slider({
