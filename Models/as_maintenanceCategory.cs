@@ -17,5 +17,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public int i_maintenanceCategoryId { get; set; }
         public string vc_maintenanceCategory { get; set; }
         public string vc_categoryDescription { get; set; }
+        public int i_categoryType { get; set; }
     }
 }

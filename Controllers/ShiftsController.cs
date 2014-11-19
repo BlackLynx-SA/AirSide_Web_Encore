@@ -19,6 +19,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return View();
         }
 
+        public ActionResult MaintenanceTasks()
+        {
+            return View();
+        }
+
         [HttpPost]
         public JsonResult getAllTechnicianGroups()
         {

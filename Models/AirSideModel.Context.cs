@@ -65,9 +65,9 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<as_assetClassMaintenanceProfile> as_assetClassMaintenanceProfile { get; set; }
-        public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
         public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
         public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
         public virtual DbSet<as_maintenanceValidationProfile> as_maintenanceValidationProfile { get; set; }
+        public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
     }
 }

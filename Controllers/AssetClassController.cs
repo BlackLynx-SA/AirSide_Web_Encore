@@ -35,6 +35,27 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult removeTaskAssosiation(int maintenanceId)
+        {
+            try
+            {
+                var assosiation = db.as_assetClassMaintenanceProfile.Find(maintenanceId);
+                db.as_assetClassMaintenanceProfile.Remove(assosiation);
+                db.SaveChanges();
+
+                return Json(new { message = "Success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to remove task assosiation: " + err.Message, "removeTaskAssosiation", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+
+        [HttpPost]
         public JsonResult getAssosiatedMaintenanceTasks(int assetClassId)
         {
             try
@@ -46,6 +67,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                         select new { 
                                             task = z.vc_description,
                                             frequency = y.f_frequency,
+                                            assetMaintenanceId = x.i_assetMaintenanceId,
                                             maintenanceId = x.i_maintenanceId
                                         }).ToList();
 
@@ -53,7 +75,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 foreach(var item in assetMaintenance)
                 {
                     MaintenanceTasksDownload newItem = new MaintenanceTasksDownload();
-                    newItem.maintenanceId = item.maintenanceId;
+                    newItem.maintenanceId = item.assetMaintenanceId;
                     newItem.maintenanceTask = item.task;
                     newItem.frequency = item.frequency.ToString();
 
@@ -149,6 +171,55 @@ namespace ADB.AirSide.Encore.V1.Controllers
             {
                 Logging log = new Logging();
                 log.log("Failed to retrieve all maintenance tasks: " + err.Message, "getAllMaintenanceTasks", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult insertMaintenanceCategory(string name, string description, int type)
+        {
+            try
+            {
+                as_maintenanceCategory newCat = new as_maintenanceCategory();
+                newCat.i_categoryType = type;
+                newCat.vc_categoryDescription = description;
+                newCat.vc_maintenanceCategory = name;
+
+                db.as_maintenanceCategory.Add(newCat);
+                db.SaveChanges();
+
+                return Json(new {message = "Success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert new maintenance category: " + err.Message, "insertMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult insertMaintenanceTaskType(string description, int catId)
+        {
+            try
+            {
+                as_maintenanceProfile newTask = new as_maintenanceProfile();
+                newTask.i_maintenanceCategoryId = catId;
+                newTask.vc_description = description;
+
+                db.as_maintenanceProfile.Add(newTask);
+                db.SaveChanges();
+
+                return Json(new { message = "Success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTaskType", Logging.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -296,7 +367,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         db.as_assetClassProfile.Add(newAssetClass);
                         db.SaveChanges();
 
-                        return Json(description);
+                        return Json(new { description = description, assetClassId = newAssetClass.i_assetClassId });
                     }
                     else
                     {

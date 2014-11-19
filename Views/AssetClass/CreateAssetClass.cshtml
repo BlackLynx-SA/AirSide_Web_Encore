@@ -262,12 +262,13 @@
                             success: function (json) {
                                 $.smallBox({
                                     title: "Asset Class was created.",
-                                    content: json,
+                                    content: json.description,
                                     color: "#5384AF",
                                     timeout: 4000,
                                     icon: "fa fa-thumbs-up"
                                 });
                                 $('#adbloader3').fadeOut(300);
+                                document.location = "../../AssetClass/EditAssetClass/" + json.assetClassId;
                             },
                             error: function (err) {
                                 $.smallBox({

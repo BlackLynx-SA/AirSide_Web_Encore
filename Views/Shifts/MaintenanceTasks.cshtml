@@ -1,0 +1,379 @@
+﻿<div id="content">
+    <section id="widget-grid">
+        <div class="row ">
+            <article class="col-sm-12 col-md-12 col-lg-12 sortable-grid ui-sortable">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-blue jarviswidget-sortable" id="mtask-id-0" data-widget-editbutton="false" role="widget">
+                    <!-- widget options:
+                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                    data-widget-colorbutton="false"
+                    data-widget-editbutton="false"
+                    data-widget-togglebutton="false"
+                    data-widget-deletebutton="false"
+                    data-widget-fullscreenbutton="false"
+                    data-widget-custombutton="false"
+                    data-widget-collapsed="true"
+                    data-widget-sortable="false"
+
+                    -->
+                    <header role="heading">
+                        <div class="jarviswidget-ctrls" role="menu">   <a href="javascript:void(0);" class="button-icon jarviswidget-toggle-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Collapse"><i class="fa fa-minus "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-fullscreen-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Fullscreen"><i class="fa fa-expand "></i></a> <a href="javascript:void(0);" class="button-icon jarviswidget-delete-btn" rel="tooltip" title="" data-placement="bottom" data-original-title="Delete"><i class="fa fa-times"></i></a></div><div class="widget-toolbar" role="menu"><a data-toggle="dropdown" class="dropdown-toggle color-box selector" href="javascript:void(0);"></a><ul class="dropdown-menu arrow-box-up-right color-select pull-right"><li><span class="bg-color-green" data-widget-setstyle="jarviswidget-color-green" rel="tooltip" data-placement="left" data-original-title="Green Grass"></span></li><li><span class="bg-color-greenDark" data-widget-setstyle="jarviswidget-color-greenDark" rel="tooltip" data-placement="top" data-original-title="Dark Green"></span></li><li><span class="bg-color-greenLight" data-widget-setstyle="jarviswidget-color-greenLight" rel="tooltip" data-placement="top" data-original-title="Light Green"></span></li><li><span class="bg-color-purple" data-widget-setstyle="jarviswidget-color-purple" rel="tooltip" data-placement="top" data-original-title="Purple"></span></li><li><span class="bg-color-magenta" data-widget-setstyle="jarviswidget-color-magenta" rel="tooltip" data-placement="top" data-original-title="Magenta"></span></li><li><span class="bg-color-pink" data-widget-setstyle="jarviswidget-color-pink" rel="tooltip" data-placement="right" data-original-title="Pink"></span></li><li><span class="bg-color-pinkDark" data-widget-setstyle="jarviswidget-color-pinkDark" rel="tooltip" data-placement="left" data-original-title="Fade Pink"></span></li><li><span class="bg-color-blueLight" data-widget-setstyle="jarviswidget-color-blueLight" rel="tooltip" data-placement="top" data-original-title="Light Blue"></span></li><li><span class="bg-color-teal" data-widget-setstyle="jarviswidget-color-teal" rel="tooltip" data-placement="top" data-original-title="Teal"></span></li><li><span class="bg-color-blue" data-widget-setstyle="jarviswidget-color-blue" rel="tooltip" data-placement="top" data-original-title="Ocean Blue"></span></li><li><span class="bg-color-blueDark" data-widget-setstyle="jarviswidget-color-blueDark" rel="tooltip" data-placement="top" data-original-title="Night Sky"></span></li><li><span class="bg-color-darken" data-widget-setstyle="jarviswidget-color-darken" rel="tooltip" data-placement="right" data-original-title="Night"></span></li><li><span class="bg-color-yellow" data-widget-setstyle="jarviswidget-color-yellow" rel="tooltip" data-placement="left" data-original-title="Day Light"></span></li><li><span class="bg-color-orange" data-widget-setstyle="jarviswidget-color-orange" rel="tooltip" data-placement="bottom" data-original-title="Orange"></span></li><li><span class="bg-color-orangeDark" data-widget-setstyle="jarviswidget-color-orangeDark" rel="tooltip" data-placement="bottom" data-original-title="Dark Orange"></span></li><li><span class="bg-color-red" data-widget-setstyle="jarviswidget-color-red" rel="tooltip" data-placement="bottom" data-original-title="Red Rose"></span></li><li><span class="bg-color-redLight" data-widget-setstyle="jarviswidget-color-redLight" rel="tooltip" data-placement="bottom" data-original-title="Light Red"></span></li><li><span class="bg-color-white" data-widget-setstyle="jarviswidget-color-white" rel="tooltip" data-placement="right" data-original-title="Purity"></span></li><li><a href="javascript:void(0);" class="jarviswidget-remove-colors" data-widget-setstyle="" rel="tooltip" data-placement="bottom" data-original-title="Reset widget color to default">Remove</a></li></ul></div>
+                        <span class="widget-icon"> <i class="fa fa-lg fa-wrench"></i> </span>
+                        <h2>Maintenance Tasks </h2>
+
+                        <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
+                    </header>
+
+                    <!-- widget div-->
+                    <div role="content">
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <div class="widget-body-toolbar bg-color-white">
+
+                                <form class="form-inline" role="form">
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12 col-md-10">
+                                            <div class="form-group">
+                                                <label class="sr-only">Group</label>
+                                                <select class="form-control input-sm" id="groupSelect">
+                                                    <option value="1">Maintenance Items</option>
+                                                    <option value="2">Visual Items</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only">Type</label>
+                                                <select class="form-control input-sm" id="typeSelect">
+                                                    <option value="0">Category</option>
+                                                    <option value="1">Task</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="categoryListGrp" style="display:none;">
+                                                <label class="sr-only">Categories</label>
+                                                <select class="form-control input-sm" id="categoryLst"></select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only">Name</label>
+                                                <input type="text" class="form-control input-sm" placeholder="Item Name" id="nameTxt">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="sr-only">Description</label>
+                                                <input type="text" class="form-control input-sm" placeholder="Description" id="descTxt">
+                                            </div>
+                                            <div class="form-group">
+                                                <img src="~/Content/img/adb_img/adb_loader_tr.GIF" id="formLoader" style="zoom:0.2; display:none;" />
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-2 text-align-right">
+
+                                            <a href="#" class="btn bg-color-blue txt-color-white" onclick="createCatOrTask();">
+                                                <i class="fa fa-plus"></i> Add
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                            <div class="tree">
+                                <img src="~/Content/img/adb_img/adb_loader_tr.GIF" id="treeLoader" style="zoom:0.3;" />
+                                <ul id="mainTree" style="display:none;">
+                                    <li>
+                                        <span title="Collapse this branch"><i class="fa fa-lg fa-wrench"></i> Maintenance Items</span>
+                                        <ul id="type_1"></ul>
+                                    </li>
+                                    <li>
+                                        <span title="Collapse this branch"><i class="fa fa-lg fa-eye"></i> Visual Items</span>
+                                        <ul id="type_2"></ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+        </div>
+    </section>
+</div>
+
+
+@section pagespecific{
+    <script type="text/javascript">
+        var visualCategories = [];
+        var maintenanceCategories = [];
+
+        $(document).ready(function () {
+            $(document).on('change', '#typeSelect', function () {
+                populateCategoyList();
+            });
+
+            $(document).on('change', '#groupSelect', function () {
+                populateCategoyList();
+            });
+
+            getAllCategories();
+        });
+
+        function modifyTask(id, name)
+        {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-pencil-square-o fa-lg txt-color-blue"></i> Modify Task?',
+                content: "What would you like to do edit or delete?",
+                buttons: '[Cancel][Delete][Edit]',
+                input: "text",
+                inputValue: name,
+                placeholder: "Task Name"
+            }, function (ButtonPressed, value) {
+                if (ButtonPressed === "Delete") {
+                    console.log('Delete');
+                }
+                else if (ButtonPressed === "Edit") {
+                    console.log('Edit');
+                }
+                else if (ButtonPressed === "Cancel") {
+                    
+                }
+            });
+        }
+
+        function createCatOrTask()
+        {
+            $('#formLoader').fadeIn(300);
+
+            var type = $('#typeSelect').val();
+            var name = $('#nameTxt').val();
+            var desc = $('#descTxt').val();
+
+            switch (type) {
+                //Category Create
+                case "0": {
+
+                    $.SmartMessageBox({
+                        title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Category?',
+                        content: "This will create a new category called " + name + ". Continue?",
+                        buttons: '[No][Yes]'
+                    }, function (ButtonPressed) {
+                        if (ButtonPressed === "Yes") {
+                            var group = $('#groupSelect').val();
+                            $.ajax({
+                                url: "../../AssetClass/insertMaintenanceCategory?name=" + name + "&description=" + desc + "&type=" + group,
+                                type: "POST",
+                                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                                dataType: "json",
+                                success: function (json) {
+                                    $.smallBox({
+                                        title: "Category Added",
+                                        content: "Category Added Successfully",
+                                        color: "#5384AF",
+                                        timeout: 4000,
+                                        icon: "fa fa-thumbs-up"
+                                    });
+                                    getAllCategories();
+                                    $('#formLoader').fadeOut(300);
+                                },
+                                error: function (err) {
+                                    $.smallBox({
+                                        title: "Error creating category",
+                                        content: err.responseText,
+                                        color: "#f51414",
+                                        timeout: 5000,
+                                        icon: "fa fa-bell swing animated"
+                                    });
+                                    $('#formLoader').fadeOut(300);
+                                }
+                            });
+                        }
+                        if (ButtonPressed === "No") {
+
+                        }
+
+                    });
+                }
+                    break;
+                    //Task Create
+                case "1": {
+                    
+                    $.SmartMessageBox({
+                        title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Task?',
+                        content: "This will create a new task called " + name + ". Continue?",
+                        buttons: '[No][Yes]'
+                    }, function (ButtonPressed) {
+                        if (ButtonPressed === "Yes") {
+                            var catId = $('#categoryLst').val();
+                            $.ajax({
+                                url: "../../AssetClass/insertMaintenanceTaskType?description=" + name + "&catId=" + catId,
+                                type: "POST",
+                                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                                dataType: "json",
+                                success: function (json) {
+                                    $.smallBox({
+                                        title: "Task Added",
+                                        content: "Task Added Successfully",
+                                        color: "#5384AF",
+                                        timeout: 4000,
+                                        icon: "fa fa-thumbs-up"
+                                    });
+                                    getAllCategories();
+                                    $('#formLoader').fadeOut(300);
+                                },
+                                error: function (err) {
+                                    $.smallBox({
+                                        title: "Error Creating Task",
+                                        content: err.responseText,
+                                        color: "#f51414",
+                                        timeout: 5000,
+                                        icon: "fa fa-bell swing animated"
+                                    });
+                                    $('#formLoader').fadeOut(300);
+                                }
+                            });
+                        }
+                        if (ButtonPressed === "No") {
+
+                        }
+
+                    });
+                }
+                    break;
+                default:
+
+            }
+        }
+
+        function populateCategoyList()
+        {
+            if ($('#typeSelect').val() == 1) {
+                $('#categoryLst').html('');
+                html = '';
+                var groupId = $('#groupSelect').val();
+                if (groupId == 1) {
+                    $.each(maintenanceCategories, function (i, v) {
+                        html += '<option value="' + v.value + '">' + v.name + '</option>';
+                    });
+                } else {
+                    $.each(visualCategories, function (i, v) {
+                        html += '<option value="' + v.value + '">' + v.name + '</option>';
+                    });
+                }
+                $('#categoryLst').html(html);
+                $('#categoryListGrp').fadeIn(300);
+                $('#descTxt').fadeOut(300);
+            }
+            else {
+                $('#descTxt').fadeIn(300);
+                $('#categoryListGrp').fadeOut(300);
+            }
+        }
+
+        function initTree() {
+            //Init Tree
+            $('.tree > ul').attr('role', 'tree').find('ul').attr('role', 'group');
+            $('.tree').find('li:has(ul)').addClass('parent_li').attr('role', 'treeitem').find(' > span').attr('title', 'Collapse this branch').on('click', function (e) {
+                var children = $(this).parent('li.parent_li').find(' > ul > li');
+                if (children.is(':visible')) {
+                    children.hide('fast');
+                    $(this).attr('title', 'Expand this branch').find(' > i').removeClass().addClass('fa fa-lg fa-plus-circle');
+                } else {
+                    children.show('fast');
+                    $(this).attr('title', 'Collapse this branch').find(' > i').removeClass().addClass('fa fa-lg fa-minus-circle');
+                }
+                e.stopPropagation();
+            });
+        }
+
+        function getAllMaintenanceTasks() {
+            $.ajax({
+                url: "../../assetclass/getAllMaintenanceTasks",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    $.each(json, function (i, v) {
+                        html = '<li><span><i class="fa fa-cog"></i> ' + json[i].vc_description + '</span> – <a href="#" onclick="modifyTask(' + json[i].i_maintenanceId + ',\'' + json[i].vc_description + '\')"><i class="fa fa-pencil-square-o txt-color-green"></i> Modify</a></li>';
+                        $('#cat_' + json[i].i_maintenanceCategoryId).append(html);
+                    });
+                    initTree();
+                    $('#treeLoader').fadeOut(300);
+                    $('#mainTree').fadeIn(500);
+                    //getValidators();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        function getAllCategories() {
+            $('#treeLoader').fadeIn(300);
+
+            //Get All Tasks and Categories
+            $.ajax({
+                url: "../../assetclass/getAllMaintenanceCategories",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    var html = "";
+                    var tree = "";
+                    $('#type_1').html('');
+                    $('#type_2').html('');
+
+                    $.each(json, function (i, v) {
+                        html += '<option value="' + json[i].i_maintenanceCategoryId + '">' + json[i].vc_maintenanceCategory + '</option>';
+
+                        //Tree View
+                        tree = '<li><span class="label label-success" title="Collapse this branch"><i class="fa fa-lg fa-plus-circle"></i> ' + json[i].vc_maintenanceCategory + '</span><ul id="cat_' + json[i].i_maintenanceCategoryId + '"></ul></li>';
+                        if (json[i].i_categoryType === 1) {
+                            $('#type_1').append(tree);
+                            maintenanceCategories.push({ value: json[i].i_maintenanceCategoryId, name: json[i].vc_maintenanceCategory });
+                        } else {
+                            $('#type_2').append(tree);
+                            visualCategories.push({ value: json[i].i_maintenanceCategoryId, name: json[i].vc_maintenanceCategory });
+                        }
+                    });
+
+                    $('#categoryLst').html(html);
+
+                    getAllMaintenanceTasks();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Categories",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -1145,6 +1145,7 @@
     <Content Include="Views\Users\TechnicianGroups.cshtml" />
     <Content Include="Views\Users\ViewAllUsers.cshtml" />
     <Content Include="Views\Home\StartUp.cshtml" />
+    <Content Include="Views\Shifts\MaintenanceTasks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

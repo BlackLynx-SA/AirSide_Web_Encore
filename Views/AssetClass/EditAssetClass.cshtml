@@ -147,7 +147,7 @@
 
                                     <div class="form-group">
                                         <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
-                                        <img src="~/img/adb_loader.GIF" id="adbloader2" style="zoom:0.5;" />
+                                        <img src="~/Content/img/adb_img/adb_loader.GIF" id="adbloader2" style="zoom:0.5;" />
                                         <div id="frequencySlider"></div>
                                         <div class="note">
                                             <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
@@ -177,26 +177,27 @@
     var frequencyVal = 0;
     var pictureId = @ViewBag.picture;
 
-        function addNewTask()
-        {
-            var allTasks = $('#taskSelect').val();
-            var assetClassId = window.location.pathname.toString().split("/",5)[3];
-            $.each(allTasks, function(i,v){
-                var maintenanceId = allTasks[i];
-                var frequencyId = frequencyVal;
-                var validationIds = $('#validationSelect').val();
-                var url = "../../assetclass/insertMaintenanceTask?assetClassId=" + assetClassId + "&maintenanceId=" + maintenanceId +"&frequencyId=" + frequencyId;
-                $.each(validationIds, function(i,v){
-                    url += "&validationIds=" + v;
-                });
+    function addNewTask()
+    {
+        var allTasks = $('#taskSelect').val();
+        var assetClassId = window.location.pathname.toString().split("/",5)[3];
+        $.each(allTasks, function(i,v){
+            var maintenanceId = allTasks[i];
+            var frequencyId = frequencyVal;
+            var validationIds = $('#validationSelect').val();
+            var url = "../../assetclass/insertMaintenanceTask?assetClassId=" + assetClassId + "&maintenanceId=" + maintenanceId +"&frequencyId=" + frequencyId;
+            $.each(validationIds, function(i,v){
+                url += "&validationIds=" + v;
+            });
 
-                $.ajax({
-                    url: url,
-                    data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+            $.ajax({
+                url: url,
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                     type: "POST",
                     dataType: "json",
                     success: function (json) {
                         $('#taskModal').modal('hide');
+                        getAssosiatedTasks();
                     },
                     error: function (err) {
                         $.smallBox({
@@ -213,6 +214,7 @@
 
         function getAssosiatedTasks()
         {
+            $('#adbloader4').fadeIn(500);
             var assetClassId = window.location.pathname.toString().split("/",5)[3];
             $.ajax({
                 url: "../../assetclass/getAssosiatedMaintenanceTasks?assetClassId=" + assetClassId,
@@ -220,6 +222,20 @@
                 dataType: "json",
                 success: function (json) {
                     console.log(json);
+                    html = "";
+                    $.each(json, function(i,v){
+                        html += '<tr><td>' + json[i].maintenanceTask + '</td><td>' + json[i].frequency + '</td><td>';
+                        $.each(json[i].validation, function(index, value){
+                            if (index === 0)
+                                html += json[i].validation[index].description;
+                            else
+                                html += ', ' +  json[i].validation[index].description;
+                        });
+                        html += '</td><td><a href="#" onclick="removeAssosiatedTask(' + json[i].maintenanceId + ')"><i class="fa fa-times txt-color-red"></i> Remove</a></td></tr>'
+                    });
+
+                    $('#dt_maintenanceTasks tbody').html(html);
+
                     $('#adbloader4').fadeOut(500);
                 },
                 error: function (err) {
@@ -230,6 +246,39 @@
                         timeout: 5000,
                         icon: "fa fa-bell swing animated"
                     });
+                    $('#adbloader4').fadeOut(500);
+                }
+            });
+        }
+
+        function removeAssosiatedTask(id)
+        {
+            $('#adbloader4').fadeIn(500);
+            $.ajax({
+                url: "../../assetclass/removeTaskAssosiation?maintenanceId=" + id,
+                type: "POST",
+                dataType: "json",
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                success: function (json) {
+                    $.smallBox({
+                        title: "Assosiation Removed",
+                        content: "Asset Class Assosiation with task removed",
+                        color: "#5384AF",
+                        timeout: 4000,
+                        icon: "fa fa-thumbs-up"
+                    });
+                    getAssosiatedTasks()
+                    $('#adbloader4').fadeOut(500);
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#adbloader4').fadeOut(500);
                 }
             });
         }
