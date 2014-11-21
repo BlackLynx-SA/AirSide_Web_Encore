@@ -203,6 +203,130 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public JsonResult editMaintenanceCategory(int id, string categoryName)
+        {
+            try
+            {
+                var category = db.as_maintenanceCategory.Find(id);
+                category.vc_maintenanceCategory = categoryName;
+                db.Entry(category).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return Json(new { message = "Category successfully edited and saved."});
+            }
+            catch(Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to edit maintenance category: " + err.Message, "editMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult editMaintenanceTask(int id, string taskName)
+        {
+            try
+            {
+                var task = db.as_maintenanceProfile.Find(id);
+                task.vc_description = taskName;
+                db.Entry(task).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return Json(new { message = "Task successfully edited and saved." });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to edit maintenance task: " + err.Message, "editMaintenanceTask", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult removeMaintenanceCategory(int id)
+        {
+            try
+            {
+                int maintenaceProfile = (from x in db.as_assetClassMaintenanceProfile
+                                         join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                                         join z in db.as_maintenanceCategory on y.i_maintenanceCategoryId equals z.i_maintenanceCategoryId
+                                         where z.i_maintenanceCategoryId == id
+                                         select x).Count();
+
+                if (maintenaceProfile == 0)
+                {
+                    var category = db.as_maintenanceCategory.Find(id);
+                    db.as_maintenanceCategory.Remove(category);
+                    db.SaveChanges();
+                    
+                    //Remove All Tasks assosiated with the Category
+                    var assosiatedTasks = db.as_maintenanceProfile.Where(q => q.i_maintenanceCategoryId == id);
+                    foreach(var item in assosiatedTasks)
+                    {
+                        db.as_maintenanceProfile.Remove(item);
+                        db.SaveChanges();
+                    }
+
+                    Response.StatusCode = 200;
+                    return Json(new { message = category.vc_maintenanceCategory + " category successfully removed" });
+
+                } else
+                {
+                    Response.StatusCode = 301; //Set status so object exists
+                    return Json(new { message = "The category contains elements that have assosiations with other objects. Please delete the tasks assosiated and try again."});
+                }
+            }
+            catch(Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult removeMaintenanceTask(int id)
+        {
+            try
+            {
+                int maintenaceProfile = (from x in db.as_assetClassMaintenanceProfile
+                                         join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                                         where y.i_maintenanceId == id
+                                         select x).Count();
+
+                if (maintenaceProfile == 0)
+                {
+                    var task = db.as_maintenanceProfile.Find(id);
+                    db.as_maintenanceProfile.Remove(task);
+                    db.SaveChanges();
+
+                    Response.StatusCode = 200;
+                    return Json(new { message = task.vc_description + " task successfully removed" });
+
+                }
+                else
+                {
+                    Response.StatusCode = 301; //Set status so object exists
+                    return Json(new { message = "This task has been assosiated with a asset class. Please remove the assosiation and try again." });
+                }
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult insertMaintenanceTaskType(string description, int catId)
         {
             try

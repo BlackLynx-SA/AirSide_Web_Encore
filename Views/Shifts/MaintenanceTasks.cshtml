@@ -148,13 +148,197 @@
                 placeholder: "Task Name"
             }, function (ButtonPressed, value) {
                 if (ButtonPressed === "Delete") {
-                    console.log('Delete');
+                    removeTask(id, name);
                 }
                 else if (ButtonPressed === "Edit") {
                     console.log('Edit');
                 }
                 else if (ButtonPressed === "Cancel") {
                     
+                }
+            });
+        }
+
+        function modifyCategory(id, name) {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-pencil-square-o fa-lg txt-color-blue"></i> Modify Category?',
+                content: "What would you like to do edit or delete?",
+                buttons: '[Cancel][Delete][Edit]',
+                input: "text",
+                inputValue: name,
+                placeholder: "Task Name"
+            }, function (ButtonPressed, value) {
+                if (ButtonPressed === "Delete") {
+                    removeCategory(id, name);
+                }
+                else if (ButtonPressed === "Edit") {
+
+                }
+                else if (ButtonPressed === "Cancel") {
+
+                }
+            });
+        }
+
+        function editTask(id, name)
+        {
+            $.ajax({
+                url: "../../AssetClass/editMaintenanceTask?id=" + id + "&taskName=" + name,
+                type: "POST",
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Task Updated",
+                        content: json.responseJSON.message,
+                        color: "#5384AF",
+                        timeout: 4000,
+                        icon: "fa fa-thumbs-up"
+                    });
+                    getAllMaintenanceTasks();
+                    $('#formLoader').fadeOut(300);
+                },
+                error: function (json) {
+                    $.smallBox({
+                        title: "Error updating task",
+                        content: json.responseJSON.message,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#formLoader').fadeOut(300);
+                }
+            });
+        }
+
+        function editCategory(id, name) {
+            $.ajax({
+                url: "../../AssetClass/editMaintenanceCategory?id=" + id + "&categoryName=" + name,
+                type: "POST",
+                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Category Updated",
+                        content: json.responseJSON.message,
+                        color: "#5384AF",
+                        timeout: 4000,
+                        icon: "fa fa-thumbs-up"
+                    });
+                    getAllCategories();
+                    $('#formLoader').fadeOut(300);
+                },
+                error: function (json) {
+                    $.smallBox({
+                        title: "Error updating task",
+                        content: json.responseJSON.message,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                    $('#formLoader').fadeOut(300);
+                }
+            });
+        }
+
+        function removeCategory(id, name) {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-times fa-lg txt-color-red"></i> Remove Category?',
+                content: "Delete '" + name + "' category from system?",
+                buttons: '[No][Yes]',
+            }, function (ButtonPressed, value) {
+                if (ButtonPressed === "Yes") {
+                    $.ajax({
+                        url: "../../AssetClass/removeMaintenanceCategory?id=" + id,
+                        type: "POST",
+                        data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                        dataType: "json",
+                        statusCode: {
+                            200: function(json) {
+                                $.smallBox({
+                                    title: "Category Removed",
+                                    content: json.message,
+                                    color: "#5384AF",
+                                    timeout: 4000,
+                                    icon: "fa fa-thumbs-up"
+                                });
+                                getAllCategories();
+                            },
+                            301: function (json) {
+                                console.log(json);
+                                $.smallBox({
+                                    title: "Category Not Removed",
+                                    content: json.responseJSON.message,
+                                    color: "#dfb56c",
+                                    timeout: 4000,
+                                    icon: "fa fa-warning swing animated"
+                                });
+                            },
+                            500: function(json)
+                            {
+                                $.smallBox({
+                                    title: "Error removing category",
+                                    content: json.responseJSON.message,
+                                    color: "#f51414",
+                                    timeout: 5000,
+                                    icon: "fa fa-bell swing animated"
+                                });
+                            }
+                        }
+                    });
+                }
+                else if (ButtonPressed === "No") {
+                }
+            });
+        }
+
+        function removeTask(id, name) {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-times fa-lg txt-color-red"></i> Remove Task?',
+                content: "Delete '" + name + "' task from system?",
+                buttons: '[No][Yes]',
+            }, function (ButtonPressed, value) {
+                if (ButtonPressed === "Yes") {
+                    $.ajax({
+                        url: "../../AssetClass/removeMaintenanceTask?id=" + id,
+                        type: "POST",
+                        data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                        dataType: "json",
+                        statusCode: {
+                            200: function (json) {
+                                $.smallBox({
+                                    title: "Task Removed",
+                                    content: json.message,
+                                    color: "#5384AF",
+                                    timeout: 4000,
+                                    icon: "fa fa-thumbs-up"
+                                });
+                                $('#treeLoader').fadeIn(300);
+                                getAllMaintenanceTasks();
+                            },
+                            301: function (json) {
+                                console.log(json);
+                                $.smallBox({
+                                    title: "Task Not Removed",
+                                    content: json.responseJSON.message,
+                                    color: "#dfb56c",
+                                    timeout: 4000,
+                                    icon: "fa fa-warning swing animated"
+                                });
+                            },
+                            500: function (json) {
+                                $.smallBox({
+                                    title: "Error removing task",
+                                    content: json.responseJSON.message,
+                                    color: "#f51414",
+                                    timeout: 5000,
+                                    icon: "fa fa-bell swing animated"
+                                });
+                            }
+                        }
+                    });
+                }
+                else if (ButtonPressed === "No") {
                 }
             });
         }
@@ -171,91 +355,116 @@
                 //Category Create
                 case "0": {
 
-                    $.SmartMessageBox({
-                        title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Category?',
-                        content: "This will create a new category called " + name + ". Continue?",
-                        buttons: '[No][Yes]'
-                    }, function (ButtonPressed) {
-                        if (ButtonPressed === "Yes") {
-                            var group = $('#groupSelect').val();
-                            $.ajax({
-                                url: "../../AssetClass/insertMaintenanceCategory?name=" + name + "&description=" + desc + "&type=" + group,
-                                type: "POST",
-                                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
-                                dataType: "json",
-                                success: function (json) {
-                                    $.smallBox({
-                                        title: "Category Added",
-                                        content: "Category Added Successfully",
-                                        color: "#5384AF",
-                                        timeout: 4000,
-                                        icon: "fa fa-thumbs-up"
-                                    });
-                                    getAllCategories();
-                                    $('#formLoader').fadeOut(300);
-                                },
-                                error: function (err) {
-                                    $.smallBox({
-                                        title: "Error creating category",
-                                        content: err.responseText,
-                                        color: "#f51414",
-                                        timeout: 5000,
-                                        icon: "fa fa-bell swing animated"
-                                    });
-                                    $('#formLoader').fadeOut(300);
-                                }
-                            });
-                        }
-                        if (ButtonPressed === "No") {
+                    if (name != '' && desc != '') {
 
-                        }
+                        $.SmartMessageBox({
+                            title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Category?',
+                            content: "This will create a new category called " + name + ". Continue?",
+                            buttons: '[No][Yes]'
+                        }, function (ButtonPressed) {
+                            if (ButtonPressed === "Yes") {
+                                var group = $('#groupSelect').val();
+                                $.ajax({
+                                    url: "../../AssetClass/insertMaintenanceCategory?name=" + name + "&description=" + desc + "&type=" + group,
+                                    type: "POST",
+                                    data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                                    dataType: "json",
+                                    success: function (json) {
+                                        $.smallBox({
+                                            title: "Category Added",
+                                            content: "Category Added Successfully",
+                                            color: "#5384AF",
+                                            timeout: 4000,
+                                            icon: "fa fa-thumbs-up"
+                                        });
+                                        getAllCategories();
+                                        $('#formLoader').fadeOut(300);
+                                    },
+                                    error: function (err) {
+                                        $.smallBox({
+                                            title: "Error creating category",
+                                            content: err.responseText,
+                                            color: "#f51414",
+                                            timeout: 5000,
+                                            icon: "fa fa-bell swing animated"
+                                        });
+                                        $('#formLoader').fadeOut(300);
+                                    }
+                                });
+                            }
+                            if (ButtonPressed === "No") {
+                                $('#formLoader').fadeOut(300);
+                            }
 
-                    });
-                }
+                        });
+                    }
+                    else {
+                        $.smallBox({
+                            title: "Invalid Entries",
+                            content: 'Please enter a valid name and description',
+                            color: "#f51414",
+                            timeout: 5000,
+                            icon: "fa fa-bell swing animated"
+                        });
+                        $('#formLoader').fadeOut(300);
+                    }
+                } 
                     break;
                     //Task Create
                 case "1": {
                     
-                    $.SmartMessageBox({
-                        title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Task?',
-                        content: "This will create a new task called " + name + ". Continue?",
-                        buttons: '[No][Yes]'
-                    }, function (ButtonPressed) {
-                        if (ButtonPressed === "Yes") {
-                            var catId = $('#categoryLst').val();
-                            $.ajax({
-                                url: "../../AssetClass/insertMaintenanceTaskType?description=" + name + "&catId=" + catId,
-                                type: "POST",
-                                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
-                                dataType: "json",
-                                success: function (json) {
-                                    $.smallBox({
-                                        title: "Task Added",
-                                        content: "Task Added Successfully",
-                                        color: "#5384AF",
-                                        timeout: 4000,
-                                        icon: "fa fa-thumbs-up"
-                                    });
-                                    getAllCategories();
-                                    $('#formLoader').fadeOut(300);
-                                },
-                                error: function (err) {
-                                    $.smallBox({
-                                        title: "Error Creating Task",
-                                        content: err.responseText,
-                                        color: "#f51414",
-                                        timeout: 5000,
-                                        icon: "fa fa-bell swing animated"
-                                    });
-                                    $('#formLoader').fadeOut(300);
-                                }
-                            });
-                        }
-                        if (ButtonPressed === "No") {
+                    if (name != '') {
+                        $.SmartMessageBox({
+                            title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Create Task?',
+                            content: "This will create a new task called " + name + ". Continue?",
+                            buttons: '[No][Yes]'
+                        }, function (ButtonPressed) {
+                            if (ButtonPressed === "Yes") {
+                                var catId = $('#categoryLst').val();
+                                $.ajax({
+                                    url: "../../AssetClass/insertMaintenanceTaskType?description=" + name + "&catId=" + catId,
+                                    type: "POST",
+                                    data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                                    dataType: "json",
+                                    success: function (json) {
+                                        $.smallBox({
+                                            title: "Task Added",
+                                            content: "Task Added Successfully",
+                                            color: "#5384AF",
+                                            timeout: 4000,
+                                            icon: "fa fa-thumbs-up"
+                                        });
+                                        getAllCategories();
+                                        $('#formLoader').fadeOut(300);
+                                    },
+                                    error: function (err) {
+                                        $.smallBox({
+                                            title: "Error Creating Task",
+                                            content: err.responseText,
+                                            color: "#f51414",
+                                            timeout: 5000,
+                                            icon: "fa fa-bell swing animated"
+                                        });
+                                        $('#formLoader').fadeOut(300);
+                                    }
+                                });
+                            }
+                            if (ButtonPressed === "No") {
+                                $('#formLoader').fadeOut(300);
+                            }
 
-                        }
-
-                    });
+                        });
+                    } else
+                    {
+                        $.smallBox({
+                            title: "Invalid name",
+                            content: 'Please enter a valid name for the task.',
+                            color: "#f51414",
+                            timeout: 5000,
+                            icon: "fa fa-bell swing animated"
+                        });
+                        $('#formLoader').fadeOut(300);
+                    }
                 }
                     break;
                 default:
@@ -304,6 +513,8 @@
             });
         }
 
+       
+
         function getAllMaintenanceTasks() {
             $.ajax({
                 url: "../../assetclass/getAllMaintenanceTasks",
@@ -311,8 +522,9 @@
                 dataType: "json",
                 success: function (json) {
                     var html = "";
+                    $('.maintenanceCat').html('');
                     $.each(json, function (i, v) {
-                        html = '<li><span><i class="fa fa-cog"></i> ' + json[i].vc_description + '</span> – <a href="#" onclick="modifyTask(' + json[i].i_maintenanceId + ',\'' + json[i].vc_description + '\')"><i class="fa fa-pencil-square-o txt-color-green"></i> Modify</a></li>';
+                        html = '<li><span><i class="fa fa-cog"></i> ' + json[i].vc_description + '</span> – <a class="txt-color-green" href="#" onclick="modifyTask(' + json[i].i_maintenanceId + ',\'' + json[i].vc_description + '\')"><i class="fa fa-cogs"></i> Modify</a></li>';
                         $('#cat_' + json[i].i_maintenanceCategoryId).append(html);
                     });
                     initTree();
@@ -350,7 +562,9 @@
                         html += '<option value="' + json[i].i_maintenanceCategoryId + '">' + json[i].vc_maintenanceCategory + '</option>';
 
                         //Tree View
-                        tree = '<li><span class="label label-success" title="Collapse this branch"><i class="fa fa-lg fa-plus-circle"></i> ' + json[i].vc_maintenanceCategory + '</span><ul id="cat_' + json[i].i_maintenanceCategoryId + '"></ul></li>';
+                        tree = '<li><span class="label label-success" title="Collapse this branch"><i class="fa fa-lg fa-plus-circle"></i> ' + json[i].vc_maintenanceCategory + '</span>';
+                        tree += '– <a class="txt-color-green" href="#" onclick="modifyCategory(' + json[i].i_maintenanceCategoryId + ',\'' + json[i].vc_maintenanceCategory + '\')"><i class="fa fa-bars "></i> Modify</a>';
+                        tree += '<ul id="cat_' + json[i].i_maintenanceCategoryId + '" class="maintenanceCat"></ul></li>';
                         if (json[i].i_categoryType === 1) {
                             $('#type_1').append(tree);
                             maintenanceCategories.push({ value: json[i].i_maintenanceCategoryId, name: json[i].vc_maintenanceCategory });
