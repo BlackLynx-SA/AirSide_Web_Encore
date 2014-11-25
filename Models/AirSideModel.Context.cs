@@ -25,11 +25,10 @@ namespace ADB.AirSide.Encore.V1.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<C_MigrationHistory> C_MigrationHistory { get; set; }
-        public virtual DbSet<as_accessProfile> as_accessProfile { get; set; }
         public virtual DbSet<as_airportProfile> as_airportProfile { get; set; }
         public virtual DbSet<as_areaProfile> as_areaProfile { get; set; }
         public virtual DbSet<as_areaSubProfile> as_areaSubProfile { get; set; }
+        public virtual DbSet<as_assetClassMaintenanceProfile> as_assetClassMaintenanceProfile { get; set; }
         public virtual DbSet<as_assetClassProfile> as_assetClassProfile { get; set; }
         public virtual DbSet<as_assetInfoProfile> as_assetInfoProfile { get; set; }
         public virtual DbSet<as_assetProfile> as_assetProfile { get; set; }
@@ -38,19 +37,17 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_eventPofile> as_eventPofile { get; set; }
         public virtual DbSet<as_eventTypes> as_eventTypes { get; set; }
         public virtual DbSet<as_fbTechProfile> as_fbTechProfile { get; set; }
-        public virtual DbSet<as_feedback> as_feedback { get; set; }
-        public virtual DbSet<as_feedbackCategories> as_feedbackCategories { get; set; }
-        public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
-        public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
         public virtual DbSet<as_frequencyProfile> as_frequencyProfile { get; set; }
         public virtual DbSet<as_locationProfile> as_locationProfile { get; set; }
-        public virtual DbSet<as_logProfile> as_logProfile { get; set; }
+        public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
+        public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
+        public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
+        public virtual DbSet<as_maintenanceValidationProfile> as_maintenanceValidationProfile { get; set; }
         public virtual DbSet<as_nodeRegionProfile> as_nodeRegionProfile { get; set; }
         public virtual DbSet<as_pictureProfile> as_pictureProfile { get; set; }
         public virtual DbSet<as_reportParameters> as_reportParameters { get; set; }
         public virtual DbSet<as_reportProfile> as_reportProfile { get; set; }
         public virtual DbSet<as_settingsProfile> as_settingsProfile { get; set; }
-        public virtual DbSet<as_shiftArchive> as_shiftArchive { get; set; }
         public virtual DbSet<as_shiftData> as_shiftData { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
         public virtual DbSet<as_technicianGroupProfile> as_technicianGroupProfile { get; set; }
@@ -58,16 +55,13 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_technicianWrenchProfile> as_technicianWrenchProfile { get; set; }
         public virtual DbSet<as_userExternalSession> as_userExternalSession { get; set; }
         public virtual DbSet<as_wrenchProfile> as_wrenchProfile { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<as_accessProfile> as_accessProfile { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-        public virtual DbSet<UserProfile> UserProfiles { get; set; }
-        public virtual DbSet<as_assetClassMaintenanceProfile> as_assetClassMaintenanceProfile { get; set; }
-        public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
-        public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
-        public virtual DbSet<as_maintenanceValidationProfile> as_maintenanceValidationProfile { get; set; }
-        public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
+        public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
+        public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
     }
 }

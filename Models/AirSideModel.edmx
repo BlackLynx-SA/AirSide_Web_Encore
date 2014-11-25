@@ -4,49 +4,39 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="airside.encoreModel.Store" Provider="Devart.Data.PostgreSql" ProviderManifestToken="PostgreSQL, 9.3.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="_MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="ContextKey" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="Model" Type="bit" MaxLength="1" Nullable="false" />
-          <Property Name="ProductVersion" Type="varchar" MaxLength="32" Nullable="false" />
-        </EntityType>
+    <Schema Namespace="airside.encoreModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="as_accessProfile">
           <Key>
             <PropertyRef Name="i_accessLevelId" />
           </Key>
           <Property Name="i_accessLevelId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_menuProfileId" Type="int" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_airportProfile">
           <Key>
             <PropertyRef Name="i_airPortId" />
           </Key>
           <Property Name="i_airPortId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_airPortDescription" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_shortDescription" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_airPortDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_shortDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_areaProfile">
           <Key>
             <PropertyRef Name="i_areaId" />
           </Key>
           <Property Name="i_areaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_airPortId" Type="int" Nullable="false" />
-          <Property Name="f_longitude" Type="double precision" Nullable="false" />
-          <Property Name="f_latitude" Type="double precision" Nullable="false" />
+          <Property Name="f_longitude" Type="float" Nullable="false" />
+          <Property Name="f_latitude" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="as_areaSubProfile">
           <Key>
             <PropertyRef Name="i_areaSubId" />
           </Key>
           <Property Name="i_areaSubId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_areaId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetClassMaintenanceProfile">
@@ -63,10 +53,10 @@
             <PropertyRef Name="i_assetClassId" />
           </Key>
           <Property Name="i_assetClassId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_pictureId" Type="int" Nullable="false" />
-          <Property Name="vc_manufacturer" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_model" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_manufacturer" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_model" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_frequencyId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetInfoProfile">
@@ -75,8 +65,8 @@
           </Key>
           <Property Name="i_assetInfoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_value" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_value" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetProfile">
           <Key>
@@ -85,15 +75,15 @@
           <Property Name="i_assetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_locationId" Type="int" Nullable="false" />
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
-          <Property Name="vc_rfidTag" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_serialNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_rfidTag" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_serialNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetStatusProfile">
           <Key>
             <PropertyRef Name="i_assetProfileId" />
           </Key>
           <Property Name="i_assetProfileId" Type="int" Nullable="false" />
-          <Property Name="bt_assetStatus" Type="boolean" Nullable="false" />
+          <Property Name="bt_assetStatus" Type="bit" Nullable="false" />
           <Property Name="i_assetSeverity" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_electricalNodeProfile">
@@ -102,8 +92,8 @@
           </Key>
           <Property Name="i_nodeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_parentNode" Type="int" Nullable="false" />
-          <Property Name="vc_nodeDescription" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_externalRef" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_nodeDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_nodeRegion" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_eventPofile">
@@ -111,21 +101,21 @@
             <PropertyRef Name="i_eventProfileId" />
           </Key>
           <Property Name="i_eventProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="dt_dateTimeStart" Type="timestamp" Nullable="false" />
+          <Property Name="dt_dateTimeStart" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="i_eventId" Type="int" Nullable="false" />
-          <Property Name="bt_active" Type="boolean" Nullable="false" />
-          <Property Name="bt_viewed" Type="boolean" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
+          <Property Name="bt_viewed" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="as_eventTypes">
           <Key>
             <PropertyRef Name="i_eventId" />
           </Key>
           <Property Name="i_eventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_title" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_color" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_icon" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_userId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="vc_title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_color" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_icon" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_userId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="as_fbTechProfile">
           <Key>
@@ -134,90 +124,66 @@
           <Property Name="i_fbTechId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_assetId" Type="int" Nullable="false" />
           <Property Name="i_fbTechNumber" Type="int" Nullable="false" />
-          <Property Name="f_averageCandela" Type="double precision" Nullable="false" />
-          <Property Name="f_maxCandela" Type="double precision" Nullable="false" />
-          <Property Name="f_persentageICAO" Type="double precision" Nullable="false" />
-          <Property Name="f_verticalDegree" Type="double precision" Nullable="false" />
-          <Property Name="f_horizontalDegree" Type="double precision" Nullable="false" />
-          <Property Name="f_xAxis" Type="double precision" Nullable="false" />
-          <Property Name="f_yAxis" Type="double precision" Nullable="false" />
+          <Property Name="f_averageCandela" Type="float" Nullable="false" />
+          <Property Name="f_maxCandela" Type="float" Nullable="false" />
+          <Property Name="f_persentageICAO" Type="float" Nullable="false" />
+          <Property Name="f_verticalDegree" Type="float" Nullable="false" />
+          <Property Name="f_horizontalDegree" Type="float" Nullable="false" />
+          <Property Name="f_xAxis" Type="float" Nullable="false" />
+          <Property Name="f_yAxis" Type="float" Nullable="false" />
           <Property Name="i_pictureId" Type="int" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="timestamp" Nullable="false" />
-          <Property Name="bt_pass" Type="boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_feedback">
-          <Key>
-            <PropertyRef Name="i_feedbackId" />
-          </Key>
-          <Property Name="i_feedbackId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="i_categoryId" Type="int" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="timestamp" Nullable="false" />
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="vc_comment" Type="varchar" MaxLength="65535" Nullable="false" />
-          <Property Name="bt_actioned" Type="boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_feedbackCategories">
-          <Key>
-            <PropertyRef Name="i_categoryId" />
-          </Key>
-          <Property Name="i_categoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="bt_pass" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="as_fileUploadInfo">
           <Key>
-            <PropertyRef Name="guid_file" />
+            <PropertyRef Name="i_fileUploadId" />
           </Key>
-          <Property Name="guid_file" Type="uuid" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="65535" Nullable="false" />
-          <Property Name="f_latitude" Type="double precision" Nullable="false" />
-          <Property Name="f_longitude" Type="double precision" Nullable="false" />
+          <Property Name="i_fileUploadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="guid_file" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="vc_description" Type="ntext" Nullable="false" />
+          <Property Name="f_latitude" Type="float" Nullable="false" />
+          <Property Name="f_longitude" Type="float" Nullable="false" />
           <Property Name="i_shiftId" Type="int" Nullable="false" />
           <Property Name="i_userId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_fileUploadProfile">
           <Key>
-            <PropertyRef Name="guid_file" />
+            <PropertyRef Name="i_fileUploadId" />
           </Key>
-          <Property Name="guid_file" Type="uuid" Nullable="false" />
-          <Property Name="vc_filePath" Type="varchar" MaxLength="65535" Nullable="false" />
-          <Property Name="vc_fileDescription" Type="varchar" MaxLength="65535" Nullable="false" />
+          <Property Name="i_fileUploadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="guid_file" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="vc_filePath" Type="ntext" Nullable="false" />
+          <Property Name="vc_fileDescription" Type="ntext" Nullable="false" />
           <Property Name="i_fileType" Type="int" Nullable="false" />
-          <Property Name="dt_datetime" Type="timestamp" Nullable="false" />
+          <Property Name="dt_datetime" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="as_frequencyProfile">
           <Key>
             <PropertyRef Name="i_frequencyId" />
           </Key>
           <Property Name="i_frequencyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="f_frequency" Type="double precision" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="f_frequency" Type="float" Nullable="false" />
+          <Property Name="i_frequencyType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_locationProfile">
           <Key>
             <PropertyRef Name="i_locationId" />
           </Key>
           <Property Name="i_locationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="f_longitude" Type="double precision" Nullable="false" />
-          <Property Name="f_latitude" Type="double precision" Nullable="false" />
-          <Property Name="vc_designation" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="f_longitude" Type="float" Nullable="false" />
+          <Property Name="f_latitude" Type="float" Nullable="false" />
+          <Property Name="vc_designation" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_areaSubId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_logProfile">
-          <Key>
-            <PropertyRef Name="i_logId" />
-          </Key>
-          <Property Name="i_logId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_logDescription" Type="varchar" MaxLength="65535" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="timestamp" Nullable="false" />
-          <Property Name="i_logType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_maintenanceCategory">
           <Key>
             <PropertyRef Name="i_maintenanceCategoryId" />
           </Key>
           <Property Name="i_maintenanceCategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_maintenanceCategory" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_categoryDescription" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="vc_maintenanceCategory" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_categoryDescription" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="i_categoryType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_maintenanceProfile">
@@ -225,7 +191,7 @@
             <PropertyRef Name="i_maintenanceId" />
           </Key>
           <Property Name="i_maintenanceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="i_maintenanceCategoryId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_maintenanceValidation">
@@ -233,8 +199,8 @@
             <PropertyRef Name="i_maintenanceValidationId" />
           </Key>
           <Property Name="i_maintenanceValidationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_validationName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_validationDescription" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="vc_validationName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_validationDescription" Type="nvarchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <EntityType Name="as_maintenanceValidationProfile">
           <Key>
@@ -249,15 +215,15 @@
             <PropertyRef Name="i_nodeRegion" />
           </Key>
           <Property Name="i_nodeRegion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_regionDescription" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_regionDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_pictureProfile">
           <Key>
             <PropertyRef Name="i_pictureId" />
           </Key>
           <Property Name="i_pictureId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_fileLocation" Type="varchar" MaxLength="400" Nullable="false" />
-          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_fileLocation" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_fileType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_reportParameters">
@@ -265,8 +231,8 @@
             <PropertyRef Name="i_reportParamId" />
           </Key>
           <Property Name="i_reportParamId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_parameterName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_dataType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_parameterName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_dataType" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_reportId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_reportProfile">
@@ -274,30 +240,20 @@
             <PropertyRef Name="i_reportId" />
           </Key>
           <Property Name="i_reportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_reportName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_reportPath" Type="varchar" MaxLength="1000" Nullable="false" />
-          <Property Name="bt_active" Type="boolean" Nullable="false" />
-          <Property Name="dt_reportDate" Type="timestamp" Nullable="false" />
+          <Property Name="vc_reportName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_reportPath" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
+          <Property Name="dt_reportDate" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="as_settingsProfile">
           <Key>
             <PropertyRef Name="i_settingId" />
           </Key>
           <Property Name="i_settingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_settingDescription" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_settingDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_dataType" Type="int" Nullable="false" />
-          <Property Name="bt_active" Type="boolean" Nullable="false" />
-          <Property Name="vc_settingValue" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_shiftArchive">
-          <Key>
-            <PropertyRef Name="i_archiveId" />
-          </Key>
-          <Property Name="i_archiveId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="i_shiftId" Type="int" Nullable="false" />
-          <Property Name="vc_permitNumber" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="dt_updateDate" Type="timestamp" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="timestamp" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
+          <Property Name="vc_settingValue" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_shiftData">
           <Key>
@@ -307,8 +263,8 @@
           <Property Name="i_shiftId" Type="int" Nullable="false" />
           <Property Name="i_assetId" Type="int" Nullable="false" />
           <Property Name="i_maintenanceId" Type="int" Nullable="false" />
-          <Property Name="dt_captureDate" Type="timestamp" Nullable="false" />
-          <Property Name="f_capturedValue" Type="double precision" Nullable="false" />
+          <Property Name="dt_captureDate" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="f_capturedValue" Type="float" Nullable="false" />
           <Property Name="i_assetCheckId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_shifts">
@@ -317,11 +273,11 @@
           </Key>
           <Property Name="i_shiftId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="timestamp" Nullable="false" />
-          <Property Name="dt_completionDate" Type="timestamp" Nullable="false" />
-          <Property Name="bt_completed" Type="boolean" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="dt_completionDate" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="bt_completed" Type="bit" Nullable="false" />
           <Property Name="i_areaSubId" Type="int" Nullable="false" />
-          <Property Name="vc_permitNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_technicianGroupProfile">
           <Key>
@@ -336,8 +292,8 @@
             <PropertyRef Name="i_groupId" />
           </Key>
           <Property Name="i_groupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_groupName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_externalRef" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_technicianWrenchProfile">
           <Key>
@@ -346,7 +302,7 @@
           <Property Name="i_assosiationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="i_wrenchId" Type="int" Nullable="false" />
-          <Property Name="dt_dateTime" Type="timestamp" Nullable="false" />
+          <Property Name="dt_dateTime" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="as_userExternalSession">
           <Key>
@@ -354,36 +310,36 @@
           </Key>
           <Property Name="i_sessionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="vc_sessionKey" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="dt_dateTime" Type="timestamp" Nullable="false" />
+          <Property Name="vc_sessionKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="dt_dateTime" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="as_wrenchProfile">
           <Key>
             <PropertyRef Name="i_wrenchId" />
           </Key>
           <Property Name="i_wrenchId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="vc_model" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="dt_lastCalibrated" Type="timestamp" Nullable="false" />
+          <Property Name="vc_model" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="dt_lastCalibrated" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="i_calibrationCycle" Type="int" Nullable="false" />
-          <Property Name="f_batteryLevel" Type="double precision" Nullable="false" />
-          <Property Name="vc_serialNumber" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="bt_active" Type="boolean" Nullable="false" />
+          <Property Name="f_batteryLevel" Type="float" Nullable="false" />
+          <Property Name="vc_serialNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetUserClaims">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="ClaimValue" Type="varchar" MaxLength="65535" />
-          <Property Name="ClaimType" Type="varchar" MaxLength="65535" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="AspNetUserLogins">
           <Key>
@@ -391,117 +347,166 @@
             <PropertyRef Name="ProviderKey" />
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="LoginProvider" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="ProviderKey" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetUserRoles">
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="RoleId" />
           </Key>
-          <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="Email" Type="varchar" MaxLength="256" />
-          <Property Name="EmailConfirmed" Type="bit" MaxLength="1" Nullable="false" />
-          <Property Name="PasswordHash" Type="varchar" MaxLength="65535" />
-          <Property Name="SecurityStamp" Type="varchar" MaxLength="65535" />
-          <Property Name="PhoneNumber" Type="varchar" MaxLength="65535" />
-          <Property Name="PhoneNumberConfirmed" Type="bit" MaxLength="1" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="bit" MaxLength="1" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="timestamp" />
-          <Property Name="LockoutEnabled" Type="bit" MaxLength="1" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-          <Property Name="UserName" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserName" Type="varchar" MaxLength="56" Nullable="false" />
-          <Property Name="FirstName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="EmailAddress" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="56" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="i_airPortId" Type="int" Nullable="false" />
           <Property Name="i_accessLevelId" Type="int" Nullable="false" />
-          <Property Name="dt_dateCreated" Type="timestamp" Nullable="false" />
-          <Property Name="aspId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="dt_dateCreated" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="aspId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="airsideencoreModelStoreContainer">
-          <EntitySet Name="_MigrationHistory" EntityType="Self._MigrationHistory" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_accessProfile" EntityType="Self.as_accessProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_airportProfile" EntityType="Self.as_airportProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_areaProfile" EntityType="Self.as_areaProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_areaSubProfile" EntityType="Self.as_areaSubProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="Self.as_assetClassMaintenanceProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_assetClassProfile" EntityType="Self.as_assetClassProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_assetStatusProfile" EntityType="Self.as_assetStatusProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_feedback" EntityType="Self.as_feedback" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_feedbackCategories" EntityType="Self.as_feedbackCategories" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_logProfile" EntityType="Self.as_logProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_maintenanceValidationProfile" EntityType="Self.as_maintenanceValidationProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_shiftArchive" EntityType="Self.as_shiftArchive" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_shifts" EntityType="Self.as_shifts" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" Schema="public" store:Type="Tables" />
-          <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" Schema="public" store:Type="Tables" />
-          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="public" store:Type="Tables" />
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="public" store:Type="Tables" />
-          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="public" store:Type="Tables" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="public" store:Type="Tables" />
-          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="public" store:Type="Tables" />
-          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="public" store:Type="Tables" />
+          <EntitySet Name="as_accessProfile" EntityType="Self.as_accessProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_airportProfile" EntityType="Self.as_airportProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_areaProfile" EntityType="Self.as_areaProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_areaSubProfile" EntityType="Self.as_areaSubProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="Self.as_assetClassMaintenanceProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_assetClassProfile" EntityType="Self.as_assetClassProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_assetStatusProfile" EntityType="Self.as_assetStatusProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_maintenanceValidationProfile" EntityType="Self.as_maintenanceValidationProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_shifts" EntityType="Self.as_shifts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="airside.encoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="C_MigrationHistory">
-          <Key>
-            <PropertyRef Name="MigrationId" />
-            <PropertyRef Name="ContextKey" />
-          </Key>
-          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Model" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_accessProfile">
-          <Key>
-            <PropertyRef Name="i_accessLevelId" />
-          </Key>
-          <Property Name="i_accessLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_menuProfileId" Type="Int32" Nullable="false" />
-          <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_airportProfile">
           <Key>
             <PropertyRef Name="i_airPortId" />
@@ -527,6 +532,15 @@
           <Property Name="i_areaSubId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="i_areaId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_assetClassMaintenanceProfile">
+          <Key>
+            <PropertyRef Name="i_assetMaintenanceId" />
+          </Key>
+          <Property Name="i_assetMaintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+          <Property Name="i_frequencyId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetClassProfile">
           <Key>
@@ -581,7 +595,7 @@
             <PropertyRef Name="i_eventProfileId" />
           </Key>
           <Property Name="i_eventProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dt_dateTimeStart" Type="DateTime" Nullable="false" />
+          <Property Name="dt_dateTimeStart" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="i_eventId" Type="Int32" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
           <Property Name="bt_viewed" Type="Boolean" Nullable="false" />
@@ -612,47 +626,8 @@
           <Property Name="f_xAxis" Type="Double" Nullable="false" />
           <Property Name="f_yAxis" Type="Double" Nullable="false" />
           <Property Name="i_pictureId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="bt_pass" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_feedback">
-          <Key>
-            <PropertyRef Name="i_feedbackId" />
-          </Key>
-          <Property Name="i_feedbackId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_categoryId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="vc_comment" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="bt_actioned" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_feedbackCategories">
-          <Key>
-            <PropertyRef Name="i_categoryId" />
-          </Key>
-          <Property Name="i_categoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fileUploadInfo">
-          <Key>
-            <PropertyRef Name="guid_file" />
-          </Key>
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_description" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="f_latitude" Type="Double" Nullable="false" />
-          <Property Name="f_longitude" Type="Double" Nullable="false" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="i_userId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fileUploadProfile">
-          <Key>
-            <PropertyRef Name="guid_file" />
-          </Key>
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_filePath" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_fileDescription" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="i_fileType" Type="Int32" Nullable="false" />
-          <Property Name="dt_datetime" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="as_frequencyProfile">
           <Key>
@@ -661,6 +636,7 @@
           <Property Name="i_frequencyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="f_frequency" Type="Double" Nullable="false" />
+          <Property Name="i_frequencyType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_locationProfile">
           <Key>
@@ -672,14 +648,38 @@
           <Property Name="vc_designation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_logProfile">
+        <EntityType Name="as_maintenanceCategory">
           <Key>
-            <PropertyRef Name="i_logId" />
+            <PropertyRef Name="i_maintenanceCategoryId" />
           </Key>
-          <Property Name="i_logId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_logDescription" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" />
-          <Property Name="i_logType" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_maintenanceCategory" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vc_categoryDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="i_categoryType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_maintenanceProfile">
+          <Key>
+            <PropertyRef Name="i_maintenanceId" />
+          </Key>
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_maintenanceValidation">
+          <Key>
+            <PropertyRef Name="i_maintenanceValidationId" />
+          </Key>
+          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_validationName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vc_validationDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_maintenanceValidationProfile">
+          <Key>
+            <PropertyRef Name="i_maintenanceValidationProfileId" />
+          </Key>
+          <Property Name="i_maintenanceValidationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_maintenanceProfileId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_nodeRegionProfile">
           <Key>
@@ -714,7 +714,7 @@
           <Property Name="vc_reportName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vc_reportPath" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
-          <Property Name="dt_reportDate" Type="DateTime" Nullable="false" />
+          <Property Name="dt_reportDate" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="as_settingsProfile">
           <Key>
@@ -726,16 +726,6 @@
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
           <Property Name="vc_settingValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_shiftArchive">
-          <Key>
-            <PropertyRef Name="i_archiveId" />
-          </Key>
-          <Property Name="i_archiveId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="vc_permitNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dt_updateDate" Type="DateTime" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_shiftData">
           <Key>
             <PropertyRef Name="i_uniqueId" />
@@ -744,7 +734,7 @@
           <Property Name="i_shiftId" Type="Int32" Nullable="false" />
           <Property Name="i_assetId" Type="Int32" Nullable="false" />
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
-          <Property Name="dt_captureDate" Type="DateTime" Nullable="false" />
+          <Property Name="dt_captureDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="f_capturedValue" Type="Double" Nullable="false" />
           <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
         </EntityType>
@@ -754,8 +744,8 @@
           </Key>
           <Property Name="i_shiftId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" />
-          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="bt_completed" Type="Boolean" Nullable="false" />
           <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
           <Property Name="vc_permitNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
@@ -783,7 +773,7 @@
           <Property Name="i_assosiationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="i_wrenchId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTime" Type="DateTime" Nullable="false" />
+          <Property Name="dt_dateTime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="as_userExternalSession">
           <Key>
@@ -792,7 +782,7 @@
           <Property Name="i_sessionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="vc_sessionKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dt_dateTime" Type="DateTime" Nullable="false" />
+          <Property Name="dt_dateTime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="as_wrenchProfile">
           <Key>
@@ -800,83 +790,31 @@
           </Key>
           <Property Name="i_wrenchId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="vc_model" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="dt_lastCalibrated" Type="DateTime" Nullable="false" />
+          <Property Name="dt_lastCalibrated" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="i_calibrationCycle" Type="Int32" Nullable="false" />
           <Property Name="f_batteryLevel" Type="Double" Nullable="false" />
           <Property Name="vc_serialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
         </EntityType>
-        <EntityType Name="AspNetRole">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaim">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ClaimValue" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimType" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="AspNetUserLogin">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUserRole">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RoleId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="AspNetUser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="EmailConfirmed" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" />
-          <Property Name="SecurityStamp" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="65535" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumberConfirmed" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="DateTime" />
-          <Property Name="LockoutEnabled" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="UserName" Type="String" MaxLength="56" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="i_airPortId" Type="Int32" Nullable="false" />
           <Property Name="i_accessLevelId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateCreated" Type="DateTime" Nullable="false" />
+          <Property Name="dt_dateCreated" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="aspId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="C_MigrationHistory" EntityType="Self.C_MigrationHistory" />
-          <EntitySet Name="as_accessProfile" EntityType="Self.as_accessProfile" />
           <EntitySet Name="as_airportProfile" EntityType="Self.as_airportProfile" />
           <EntitySet Name="as_areaProfile" EntityType="Self.as_areaProfile" />
           <EntitySet Name="as_areaSubProfile" EntityType="Self.as_areaSubProfile" />
+          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="Self.as_assetClassMaintenanceProfile" />
           <EntitySet Name="as_assetClassProfile" EntityType="Self.as_assetClassProfile" />
           <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" />
           <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" />
@@ -885,19 +823,17 @@
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" />
           <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" />
-          <EntitySet Name="as_feedback" EntityType="Self.as_feedback" />
-          <EntitySet Name="as_feedbackCategories" EntityType="Self.as_feedbackCategories" />
-          <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" />
-          <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" />
-          <EntitySet Name="as_logProfile" EntityType="Self.as_logProfile" />
+          <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" />
+          <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" />
+          <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" />
+          <EntitySet Name="as_maintenanceValidationProfile" EntityType="Self.as_maintenanceValidationProfile" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" />
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" />
           <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" />
-          <EntitySet Name="as_shiftArchive" EntityType="Self.as_shiftArchive" />
           <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" />
           <EntitySet Name="as_shifts" EntityType="Self.as_shifts" />
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" />
@@ -905,59 +841,138 @@
           <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" />
           <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" />
           <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" />
-          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
-          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRole" />
-          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="UserProfiles" EntityType="Self.UserProfile" />
-          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="airside.encoreModel.as_assetClassMaintenanceProfile" />
-          <EntitySet Name="as_maintenanceProfile" EntityType="airside.encoreModel.as_maintenanceProfile" />
-          <EntitySet Name="as_maintenanceValidation" EntityType="airside.encoreModel.as_maintenanceValidation" />
-          <EntitySet Name="as_maintenanceValidationProfile" EntityType="airside.encoreModel.as_maintenanceValidationProfile" />
-          <EntitySet Name="as_maintenanceCategory" EntityType="airside.encoreModel.as_maintenanceCategory" />
+          <EntitySet Name="as_accessProfile" EntityType="airside.encoreModel.as_accessProfile" />
+          <EntitySet Name="AspNetRoles" EntityType="airside.encoreModel.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="airside.encoreModel.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="airside.encoreModel.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="airside.encoreModel.AspNetUser" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="airside.encoreModel.AspNetUserRoles">
+            <End Role="AspNetRole" EntitySet="AspNetRoles" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
+          <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
         </EntityContainer>
-        <EntityType Name="as_assetClassMaintenanceProfile">
+        <EntityType Name="as_accessProfile">
           <Key>
-            <PropertyRef Name="i_assetMaintenanceId" />
+            <PropertyRef Name="i_accessLevelId" />
           </Key>
-          <Property Name="i_assetMaintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
-          <Property Name="i_frequencyId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_maintenanceProfile">
-          <Key>
-            <PropertyRef Name="i_maintenanceId" />
-          </Key>
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_accessLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_menuProfileId" Type="Int32" Nullable="false" />
           <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_maintenanceValidation">
+        <EntityType Name="AspNetRole">
           <Key>
-            <PropertyRef Name="i_maintenanceValidationId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_validationName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="vc_validationDescription" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="airside.encoreModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
         </EntityType>
-        <EntityType Name="as_maintenanceValidationProfile">
+        <EntityType Name="AspNetUserClaim">
           <Key>
-            <PropertyRef Name="i_maintenanceValidationProfileId" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="i_maintenanceValidationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_maintenanceProfileId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
         </EntityType>
-        <EntityType Name="as_maintenanceCategory">
+        <EntityType Name="AspNetUserLogin">
           <Key>
-            <PropertyRef Name="i_maintenanceCategoryId" />
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
           </Key>
-          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_maintenanceCategory" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="vc_categoryDescription" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="i_categoryType" Type="Int32" Nullable="false" />
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+          <NavigationProperty Name="AspNetRoles" Relationship="airside.encoreModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="airside.encoreModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaim">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="airside.encoreModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="airside.encoreModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityType Name="as_fileUploadInfo">
+          <Key>
+            <PropertyRef Name="i_fileUploadId" />
+          </Key>
+          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="f_latitude" Type="Double" Nullable="false" />
+          <Property Name="f_longitude" Type="Double" Nullable="false" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+          <Property Name="i_userId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_fileUploadProfile">
+          <Key>
+            <PropertyRef Name="i_fileUploadId" />
+          </Key>
+          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_filePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="vc_fileDescription" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="i_fileType" Type="Int32" Nullable="false" />
+          <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -965,25 +980,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="airsideencoreModelStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="C_MigrationHistory">
-            <EntityTypeMapping TypeName="airside.encoreModel.C_MigrationHistory">
-              <MappingFragment StoreEntitySet="_MigrationHistory">
-                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
-                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
-                <ScalarProperty Name="Model" ColumnName="Model" />
-                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_accessProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_accessProfile">
-              <MappingFragment StoreEntitySet="as_accessProfile">
-                <ScalarProperty Name="i_accessLevelId" ColumnName="i_accessLevelId" />
-                <ScalarProperty Name="i_menuProfileId" ColumnName="i_menuProfileId" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_airportProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_airportProfile">
               <MappingFragment StoreEntitySet="as_airportProfile">
@@ -1010,6 +1006,16 @@
                 <ScalarProperty Name="i_areaSubId" ColumnName="i_areaSubId" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
                 <ScalarProperty Name="i_areaId" ColumnName="i_areaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_assetClassMaintenanceProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_assetClassMaintenanceProfile">
+              <MappingFragment StoreEntitySet="as_assetClassMaintenanceProfile">
+                <ScalarProperty Name="i_assetMaintenanceId" ColumnName="i_assetMaintenanceId" />
+                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="i_frequencyId" ColumnName="i_frequencyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1108,55 +1114,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_feedback">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_feedback">
-              <MappingFragment StoreEntitySet="as_feedback">
-                <ScalarProperty Name="i_feedbackId" ColumnName="i_feedbackId" />
-                <ScalarProperty Name="i_categoryId" ColumnName="i_categoryId" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="vc_comment" ColumnName="vc_comment" />
-                <ScalarProperty Name="bt_actioned" ColumnName="bt_actioned" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_feedbackCategories">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_feedbackCategories">
-              <MappingFragment StoreEntitySet="as_feedbackCategories">
-                <ScalarProperty Name="i_categoryId" ColumnName="i_categoryId" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadInfo">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
-              <MappingFragment StoreEntitySet="as_fileUploadInfo">
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
-                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
-              <MappingFragment StoreEntitySet="as_fileUploadProfile">
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
-                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
-                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
-                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_frequencyProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_frequencyProfile">
               <MappingFragment StoreEntitySet="as_frequencyProfile">
                 <ScalarProperty Name="i_frequencyId" ColumnName="i_frequencyId" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
                 <ScalarProperty Name="f_frequency" ColumnName="f_frequency" />
+                <ScalarProperty Name="i_frequencyType" ColumnName="i_frequencyType" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1171,13 +1135,40 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_logProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_logProfile">
-              <MappingFragment StoreEntitySet="as_logProfile">
-                <ScalarProperty Name="i_logId" ColumnName="i_logId" />
-                <ScalarProperty Name="vc_logDescription" ColumnName="vc_logDescription" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="i_logType" ColumnName="i_logType" />
+          <EntitySetMapping Name="as_maintenanceCategory">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceCategory">
+              <MappingFragment StoreEntitySet="as_maintenanceCategory">
+                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
+                <ScalarProperty Name="vc_maintenanceCategory" ColumnName="vc_maintenanceCategory" />
+                <ScalarProperty Name="vc_categoryDescription" ColumnName="vc_categoryDescription" />
+                <ScalarProperty Name="i_categoryType" ColumnName="i_categoryType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_maintenanceProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceProfile">
+              <MappingFragment StoreEntitySet="as_maintenanceProfile">
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_maintenanceValidation">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidation">
+              <MappingFragment StoreEntitySet="as_maintenanceValidation">
+                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
+                <ScalarProperty Name="vc_validationName" ColumnName="vc_validationName" />
+                <ScalarProperty Name="vc_validationDescription" ColumnName="vc_validationDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_maintenanceValidationProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidationProfile">
+              <MappingFragment StoreEntitySet="as_maintenanceValidationProfile">
+                <ScalarProperty Name="i_maintenanceValidationProfileId" ColumnName="i_maintenanceValidationProfileId" />
+                <ScalarProperty Name="i_maintenanceProfileId" ColumnName="i_maintenanceProfileId" />
+                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1228,17 +1219,6 @@
                 <ScalarProperty Name="i_dataType" ColumnName="i_dataType" />
                 <ScalarProperty Name="bt_active" ColumnName="bt_active" />
                 <ScalarProperty Name="vc_settingValue" ColumnName="vc_settingValue" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_shiftArchive">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftArchive">
-              <MappingFragment StoreEntitySet="as_shiftArchive">
-                <ScalarProperty Name="i_archiveId" ColumnName="i_archiveId" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
-                <ScalarProperty Name="dt_updateDate" ColumnName="dt_updateDate" />
-                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1319,59 +1299,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetRole">
-              <MappingFragment StoreEntitySet="AspNetRoles">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserClaim">
-              <MappingFragment StoreEntitySet="AspNetUserClaims">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserLogin">
-              <MappingFragment StoreEntitySet="AspNetUserLogins">
-                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserRoles">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserRole">
-              <MappingFragment StoreEntitySet="AspNetUserRoles">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUser">
-              <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="airside.encoreModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
@@ -1387,50 +1314,90 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_assetClassMaintenanceProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_assetClassMaintenanceProfile">
-              <MappingFragment StoreEntitySet="as_assetClassMaintenanceProfile">
-                <ScalarProperty Name="i_frequencyId" ColumnName="i_frequencyId" />
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
-                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
-                <ScalarProperty Name="i_assetMaintenanceId" ColumnName="i_assetMaintenanceId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceProfile">
-              <MappingFragment StoreEntitySet="as_maintenanceProfile">
-                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
+          <EntitySetMapping Name="as_accessProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_accessProfile">
+              <MappingFragment StoreEntitySet="as_accessProfile">
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="i_menuProfileId" ColumnName="i_menuProfileId" />
+                <ScalarProperty Name="i_accessLevelId" ColumnName="i_accessLevelId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceValidation">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidation">
-              <MappingFragment StoreEntitySet="as_maintenanceValidation">
-                <ScalarProperty Name="vc_validationDescription" ColumnName="vc_validationDescription" />
-                <ScalarProperty Name="vc_validationName" ColumnName="vc_validationName" />
-                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceValidationProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidationProfile">
-              <MappingFragment StoreEntitySet="as_maintenanceValidationProfile">
-                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
-                <ScalarProperty Name="i_maintenanceProfileId" ColumnName="i_maintenanceProfileId" />
-                <ScalarProperty Name="i_maintenanceValidationProfileId" ColumnName="i_maintenanceValidationProfileId" />
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceCategory">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceCategory">
-              <MappingFragment StoreEntitySet="as_maintenanceCategory">
-                <ScalarProperty Name="i_categoryType" ColumnName="i_categoryType" />
-                <ScalarProperty Name="vc_categoryDescription" ColumnName="vc_categoryDescription" />
-                <ScalarProperty Name="vc_maintenanceCategory" ColumnName="vc_maintenanceCategory" />
-                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="airside.encoreModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUser">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRole">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="as_fileUploadInfo">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
+              <MappingFragment StoreEntitySet="as_fileUploadInfo">
+                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
+                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
+              <MappingFragment StoreEntitySet="as_fileUploadProfile">
+                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
+                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
+                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
+                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

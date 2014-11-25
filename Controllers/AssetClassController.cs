@@ -538,7 +538,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var frequencies = db.as_frequencyProfile.Select(q => new { frequencyId = q.i_frequencyId, frequency = q.f_frequency }).ToList();
+                var frequencies = db.as_frequencyProfile.Select(q => new { frequencyId = q.i_frequencyId, frequency = q.f_frequency, type = q.i_frequencyType }).Where(q=>q.type == 1).ToList();
                 return Json(frequencies);
             }
             catch (Exception err)

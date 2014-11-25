@@ -1,81 +1,93 @@
 ﻿<!-- MAIN CONTENT -->
+<style type="text/css">
+    #mapTopMenuBack {
+        background-color: #000;
+        opacity: 0.7;
+        height: 70px;
+        position: absolute;
+        z-index: 3;
+    }
+
+    #mapMenuItems {
+        position: absolute;
+        z-index: 4;
+        height: 70px;
+        line-height: 64px;
+    }
+</style>
+
 <div id="content">
     <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">Brand</a>
-                    </div>
+        <div class="col-md-12" id="mapTopMenuBack"></div>
+        <div class="col-md-12" id="mapMenuItems">
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">Link</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">One more separated link</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="navbar-form navbar-left" role="search">
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
-                            <button type="submit" class="btn btn-default">Submit</button>
-                        </form>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="#">Link</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
+            <button type="button" class="btn btn-labeled btn-success">
+                <span class="btn-label">
+                    <i class="fa fa-lightbulb-o fa-2x"></i>
+                </span>
+                Assets
+            </button>
+            <button type="button" class="btn btn-labeled btn-primary">
+                <span class="btn-label">
+                    <i class="fa fa-road fa-2x"></i>
+                </span>
+                Areas
+            </button>
+            <button type="button" class="btn btn-labeled btn-warning">
+                <span class="btn-label">
+                    <i class="fa fa-eye fa-2x"></i>
+                </span>
+                Visual Surveyor&trade;
+            </button>
+            <button type="button" class="btn btn-labeled btn-danger">
+                <span class="btn-label">
+                    <i class="fa fa-sun-o fa-2x"></i>
+                </span>
+                Photometric
+            </button>
+            <button type="button" class="btn btn-labeled btn-info">
+                <span class="btn-label">
+                    <i class="fa fa-picture-o fa-2x"></i>
+                </span>
+                AutoCAD
+            </button>
+
+            <div class="btn-group" style="float:right;">
+                <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown" style="float:none;">
+                    <span class="btn-label">
+                        <i class="fa fa-map-marker fa-2x"></i>
+                    </span>
+                    Map Type
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Hybrid</a></li>
+                    <li><a href="#">Satelite</a></li>
+                    <li><a href="#">Road Map</a></li>
+                    <li><a href="#">Terrain</a></li>
+                </ul>
+            </div>
         </div>
     </div>
     <div id="map_canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
-    &nbsp;
+        &nbsp;
     </div>
 </div>
 
 @section pagespecific{
     <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
     </script>
-    
+
     <script>
         var globalMap
         function resize() {
-            $('#map_canvas').css('height', Math.round($(window).height() * 0.83));
+            //Calculate the window height and deduct the menu height
+            $('#map_canvas').css('height', Math.round($(window).height() - 170));
             google.maps.event.trigger(globalMap, 'resize');
         }
 
         $(document).ready(function () {
-            
+
 
             var pagefunction = function () {
                 function initMap() {
@@ -112,7 +124,7 @@
             };
 
             pagefunction();
-            
+
             $(window).resize(function () { resize() });
         });
     </script>

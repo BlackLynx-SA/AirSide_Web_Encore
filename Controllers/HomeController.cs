@@ -17,6 +17,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
+        [AllowAnonymous]
+        public ActionResult rebuildCache()
+        {
+            CacheHelper cache = new CacheHelper();
+            cache.rebuildAssetProfile();
+            return View();
+        }
+
         //GET: home/startup
         public ActionResult StartUp()
         {

@@ -17,5 +17,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public int i_frequencyId { get; set; }
         public string vc_description { get; set; }
         public double f_frequency { get; set; }
+        public int i_frequencyType { get; set; }
     }
 }
