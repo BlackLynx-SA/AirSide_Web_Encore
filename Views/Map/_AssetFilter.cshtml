@@ -1,0 +1,138 @@
+﻿<div class="modal fade" id="assetFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title"><i class="fa fa-lightbulb-o txt-color-green fa-2x"></i> Asset Filter</h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="radio">
+                                <input type="radio" name="assetFilterRadio" checked="checked" value="allassets">
+                                <i></i>Show All Assets
+                            </label>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="radio">
+                                <input type="radio" name="assetFilterRadio" value="asset">
+                                <i></i>Show Specific Assets Type
+                            </label>
+                            <label class="select">
+                                @Html.DropDownList("assetClasses", null, String.Empty)<i></i>
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This is all loaded asset types in the system. To view all click <a href="~/assetclass/assetclasses">here.</a></div>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="radio">
+                                <input type="radio" name="assetFilterRadio" value="maintain">
+                                <i></i>Show Maintenance Cycle
+                            </label>
+                            <label class="select">
+                                <select id="maintenanceSelect">
+                                    <option value="0">No Data</option>
+                                    <option value="1">Recently Updated</option>
+                                    <option value="2">Mid Cycle</option>
+                                    <option value="3">Almost Due</option>
+                                    <option value="4">Over Due</option>
+                                </select><i></i>
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance task.</div>
+                        </section>
+                    </div>
+                    <hr /><br />
+                    <div class="row">
+                        <section class="col col-11">
+                            <label class="checkbox">
+                                <input id="clusteredChk" type="checkbox" name="checkbox">
+                                <i></i>Show Asset Clustered
+                            </label>
+                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Hint:</strong> This data visualization groups assets together.</div>
+                        </section>
+
+                    </div>
+                    <div class="row">
+                        <section class="col col-11">
+                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="assetLoader" style="height:15px; display:none;" />
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button class="btn btn-sm btn-primary" style="float:right" id="assetFilterBtn">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function filterAssets() {
+        $('#assetLoader').fadeIn(500);
+
+        //Clear Map
+        clearAllMarkers();
+        markerClusterer.clearMarkers();
+
+        var clustered = $('#clusteredChk').prop("checked");
+        var filterType = $('input[name=assetFilterRadio]:checked').val();
+        if (filterType === 'allassets')
+            showAllAssets(clustered);
+        else if (filterType === 'maintain') {
+            var cycle = $('#maintenanceSelect').val();
+            showMaintenanceCycle(cycle, clustered);
+        } else if (filterType === 'asset') {
+            var asset = $('#assetClasses').val();
+            showAssetClass(asset, clustered)
+        }
+        $('#assetFilterModal').modal('hide');
+        $('#assetLoader').hide();
+    }
+
+    //Asset Filters
+    function showAllAssets(clustered) {
+        var i = 0;
+        markers = [];
+        $.each(Assets.jsonData, function () {
+            //Add Marker to Map
+            addMarker(Assets.jsonData[i]);
+            i++;
+        });
+        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
+    }
+
+    function showAssetClass(asset, clustered) {
+        var i = 0;
+        markers = [];
+        $.each(Assets.jsonData, function () {
+            if (asset == Assets.jsonData[i].assetClassId) {
+                //Add Marker to Map
+                addMarker(Assets.jsonData[i]);
+            }
+            i++;
+        });
+
+        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
+    }
+
+    function showMaintenanceCycle(cycle, clustered) {
+        var i = 0;
+        markers = [];
+        $.each(Assets.jsonData, function () {
+            if (cycle == Assets.jsonData[i].maintenanceCycle) {
+                //Add Marker to Map
+                addMarker(Assets.jsonData[i]);
+            }
+            i++;
+        });
+
+        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
+    }
+</script>

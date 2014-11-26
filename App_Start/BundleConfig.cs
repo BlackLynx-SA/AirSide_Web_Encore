@@ -12,8 +12,6 @@ namespace ADB.AirSide.Encore.V1
         {
             bundles.Add(new StyleBundle("~/content/smartadmin").IncludeDirectory("~/content/css", "*.min.css"));
 
-            //bundles.Add(new StyleBundle("~/scripts/plugin/fancybox").Include("~/scripts/plugin/fancybox/jquery.fancybox.css"));
-
             bundles.Add(new ScriptBundle("~/scripts/smartadmin").Include(
                 "~/scripts/app.config.js",
                 "~/scripts/plugin/jquery-touch/jquery.ui.touch-punch.min.js",
@@ -75,6 +73,29 @@ namespace ADB.AirSide.Encore.V1
             bundles.Add(new ScriptBundle("~/scripts/vector-map").Include(
                 "~/scripts/plugin/vectormap/jquery-jvectormap-1.2.2.min.js",
                 "~/scripts/plugin/vectormap/jquery-jvectormap-world-mill-en.js"
+                ));
+
+            //Google Maps
+            bundles.Add(new ScriptBundle("~/scripts/googlemaps").Include(
+               "~/scripts/plugin/googlemaps/MarkerCluster.js",
+               "~/scripts/plugin/date-time/moment.min.js"
+               ));
+
+            //Login Page Bundles
+            bundles.Add(new ScriptBundle("~/scripts/loginscripts").Include(
+                "~/scripts/bootstrap/bootstrap.min.js",
+                "~/scripts/login/jquery.icheck.min.js",
+                "~/scripts/login/waypoints.min.js",
+                 "~/scripts/login/authenty.js",
+                "~/scripts/login/preview/jquery.malihu.PageScroll2id.js",
+                "~/scripts/login/preview/jquery.address-1.6.min.js",
+                "~/scripts/login/preview/scrollTo.min.js",
+                "~/scripts/login/preview/init.js",
+                "~/scripts/login/pagescript.js"
+                ));
+
+            bundles.Add(new StyleBundle("~/content/loginstyle").IncludeDirectory("~/content/css/login", "*.css").Include(
+                "~/content/css/login/checkbox/orange.css"
                 ));
 
             BundleTable.EnableOptimizations = true;

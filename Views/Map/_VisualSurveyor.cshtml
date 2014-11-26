@@ -1,0 +1,164 @@
+﻿<div class="modal fade" id="visualSurveyFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title"><i class="fa fa-eye txt-color-yellow fa-2x"></i> Area Filter</h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="label">
+                                Available Dates
+                            </label>
+                            <label class="select">
+                                @Html.DropDownList("surveyorDates", null, String.Empty)<i></i>
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This list only contains dates on which survey were performed.</div>
+                        </section>
+                    </div>
+                    
+                    <hr /><br />
+                    <div class="row">
+                        <section class="col col-11">
+                            <label class="label">
+                                Filter according to:
+                            </label>
+                            <label class="checkbox">
+                                <input id="voiceChk" type="checkbox" name="checkbox">
+                                <i></i>Voice Reports
+                            </label>
+                            <label class="checkbox">
+                                <input id="imageChk" type="checkbox" name="checkbox">
+                                <i></i>Images Taken
+                            </label>
+                            <label class="checkbox">
+                                <input id="textChk" type="checkbox" name="checkbox">
+                                <i></i>Text Memos
+                            </label>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-11">
+                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="surveyorLoader" style="height:15px; display:none;" />
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" style="float:right" id="areaFilterBtn">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //Visual Surveyor Filter
+    function requestSurveyorData() {
+        //Clear Map
+        clearAllMarkers();
+        markerClusterer.clearMarkers();
+
+        $('#surveyorLoader').fadeIn(500);
+        var surveyDate = $('#surveyorDates').val();
+        var voiceChk = $('#voiceChk').prop('checked');
+        var textChk = $('#textChk').prop('checked');
+        var imageChk = $('#imageChk').prop('checked');
+
+        $.ajax({
+            url: 'getSurveydData?dateOfSurvey=' + surveyDate,
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                processJson(voiceChk, textChk, imageChk, json);
+                $('#surveyorLoader').fadeOut(500);
+                $('#visualSurveyFilterModal').modal('hide');
+            }
+        });
+    }
+
+    function getTextContent(url, date, technician, long, lat) {
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (text) {
+                htmltxt += '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote><button class="btn btn-sm btn-pink"><i class="icon-map-marker"></i>Location</button><hr /></div>';
+                $('#textContent').html(htmltxt);
+                addMarker(long, lat, "Text", text, technician + " (" + date + ")");
+            }
+        });
+    }
+
+    function processJson(voice, text, image, json) {
+        markers = [];
+        //Images First
+        for (var i = 0; i < json.length; i++) {
+            if (json[i].type === 'jpg' && image) {
+                var picture = json[i].url;
+                var lrgPicture = picture.replace(".jpg", "_med.jpg");
+                addSurveyorMarker(json[i].longitude, json[i].latitude, "Image", lrgPicture, json[i].technician + " (" + json[i].date + ")");
+            } else if (json[i].type === 'text' && text) {
+                var textURL = json[i].url;
+                getTextContent(textURL, json[i].date, json[i].technician, json[i].longitude, json[i].latitude);
+                //addSurveyorMarker(json[i].longitude, json[i].latitude, "Text", json[i].url, json[i].technician + " (" + json[i].date + ")");
+            } else if (json[i].type === 'm4a' && voice) {
+                var voiceURL = json[i].url;
+                addSurveyorMarker(json[i].longitude, json[i].latitude, "Voice", json[i].url, json[i].technician + " (" + json[i].date + ")");
+            }
+        }
+    }
+
+    function createSurveyorContent(type, content, text) {
+        var htmltxt = "";
+        if (type === "Image") {
+            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> Image Taken</h4>';
+            htmltxt += '<div class="col-md-12"><img src="' + content + '" style="width: 250px; height: 250px;"/></div>';
+            htmltxt += '<br/><div class="col-md-12"><span> - ' + text + '</span></div><hr/></div>';
+        } else if (type === "Voice") {
+            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> Voice Memo Taken</h4></div>';
+            htmltxt += '<audio width="100%" height="32" style="width:100%;" controls="controls" preload="none">';
+            htmltxt += '<source src="' + content + '" type="audio/mp4"></audio><hr />';
+            htmltxt += '<div class="col-md-12"><span> - ' + text + '</span></div>';
+        } else if (type === "Text") {
+            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter pink"><i class="pink icon-file-text-alt"></i> Text Memo Taken</h4><blockquote>' + content + '<small>' + text + '</small></blockquote><hr /></div>';
+        }
+
+        return htmltxt;
+    }
+
+
+    function addSurveyorMarker(long, lat, type, url, text) {
+        var latLongMarker = new google.maps.LatLng(lat, long);
+        var contentString = "";
+        var image = "";
+
+        if (type === "Image")
+            image = '/Images/icons/map_icon_green.png';
+        else if (type === "Text")
+            image = '/Images/icons/map_icon_red.png';
+        else if (type === "Voice")
+            image = '/Images/icons/map_icon_blue.png';
+
+        //Generate content for info window
+        contentString = createSurveyorContent(type, url, text);
+
+        var marker = new google.maps.Marker({
+            position: latLongMarker,
+            map: map,
+            title: type,
+            icon: image
+        });
+
+        //Add click event handler for info window
+        google.maps.event.addListener(marker, 'click', function () {
+            if (infowindow) infowindow.close();
+            infowindow = new google.maps.InfoWindow({ content: contentString });
+            infowindow.open(map, marker);
+        });
+
+        markers.push(marker);
+    }
+</script>

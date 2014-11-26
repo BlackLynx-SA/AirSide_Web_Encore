@@ -1,0 +1,495 @@
+/*Fancybox Fix*/
+.fancybox-opened {
+    z-index: 99999;
+}
+
+#jarviswidget-fullscreen-mode {
+    z-index: 99997;
+}
+
+.fancybox-overlay {
+    z-index: 99998;
+}
+
+/*General Styling*/
+.smart-style-3 #header {
+    background-color: #22a1e4;
+    background-image: -moz-linear-gradient(top,#2e94bc,#2a87ac);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#2e94bc),to(#2a87ac));
+    background-image: -webkit-linear-gradient(top,#2e94bc,#2a87ac);
+    background-image: -o-linear-gradient(top,#2e94bc,#2a87ac);
+    background-image: linear-gradient(to bottom,#2e94bc,#2a87ac);
+}
+
+.smart-style-3 #logo-group span#activity:active, .smart-style-3 #logo-group span#activity:hover, .smart-style-3 .btn-header>:first-child>a:active, .smart-style-3 .btn-header>:first-child>a:hover {
+    -webkit-box-shadow: inset 1px 1px 0 #004289,inset -1px -1px 0 #004289;
+    -moz-box-shadow: inset 1px 1px 0 #004289,inset -1px -1px 0 #004289;
+    box-shadow: inset 1px 1px 0 #004289,inset -1px -1px 0 #004289;
+    background-color: #023a77;
+    background-image: -moz-linear-gradient(top,#023a77,#004289);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#023a77),to(#004289));
+    background-image: -webkit-linear-gradient(top,#023a77,#004289);
+    background-image: -o-linear-gradient(top,#023a77,#004289);
+    background-image: linear-gradient(to bottom,#023a77,#004289);
+    cursor:pointer;
+}
+
+.smart-style-3 #logo-group span#activity, .smart-style-3 .btn-header>:first-child>a {
+    background-color: #004da1;
+    background-image: -moz-linear-gradient(top,#004da1,#004289);
+    background-image: -webkit-gradient(linear,0 0,0 100%,from(#004289),to(#004289));
+    background-image: -webkit-linear-gradient(top,#004da1,#004289);
+    background-image: -o-linear-gradient(top,#004da1,#004289);
+    background-image: linear-gradient(to bottom,#004da1,#004289);
+    color: #fff!important;
+    border: 1px solid #0264cf;
+    text-shadow: #012043 0 -1px;
+}
+
+.txt-color-orangeDark {
+    color: #22a1e4!important;
+}
+
+.smart-style-3 #logo img {
+    width: 180px;
+    height: auto;
+    padding-left: 3px;
+    margin-top: -5px;
+}
+
+.smart-style-3 .dropdown-menu {
+    border-radius: 0;
+    border-bottom: 2px solid #ADADAD;
+    background: #efefef;
+}
+
+.smart-style-3 .dropdown-menu>.active>a, .smart-style-3 .dropdown-menu>.active>a:hover, .smart-style-3 .dropdown-menu>li>a:focus, .smart-style-3 .dropdown-menu>li>a:hover, .smart-style-3 .tt-suggestion.tt-is-under-cursor {
+    background-color: #22a1e4;
+    color: #fff;
+}
+
+.smart-style-3 .dropdown-menu>li>a {
+    color: #444;
+}
+
+.smart-style-3 .header-dropdown-list>li>.dropdown-toggle {
+    display: block;
+    background: rgba(0,77,161,.5);
+    padding: 2px 7px 3px;
+    border-radius: 3px;
+    margin-top: 14px;
+}
+
+.smart-style-3 .header-dropdown-list>li>.dropdown-toggle, .smart-style-3 .project-context>:first-child, .smart-style-3 .project-selector {
+    color: #fff;
+    text-shadow: #012043 0 -1px;
+}
+
+#header>div.open {
+    font-weight: 500;
+}
+
+/*Login Screen*/
+.authenty.signin-main .signin:hover {
+    background-color: #1b81b6;
+}
+
+.authenty.signin-main .signin {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #22a1e4;
+    color: #ffffff;
+    -webkit-transition: background-color 300ms linear;
+    -moz-transition: background-color 300ms linear;
+    -o-transition: background-color 300ms linear;
+    -ms-transition: background-color 300ms linear;
+    transition: background-color 300ms linear;
+}
+
+.jarviswidget-remove-colors {
+    color: #444!important;
+    padding: 0!important;
+    background: none!important;
+}
+
+/*Map Styles*/
+.mapContent {
+    height: 100%;
+    width: 100%;
+}
+
+#map-canvas {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.sidebar.sidebar-fixed {
+    top: 65px;
+}
+
+.navbar-fixed-top + .main-container {
+    padding-top: 65px;
+}
+
+#mapTopMenuBack {
+    height: 161px;
+    width: 100%;
+    z-index: 1000;
+    background-color: #141a1b;
+    color: #fff;
+    opacity: 0.7;
+    position: absolute;
+    border-bottom: 1px solid #3f4e54;
+    border-left: 1px solid #3f4e54;
+}
+
+#mapTopMenu {
+    height: 161px;
+    width: 100%;
+    z-index: 1001;
+    color: #fff;
+    position: absolute;
+    display: -webkit-box;
+}
+
+#mapMenuFooter {
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    position: absolute;
+}
+
+#collapsedMenu {
+    display: -webkit-box;
+    height: 41px;
+    width: 100%;
+    z-index: 1000;
+    background-color: #222a2d;
+    color: #fff;
+    position: absolute;
+    border-bottom: 1px solid #3f4e54;
+    border-left: 1px solid #3f4e54;
+}
+
+.hint {
+    font-size: x-small;
+    color: #808080;
+}
+
+.mapBtnBlue {
+    height: 72px;
+    width: 72px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #6fb3e0;
+    font-size: 50px;
+}
+
+.mapBtnRed {
+    height: 72px;
+    width: 72px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #d15b47;
+    font-size: 50px;
+}
+
+.mapBtnYellow {
+    height: 72px;
+    width: 72px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #ffb752;
+    font-size: 50px;
+}
+
+.mapBtnGreen {
+    height: 72px;
+    width: 72px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #87b87f;
+    font-size: 50px;
+}
+
+.mapBtn:hover {
+    color: #fff;
+    border: 1px solid #3f4e54;
+}
+
+.mapBtnCaption {
+    padding-top: 5px;
+    font-size: 10px;
+}
+
+.mapBtnSpan {
+    color: #b1bac1;
+    float: left;
+    margin-right: 5px;
+    text-align: center;
+}
+
+    .mapBtnSpan:hover {
+        color: #fff;
+    }
+
+.mapMenuDiv {
+    border-right: 1px solid #3f4e54;
+    height: 160px;
+    margin-left: 10px;
+}
+
+/*Small Menu Buttons*/
+.mapSmlBtnBlue {
+    height: 30px;
+    width: 40px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #6fb3e0;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.mapSmlBtnRed {
+    height: 30px;
+    width: 40px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #d15b47;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.mapSmlBtnYellow {
+    height: 30px;
+    width: 40px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #ffb752;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.mapSmlBtnGreen {
+    height: 30px;
+    width: 40px;
+    color: #b1bac1;
+    background: none;
+    border: 1px solid #87b87f;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.mapSmlBtn:hover {
+    color: #fff;
+    border: 1px solid #3f4e54;
+}
+
+.mapSmlMenuDiv {
+    border-right: 1px solid #3f4e54;
+    height: 41px;
+    margin-left: 10px;
+}
+
+/*iPad CSS*/
+@media only screen and (device-width: 768px) {
+    #mapTopMenuBack {
+    height: 122px;
+    width: 100%;
+    z-index: 1000;
+    background-color: #141a1b;
+    color: #fff;
+    opacity: 0.7;
+    position: absolute;
+    border-bottom: 1px solid #3f4e54;
+    border-left: 1px solid #3f4e54;
+}
+
+    .mapBtnBlue {
+       height:60px;
+        height:60px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #6fb3e0;
+        font-size: 35px;
+    }
+
+    .mapBtnBlue i{
+        margin:-20px;
+    }
+
+    .mapBtnRed {
+       height:60px;
+        height:60px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #d15b47;
+        font-size: 35px;
+    }
+     .mapBtnRed i{
+        margin:-20px;
+    }
+    .mapBtnYellow {
+       height:60px;
+        height:60px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #ffb752;
+        font-size: 35px;
+    }
+     .mapBtnYellow i{
+        margin:-20px;
+    }
+    .mapBtnGreen {
+     height:60px;
+        height:60px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #87b87f;
+        font-size: 35px;
+    }
+     .mapBtnGreen i{
+        margin:-20px;
+    }
+    .mapBtn:hover {
+        color: #fff;
+        border: 1px solid #3f4e54;
+    }
+
+    .mapBtnCaption {
+        padding-top: 5px;
+        font-size: 10px;
+    }
+
+    .mapBtnSpan {
+        color: #b1bac1;
+        float: left;
+        margin-right: 5px;
+        text-align: center;
+    }
+
+        .mapBtnSpan:hover {
+            color: #fff;
+        }
+
+    .mapMenuDiv {
+        border-right: 1px solid #3f4e54;
+        height: 122px;
+        margin-left: 10px;
+    }
+
+    /*Small Menu Buttons*/
+    .mapSmlBtnBlue {
+        height: 30px;
+        width: 40px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #6fb3e0;
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .mapSmlBtnBlue i{
+        margin:-20px;
+    }
+
+    .mapSmlBtnRed {
+        height: 30px;
+        width: 40px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #d15b47;
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .mapSmlBtnRed i{
+        margin:-20px;
+    }
+
+    .mapSmlBtnYellow {
+        height: 30px;
+        width: 40px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #ffb752;
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .mapSmlBtnYellow i{
+        margin:-20px;
+    }
+
+    .mapSmlBtnGreen {
+        height: 30px;
+        width: 40px;
+        color: #b1bac1;
+        background: none;
+        border: 1px solid #87b87f;
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .mapSmlBtnGreen i{
+        margin:-20px;
+    }
+
+    .mapSmlBtn:hover {
+        color: #fff;
+        border: 1px solid #3f4e54;
+    }
+
+    .mapSmlMenuDiv {
+        border-right: 1px solid #3f4e54;
+        height: 41px;
+        margin-left: 10px;
+    }
+}
+
+.fancyboxDropdown{
+    width:200px;
+}
+
+.filterBox{
+    overflow: hidden;
+}
+
+.mapInfo{
+    width:300px;
+    overflow: hidden;
+    height:100%;
+}
+
+.mapInfoSummary{
+    list-style:none;
+}
+
+.daterangepicker .dropdown-menu{
+    z-index:9000;
+}
+
+.fancyDiv{
+    width:300px;
+}
+
+.techgroup{
+    padding-left:5px;
+}
+
+.bg-color-orange {
+    background-color: #f67808!important;
+}
+
+.bg-color-yellow {
+    background-color: #efec02!important;
+}
+
+.bg-color-lime{
+    background-color: #00b72b!important;
+}
+
+.bg-color-red{
+    background-color: #e70a0a!important;
+}

@@ -1,0 +1,117 @@
+﻿<div class="modal fade" id="areaFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title"><i class="fa fa-road txt-color-blue fa-2x"></i> Area Filter</h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="radio">
+                                <input type="radio" name="areaFilterRadio" checked="checked" value="main">
+                                <i></i>Main Maintenance Areas
+                            </label>
+                            <label class="select">
+                                @Html.DropDownList("mainAreas", null, String.Empty)<i></i>
+                            </label>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="radio">
+                                <input type="radio" name="areaFilterRadio" value="sub">
+                                <i></i>Sub Areas
+                            </label>
+                            <label class="select">
+                                <select id="subAreas"></select><i></i>
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> These areas are filtered according to the main area.</div>
+                        </section>
+                    </div>
+                    <hr /><br />
+                    <div class="row">
+                        <section class="col col-11">
+                            <label class="checkbox">
+                                <input id="clusteredAreaChk" type="checkbox" name="checkbox">
+                                <i></i>Show Asset Clustered
+                            </label>
+                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Hint:</strong> This data visualization groups assets together.</div>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-11">
+                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="areaLoader" style="height:15px; display:none;" />
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" style="float:right" id="areaFilterBtn">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"> 
+    function filterSubAreas(areaId) {
+        var i = 0;
+        var options = "";
+        $.each(SubAreas.jsonData, function () {
+            if (SubAreas.jsonData[i].i_areaId == areaId) {
+                options += '<option value="' + SubAreas.jsonData[i].i_areaSubId + '">' + SubAreas.jsonData[i].vc_description + '</option>';
+            }
+            i++;
+        });
+
+        $('#subAreas').html(options);
+    }
+
+    function filterAreas() {
+        $('#areaLoader').fadeIn(500);
+        //Clear Map
+        clearAllMarkers();
+        markerClusterer.clearMarkers();
+
+        var clustered = $('#clusteredAreaChk').prop("checked");
+        var filterType = $('input[name=areaFilterRadio]:checked').val();
+        if (filterType === 'main') {
+            var main = $('#mainAreas').val();
+            showMainAreas(main, clustered);
+        }
+        else if (filterType === 'sub') {
+            var sub = $('#subAreas').val();
+            showSubAreas(sub, clustered);
+        }
+        $('#areaFilterModal').modal('hide');
+        $('#areaLoader').hide();
+    }
+
+    //Area Filters
+    function showMainAreas(main, clustered) {
+        var i = 0;
+        markers = [];
+        $.each(Assets.jsonData, function () {
+            if (Assets.jsonData[i].location.areaId == main)
+                //Add Marker to Map
+                addMarker(Assets.jsonData[i]);
+            i++;
+        });
+        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
+    }
+
+    function showSubAreas(sub, clustered) {
+        var i = 0;
+        markers = [];
+        $.each(Assets.jsonData, function () {
+            if (Assets.jsonData[i].location.areaSubId == sub)
+                //Add Marker to Map
+                addMarker(Assets.jsonData[i]);
+            i++;
+        });
+        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
+    }
+</script>

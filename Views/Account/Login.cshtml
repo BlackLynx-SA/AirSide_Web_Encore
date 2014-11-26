@@ -1,99 +1,94 @@
-﻿@model LoginViewModel
-@{
-    ViewBag.PageId = "extr-page";
-    ViewBag.PageClass = "animated fadeInDown";
-}
+﻿@{Layout = null;}
+@using ADB.AirSide.Encore.V1.Models
+@model LoginViewModel
 
-@section topright{
-    <span id="extr-page-header-space"> <span class="hidden-mobile">Need an account?</span> <a href="@Url.Action("register", "account")" class="btn btn-danger">Create account</a> </span>
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-<div id="content" class="container">
-    <div class="row">
-        @{ Html.RenderPartial("_LoginText"); }
-        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
-            <div class="well no-padding">
-                <form action="@Url.Action("login", "account", new { ReturnUrl = ViewBag.ReturnUrl })" method="POST" id="login-form" class="smart-form client-form">
-                    <header>
-                        Sign In
-                    </header>
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationBootstrap()
-                    <fieldset>
-                        <section>
-                            <label class="label">E-mail</label>
-                            <label class="input">
-                                <i class="icon-append fa fa-user"></i>
-                                <input type="email" name="email" value="">
-                                <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> Please enter email address/username</b>
-                            </label>
-                        </section>
+    <title>ADB AirSide&trade;</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="This web interface is the enterprise portal for the AirSide solution.">
+    <meta name="author" content="BlackLynx (Pty) Ltd.">
 
-                        <section>
-                            <label class="label">Password</label>
-                            <label class="input">
-                                <i class="icon-append fa fa-lock"></i>
-                                <input type="password" name="password" value="">
-                                <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b>
-                            </label>
-                            <div class="note">
-                                <a href="@Url.Action("forgotpassword", "account")"><i class="fa fa-frown-o"></i> Forgot password?</a>
+    <!-- FAVICONS -->
+    <link rel="shortcut icon" href="~/content/img/favicon/adb_icon.ico" type="image/x-icon">
+    <link rel="icon" href="~/content/img/favicon/adb_icon.ico" type="image/x-icon">
+
+    <!-- Stylesheets -->
+    @Styles.Render("~/content/loginstyle")
+
+    <!-- Font Awesome CDN -->
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <section id="authenty_preview">
+        <section id="signin_main" class="authenty signin-main">
+            <div class="section-content">
+                <div class="wrap">
+                    <div class="container">
+                        <div class="form-wrap">
+                            <div class="row">
+                                <div id="form_1" data-animation="bounceIn">
+                                    <div class="form-header">
+                                        <img src="~/images/adbimages/ADB_Logo_100.png" class="adb_logo" />
+                                    </div>
+                                    <div class="form-main">
+
+                                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "form_1" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <div class="form-group">
+                                                <input type="text" id="Email" name="Email" class="form-control" placeholder="Email Address" required="required">
+                                                <input type="password" id="Password" name="Password" class="form-control" placeholder="Password" required="required">
+                                                <input type="hidden" id="RememberMe" name="RememberMe" value="false"/>
+                                                <span style="color:#999999;"><input type="checkbox" id="RememberMeChk" /> Remember Me?</span>
+                                            </div>
+                                            <input id="signIn_1" type="submit" class="btn btn-block" style="background-color:#22a1e4; color:#fff;" value="Sign In" />
+                                        }
+                                    </div>
+                                    <div class="form-footer">
+                                        <div class="row">
+                                            <div class="col-xs-7">
+                                                <i class="fa fa-unlock-alt"></i>
+                                                <a href="#password_recovery" id="forgot_from_1">Forgot password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (!Html.ViewData.ModelState.IsValid)
+                                {
+                                    <div class="alert alert-danger" role="alert" data-animation="bounceIn">
+                                        <span><b>Login Failed! </b> @Html.ValidationSummary(true)</span>
+                                    </div>
+                                }
                             </div>
-                        </section>
-
-                        <section>
-                            <label class="checkbox">
-                                <input type="checkbox" name="rememberMe" value="true">
-                                <input type="hidden" name="rememberMe" value="false" />
-                                <i></i>Stay signed in
-                            </label>
-                        </section>
-                    </fieldset>
-                    <footer>
-                        <button type="submit" class="btn btn-primary">
-                            Sign in
-                        </button>
-                    </footer>
-                </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            @{ Html.RenderPartial("_SocialMedia"); }
-        </div>
-    </div>
-</div>
-@section pagespecific {
-    <script type="text/javascript">
-        $(function () {
-            // Validation
-            $("#login-form").validate({
-                // Rules for form validation
-                rules: {
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 3,
-                        maxlength: 20
-                    }
-                },
+        </section>
 
-                // Messages for form validation
-                messages: {
-                    email: {
-                        required: 'Please enter your email address',
-                        email: 'Please enter a VALID email address'
-                    },
-                    password: {
-                        required: 'Please enter your password'
-                    }
-                },
 
-                // Do not change code below
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element.parent());
-                }
-            });
-        });
-    </script>
-}
+    </section>
+
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+   <script> if (!window.jQuery) { document.write('<script src="/scripts/libs/jquery-2.1.1.min.js"><\/script>'); } </script>
+
+   @Scripts.Render("~/scripts/loginscripts")
+
+</body>
+</html>

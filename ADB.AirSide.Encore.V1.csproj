@@ -281,6 +281,14 @@
     <Content Include="Content\css\font-awesome.min.css" />
     <Content Include="Content\css\invoice.min.css" />
     <Content Include="Content\css\lockscreen.min.css" />
+    <Content Include="Content\css\login\adbstyles.css" />
+    <Content Include="Content\css\login\animation.css" />
+    <Content Include="Content\css\login\authenty.css" />
+    <Content Include="Content\css\login\bootstrap.css" />
+    <Content Include="Content\css\login\checkbox\orange%402x.png" />
+    <Content Include="Content\css\login\checkbox\orange.css" />
+    <Content Include="Content\css\login\checkbox\orange.png" />
+    <Content Include="Content\css\login\preview.css" />
     <Content Include="Content\css\smartadmin-production-plugins.min.css" />
     <Content Include="Content\css\smartadmin-production.min.css" />
     <Content Include="Content\css\smartadmin-rtl.min.css" />
@@ -518,6 +526,8 @@
     <Content Include="Content\img\versions\reactversion.png" />
     <Content Include="Content\img\voicecommand\active-btn.gif" />
     <Content Include="Content\img\vt-menu.png" />
+    <Content Include="Content\orange%402x.png" />
+    <Content Include="Content\orange.png" />
     <Content Include="Content\sound\bigbox.mp3" />
     <Content Include="Content\sound\license.txt" />
     <Content Include="Content\sound\messagebox.mp3" />
@@ -526,6 +536,18 @@
     <Content Include="Content\sound\voice_off.mp3" />
     <Content Include="Content\sound\voice_on.mp3" />
     <Content Include="Global.asax" />
+    <Content Include="Images\adbimages\ADB_Logo_100.png" />
+    <Content Include="Images\adbimages\ADB_Logo_100_white.png" />
+    <Content Include="Images\adbimages\ADB_Symbol.png" />
+    <Content Include="Images\adbimages\ADB_Symbol_White.png" />
+    <Content Include="Images\icons\excel_ico.png" />
+    <Content Include="Images\icons\map_icon_blue.png" />
+    <Content Include="Images\icons\map_icon_green.png" />
+    <Content Include="Images\icons\map_icon_grey.png" />
+    <Content Include="Images\icons\map_icon_orange.png" />
+    <Content Include="Images\icons\map_icon_red.png" />
+    <Content Include="Images\icons\map_icon_yellow.png" />
+    <Content Include="Images\icons\pdf_ico.png" />
     <Content Include="Images\lights\Base_Ring.png" />
     <Content Include="Images\lights\BPE_LightType.png" />
     <Content Include="Images\lights\DRC_LightType.png" />
@@ -562,6 +584,12 @@
     <Content Include="Images\lights\TLP_C_LightType.png" />
     <Content Include="Images\lights\TLP_S_LightType.png" />
     <Content Include="Images\lights\UEL_LightType.png" />
+    <Content Include="Images\map_images\GreenMarker.png" />
+    <Content Include="Images\map_images\NutralMarker.png" />
+    <Content Include="Images\map_images\OrangeMarker.png" />
+    <Content Include="Images\map_images\RedMarker.png" />
+    <Content Include="Images\map_images\WholeMap.gif" />
+    <Content Include="Images\map_images\YellowMarker.png" />
     <Content Include="Images\uploads\empty.txt" />
     <Content Include="packages.config" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
@@ -584,6 +612,14 @@
     <Content Include="Scripts\demo.min.js" />
     <Content Include="Scripts\libs\jquery-2.1.1.min.js" />
     <Content Include="Scripts\libs\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\login\authenty.js" />
+    <Content Include="Scripts\login\pagescript.js" />
+    <Content Include="Scripts\login\jquery.icheck.min.js" />
+    <Content Include="Scripts\login\preview\init.js" />
+    <Content Include="Scripts\login\preview\jquery.address-1.6.min.js" />
+    <Content Include="Scripts\login\preview\jquery.malihu.PageScroll2id.js" />
+    <Content Include="Scripts\login\preview\scrollTo.min.js" />
+    <Content Include="Scripts\login\waypoints.min.js" />
     <Content Include="Scripts\notification\SmartNotification.min.js" />
     <Content Include="Scripts\plugin\bootstrap-duallistbox\jquery.bootstrap-duallistbox.min.js" />
     <Content Include="Scripts\plugin\bootstrap-progressbar\bootstrap-progressbar.min.js" />
@@ -940,6 +976,63 @@
     <Content Include="Scripts\plugin\datatables\jquery.dataTables.min.js" />
     <Content Include="Scripts\plugin\datatables\swf\copy_csv_xls.swf" />
     <Content Include="Scripts\plugin\datatables\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Scripts\plugin\date-time\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\plugin\date-time\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\plugin\date-time\bootstrap-timepicker.min.js" />
+    <Content Include="Scripts\plugin\date-time\daterangepicker.min.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ar.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.az.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.bg.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ca.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.cy.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.da.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.de.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.el.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.es.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.et.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.fa.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.fi.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.gl.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.he.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.hr.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.hu.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.id.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.is.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.it.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ka.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.kk.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.kr.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.lt.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.lv.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.mk.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ms.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.nl-BE.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.nl.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.no.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.pl.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.pt-BR.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.pt.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ro.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.rs-latin.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.rs.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ru.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.sk.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.sl.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.sq.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.sv.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.sw.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.th.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.ua.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.uk.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.vi.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.zh-CN.js" />
+    <Content Include="Scripts\plugin\date-time\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="Scripts\plugin\date-time\moment.min.js" />
     <Content Include="Scripts\plugin\date\date.js" />
     <Content Include="Scripts\plugin\ddslick\jquery.ddslick.min.js" />
     <Content Include="Scripts\plugin\delete-table-row\delete-table-row.min.js" />
@@ -987,6 +1080,7 @@
     <Content Include="Scripts\plugin\fullcalendar\jquery.fullcalendar.min.js" />
     <Content Include="Scripts\plugin\gmap3\gmap3.min.js" />
     <Content Include="Scripts\plugin\gmapjs\gmapjs.js" />
+    <Content Include="Scripts\plugin\googlemaps\MarkerCluster.js" />
     <Content Include="Scripts\plugin\ion-slider\ion.rangeSlider.min.js" />
     <Content Include="Scripts\plugin\jcrop\jquery.color.min.js" />
     <Content Include="Scripts\plugin\jcrop\jquery.Jcrop.min.js" />
@@ -1139,8 +1233,9 @@
       <DependentUpon>AirSideModel.edmx</DependentUpon>
       <LastGenOutput>AirSideModel.cs</LastGenOutput>
     </Content>
+    <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Custom.pubxml" />
-    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1159,6 +1254,10 @@
     <Content Include="Views\Home\StartUp.cshtml" />
     <Content Include="Views\Shifts\MaintenanceTasks.cshtml" />
     <Content Include="Views\Home\rebuildcache.cshtml" />
+    <Content Include="Views\Map\_AssetFilter.cshtml" />
+    <Content Include="Views\Map\_AreaFilter.cshtml" />
+    <Content Include="Views\Map\_VisualSurveyor.cshtml" />
+    <Content Include="Views\Map\_Photometric.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1373,7 +1472,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>BlackLynxCode.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

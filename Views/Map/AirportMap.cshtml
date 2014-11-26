@@ -13,121 +13,349 @@
         z-index: 4;
         height: 70px;
         line-height: 64px;
+        margin-left: 10px;
     }
 </style>
 
 <div id="content">
-    <div class="row">
-        <div class="col-md-12" id="mapTopMenuBack"></div>
-        <div class="col-md-12" id="mapMenuItems">
+    <div id="mapTopMenuBack"></div>
+    <div id="mapMenuItems">
+        @* Asset Filter Buttons *@
+        <button type="button" class="btn btn-success assetFilterBtn hidden-md hidden-lg">
+            <i class="fa fa-lightbulb-o"></i>
+        </button>
+        <button type="button" class="btn btn-labeled btn-success hidden-sm hidden-xs assetFilterBtn">
+            <span class="btn-label">
+                <i class="fa fa-lightbulb-o"></i>
+            </span>
+            Assets
+        </button>
 
-            <button type="button" class="btn btn-labeled btn-success">
-                <span class="btn-label">
-                    <i class="fa fa-lightbulb-o fa-2x"></i>
-                </span>
-                Assets
-            </button>
-            <button type="button" class="btn btn-labeled btn-primary">
-                <span class="btn-label">
-                    <i class="fa fa-road fa-2x"></i>
-                </span>
-                Areas
-            </button>
-            <button type="button" class="btn btn-labeled btn-warning">
-                <span class="btn-label">
-                    <i class="fa fa-eye fa-2x"></i>
-                </span>
-                Visual Surveyor&trade;
-            </button>
-            <button type="button" class="btn btn-labeled btn-danger">
-                <span class="btn-label">
-                    <i class="fa fa-sun-o fa-2x"></i>
-                </span>
-                Photometric
-            </button>
-            <button type="button" class="btn btn-labeled btn-info">
-                <span class="btn-label">
-                    <i class="fa fa-picture-o fa-2x"></i>
-                </span>
-                AutoCAD
-            </button>
+        @* Area Filter Buttons *@
+        <button type="button" class="btn btn-primary hidden-md hidden-lg areaFilterBtn">
+            <i class="fa fa-road "></i>
+        </button>
+        <button type="button" class="btn btn-labeled btn-primary hidden-sm hidden-xs areaFilterBtn">
+            <span class="btn-label">
+                <i class="fa fa-road"></i>
+            </span>
+            Areas
+        </button>
 
-            <div class="btn-group" style="float:right;">
-                <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown" style="float:none;">
-                    <span class="btn-label">
-                        <i class="fa fa-map-marker fa-2x"></i>
-                    </span>
-                    Map Type
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Hybrid</a></li>
-                    <li><a href="#">Satelite</a></li>
-                    <li><a href="#">Road Map</a></li>
-                    <li><a href="#">Terrain</a></li>
-                </ul>
-            </div>
+        @* Visual Surveyor Buttons *@
+        <button type="button" class="btn btn-warning hidden-md hidden-lg surveyorBtn">
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" class="btn btn-labeled btn-warning hidden-sm hidden-xs surveyorBtn">
+            <span class="btn-label">
+                <i class="fa fa-eye "></i>
+            </span>
+            Visual Surveyor&trade;
+        </button>
+
+        @* Photometric Buttons *@
+        <button type="button" class="btn btn-danger hidden-md hidden-lg photoBtn">
+            <i class="fa fa-sun-o "></i>
+        </button>
+        <button type="button" class="btn btn-labeled btn-danger hidden-sm hidden-xs photoBtn">
+            <span class="btn-label">
+                <i class="fa fa-sun-o "></i>
+            </span>
+            Photometric
+        </button>
+
+        @* AutoCAD Buttons *@
+        <button type="button" class="btn btn-info hidden-lg">
+            <i class="fa fa-picture-o "></i>
+        </button>
+        <button type="button" class="btn btn-labeled btn-info hidden-sm hidden-xs hidden-md">
+            <span class="btn-label">
+                <i class="fa fa-picture-o "></i>
+            </span>
+            AutoCAD
+        </button>
+
+        @* Map Type Buttons *@
+        <div class="btn-group  hidden-lg">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-map-marker"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+            </ul>
+        </div>
+        <div class="btn-group hidden-sm hidden-xs hidden-md">
+            <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="btn-label">
+                    <i class="fa fa-map-marker "></i>
+                </span>
+                Map Type
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+            </ul>
         </div>
     </div>
-    <div id="map_canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
+
+    <div id="map-canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
         &nbsp;
     </div>
 </div>
+
+@{
+    //Render Partials for all modal windows
+    Html.RenderPartial("_AssetFilter");
+    Html.RenderPartial("_AreaFilter");
+    Html.RenderPartial("_VisualSurveyor");
+    Html.RenderPartial("_Photometric");
+}
 
 @section pagespecific{
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
     </script>
 
+    @Scripts.Render("~/scripts/googlemaps")
+
     <script>
-        var globalMap
+        //Map Global Variables
+        var Assets = new AllAssets();
+        var SubAreas = new AllSubAreas();
+        var map, heatmap, infowindow;
+        var markers = [];
+        var markerClusterer = new MarkerClusterer(null, null);
+        var overlayShow = false;
+        var heatMapShow = false;
+        var clusterShow = false;
+
+        initMap();
+
+        function AllAssets() {
+            this.jsonData = {};
+        }
+
+        function markerInfo(json) {
+            //Header
+            var content = '<div class="mapInfo"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
+
+            //Image of Asset
+            content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
+
+            content += "<h5 class='txt-color-blue'>Summary</h4>"
+            content += "<ul class='mapInfoSummary'><li>Maintenance Status: " + getMaintenanceStatus(json.maintenanceCycle) + "</li>";
+            content += "<li>Previous Date: <strong>" + json.previousDate + "</strong></li>";
+            content += "<li>Next Date: <strong>" + json.nextDate + "</strong></li>";
+            content += "<li>Asset Type: <strong>" + json.assetClass.description + "</strong></li>";
+            content += "</ul><hr/>";
+
+            //End
+            content += '</div>';
+
+            return content;
+        }
+
+        function getMaintenanceStatus(status) {
+            var img;
+            switch (status) {
+                case 0: img = "<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> No Data Available</span>";
+                    break;
+                case 1: img = "<span style='color:green;'><i class='fa fa-thumbs-o-up'></i> Recently Updated</span>";
+                    break;
+                case 2: img = "<span style='color:#ffb752;'><i class='fa fa-ellipsis-h'></i> In Mid Cycle</span>";
+                    break;
+                case 3: img = "<span style='color:orange;'><i class='fa fa-bell icon-animated-bell'></i> Almost Due</span>";
+                    break;
+                case 4: img = "<span style='color:red;'><i class='fa fa-thumbs-o-down'></i> Asset Overdue</span>";
+                    break;
+                default:
+                    break;
+            }
+
+            return img
+        }
+
+        function getImage(value) {
+            var image;
+            switch (value) {
+                case 0: image = '/images/map_images/NutralMarker.png';
+                    break;
+                case 1: image = '/images/map_images/GreenMarker.png';
+                    break;
+                case 2: image = '/images/map_images/YellowMarker.png';
+                    break;
+                case 3: image = '/images/map_images/OrangeMarker.png';
+                    break;
+                case 4: image = '/images/map_images/RedMarker.png';
+                    break;
+
+                default:
+                    break;
+            }
+
+            return image;
+        }
+
+        function addMarker(json) {
+            var long = json.location.longitude;
+            var lat = json.location.latitude;
+            var latLongMarker = new google.maps.LatLng(lat, long);
+            var image = getImage(json.maintenanceCycle);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latLongMarker,
+                title: json.assetId.toString(),
+                icon: image
+            });
+
+            //Generate Info Window Content
+            var content = markerInfo(json);
+
+            google.maps.event.addListener(marker, 'click', function () {
+                if (infowindow) infowindow.close();
+                infowindow = new google.maps.InfoWindow({ content: content });
+                infowindow.open(map, marker);
+            });
+
+            markers.push(marker);
+        }
+
+        function changeMap(type) {
+            if (type === 'Satellite') {
+                map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+            } else if (type === 'Roadmap') {
+                map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+            } else if (type === 'Hybrid') {
+                map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+            } else if (type === 'Terrain') {
+                map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+            }
+        }
+
+        function AllAssets() {
+            this.jsonData = {};
+        }
+
+        function AllSubAreas() {
+            this.jsonData = {};
+        }
+
+        function requestAllAssetData() {
+            $.ajax({
+                url: 'getAllAssets',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    Assets.jsonData = json;
+                }
+            });
+        }
+
+        function requestAllSubAreas() {
+            $.ajax({
+                url: 'getAllSubAreas',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    SubAreas.jsonData = json;
+                }
+            });
+        }
+
+        function initMap() {
+            $.ajax({
+                url: 'getMapCenter',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    var zoom = 15;
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        zoom = 14;
+                    }
+                    var mapOptions = {
+                        center: new google.maps.LatLng(json[0], json[1]),
+                        zoom: zoom,
+                        disableDefaultUI: true,
+                        mapTypeId: google.maps.MapTypeId.SATELLITE
+                    };
+                    map = new google.maps.Map(document.getElementById("map-canvas"),
+                        mapOptions);
+
+                    //Download all assets and Sub Areas
+                    requestAllAssetData();
+                    requestAllSubAreas();
+                }
+            });
+        }
+
         function resize() {
             //Calculate the window height and deduct the menu height
-            $('#map_canvas').css('height', Math.round($(window).height() - 170));
-            google.maps.event.trigger(globalMap, 'resize');
+            $('#map-canvas').css('height', Math.round($(window).height() - 170));
+            $('#mapTopMenuBack').css('width', $('#map-canvas').width());
+            $('#mapMenuItems').css('width', $('#map-canvas').width());
+            if(map != null)
+                google.maps.event.trigger(map, 'resize');
+        }
+
+        function clearAllMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = null;
         }
 
         $(document).ready(function () {
+            $('#map-canvas').css('height', Math.round($(window).height() - 170));
+            $('#mapTopMenuBack').css('width', $('#map-canvas').width());
+            $('#mapMenuItems').css('width', $('#map-canvas').width());
 
+            
 
-            var pagefunction = function () {
-                function initMap() {
-                    globalMap = new GMaps({
-                        div: '#map_canvas',
-                        lat: -12.043333,
-                        lng: -77.028333
-                    });
+            $(document).on('change', '#mainAreas', function () {
+                var area = $(this).val();
+                filterSubAreas(area);
+            });
 
-                    globalMap.setContextMenu({
-                        control: 'map',
-                        options: [{
-                            title: 'Add marker',
-                            name: 'add_marker',
-                            action: function (e) {
-                                this.addMarker({
-                                    lat: e.latLng.lat(),
-                                    lng: e.latLng.lng(),
-                                    title: 'New marker'
-                                });
-                            }
-                        }, {
-                            title: 'Center here',
-                            name: 'center_here',
-                            action: function (e) {
-                                this.setCenter(e.latLng.lat(), e.latLng.lng());
-                            }
-                        }]
-                    });
-                }
+            $(document).on('click', '#assetFilterBtn', function () {
+                filterAssets();
+            });
 
-                initMap();
-                resize();
-            };
+            $(document).on('click', '#areaFilterBtn', function () {
+                filterAreas();
+            });
 
-            pagefunction();
+            $(document).on('click', '#surveyorFilterBtn', function () {
+                requestSurveyorData();
+            });
 
+            $(document).on('click', '#photoFilterBtn', function () {
+                applyFbTechFilter();
+            });
+
+            //Modal Click Events
+            $(document).on('click', '.assetFilterBtn', function () {
+                $('#assetFilterModal').modal('show');
+            });
+
+            $(document).on('click', '.areaFilterBtn', function () {
+                $('#areaFilterModal').modal('show');
+            });
+
+            $(document).on('click', '.surveyorBtn', function () {
+                $('#visualSurveyFilterModal').modal('show');
+            });
+
+            $(document).on('click', '.photoBtn', function () {
+                $('#photometricFilterModal').modal('show');
+            });
+
+            //Fire all the resize items for the map
             $(window).resize(function () { resize() });
         });
     </script>
-
-    <script src="~/Scripts/plugin/gmapjs/gmapjs.js"></script>
 }

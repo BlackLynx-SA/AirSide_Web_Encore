@@ -624,7 +624,7 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log("Failed to rebuild asset profile:(" + assetID.ToString() + ") " + err.Message, "rebuildAssetProfile", Logging.logTypes.Error, "SYSTEM");
+                log.log("Failed to rebuild asset profile:(" + assetID.ToString() + ") " + err.InnerException.Message, "rebuildAssetProfile", Logging.logTypes.Error, "SYSTEM");
             }
         }
 

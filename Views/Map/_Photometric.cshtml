@@ -1,0 +1,148 @@
+﻿<div class="modal fade" id="photometricFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title"><i class="fa fa-sun-o txt-color-red fa-2x"></i> Photometric Filter</h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <section class="col col-10">
+                            <label class="label">
+                                Available Dates
+                            </label>
+                            <label class="select">
+                                @Html.DropDownList("photmetricDates", null, String.Empty)<i></i>
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This list only contains dates on which photometric runs were performed.</div>
+                        </section>
+                    </div>
+
+                    <hr /><br />
+                    <div class="row">
+                        <section class="col col-11">
+                            <label class="checkbox">
+                                <input id="failedChk" type="checkbox" name="checkbox">
+                                <i></i>Only Show Failed Lights
+                            </label>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This filter will only show failed lights.</div>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-11">
+                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="photoLoader" style="height:15px; display:none;" />
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" style="float:right" id="photoFilterBtn">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function generateFBTechContent(json) {
+        var content = '<div style="width:450px;">' +
+                            '<div style="margin: 10px 10px 10px 10px; overflow:hidden;">' +
+                            '<h3 class="header smaller lighter blue">Photometric data for <strong>' + json.tagid + '</strong></h3>' +
+                            '<div class="row">' +
+                            '<div class="col-xs-4"><h5>Avg Cd: ' + json.avgcd + '</h5></div>' +
+                            '<div class="col-xs-4"><h5>Max Cd: ' + json.maxcd + '</h5></div>' +
+                            '<div class="col-xs-4"><h5>ICAO: ' + json.pericao + '</h5></div>' +
+                            '</div><hr/>' +
+                            '<img src="' + json.picture + '" alt="Candela Chart" style="zoom:0.7;"/>' +
+                            '</div>' +
+                        '</div>';
+        return content;
+    }
+
+    function applyFbTechFilter() {
+        //Clear Map
+        clearAllMarkers();
+        markerClusterer.clearMarkers();
+
+
+        $('#photoLoader').fadeIn(500);
+
+        var date = $('#photmetricDates').val();
+        var url = 'getFBTechData?dateForData=' + date;
+        var flag = $('#failedChk').prop('checked');
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            cache: false,
+            dataType: 'json',
+            success: function (json) {
+                var i = 0;
+                markers = [];
+                $.each(json, function () {
+                    //Generate Info Screen
+                    var contentString = generateFBTechContent(json[i]);
+
+                    var image = null;
+
+                    if (json[i].pass !== false)
+                        image = '/Images/icons/map_icon_green.png';
+                    else
+                        image = '/Images/icons/map_icon_red.png';
+
+                    if (image !== null) {
+
+                        if (!flag) {
+                            //Get Lat/Long for marker
+                            var long = json[i].longitude;
+                            var lat = json[i].latitude;
+                            var latLongMarker = new google.maps.LatLng(lat, long);
+                            var marker = new google.maps.Marker({
+                                position: latLongMarker,
+                                map: map,
+                                title: json[i].tagid,
+                                icon: image
+                            });
+
+                            //Add click event handler for info window
+                            google.maps.event.addListener(marker, 'click', function () {
+                                if (infowindow) infowindow.close();
+                                infowindow = new google.maps.InfoWindow({ content: contentString });
+                                infowindow.open(map, marker);
+                            });
+
+                            markers.push(marker);
+                        } else {
+                            if (!json[i].pass) {
+                                //Get Lat/Long for marker
+                                var long = json[i].longitude;
+                                var lat = json[i].latitude;
+                                var latLongMarker = new google.maps.LatLng(lat, long);
+                                var marker = new google.maps.Marker({
+                                    position: latLongMarker,
+                                    map: map,
+                                    title: json[i].tagid,
+                                    icon: image
+                                });
+
+                                //Add click event handler for info window
+                                google.maps.event.addListener(marker, 'click', function () {
+                                    if (infowindow) infowindow.close();
+                                    infowindow = new google.maps.InfoWindow({ content: contentString });
+                                    infowindow.open(map, marker);
+                                });
+
+                                markers.push(marker);
+                            }
+                        }
+                    }
+                    i++;
+                });
+                $('#photoLoader').fadeOut(500);
+                $('#photometricFilterModal').modal('hide');
+            }
+        });
+    }
+</script>
