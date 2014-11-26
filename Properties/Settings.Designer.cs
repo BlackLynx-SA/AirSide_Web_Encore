@@ -22,34 +22,5 @@ namespace ADB.AirSide.Encore.V1.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("mongodb://192.168.0.239")]
-        public string MongoDBServer {
-            get {
-                return ((string)(this["MongoDBServer"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("AirSideEncore")]
-        public string MongoDBDatabase {
-            get {
-                return ((string)(this["MongoDBDatabase"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\sqlexpress;Initial Catalog=airside.encore;User ID=sa;Password=pu1ue" +
-            "$en")]
-        public string Setting {
-            get {
-                return ((string)(this["Setting"]));
-            }
-        }
     }
 }
