@@ -250,6 +250,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.dt_captureDate = DateTime.Now;
                     db.as_shiftData.Add(shift);
                     db.SaveChanges();
+
+                    try
+                    {
+                        CacheHelper cache = new CacheHelper();
+                        cache.rebuildAssetProfileForAsset(shift.i_assetId);
+                    }
+                    catch (Exception err)
+                    {
+                        Logging log = new Logging();
+                        log.log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", Logging.logTypes.Error, "SYSTEM");
+                    }
                 }
                 return Json("[{success:1}]");
             }
@@ -588,6 +599,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         //Log the change
                         log.log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", Logging.logTypes.Info, "iOS Device");
                         i++;
+
+                        try
+                        {
+                            CacheHelper cache = new CacheHelper();
+                            cache.rebuildAssetProfileForAsset(item.assetId);
+                        }
+                        catch (Exception err)
+                        {
+                            log.log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", Logging.logTypes.Error, "SYSTEM");
+                        }
                     }
                     else
                     {
@@ -625,6 +646,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                     //Log the change
                     log.log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", Logging.logTypes.Info, UserId.ToString());
+
+                    try
+                    {
+                        CacheHelper cache = new CacheHelper();
+                        cache.rebuildAssetProfileForAsset(asset.i_assetId);
+                    }
+                    catch (Exception err)
+                    {
+                        log.log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", Logging.logTypes.Error, "SYSTEM");
+                    }
+
                     return Json("[{success:1}]");
                 }
                 else
@@ -667,6 +699,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                     db.as_assetProfile.Add(newAsset);
                     db.SaveChanges();
+
+                    try
+                    {
+                        CacheHelper cache = new CacheHelper();
+                        cache.rebuildAssetProfileForAsset(newAsset.i_assetId);
+                    }
+                    catch (Exception err)
+                    {
+                        Logging log = new Logging();
+                        log.log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", Logging.logTypes.Error, "SYSTEM");
+                    }
                 }
 
                 //2014/10/28 - Changed "assets" to "success" after iPad failure

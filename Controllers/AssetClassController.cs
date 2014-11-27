@@ -12,6 +12,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
     public class AssetClassController : Controller
     {
         private Entities db = new Entities();
+
         public ActionResult AssetClasses()
         {
             return View();

@@ -65,10 +65,10 @@
         </button>
 
         @* AutoCAD Buttons *@
-        <button type="button" class="btn btn-info hidden-lg">
+        <button type="button" class="btn btn-info hidden-lg autoCadBtn">
             <i class="fa fa-picture-o "></i>
         </button>
-        <button type="button" class="btn btn-labeled btn-info hidden-sm hidden-xs hidden-md">
+        <button type="button" class="btn btn-labeled btn-info hidden-sm hidden-xs hidden-md autoCadBtn">
             <span class="btn-label">
                 <i class="fa fa-picture-o "></i>
             </span>
@@ -199,6 +199,30 @@
             }
 
             return image;
+        }
+
+        //This needs to be updated to accomodate for multiple AutoCAD Drawings
+        function loadOverlay() {
+            $('#loader').fadeIn(500);
+            if (!overlayShow) {
+                var overlaySrc = '../../images/map_images/wholemap.gif';
+                var preloadOverlay = new Image();
+                preloadOverlay.onload = function () {
+
+                    var imagebounds = new google.maps.LatLngBounds(
+                                            new google.maps.LatLng(51.455567, -0.490753),
+                                            new google.maps.LatLng(51.479600, -0.426184));
+                    mapOver = new google.maps.GroundOverlay(overlaySrc, imagebounds);
+                    mapOver.setMap(map);
+                    overlayShow = true;
+                    $('#loader').fadeOut(500);
+                };
+                preloadOverlay.src = overlaySrc;
+            } else {
+                mapOver.setMap(null);
+                overlayShow = false;
+                $('#loader').fadeOut(500);
+            }
         }
 
         function addMarker(json) {
@@ -353,6 +377,11 @@
             $(document).on('click', '.photoBtn', function () {
                 $('#photometricFilterModal').modal('show');
             });
+
+            $(document).on('click', '.autoCadBtn', function () {
+                loadOverlay();
+            });
+            
 
             //Fire all the resize items for the map
             $(window).resize(function () { resize() });
