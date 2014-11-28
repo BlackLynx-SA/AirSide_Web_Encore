@@ -1433,6 +1433,12 @@
     <Compile Include="Models\as_technicianWrenchProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\as_todoCategories.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_todoProfile.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\as_userExternalSession.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>

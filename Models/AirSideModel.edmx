@@ -72,7 +72,7 @@
           <Key>
             <PropertyRef Name="i_assetId" />
           </Key>
-          <Property Name="i_assetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_assetId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="i_locationId" Type="int" Nullable="false" />
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
           <Property Name="vc_rfidTag" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -304,6 +304,28 @@
           <Property Name="i_wrenchId" Type="int" Nullable="false" />
           <Property Name="dt_dateTime" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
+        <EntityType Name="as_todoCategories">
+          <Key>
+            <PropertyRef Name="i_todoCatId" />
+          </Key>
+          <Property Name="i_todoCatId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="bt_private" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_todoProfile">
+          <Key>
+            <PropertyRef Name="i_todoProfileId" />
+          </Key>
+          <Property Name="i_todoProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dt_dateTime" Type="datetime" Nullable="false" />
+          <Property Name="vc_title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_description" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="i_todoCatId" Type="int" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
+          <Property Name="bt_private" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="as_userExternalSession">
           <Key>
             <PropertyRef Name="i_sessionId" />
@@ -478,6 +500,8 @@
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_todoCategories" EntityType="Self.as_todoCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_todoProfile" EntityType="Self.as_todoProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -861,6 +885,8 @@
           </AssociationSet>
           <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
           <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
+          <EntitySet Name="as_todoCategories" EntityType="airside.encoreModel.as_todoCategories" />
+          <EntitySet Name="as_todoProfile" EntityType="airside.encoreModel.as_todoProfile" />
         </EntityContainer>
         <EntityType Name="as_accessProfile">
           <Key>
@@ -973,6 +999,28 @@
           <Property Name="vc_fileDescription" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="i_fileType" Type="Int32" Nullable="false" />
           <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="as_todoCategories">
+          <Key>
+            <PropertyRef Name="i_todoCatId" />
+          </Key>
+          <Property Name="i_todoCatId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="bt_private" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_todoProfile">
+          <Key>
+            <PropertyRef Name="i_todoProfileId" />
+          </Key>
+          <Property Name="i_todoProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dt_dateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vc_title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="i_todoCatId" Type="Int32" Nullable="false" />
+          <Property Name="bt_active" Type="Boolean" Nullable="false" />
+          <Property Name="bt_private" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1398,6 +1446,30 @@
                 <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
                 <ScalarProperty Name="guid_file" ColumnName="guid_file" />
                 <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_todoCategories">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_todoCategories">
+              <MappingFragment StoreEntitySet="as_todoCategories">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="bt_private" ColumnName="bt_private" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_todoProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_todoProfile">
+              <MappingFragment StoreEntitySet="as_todoProfile">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="bt_private" ColumnName="bt_private" />
+                <ScalarProperty Name="bt_active" ColumnName="bt_active" />
+                <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="vc_title" ColumnName="vc_title" />
+                <ScalarProperty Name="dt_dateTime" ColumnName="dt_dateTime" />
+                <ScalarProperty Name="i_todoProfileId" ColumnName="i_todoProfileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

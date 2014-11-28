@@ -90,6 +90,83 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        #region AJAX Calls for Dashboard
+
+        [HttpPost]
+        public JsonResult getAllTodos()
+        {
+            try
+            {
+                var user = db.UserProfiles.Where(q => q.UserName == User.Identity.Name).First();
+                var todos = db.as_todoProfile.Where(q => (q.UserId == user.UserId && q.bt_active == true) || (q.bt_private == false && q.bt_active == true)).ToList();
+                return Json(todos);
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to get user todos: " + err.Message + "|" + err.InnerException.Message, "getAllTodos", Logging.logTypes.Error, User.Identity.Name);
+                return Json(new { error = err.InnerException.Message });
+            }
+        }
+
+        [HttpPost]
+        public JsonResult getTodoCategories()
+        {
+            try
+            {
+                var user = db.UserProfiles.Where(q => q.UserName == User.Identity.Name).First();
+                var categories = db.as_todoCategories.Where(q => q.UserId == user.UserId || q.bt_private == false).ToList();
+                return Json(categories);
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to get user todos categories: " + err.Message + "|" + err.InnerException.Message, "getTodoCategories", Logging.logTypes.Error, User.Identity.Name);
+                return Json(new { error = err.InnerException.Message });
+            }
+        }
+
+        public JsonResult insertNewTodo(as_todoProfile todo)
+        {
+            try
+            {
+                var user = db.UserProfiles.Where(q => q.UserName == User.Identity.Name).First();
+                todo.UserId = user.UserId;
+                todo.dt_dateTime = DateTime.Now;
+                db.as_todoProfile.Add(todo);
+                db.SaveChanges();
+
+                return Json(new { status = "success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", Logging.logTypes.Error, User.Identity.Name);
+                return Json(new { error = err.InnerException.Message });
+            }
+        }
+
+        public JsonResult updateTodo(int todoId, Boolean active)
+        {
+            try
+            {
+                var todo = db.as_todoProfile.Find(todoId);
+                todo.bt_active = active;
+                db.Entry(todo).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return Json(new { status = "success", item = todo.vc_description });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", Logging.logTypes.Error, User.Identity.Name);
+                return Json(new { error = err.InnerException.Message });
+            }
+        }
+
+        #endregion
+
         #region Helpers
 
         static string GetMd5Hash(MD5 md5Hash, string input)

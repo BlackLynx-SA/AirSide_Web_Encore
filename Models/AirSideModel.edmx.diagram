@@ -46,6 +46,8 @@
         <AssociationConnector Association="airside.encoreModel.AspNetUserRoles" />
         <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadInfo" Width="1.5" PointX="11.375" PointY="15.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadProfile" Width="1.5" PointX="7.375" PointY="9.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_todoCategories" Width="1.5" PointX="13.375" PointY="16.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_todoProfile" Width="1.5" PointX="15.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
