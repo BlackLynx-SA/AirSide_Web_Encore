@@ -1,4 +1,18 @@
-﻿using ADB.AirSide.Encore.V1.App_Helpers;
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for the Shifts route
+#endregion
+
+using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
 using System;
 using System.Collections.Generic;
@@ -14,16 +28,64 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         public ActionResult Calendar()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult MaintenanceTasks()
         {
             return View();
         }
 
+        #region Custom Shifts
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        public JsonResult insertCustomShift(as_shiftsCustom shiftData, int[] assetIds)
+        {
+            try
+            {
+                //set default values for creation
+                shiftData.bt_completed = false;
+                shiftData.dt_completionDate = new DateTime(1970, 1, 1);
+
+                db.as_shiftsCustom.Add(shiftData);
+                db.SaveChanges();
+
+                //create the profile for this shift
+                foreach (int item in assetIds)
+                {
+                    as_shiftsCustomProfile newProfile = new as_shiftsCustomProfile();
+                    newProfile.i_assetId = item;
+                    newProfile.i_shiftCustomId = shiftData.i_shiftCustomId;
+                    db.as_shiftsCustomProfile.Add(newProfile);
+                }
+
+                //commit to db
+                db.SaveChanges();
+
+                return Json(new { message = "Successfully added custom shift", count = assetIds.Count() });
+            } catch(Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert a custom shift: " + err.InnerException.Message, "insertCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(new { message = err.InnerException.Message });
+            }
+        }
+
+        #endregion
+
+        #region Area Based Shifts
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllTechnicianGroups()
         {
@@ -41,6 +103,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllShifts()
         {
@@ -79,6 +143,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getUserEvents()
         {
@@ -96,6 +162,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertUserDefinedEvent(string description, string title, string color, string icon, Boolean userSpesific)
@@ -126,6 +194,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getUserActiveEvents()
         {
@@ -166,11 +236,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult AllShifts()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getShifts(Boolean active)
         {
@@ -233,6 +307,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertUserEvent(string dateTime, int recuring, int groupId)
@@ -272,6 +348,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId)
@@ -325,5 +403,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 return Json(err.Message);
             }
         }
+    
+        #endregion
     }
 }

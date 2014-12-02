@@ -12,12 +12,12 @@ namespace ADB.AirSide.Encore.V1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_todoCategories
+    public partial class as_validationProfile
     {
-        public int i_todoCatId { get; set; }
-        public string vc_description { get; set; }
-        public bool bt_private { get; set; }
+        public int i_validationProfile { get; set; }
         public int UserId { get; set; }
-        public string vc_icon { get; set; }
+        public int i_assetId { get; set; }
+        public System.DateTime dt_dateTimeStamp { get; set; }
+        public bool bt_validated { get; set; }
     }
 }

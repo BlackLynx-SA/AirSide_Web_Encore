@@ -12,12 +12,14 @@ namespace ADB.AirSide.Encore.V1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_todoCategories
+    public partial class as_shiftsCustom
     {
-        public int i_todoCatId { get; set; }
-        public string vc_description { get; set; }
-        public bool bt_private { get; set; }
-        public int UserId { get; set; }
-        public string vc_icon { get; set; }
+        public int i_shiftCustomId { get; set; }
+        public int i_techGroupId { get; set; }
+        public System.DateTime dt_scheduledDate { get; set; }
+        public System.DateTime dt_completionDate { get; set; }
+        public bool bt_completed { get; set; }
+        public string vc_permitNumber { get; set; }
+        public string vc_externalReference { get; set; }
     }
 }
