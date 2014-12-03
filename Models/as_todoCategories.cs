@@ -18,5 +18,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public string vc_description { get; set; }
         public bool bt_private { get; set; }
         public int UserId { get; set; }
+        public string vc_icon { get; set; }
     }
 }

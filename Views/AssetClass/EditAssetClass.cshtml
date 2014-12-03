@@ -193,21 +193,21 @@
             $.ajax({
                 url: url,
                 data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
-                    type: "POST",
-                    dataType: "json",
-                    success: function (json) {
-                        $('#taskModal').modal('hide');
-                        getAssosiatedTasks();
-                    },
-                    error: function (err) {
-                        $.smallBox({
-                            title: "Error Retrieving Tasks",
-                            content: err.responseText,
-                            color: "#f51414",
-                            timeout: 5000,
-                            icon: "fa fa-bell swing animated"
-                        });
-                    }
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $('#taskModal').modal('hide');
+                    getAssosiatedTasks();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error Retrieving Tasks",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
                 });
             });
         }

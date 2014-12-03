@@ -126,17 +126,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        public JsonResult insertNewTodo(as_todoProfile todo)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult insertNewTodo(string description, string category)
         {
             try
             {
+                var categoryObject = db.as_todoCategories.Where(q => q.vc_description == category).First();
                 var user = db.UserProfiles.Where(q => q.UserName == User.Identity.Name).First();
+                
+                as_todoProfile todo = new as_todoProfile();
                 todo.UserId = user.UserId;
                 todo.dt_dateTime = DateTime.Now;
+                todo.bt_private = true;
+                todo.bt_active = true;
+                todo.vc_description = description;
+                todo.i_todoCatId = categoryObject.i_todoCatId;
+
                 db.as_todoProfile.Add(todo);
                 db.SaveChanges();
 
-                return Json(new { status = "success" });
+                return Json(new { 
+                    date = todo.dt_dateTime.ToString("yyyy/MM/dd"),
+                    vc_description = todo.vc_description,
+                    i_todoProfileId = todo.i_todoProfileId,
+                    i_todoCatId = todo.i_todoCatId
+                });
             }
             catch (Exception err)
             {
@@ -146,6 +161,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult updateTodo(int todoId, Boolean active)
         {
             try

@@ -16,7 +16,6 @@ namespace ADB.AirSide.Encore.V1.Models
     {
         public int i_todoProfileId { get; set; }
         public System.DateTime dt_dateTime { get; set; }
-        public string vc_title { get; set; }
         public string vc_description { get; set; }
         public int i_todoCatId { get; set; }
         public bool bt_active { get; set; }

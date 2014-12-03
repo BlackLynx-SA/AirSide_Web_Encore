@@ -312,6 +312,7 @@
           <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="bt_private" Type="bit" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="vc_icon" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -319,7 +320,6 @@
           </Key>
           <Property Name="i_todoProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="dt_dateTime" Type="datetime" Nullable="false" />
-          <Property Name="vc_title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="i_todoCatId" Type="int" Nullable="false" />
           <Property Name="bt_active" Type="bit" Nullable="false" />
@@ -1008,6 +1008,7 @@
           <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="bt_private" Type="Boolean" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="vc_icon" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -1015,7 +1016,6 @@
           </Key>
           <Property Name="i_todoProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="dt_dateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="vc_title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="vc_description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="i_todoCatId" Type="Int32" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
@@ -1452,6 +1452,7 @@
           <EntitySetMapping Name="as_todoCategories">
             <EntityTypeMapping TypeName="airside.encoreModel.as_todoCategories">
               <MappingFragment StoreEntitySet="as_todoCategories">
+                <ScalarProperty Name="vc_icon" ColumnName="vc_icon" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="bt_private" ColumnName="bt_private" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
@@ -1467,7 +1468,6 @@
                 <ScalarProperty Name="bt_active" ColumnName="bt_active" />
                 <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="vc_title" ColumnName="vc_title" />
                 <ScalarProperty Name="dt_dateTime" ColumnName="dt_dateTime" />
                 <ScalarProperty Name="i_todoProfileId" ColumnName="i_todoProfileId" />
               </MappingFragment>
