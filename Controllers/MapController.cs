@@ -1,5 +1,18 @@
-﻿using ADB.AirSide.Encore.V1.App_Helpers;
-using ADB.AirSide.Encore.V1.Models;
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for all Mapping related calls
+#endregion
+
+using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
 using System;
 using System.Collections.Generic;
@@ -21,6 +34,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewBag.mainAreas = new SelectList(db.as_areaProfile.OrderBy(q => q.vc_description).Distinct(), "i_areaId", "vc_description");
             ViewBag.surveyorDates = new SelectList(db.as_fileUploadProfile.OrderByDescending(q => q.dt_datetime).ToList().Select(q => q.dt_datetime.ToString("yyy/MM/dd")).Distinct(), "dt_datetime");
             ViewBag.photmetricDates = new SelectList(db.as_fbTechProfile.OrderByDescending(q => q.dt_dateTimeStamp).ToList().Select(q => q.dt_dateTimeStamp.ToString("yyy/MM/dd")).Distinct(), "dt_dateTimeStamp");
+            ViewBag.techgroups = new SelectList(db.as_technicianGroups, "i_groupId", "vc_groupName");
             return View();
         }
 

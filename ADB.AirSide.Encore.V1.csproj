@@ -1260,6 +1260,7 @@
     <Content Include="Views\Map\_AreaFilter.cshtml" />
     <Content Include="Views\Map\_VisualSurveyor.cshtml" />
     <Content Include="Views\Map\_Photometric.cshtml" />
+    <Content Include="Views\Map\_ShiftCreate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1424,6 +1425,12 @@
     <Compile Include="Models\as_shifts.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\as_shiftsCustom.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_shiftsCustomProfile.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\as_technicianGroupProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
@@ -1440,6 +1447,9 @@
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_userExternalSession.cs">
+      <DependentUpon>AirSideModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_validationProfile.cs">
       <DependentUpon>AirSideModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_wrenchProfile.cs">

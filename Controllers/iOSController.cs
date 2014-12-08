@@ -1,4 +1,18 @@
-﻿using ADB.AirSide.Encore.V1.App_Helpers;
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for iOS calls to use with the iPad application
+#endregion
+
+using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;

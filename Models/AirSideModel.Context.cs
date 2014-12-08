@@ -64,6 +64,9 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
         public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
         public virtual DbSet<as_todoCategories> as_todoCategories { get; set; }
+        public virtual DbSet<as_shiftsCustom> as_shiftsCustom { get; set; }
+        public virtual DbSet<as_shiftsCustomProfile> as_shiftsCustomProfile { get; set; }
+        public virtual DbSet<as_validationProfile> as_validationProfile { get; set; }
         public virtual DbSet<as_todoProfile> as_todoProfile { get; set; }
     }
 }

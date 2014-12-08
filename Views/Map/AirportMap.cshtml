@@ -75,33 +75,56 @@
             AutoCAD
         </button>
 
-        @* Map Type Buttons *@
+        @* Shifts Buttons *@
         <div class="btn-group  hidden-lg">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-map-marker"></i>
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-calendar "></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
-                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
-                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
-                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+                <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
+                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">Create Shift</a></li>
             </ul>
         </div>
         <div class="btn-group hidden-sm hidden-xs hidden-md">
-            <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown">
+            <button type="button" class="btn btn-labeled btn-success dropdown-toggle" data-toggle="dropdown">
                 <span class="btn-label">
-                    <i class="fa fa-map-marker "></i>
+                    <i class="fa fa-calendar "></i>
                 </span>
-                Map Type
+                Shifts
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
-                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
-                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
-                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+                <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
+                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">Create Shift</a></li>
             </ul>
         </div>
-    </div>
+
+            @* Map Type Buttons *@
+            <div class="btn-group  hidden-lg">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-map-marker"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                    <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                    <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                    <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+                </ul>
+            </div>
+            <div class="btn-group hidden-sm hidden-xs hidden-md">
+                <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="btn-label">
+                        <i class="fa fa-map-marker "></i>
+                    </span>
+                    Map Type
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                    <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                    <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                    <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+                </ul>
+            </div>
+        </div>
 
     <div id="map-canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
         &nbsp;
@@ -114,12 +137,16 @@
     Html.RenderPartial("_AreaFilter");
     Html.RenderPartial("_VisualSurveyor");
     Html.RenderPartial("_Photometric");
+    Html.RenderPartial("_ShiftCreate");
 }
 
 @section pagespecific{
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
     </script>
+
+    <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
+    <script src="~/scripts/plugin/date/date.js"></script>
 
     @Scripts.Render("~/scripts/googlemaps")
 
@@ -133,6 +160,9 @@
         var overlayShow = false;
         var heatMapShow = false;
         var clusterShow = false;
+        var centerLat, centerLong;
+        var rectangle;
+        var rectFlag = false;
 
         initMap();
 
@@ -297,6 +327,9 @@
                 type: 'post',
                 dataType: 'json',
                 success: function (json) {
+                    centerLat = json[0];
+                    centerLong = json[1];
+
                     var zoom = 15;
                     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                         zoom = 14;
@@ -333,11 +366,96 @@
             markers = null;
         }
 
+        //Shifts Functions
+        function showRectangle() {
+            if (!rectFlag) {
+                var c = map.getCenter();
+
+                var bounds = new google.maps.LatLngBounds(
+                    new google.maps.LatLng(c.k - 0.001, c.B - 0.002),
+                    new google.maps.LatLng(c.k + 0.001, c.B + 0.002)
+
+                      //new google.maps.LatLng(44.490, -78.649),
+                      //new google.maps.LatLng(44.599, -78.443)
+                  );
+
+                // Define a rectangle and set its editable property to true.
+                rectangle = new google.maps.Rectangle({
+                    bounds: bounds,
+                    editable: true,
+                    draggable: true
+                });
+
+                rectangle.setMap(map);
+
+                rectFlag = true;
+
+                //enable button
+                $('.createShift').removeClass("disabled");
+
+            } else {
+                rectangle.setMap(null);
+                rectFlag = false;
+
+                //disable creatShift
+                $('.createShift').addClass("disabled");
+            }
+        }
+
+        var selectedAssets = [];
+        function getSelectedAssets()
+        {
+            selectedAssets = [];
+
+            var selectorNWLat = rectangle.bounds.Fa.j;
+            var selectorNWLong = rectangle.bounds.wa.j;
+            var selectorSELat = rectangle.bounds.Fa.k;
+            var selectorSELong = rectangle.bounds.wa.k;
+
+            $.each(markers, function (i, v) {
+                var markerLat = 0;
+                var markerLong = 0;
+
+                markerLat = v.position.k;
+                markerLong = v.position.B;
+
+                var latFlag = false;
+                var longFlag = false;
+
+                if (markerLat >= selectorSELat && markerLat <= selectorNWLat) latFlag = true;
+                if (markerLong <= selectorSELong && markerLong >= selectorNWLong) longFlag = true;
+
+                if (latFlag && longFlag)
+                    selectedAssets.push(v);
+            });
+
+            var assetArray = [];
+            $.each(selectedAssets, function (i, v) {
+                assetArray.push(v.title);
+            });
+
+            if (selectedAssets.length > 0) {
+                $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift for ' + selectedAssets.length + ' assets');
+                $('#shiftModal').modal('show');
+            }
+            else {
+                $.smallBox({
+                    title: "Not Assets",
+                    content: "Please select assets to create a shift",
+                    color: "#dfb56c",
+                    timeout: 4000,
+                    icon: "fa fa-warning swing animated"
+                });
+            }
+
+           
+        }
+
         $(document).ready(function () {
             $('#map-canvas').css('height', Math.round($(window).height() - 170));
             $('#mapTopMenuBack').css('width', $('#map-canvas').width());
             $('#mapMenuItems').css('width', $('#map-canvas').width());
-
+            $('#timepicker').timepicker();
             
 
             $(document).on('change', '#mainAreas', function () {
@@ -376,6 +494,10 @@
 
             $(document).on('click', '.photoBtn', function () {
                 $('#photometricFilterModal').modal('show');
+            });
+
+            $(document).on('click', '.shiftsBtn', function () {
+                showRectangle();
             });
 
             $(document).on('click', '.autoCadBtn', function () {

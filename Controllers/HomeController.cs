@@ -1,4 +1,18 @@
-﻿#region Using
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for the Home route
+#endregion
+
+#region Using
 
 using ADB.AirSide.Encore.V1.Models;
 using System.Web.Mvc;
@@ -104,8 +118,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log("Failed to get user todos: " + err.Message + "|" + err.InnerException.Message, "getAllTodos", Logging.logTypes.Error, User.Identity.Name);
-                return Json(new { error = err.InnerException.Message });
+                log.log(err);
+                return Json(new { error = err.Message });
             }
         }
 
@@ -121,8 +135,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log("Failed to get user todos categories: " + err.Message + "|" + err.InnerException.Message, "getTodoCategories", Logging.logTypes.Error, User.Identity.Name);
-                return Json(new { error = err.InnerException.Message });
+                log.log(err);
+                return Json(new { error = err.Message });
             }
         }
 

@@ -279,6 +279,26 @@
           <Property Name="i_areaSubId" Type="int" Nullable="false" />
           <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="as_shiftsCustom">
+          <Key>
+            <PropertyRef Name="i_shiftCustomId" />
+          </Key>
+          <Property Name="i_shiftCustomId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_techGroupId" Type="int" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="datetime" Nullable="false" />
+          <Property Name="dt_completionDate" Type="datetime" Nullable="false" />
+          <Property Name="bt_completed" Type="bit" Nullable="false" />
+          <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_externalReference" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_shiftsCustomProfile">
+          <Key>
+            <PropertyRef Name="i_shiftCustomProfileId" />
+          </Key>
+          <Property Name="i_shiftCustomProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_shiftCustomId" Type="int" Nullable="false" />
+          <Property Name="i_assetId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="as_technicianGroupProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -334,6 +354,22 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="vc_sessionKey" Type="nvarchar" MaxLength="300" Nullable="false" />
           <Property Name="dt_dateTime" Type="datetime2" Precision="0" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="as_validationProfile">
+          <Key>
+            <PropertyRef Name="i_validationProfile" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="i_assetId" />
+            <PropertyRef Name="dt_dateTimeStamp" />
+            <PropertyRef Name="bt_validated" />
+          </Key>
+          <Property Name="i_validationProfile" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="i_assetId" Type="int" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="bt_validated" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="as_wrenchProfile">
           <Key>
@@ -497,6 +533,8 @@
           <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_shifts" EntityType="Self.as_shifts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_shiftsCustom" EntityType="Self.as_shiftsCustom" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_shiftsCustomProfile" EntityType="Self.as_shiftsCustomProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" Schema="dbo" store:Type="Tables" />
@@ -510,6 +548,15 @@
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_validationProfile" EntityType="Self.as_validationProfile" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [as_validationProfile].[i_validationProfile] AS [i_validationProfile], 
+    [as_validationProfile].[UserId] AS [UserId], 
+    [as_validationProfile].[i_assetId] AS [i_assetId], 
+    [as_validationProfile].[dt_dateTimeStamp] AS [dt_dateTimeStamp], 
+    [as_validationProfile].[bt_validated] AS [bt_validated]
+    FROM [dbo].[as_validationProfile] AS [as_validationProfile]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -886,6 +933,9 @@
           <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
           <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
           <EntitySet Name="as_todoCategories" EntityType="airside.encoreModel.as_todoCategories" />
+          <EntitySet Name="as_shiftsCustom" EntityType="airside.encoreModel.as_shiftsCustom" />
+          <EntitySet Name="as_shiftsCustomProfile" EntityType="airside.encoreModel.as_shiftsCustomProfile" />
+          <EntitySet Name="as_validationProfile" EntityType="airside.encoreModel.as_validationProfile" />
           <EntitySet Name="as_todoProfile" EntityType="airside.encoreModel.as_todoProfile" />
         </EntityContainer>
         <EntityType Name="as_accessProfile">
@@ -1009,6 +1059,41 @@
           <Property Name="bt_private" Type="Boolean" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="vc_icon" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="as_shiftsCustom">
+          <Key>
+            <PropertyRef Name="i_shiftCustomId" />
+          </Key>
+          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_techGroupId" Type="Int32" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bt_completed" Type="Boolean" Nullable="false" />
+          <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vc_externalReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="as_shiftsCustomProfile">
+          <Key>
+            <PropertyRef Name="i_shiftCustomProfileId" />
+          </Key>
+          <Property Name="i_shiftCustomProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_validationProfile">
+          <Key>
+            <PropertyRef Name="i_validationProfile" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="i_assetId" />
+            <PropertyRef Name="dt_dateTimeStamp" />
+            <PropertyRef Name="bt_validated" />
+          </Key>
+          <Property Name="i_validationProfile" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bt_validated" Type="Boolean" Nullable="false" />
+>>>>>>> origin/master
         </EntityType>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -1457,6 +1542,39 @@
                 <ScalarProperty Name="bt_private" ColumnName="bt_private" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
                 <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_shiftsCustom">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustom">
+              <MappingFragment StoreEntitySet="as_shiftsCustom">
+                <ScalarProperty Name="vc_externalReference" ColumnName="vc_externalReference" />
+                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
+                <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
+                <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
+                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
+                <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
+                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_shiftsCustomProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustomProfile">
+              <MappingFragment StoreEntitySet="as_shiftsCustomProfile">
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
+                <ScalarProperty Name="i_shiftCustomProfileId" ColumnName="i_shiftCustomProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_validationProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_validationProfile">
+              <MappingFragment StoreEntitySet="as_validationProfile">
+                <ScalarProperty Name="bt_validated" ColumnName="bt_validated" />
+                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="i_validationProfile" ColumnName="i_validationProfile" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
