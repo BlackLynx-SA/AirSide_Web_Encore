@@ -1218,22 +1218,22 @@
     <Content Include="Views\AppViews\Blog.cshtml" />
     <Content Include="Views\AppViews\Projects.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
-    <EntityDeploy Include="Models\AirSideModel.edmx">
+    <EntityDeploy Include="Models\AirSideModels.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AirSideModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>AirSideModels.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\AirSideModel.Context.tt">
+    <Content Include="Models\AirSideModels.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AirSideModel.edmx</DependentUpon>
-      <LastGenOutput>AirSideModel.Context.cs</LastGenOutput>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+      <LastGenOutput>AirSideModels.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\AirSideModel.edmx.diagram">
-      <DependentUpon>AirSideModel.edmx</DependentUpon>
+    <Content Include="Models\AirSideModels.edmx.diagram">
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
     </Content>
-    <Content Include="Models\AirSideModel.tt">
+    <Content Include="Models\AirSideModels.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AirSideModel.edmx</DependentUpon>
-      <LastGenOutput>AirSideModel.cs</LastGenOutput>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+      <LastGenOutput>AirSideModels.cs</LastGenOutput>
     </Content>
     <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
@@ -1261,6 +1261,8 @@
     <Content Include="Views\Map\_VisualSurveyor.cshtml" />
     <Content Include="Views\Map\_Photometric.cshtml" />
     <Content Include="Views\Map\_ShiftCreate.cshtml" />
+    <Content Include="Views\Shifts\_CalendarShift.cshtml" />
+    <Content Include="Views\Shifts\_CalendarEvent.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1314,151 +1316,151 @@
     </Compile>
     <Content Include="Logs\empty.txt" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AirSideModel.Context.cs">
+    <Compile Include="Models\AirSideModels.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModel.Context.tt</DependentUpon>
+      <DependentUpon>AirSideModels.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AirSideModel.cs">
+    <Compile Include="Models\AirSideModels.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AirSideModel.Designer.cs">
+    <Compile Include="Models\AirSideModels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModel.edmx</DependentUpon>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AspNetUserLogin.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_accessProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_airportProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_areaProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_areaSubProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_assetClassMaintenanceProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_assetClassProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_assetInfoProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_assetProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_assetStatusProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_electricalNodeProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_eventPofile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_eventTypes.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_fbTechProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_fileUploadInfo.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_fileUploadProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_frequencyProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_locationProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_maintenanceCategory.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_maintenanceProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_maintenanceValidation.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_maintenanceValidationProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_nodeRegionProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_pictureProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_reportParameters.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_reportProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_settingsProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_shiftData.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_shifts.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_shiftsCustom.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_shiftsCustomProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_technicianGroupProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_technicianGroups.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_technicianWrenchProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_todoCategories.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_todoProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_userExternalSession.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_validationProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+    <Compile Include="Models\as_validationTaskProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_wrenchProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GeneralModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\UserProfile.cs">
-      <DependentUpon>AirSideModel.tt</DependentUpon>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

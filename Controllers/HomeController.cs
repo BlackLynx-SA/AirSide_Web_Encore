@@ -21,6 +21,7 @@ using System;
 using ADB.AirSide.Encore.V1.App_Helpers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Collections.Generic;
 
 #endregion
 
@@ -107,18 +108,75 @@ namespace ADB.AirSide.Encore.V1.Controllers
         #region AJAX Calls for Dashboard
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult setToDoStatus(int todoId)
+        {
+            try
+            {
+                //This procedure sets the To-Do item to inactive and sets the date
+                //Create Date: 2014/12/09
+                //Author: Bernard Willer
+
+                var todo = db.as_todoProfile.Find(todoId);
+                todo.bt_active = false;
+                todo.dt_completedDate = DateTime.Now;
+
+                db.Entry(todo).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return Json(new { status = "Success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        [HttpPost]
         public JsonResult getAllTodos()
         {
             try
             {
                 var user = db.UserProfiles.Where(q => q.UserName == User.Identity.Name).First();
                 var todos = db.as_todoProfile.Where(q => (q.UserId == user.UserId && q.bt_active == true) || (q.bt_private == false && q.bt_active == true)).ToList();
-                return Json(todos);
+                var todosDone = db.as_todoProfile.Where(q => (q.UserId == user.UserId && q.bt_active == false)).OrderByDescending(q=>q.dt_completedDate).Take(5).ToList();
+                List<ToDoList> todoItems = new List<ToDoList>();
+                foreach(var item in todos)
+                {
+                    ToDoList list = new ToDoList();
+                    list.date = item.dt_dateTime.ToString("yyyy/MM/dd");
+                    list.vc_description = item.vc_description;
+                    list.i_todoProfileId = item.i_todoProfileId;
+                    list.i_todoCatId = item.i_todoCatId;
+                    list.bt_active = item.bt_active;
+
+                    todoItems.Add(list);
+                }
+
+                if(todosDone != null)
+                {
+                    foreach (var item in todosDone)
+                    {
+                        ToDoList list = new ToDoList();
+                        list.date = item.dt_dateTime.ToString("yyyy/MM/dd");
+                        list.vc_description = item.vc_description;
+                        list.i_todoProfileId = item.i_todoProfileId;
+                        list.i_todoCatId = item.i_todoCatId;
+                        list.bt_active = item.bt_active;
+
+                        todoItems.Add(list);
+                    }
+                }
+                return Json(todoItems);
             }
             catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log(err);
+                log.logError(err, Request.UserHostAddress);
                 return Json(new { error = err.Message });
             }
         }
@@ -135,7 +193,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log(err);
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return Json(new { error = err.Message });
             }
         }
@@ -156,6 +214,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 todo.bt_active = true;
                 todo.vc_description = description;
                 todo.i_todoCatId = categoryObject.i_todoCatId;
+                todo.dt_completedDate = new DateTime(1970, 1, 1);
 
                 db.as_todoProfile.Add(todo);
                 db.SaveChanges();

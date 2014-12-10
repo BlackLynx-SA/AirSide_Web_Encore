@@ -72,7 +72,7 @@
           <Key>
             <PropertyRef Name="i_assetId" />
           </Key>
-          <Property Name="i_assetId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetId" Type="int" Nullable="false" />
           <Property Name="i_locationId" Type="int" Nullable="false" />
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
           <Property Name="vc_rfidTag" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -278,6 +278,8 @@
           <Property Name="bt_completed" Type="bit" Nullable="false" />
           <Property Name="i_areaSubId" Type="int" Nullable="false" />
           <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="int" Nullable="false" />
+          <Property Name="i_maintenanceValidationId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_shiftsCustom">
           <Key>
@@ -345,6 +347,7 @@
           <Property Name="bt_active" Type="bit" Nullable="false" />
           <Property Name="bt_private" Type="bit" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="dt_completedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="as_userExternalSession">
           <Key>
@@ -355,21 +358,16 @@
           <Property Name="vc_sessionKey" Type="nvarchar" MaxLength="300" Nullable="false" />
           <Property Name="dt_dateTime" Type="datetime2" Precision="0" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="as_validationProfile">
+        <EntityType Name="as_validationTaskProfile">
           <Key>
-            <PropertyRef Name="i_validationProfile" />
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="i_assetId" />
-            <PropertyRef Name="dt_dateTimeStamp" />
-            <PropertyRef Name="bt_validated" />
+            <PropertyRef Name="i_validationProfileId" />
           </Key>
-          <Property Name="i_validationProfile" Type="int" Nullable="false" />
+          <Property Name="i_validationProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="i_assetId" Type="int" Nullable="false" />
           <Property Name="dt_dateTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="bt_validated" Type="bit" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_wrenchProfile">
           <Key>
@@ -541,6 +539,7 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <EntitySet Name="as_todoCategories" EntityType="Self.as_todoCategories" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_todoProfile" EntityType="Self.as_todoProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_validationTaskProfile" EntityType="Self.as_validationTaskProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -548,15 +547,6 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="as_validationProfile" EntityType="Self.as_validationProfile" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [as_validationProfile].[i_validationProfile] AS [i_validationProfile], 
-    [as_validationProfile].[UserId] AS [UserId], 
-    [as_validationProfile].[i_assetId] AS [i_assetId], 
-    [as_validationProfile].[dt_dateTimeStamp] AS [dt_dateTimeStamp], 
-    [as_validationProfile].[bt_validated] AS [bt_validated]
-    FROM [dbo].[as_validationProfile] AS [as_validationProfile]</DefiningQuery>
-          </EntitySet>
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -578,6 +568,14 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="airside.encoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="as_accessProfile">
+          <Key>
+            <PropertyRef Name="i_accessLevelId" />
+          </Key>
+          <Property Name="i_accessLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_menuProfileId" Type="Int32" Nullable="false" />
+          <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
         <EntityType Name="as_airportProfile">
           <Key>
             <PropertyRef Name="i_airPortId" />
@@ -604,15 +602,6 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="i_areaId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_assetClassMaintenanceProfile">
-          <Key>
-            <PropertyRef Name="i_assetMaintenanceId" />
-          </Key>
-          <Property Name="i_assetMaintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
-          <Property Name="i_frequencyId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_assetClassProfile">
           <Key>
             <PropertyRef Name="i_assetClassId" />
@@ -637,7 +626,7 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Key>
             <PropertyRef Name="i_assetId" />
           </Key>
-          <Property Name="i_assetId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
           <Property Name="i_locationId" Type="Int32" Nullable="false" />
           <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
           <Property Name="vc_rfidTag" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
@@ -699,6 +688,29 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="i_pictureId" Type="Int32" Nullable="false" />
           <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="bt_pass" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_fileUploadInfo">
+          <Key>
+            <PropertyRef Name="i_fileUploadId" />
+          </Key>
+          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="f_latitude" Type="Double" Nullable="false" />
+          <Property Name="f_longitude" Type="Double" Nullable="false" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+          <Property Name="i_userId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_fileUploadProfile">
+          <Key>
+            <PropertyRef Name="i_fileUploadId" />
+          </Key>
+          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_filePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vc_fileDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="i_fileType" Type="Int32" Nullable="false" />
+          <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="as_frequencyProfile">
           <Key>
@@ -809,17 +821,25 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="f_capturedValue" Type="Double" Nullable="false" />
           <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_shifts">
+        <EntityType Name="as_shiftsCustom">
           <Key>
-            <PropertyRef Name="i_shiftId" />
+            <PropertyRef Name="i_shiftCustomId" />
           </Key>
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_techGroupId" Type="Int32" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="bt_completed" Type="Boolean" Nullable="false" />
-          <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
           <Property Name="vc_permitNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="vc_externalReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_shiftsCustomProfile">
+          <Key>
+            <PropertyRef Name="i_shiftCustomProfileId" />
+          </Key>
+          <Property Name="i_shiftCustomProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_technicianGroupProfile">
           <Key>
@@ -846,6 +866,16 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="i_wrenchId" Type="Int32" Nullable="false" />
           <Property Name="dt_dateTime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
+        <EntityType Name="as_todoCategories">
+          <Key>
+            <PropertyRef Name="i_todoCatId" />
+          </Key>
+          <Property Name="i_todoCatId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="bt_private" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="vc_icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
         <EntityType Name="as_userExternalSession">
           <Key>
             <PropertyRef Name="i_sessionId" />
@@ -867,6 +897,55 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="vc_serialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
         </EntityType>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
         <EntityType Name="UserProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -881,11 +960,43 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="dt_dateCreated" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="aspId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="as_accessProfile" EntityType="Self.as_accessProfile" />
           <EntitySet Name="as_airportProfile" EntityType="Self.as_airportProfile" />
           <EntitySet Name="as_areaProfile" EntityType="Self.as_areaProfile" />
           <EntitySet Name="as_areaSubProfile" EntityType="Self.as_areaSubProfile" />
-          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="Self.as_assetClassMaintenanceProfile" />
           <EntitySet Name="as_assetClassProfile" EntityType="Self.as_assetClassProfile" />
           <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" />
           <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" />
@@ -894,6 +1005,8 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" />
           <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" />
+          <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" />
+          <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" />
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" />
@@ -906,195 +1019,36 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" />
           <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" />
           <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" />
-          <EntitySet Name="as_shifts" EntityType="Self.as_shifts" />
+          <EntitySet Name="as_shiftsCustom" EntityType="Self.as_shiftsCustom" />
+          <EntitySet Name="as_shiftsCustomProfile" EntityType="Self.as_shiftsCustomProfile" />
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" />
           <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" />
           <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" />
+          <EntitySet Name="as_todoCategories" EntityType="Self.as_todoCategories" />
           <EntitySet Name="as_userExternalSession" EntityType="Self.as_userExternalSession" />
           <EntitySet Name="as_wrenchProfile" EntityType="Self.as_wrenchProfile" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="UserProfiles" EntityType="Self.UserProfile" />
-          <EntitySet Name="as_accessProfile" EntityType="airside.encoreModel.as_accessProfile" />
-          <EntitySet Name="AspNetRoles" EntityType="airside.encoreModel.AspNetRole" />
-          <EntitySet Name="AspNetUserClaims" EntityType="airside.encoreModel.AspNetUserClaim" />
-          <EntitySet Name="AspNetUserLogins" EntityType="airside.encoreModel.AspNetUserLogin" />
-          <EntitySet Name="AspNetUsers" EntityType="airside.encoreModel.AspNetUser" />
-          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
           </AssociationSet>
-          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="AspNetUserRoles" Association="airside.encoreModel.AspNetUserRoles">
-            <End Role="AspNetRole" EntitySet="AspNetRoles" />
-            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
-          <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
-          <EntitySet Name="as_todoCategories" EntityType="airside.encoreModel.as_todoCategories" />
-          <EntitySet Name="as_shiftsCustom" EntityType="airside.encoreModel.as_shiftsCustom" />
-          <EntitySet Name="as_shiftsCustomProfile" EntityType="airside.encoreModel.as_shiftsCustomProfile" />
-          <EntitySet Name="as_validationProfile" EntityType="airside.encoreModel.as_validationProfile" />
           <EntitySet Name="as_todoProfile" EntityType="airside.encoreModel.as_todoProfile" />
+          <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
+          <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="airside.encoreModel.as_assetClassMaintenanceProfile" />
+          <EntitySet Name="as_shifts" EntityType="airside.encoreModel.as_shifts" />
         </EntityContainer>
-        <EntityType Name="as_accessProfile">
-          <Key>
-            <PropertyRef Name="i_accessLevelId" />
-          </Key>
-          <Property Name="i_accessLevelId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_menuProfileId" Type="Int32" Nullable="false" />
-          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="AspNetRole">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUsers" Relationship="airside.encoreModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUserClaim">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUserLogin">
-          <Key>
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-            <PropertyRef Name="UserId" />
-          </Key>
-          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUser" Relationship="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
-        </EntityType>
-        <EntityType Name="AspNetUser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
-          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="AspNetUserClaims" Relationship="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
-          <NavigationProperty Name="AspNetUserLogins" Relationship="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
-          <NavigationProperty Name="AspNetRoles" Relationship="airside.encoreModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
-        </EntityType>
-        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
-          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="airside.encoreModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserClaim">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
-          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="airside.encoreModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUser">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserLogin">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="AspNetUserRoles">
-          <End Type="airside.encoreModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
-          <End Type="airside.encoreModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
-        </Association>
-        <EntityType Name="as_fileUploadInfo">
-          <Key>
-            <PropertyRef Name="i_fileUploadId" />
-          </Key>
-          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="f_latitude" Type="Double" Nullable="false" />
-          <Property Name="f_longitude" Type="Double" Nullable="false" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="i_userId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fileUploadProfile">
-          <Key>
-            <PropertyRef Name="i_fileUploadId" />
-          </Key>
-          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_filePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="vc_fileDescription" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="i_fileType" Type="Int32" Nullable="false" />
-          <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
-        </EntityType>
-        <EntityType Name="as_todoCategories">
-          <Key>
-            <PropertyRef Name="i_todoCatId" />
-          </Key>
-          <Property Name="i_todoCatId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="bt_private" Type="Boolean" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="vc_icon" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="as_shiftsCustom">
-          <Key>
-            <PropertyRef Name="i_shiftCustomId" />
-          </Key>
-          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_techGroupId" Type="Int32" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="bt_completed" Type="Boolean" Nullable="false" />
-          <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="vc_externalReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="as_shiftsCustomProfile">
-          <Key>
-            <PropertyRef Name="i_shiftCustomProfileId" />
-          </Key>
-          <Property Name="i_shiftCustomProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" />
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_validationProfile">
-          <Key>
-            <PropertyRef Name="i_validationProfile" />
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="i_assetId" />
-            <PropertyRef Name="dt_dateTimeStamp" />
-            <PropertyRef Name="bt_validated" />
-          </Key>
-          <Property Name="i_validationProfile" Type="Int32" Nullable="false" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="bt_validated" Type="Boolean" Nullable="false" />
->>>>>>> origin/master
-        </EntityType>
         <EntityType Name="as_todoProfile">
           <Key>
             <PropertyRef Name="i_todoProfileId" />
@@ -1106,6 +1060,41 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
           <Property Name="bt_private" Type="Boolean" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="dt_completedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="as_validationTaskProfile">
+          <Key>
+            <PropertyRef Name="i_validationProfileId" />
+          </Key>
+          <Property Name="i_validationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bt_validated" Type="Boolean" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_assetClassMaintenanceProfile">
+          <Key>
+            <PropertyRef Name="i_assetMaintenanceId" />
+          </Key>
+          <Property Name="i_assetMaintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+          <Property Name="i_frequencyId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_shifts">
+          <Key>
+            <PropertyRef Name="i_shiftId" />
+          </Key>
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="bt_completed" Type="Boolean" Nullable="false" />
+          <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
+          <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1113,6 +1102,15 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="airsideencoreModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="as_accessProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_accessProfile">
+              <MappingFragment StoreEntitySet="as_accessProfile">
+                <ScalarProperty Name="i_accessLevelId" ColumnName="i_accessLevelId" />
+                <ScalarProperty Name="i_menuProfileId" ColumnName="i_menuProfileId" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="as_airportProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_airportProfile">
               <MappingFragment StoreEntitySet="as_airportProfile">
@@ -1139,16 +1137,6 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
                 <ScalarProperty Name="i_areaSubId" ColumnName="i_areaSubId" />
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
                 <ScalarProperty Name="i_areaId" ColumnName="i_areaId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_assetClassMaintenanceProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_assetClassMaintenanceProfile">
-              <MappingFragment StoreEntitySet="as_assetClassMaintenanceProfile">
-                <ScalarProperty Name="i_assetMaintenanceId" ColumnName="i_assetMaintenanceId" />
-                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
-                <ScalarProperty Name="i_frequencyId" ColumnName="i_frequencyId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1244,6 +1232,31 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
                 <ScalarProperty Name="i_pictureId" ColumnName="i_pictureId" />
                 <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
                 <ScalarProperty Name="bt_pass" ColumnName="bt_pass" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadInfo">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
+              <MappingFragment StoreEntitySet="as_fileUploadInfo">
+                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
+                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
+              <MappingFragment StoreEntitySet="as_fileUploadProfile">
+                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
+                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
+                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
+                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1368,16 +1381,25 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_shifts">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shifts">
-              <MappingFragment StoreEntitySet="as_shifts">
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <EntitySetMapping Name="as_shiftsCustom">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustom">
+              <MappingFragment StoreEntitySet="as_shiftsCustom">
+                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
+                <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
                 <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
                 <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
                 <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
-                <ScalarProperty Name="i_areaSubId" ColumnName="i_areaSubId" />
                 <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
+                <ScalarProperty Name="vc_externalReference" ColumnName="vc_externalReference" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_shiftsCustomProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustomProfile">
+              <MappingFragment StoreEntitySet="as_shiftsCustomProfile">
+                <ScalarProperty Name="i_shiftCustomProfileId" ColumnName="i_shiftCustomProfileId" />
+                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1409,6 +1431,17 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="as_todoCategories">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_todoCategories">
+              <MappingFragment StoreEntitySet="as_todoCategories">
+                <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="bt_private" ColumnName="bt_private" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="vc_icon" ColumnName="vc_icon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="as_userExternalSession">
             <EntityTypeMapping TypeName="airside.encoreModel.as_userExternalSession">
               <MappingFragment StoreEntitySet="as_userExternalSession">
@@ -1432,6 +1465,51 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="airside.encoreModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
@@ -1447,140 +1525,18 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_accessProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_accessProfile">
-              <MappingFragment StoreEntitySet="as_accessProfile">
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="i_menuProfileId" ColumnName="i_menuProfileId" />
-                <ScalarProperty Name="i_accessLevelId" ColumnName="i_accessLevelId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetRole">
-              <MappingFragment StoreEntitySet="AspNetRoles">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserClaim">
-              <MappingFragment StoreEntitySet="AspNetUserClaims">
-                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
-                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUserLogin">
-              <MappingFragment StoreEntitySet="AspNetUserLogins">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
-                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="airside.encoreModel.AspNetUser">
-              <MappingFragment StoreEntitySet="AspNetUsers">
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
-                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
-                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
-                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
-                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
-                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
-                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="AspNetUserRoles" TypeName="airside.encoreModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
-            <EndProperty Name="AspNetUser">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="AspNetRole">
+            <EndProperty Name="AspNetRoles">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="as_fileUploadInfo">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
-              <MappingFragment StoreEntitySet="as_fileUploadInfo">
-                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
-                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
-              <MappingFragment StoreEntitySet="as_fileUploadProfile">
-                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
-                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
-                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
-                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_todoCategories">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_todoCategories">
-              <MappingFragment StoreEntitySet="as_todoCategories">
-                <ScalarProperty Name="vc_icon" ColumnName="vc_icon" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="bt_private" ColumnName="bt_private" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="i_todoCatId" ColumnName="i_todoCatId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_shiftsCustom">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustom">
-              <MappingFragment StoreEntitySet="as_shiftsCustom">
-                <ScalarProperty Name="vc_externalReference" ColumnName="vc_externalReference" />
-                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
-                <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
-                <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
-                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
-                <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
-                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_shiftsCustomProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustomProfile">
-              <MappingFragment StoreEntitySet="as_shiftsCustomProfile">
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
-                <ScalarProperty Name="i_shiftCustomProfileId" ColumnName="i_shiftCustomProfileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_validationProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_validationProfile">
-              <MappingFragment StoreEntitySet="as_validationProfile">
-                <ScalarProperty Name="bt_validated" ColumnName="bt_validated" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="i_validationProfile" ColumnName="i_validationProfile" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_todoProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_todoProfile">
               <MappingFragment StoreEntitySet="as_todoProfile">
+                <ScalarProperty Name="dt_completedDate" ColumnName="dt_completedDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="bt_private" ColumnName="bt_private" />
                 <ScalarProperty Name="bt_active" ColumnName="bt_active" />
@@ -1588,6 +1544,43 @@ warning 6002: The table/view 'Airside.Encore.dbo.as_validationProfile' does not 
                 <ScalarProperty Name="vc_description" ColumnName="vc_description" />
                 <ScalarProperty Name="dt_dateTime" ColumnName="dt_dateTime" />
                 <ScalarProperty Name="i_todoProfileId" ColumnName="i_todoProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_validationTaskProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_validationTaskProfile">
+              <MappingFragment StoreEntitySet="as_validationTaskProfile">
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="bt_validated" ColumnName="bt_validated" />
+                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="i_validationProfileId" ColumnName="i_validationProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_assetClassMaintenanceProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_assetClassMaintenanceProfile">
+              <MappingFragment StoreEntitySet="as_assetClassMaintenanceProfile">
+                <ScalarProperty Name="i_frequencyId" ColumnName="i_frequencyId" />
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
+                <ScalarProperty Name="i_assetMaintenanceId" ColumnName="i_assetMaintenanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_shifts">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shifts">
+              <MappingFragment StoreEntitySet="as_shifts">
+                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
+                <ScalarProperty Name="i_areaSubId" ColumnName="i_areaSubId" />
+                <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
+                <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
+                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

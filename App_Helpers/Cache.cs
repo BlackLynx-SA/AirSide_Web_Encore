@@ -1,4 +1,18 @@
-﻿using ADB.AirSide.Encore.V1.Models;
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for the Home route
+#endregion
+
+using ADB.AirSide.Encore.V1.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -380,11 +394,12 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                     assetDoc.Add("assetClassId", item.i_assetClassId);
                     assetDoc.Add("rfidTag", item.vc_rfidTag);
                     assetDoc.Add("serialNumber", item.vc_serialNumber);
-                    assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
+                    assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(item.i_assetId));
 
-                    //Add Maintenance Dates
-                    assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
-                    assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
+                    //2014/12/09 Decomissioned
+                    //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
+                    //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
+                    //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
 
                     //get data for loaction
                     var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
@@ -469,11 +484,12 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                 assetDoc.Add("assetClassId", asset.i_assetClassId);
                 assetDoc.Add("rfidTag", asset.vc_rfidTag);
                 assetDoc.Add("serialNumber", asset.vc_serialNumber);
-                assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(asset.i_assetId));
+                assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(assetId));
 
-                //Add Maintenance Dates
-                assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(asset.i_assetId).ToString("yyy/MM/dd"));
-                assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(asset.i_assetId).ToString("yyy/MM/dd"));
+                //2014/12/09 Decomissioned
+                //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(asset.i_assetId));
+                //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(asset.i_assetId).ToString("yyy/MM/dd"));
+                //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(asset.i_assetId).ToString("yyy/MM/dd"));
 
                 //get data for loaction
                 var location = db.as_locationProfile.Where(q => q.i_locationId == asset.i_locationId).FirstOrDefault();
@@ -562,11 +578,13 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                     assetDoc.Add("assetClassId", item.i_assetClassId);
                     assetDoc.Add("rfidTag", item.vc_rfidTag);
                     assetDoc.Add("serialNumber", item.vc_serialNumber);
-                    assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
 
-                    //Add Maintenance Dates
-                    assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
-                    assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
+                    assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(item.i_assetId));
+                    
+                    //2014/12/09 - Decommisioned basic torque maintenance for maintenace tasks
+                    //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
+                    //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
+                    //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
 
                     //get data for loaction
                     var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();

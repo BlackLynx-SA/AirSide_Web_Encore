@@ -12,12 +12,13 @@ namespace ADB.AirSide.Encore.V1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_validationProfile
+    public partial class as_validationTaskProfile
     {
-        public int i_validationProfile { get; set; }
+        public int i_validationProfileId { get; set; }
         public int UserId { get; set; }
         public int i_assetId { get; set; }
         public System.DateTime dt_dateTimeStamp { get; set; }
         public bool bt_validated { get; set; }
+        public int i_maintenanceId { get; set; }
     }
 }

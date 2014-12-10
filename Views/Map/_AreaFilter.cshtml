@@ -88,29 +88,38 @@
         }
         $('#areaFilterModal').modal('hide');
         $('#areaLoader').hide();
+        lastFilter = "areas";
     }
 
     //Area Filters
     function showMainAreas(main, clustered) {
-        var i = 0;
         markers = [];
-        $.each(Assets.jsonData, function () {
-            if (Assets.jsonData[i].location.areaId == main)
-                //Add Marker to Map
-                addMarker(Assets.jsonData[i]);
-            i++;
+        $.each(Assets.jsonData, function (i,v) {
+            if (v.location.areaId == main)
+            {
+                $.each(v.maintenance, function (index, value) {
+                    if (value.maintenanceId == selectedTask) {
+                        addMarker(v);
+                        return false;
+                    }
+                });
+            }
         });
         if (clustered) markerClusterer = new MarkerClusterer(map, markers);
     }
 
     function showSubAreas(sub, clustered) {
-        var i = 0;
         markers = [];
-        $.each(Assets.jsonData, function () {
-            if (Assets.jsonData[i].location.areaSubId == sub)
-                //Add Marker to Map
-                addMarker(Assets.jsonData[i]);
-            i++;
+        $.each(Assets.jsonData, function (i,v) {
+            if (v.location.areaSubId == sub)
+            {
+                $.each(v.maintenance, function (index, value) {
+                    if (value.maintenanceId == selectedTask) {
+                        addMarker(v);
+                        return false;
+                    }
+                });
+            }
         });
         if (clustered) markerClusterer = new MarkerClusterer(map, markers);
     }

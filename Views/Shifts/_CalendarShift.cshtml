@@ -1,0 +1,91 @@
+﻿ <!--Modal for add Technician Shift-->
+<div class="modal fade" id="techModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="techModalLabel"><i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift - </h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <fieldset>
+                            <section class="col col-6">
+                                <label class="label">Select a date</label>
+                                <label class="input">
+                                    <i class="fa fa-calendar icon-prepend"></i>
+                                    <input type="text" id="shiftdate" placeholder="Select a date" class="form-control datepicker" data-dateformat="dd/mm/yy" style="z-index:1051;">
+                                </label>
+                            </section>
+                            <section class="col col-6">
+                                <label class="label">Time of shift</label>
+                                <label class="input">
+                                    <i class="fa fa-clock-o icon-prepend"></i>
+                                    <input class="form-control" id="timepicker" type="text" placeholder="Select time" style="background:#fff;">
+                                </label>
+                            </section>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <fieldset>
+                            <section class="col col-6">
+                                <label class="label">Work Permit Number</label>
+                                <label class="input">
+                                    <i class="fa fa-road icon-prepend"></i>
+                                    <input class="form-control" id="workpermitTxt" type="text" placeholder="Enter a Work Permit">
+                                </label>
+                                <div class="note"><strong>Note:</strong> If a permit was issued to go airside, please fill it in.</div>
+                            </section>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <fieldset>
+                            <section class="col col-6">
+                                <label class="label">Maintenance Task</label>
+                                <label class="select">
+                                    @Html.DropDownList("maintenanceTasks", null, String.Empty)<i></i>
+                                </label>
+                            </section>
+                            <section class="col col-6">
+                                <label class="label">Validation</label>
+                                <label class="select">
+                                    <select id="validationSelect"></select><i></i>
+                                </label>
+                            </section>
+                        </fieldset>
+                    </div>
+                    <div class="row">
+                        <fieldset>
+                            <section class="col col-6">
+                                <label class="label">Maintenance Area</label>
+                                <label class="select">
+                                    <select id="areaSelect"></select><i></i>
+                                </label>
+                            </section>
+                            <section class="col col-6">
+                                <label class="label">Sub Area</label>
+                                <label class="select">
+                                    <select id="subAreaSelect"></select><i></i>
+                                </label>
+                            </section>
+                        </fieldset>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader" style="height:20px; display:none;" />
+                <button class="btn btn-primary" onclick="addNewShift();"><i class="fa fa-plus"></i> Add Shift</button>
+                <button class="btn btn-danger" onclick="$('#techModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function getValidationTasks(subArea, task)
+    {
+
+    }
+</script>

@@ -98,33 +98,62 @@
             </ul>
         </div>
 
-            @* Map Type Buttons *@
-            <div class="btn-group  hidden-lg">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-map-marker"></i>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
-                    <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
-                    <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
-                    <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
-                </ul>
-            </div>
-            <div class="btn-group hidden-sm hidden-xs hidden-md">
-                <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="btn-label">
-                        <i class="fa fa-map-marker "></i>
-                    </span>
-                    Map Type
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
-                    <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
-                    <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
-                    <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
-                </ul>
-            </div>
+        @*Maintenance Task Buttons*@
+        @* Map Type Buttons *@
+        <div class="btn-group  hidden-lg">
+            <button type="button" class="btn btn-primary dropdown-toggle maintenanceBtn" data-toggle="dropdown">
+                <i class="fa fa-wrench"></i>
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
+                {
+                    <li><a href="#" onclick="setTask(@prod.i_maintenanceId, '@prod.vc_description');">@prod.vc_description</a></li>
+                }
+            </ul>
+
         </div>
+        <div class="btn-group hidden-sm hidden-xs hidden-md">
+            <button type="button" class="btn btn-labeled btn-primary dropdown-toggle maintenanceBtn" data-toggle="dropdown">
+                <span class="btn-label">
+                    <i class="fa fa-wrench "></i>
+                </span>
+                <span id="taskLabel">@ViewBag.taskDesc</span>
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
+                {
+                    <li><a href="#" onclick="setTask(@prod.i_maintenanceId, '@prod.vc_description');">@prod.vc_description</a></li>
+                }
+            </ul>
+        </div>
+
+        @* Map Type Buttons *@
+        <div class="btn-group  hidden-lg">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-map-marker"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+            </ul>
+        </div>
+        <div class="btn-group hidden-sm hidden-xs hidden-md">
+            <button type="button" class="btn btn-labeled btn-default dropdown-toggle" data-toggle="dropdown">
+                <span class="btn-label">
+                    <i class="fa fa-map-marker "></i>
+                </span>
+                Map Type
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
+                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
+                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
+                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+            </ul>
+        </div>
+    </div>
 
     <div id="map-canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
         &nbsp;
@@ -163,26 +192,49 @@
         var centerLat, centerLong;
         var rectangle;
         var rectFlag = false;
+        var selectedTask = @ViewBag.firstTask;
+        var lastFilter;
 
         initMap();
+
+
+        function setTask(id, desc)
+        {
+            selectedTask = id;
+            $('#taskLabel').html(desc);
+            if(lastFilter === "assets")
+                filterAssets();
+            else if(lastFilter === "areas")
+                filterAreas();
+        }
 
         function AllAssets() {
             this.jsonData = {};
         }
 
         function markerInfo(json) {
+
+            var previousDate, nextDate, cycle;
+            $.each(json.maintenance, function (i, v) {
+                if (v.maintenanceId === selectedTask) {
+                    previousDate = v.previousDate;
+                    nextDate = v.nextDate;
+                    cycle = v.maintenanceCycle;
+                }
+            });
+
             //Header
-            var content = '<div class="mapInfo"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
+            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
 
             //Image of Asset
             content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
-
             content += "<h5 class='txt-color-blue'>Summary</h4>"
-            content += "<ul class='mapInfoSummary'><li>Maintenance Status: " + getMaintenanceStatus(json.maintenanceCycle) + "</li>";
-            content += "<li>Previous Date: <strong>" + json.previousDate + "</strong></li>";
-            content += "<li>Next Date: <strong>" + json.nextDate + "</strong></li>";
+            content += "<ul class='mapInfoSummary'>";
+            content += "<li>Maintenance Status: " + getMaintenanceStatus(cycle) + "</li>";
+            content += "<li>Previous Date: <strong>" + previousDate + "</strong></li>";
+            content += "<li>Next Date: <strong>" + nextDate + "</strong></li>";
             content += "<li>Asset Type: <strong>" + json.assetClass.description + "</strong></li>";
-            content += "</ul><hr/>";
+            content += "</ul>";
 
             //End
             content += '</div>';
@@ -195,13 +247,13 @@
             switch (status) {
                 case 0: img = "<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> No Data Available</span>";
                     break;
-                case 1: img = "<span style='color:green;'><i class='fa fa-thumbs-o-up'></i> Recently Updated</span>";
+                case 1: img = "<span class='txt-color-green'><i class='fa fa-thumbs-o-up'></i> Recently Updated</span>";
                     break;
-                case 2: img = "<span style='color:#ffb752;'><i class='fa fa-ellipsis-h'></i> In Mid Cycle</span>";
+                case 2: img = "<span class='txt-color-yellow'><i class='fa fa-ellipsis-h'></i> In Mid Cycle</span>";
                     break;
-                case 3: img = "<span style='color:orange;'><i class='fa fa-bell icon-animated-bell'></i> Almost Due</span>";
+                case 3: img = "<span class='txt-color-orange'><i class='fa fa-bell icon-animated-bell'></i> Almost Due</span>";
                     break;
-                case 4: img = "<span style='color:red;'><i class='fa fa-thumbs-o-down'></i> Asset Overdue</span>";
+                case 4: img = "<span class='txt-color-red'><i class='fa fa-thumbs-o-down'></i> Asset Overdue</span>";
                     break;
                 default:
                     break;
@@ -211,8 +263,13 @@
         }
 
         function getImage(value) {
-            var image;
-            switch (value) {
+            var image, cycle;
+            $.each(value, function (i, v) {
+                if (v.maintenanceId === selectedTask)
+                    cycle = v.maintenanceCycle;
+            });
+
+            switch (cycle) {
                 case 0: image = '/images/map_images/NutralMarker.png';
                     break;
                 case 1: image = '/images/map_images/GreenMarker.png';
@@ -259,7 +316,7 @@
             var long = json.location.longitude;
             var lat = json.location.latitude;
             var latLongMarker = new google.maps.LatLng(lat, long);
-            var image = getImage(json.maintenanceCycle);
+            var image = getImage(json.maintenance);
             var marker = new google.maps.Marker({
                 map: map,
                 position: latLongMarker,
@@ -355,7 +412,7 @@
             $('#map-canvas').css('height', Math.round($(window).height() - 170));
             $('#mapTopMenuBack').css('width', $('#map-canvas').width());
             $('#mapMenuItems').css('width', $('#map-canvas').width());
-            if(map != null)
+            if (map != null)
                 google.maps.event.trigger(map, 'resize');
         }
 
@@ -403,8 +460,7 @@
         }
 
         var selectedAssets = [];
-        function getSelectedAssets()
-        {
+        function getSelectedAssets() {
             selectedAssets = [];
 
             var selectorNWLat = rectangle.bounds.Fa.j;
@@ -447,8 +503,6 @@
                     icon: "fa fa-warning swing animated"
                 });
             }
-
-           
         }
 
         $(document).ready(function () {
@@ -456,7 +510,7 @@
             $('#mapTopMenuBack').css('width', $('#map-canvas').width());
             $('#mapMenuItems').css('width', $('#map-canvas').width());
             $('#timepicker').timepicker();
-            
+
 
             $(document).on('change', '#mainAreas', function () {
                 var area = $(this).val();
@@ -503,7 +557,21 @@
             $(document).on('click', '.autoCadBtn', function () {
                 loadOverlay();
             });
-            
+
+            //Select the radio button on drop down select
+            $(document).on('click', '#assetClasses', function () {
+                $('#assetTypeRadio').prop("checked", null);
+                $('#allAssetRadio').prop("checked", null);
+                $('#assetTypeRadio').prop("checked", "checked");
+            });
+
+            $(document).on('click', '#maintenanceTasks', function () {
+                $('#assetTypeRadio').prop("checked", null);
+                $('#allAssetRadio').prop("checked", null);
+                $('#assetMaintenanceRadio').prop("checked", "checked");
+            });
+
+            $(document).on('click', '#assetClasses', function () { });
 
             //Fire all the resize items for the map
             $(window).resize(function () { resize() });

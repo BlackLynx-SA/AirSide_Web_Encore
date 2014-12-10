@@ -1,4 +1,5 @@
 ﻿using ADB.AirSide.Encore.V1.Models;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,203 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                                   join y in db.as_assetProfile on x.i_assetId equals y.i_assetId
                                   select x.dt_captureDate).DefaultIfEmpty(newDate).First();
             return firstDate;
+        }
+
+        public BsonArray getMaintenaceTasks(int assetId)
+        {
+            var asset = (from x in db.as_assetProfile
+                         join y in db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
+                         join z in db.as_assetClassMaintenanceProfile on y.i_assetClassId equals z.i_assetClassId
+                         join a in db.as_frequencyProfile on z.i_frequencyId equals a.i_frequencyId
+                         join b in db.as_maintenanceProfile on z.i_maintenanceId equals b.i_maintenanceId
+                         where x.i_assetId == assetId
+                         select new { 
+                            frequency = a.f_frequency,
+                            task = b.vc_description,
+                            maintencanceId = b.i_maintenanceId,
+                         });
+
+            BsonArray maintenanceArray = new BsonArray();
+            foreach(var item in asset)
+            {
+                BsonDocument maintenanceTask = new BsonDocument();
+                maintenanceTask.Add("maintenanceTask", item.task);
+                DateTime previousDate = getMaintenanceLastDate(item.maintencanceId, assetId);
+                maintenanceTask.Add("previousDate", previousDate.ToString("yyy/MM/dd"));
+                maintenanceTask.Add("nextDate", getMaintenanceNextDate(item.maintencanceId, assetId, item.frequency).ToString("yyy/MM/dd"));
+                maintenanceTask.Add("maintenanceCycle", getMaintenanceColour(previousDate, item.frequency));
+                maintenanceTask.Add("maintenanceId", item.maintencanceId);
+                maintenanceArray.Add(maintenanceTask);
+            }
+
+            return maintenanceArray;
+        }
+
+        public DateTime getMaintenanceLastDate(int maintenanceId, int assetId)
+        {
+            try
+            {
+                //Get the last maintained date for a asset
+                //Create Date: 2014/12/09
+                //Author: Bernard Willer
+
+                Boolean shiftFlag = true;
+                Boolean validationFlag = true;
+
+                DateTime shiftDate = DateTime.Now;
+                DateTime valDate = DateTime.Now;
+                DateTime returnDate = new DateTime(1970, 1, 1);
+
+                //Get the last shift date for asset
+                var lastDate = (from x in db.as_shiftData
+                                join y in db.as_assetProfile on x.i_assetId equals y.i_assetId
+                                where x.i_assetId == assetId && x.i_maintenanceId == maintenanceId
+                                select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
+
+                if (lastDate == null)
+                    shiftFlag = false;
+                else
+                    shiftDate = lastDate.dt_captureDate;
+
+
+                //get last validation date for asset
+                var lastValDate = (from x in db.as_validationTaskProfile
+                                   where x.i_assetId == assetId
+                                   select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
+
+                if (lastValDate == null)
+                    validationFlag = false;
+                else
+                    valDate = lastValDate.dt_dateTimeStamp;
+
+                //get the latest date
+                if (shiftFlag && validationFlag)
+                {
+                    if (shiftDate > valDate)
+                        returnDate = shiftDate;
+                    else
+                        returnDate = valDate;
+                }
+                else if (shiftFlag)
+                {
+                    returnDate = shiftDate;
+                }
+                else if (validationFlag)
+                {
+                    returnDate = valDate;
+                }
+
+                return returnDate;
+
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "SYSTEM Cache");
+                return new DateTime(1970, 1, 1);
+            }
+        
+        }
+
+        public DateTime getMaintenanceNextDate(int maintenanceId, int assetId, double frequency)
+        {
+            //Gets the next maintenance date for a asset
+            //Create Date: 2014/12/09
+            //Author: Bernard Willer
+
+            try
+            {
+                Boolean shiftFlag = true;
+                Boolean validationFlag = true;
+
+                DateTime shiftDate = DateTime.Now;
+                DateTime valDate = DateTime.Now;
+                DateTime returnDate = new DateTime(1970, 1, 1);
+
+                //Get the last shift date for asset
+                var lastDate = (from x in db.as_shiftData
+                                join y in db.as_assetProfile on x.i_assetId equals y.i_assetId
+                                where x.i_assetId == assetId && x.i_maintenanceId == maintenanceId
+                                select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
+
+                if (lastDate == null)
+                    shiftFlag = false;
+                else
+                    shiftDate = lastDate.dt_captureDate;
+
+
+                //get last validation date for asset
+                var lastValDate = (from x in db.as_validationTaskProfile
+                                   where x.i_assetId == assetId
+                                   select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
+
+                if (lastValDate == null)
+                    validationFlag = false;
+                else
+                    valDate = lastValDate.dt_dateTimeStamp;
+
+                //get the latest date
+                if (shiftFlag && validationFlag)
+                {
+                    if (shiftDate > valDate)
+                        returnDate = shiftDate.AddDays(frequency);
+                    else
+                        returnDate = valDate.AddDays(frequency);
+                }
+                else if (shiftFlag)
+                {
+                    returnDate = shiftDate.AddDays(frequency);
+                }
+                else if (validationFlag)
+                {
+                    returnDate = valDate.AddDays(frequency);
+                }
+
+                return returnDate;
+            }    
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "SYSTEM Cache");
+                return new DateTime(1970, 1, 1);
+            }
+        
+        }
+
+        public int getMaintenanceColour(DateTime lastDate, double frequency)
+        {
+            try
+            {
+                //Get the maintenace for given date
+                //Create Date: 2014/12/09
+                //Author: Bernard Willer
+
+                //Calculate the day difference 
+                int daysDiff = 0;
+
+                if (lastDate > new DateTime(1970,1,1))
+                    daysDiff = (DateTime.Now - lastDate).Days;
+                else
+                    daysDiff = -1;
+
+                int color = (int)maintenanceColours.grey;
+
+                //calculate the color
+                if (daysDiff == -1) color = (int)maintenanceColours.grey;
+                else if (daysDiff <= (frequency / 3)) color = (int)maintenanceColours.green;
+                else if ((daysDiff > (frequency / 3)) && (daysDiff <= (frequency / 1.5))) color = (int)maintenanceColours.yellow;
+                else if ((daysDiff > (frequency / 1.5)) && (daysDiff <= frequency)) color = (int)maintenanceColours.orange;
+                else color = (int)maintenanceColours.red;
+
+                return color;
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "SYSTEM Cache");
+                return (int)maintenanceColours.grey;
+            }
+        
         }
 
         public int getFrequencyColourForAsset(int assetId)

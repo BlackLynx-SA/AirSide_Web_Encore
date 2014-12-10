@@ -35,6 +35,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewBag.surveyorDates = new SelectList(db.as_fileUploadProfile.OrderByDescending(q => q.dt_datetime).ToList().Select(q => q.dt_datetime.ToString("yyy/MM/dd")).Distinct(), "dt_datetime");
             ViewBag.photmetricDates = new SelectList(db.as_fbTechProfile.OrderByDescending(q => q.dt_dateTimeStamp).ToList().Select(q => q.dt_dateTimeStamp.ToString("yyy/MM/dd")).Distinct(), "dt_dateTimeStamp");
             ViewBag.techgroups = new SelectList(db.as_technicianGroups, "i_groupId", "vc_groupName");
+            var maintenanceTasks = db.as_maintenanceProfile.OrderBy(q => q.vc_description).ToList();
+            ViewData["maintenanceTasks"] = maintenanceTasks;
+            ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
+            ViewBag.taskDesc = maintenanceTasks[0].vc_description;
+
             return View();
         }
 
@@ -159,95 +164,96 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(data);
         }
 
-        [HttpPost]
-        public JsonResult getAllAssetProfiles(int? subAreaId, int? areaId)
-        {
-            List<AssetDownload> assetList = new List<AssetDownload>();
-            try
-            {
-                CacheHelper cache = new CacheHelper();
-                List<mongoAssetProfile> cacheList = cache.getAllAssets();
-                if (subAreaId == null && areaId == null)
-                {
-                    foreach (mongoAssetProfile item in cacheList)
-                    {
-                        AssetDownload asset = new AssetDownload();
-                        asset.i_assetId = item.assetId;
-                        asset.i_assetClassId = item.assetClassId;
-                        asset.vc_tagId = item.rfidTag;
-                        asset.vc_serialNumber = item.rfidTag;
-                        asset.i_locationId = item.locationId;
-                        asset.i_areaSubId = item.location.areaSubId;
-                        asset.longitude = item.location.longitude;
-                        asset.latitude = item.location.latitude;
-                        asset.lastDate = item.previousDate;
-                        asset.maintenance = "0";
-                        asset.assetDesc = item.assetClass.description;
-                        asset.imagePath = item.picture.fileLocation;
-                        asset.imageDesc = item.picture.description;
-                        asset.frequencyId = item.maintenanceCycle;
-                        assetList.Add(asset);
-                    }
-                }
-                else if (areaId != null)
-                {
-                    foreach (mongoAssetProfile item in cacheList)
-                    {
-                        if (item.location.areaId == areaId)
-                        {
-                            AssetDownload asset = new AssetDownload();
-                            asset.i_assetId = item.assetId;
-                            asset.i_assetClassId = item.assetClassId;
-                            asset.vc_tagId = item.rfidTag;
-                            asset.vc_serialNumber = item.rfidTag;
-                            asset.i_locationId = item.locationId;
-                            asset.i_areaSubId = item.location.areaSubId;
-                            asset.longitude = item.location.longitude;
-                            asset.latitude = item.location.latitude;
-                            asset.lastDate = item.previousDate;
-                            asset.maintenance = "0";
-                            asset.assetDesc = item.assetClass.description;
-                            asset.imagePath = item.picture.fileLocation;
-                            asset.imageDesc = item.picture.description;
-                            asset.frequencyId = item.maintenanceCycle;
-                            assetList.Add(asset);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (mongoAssetProfile item in cacheList)
-                    {
-                        if (item.location.areaSubId == subAreaId)
-                        {
-                            AssetDownload asset = new AssetDownload();
-                            asset.i_assetId = item.assetId;
-                            asset.i_assetClassId = item.assetClassId;
-                            asset.vc_tagId = item.rfidTag;
-                            asset.vc_serialNumber = item.rfidTag;
-                            asset.i_locationId = item.locationId;
-                            asset.i_areaSubId = item.location.areaSubId;
-                            asset.longitude = item.location.longitude;
-                            asset.latitude = item.location.latitude;
-                            asset.lastDate = item.previousDate;
-                            asset.maintenance = "0";
-                            asset.assetDesc = item.assetClass.description;
-                            asset.imagePath = item.picture.fileLocation;
-                            asset.imageDesc = item.picture.description;
-                            asset.frequencyId = item.maintenanceCycle;
-                            assetList.Add(asset);
-                        }
-                    }
-                }
+        //2014/12/09 Decomissioned 
+        //[HttpPost]
+        //public JsonResult getAllAssetProfiles(int? subAreaId, int? areaId)
+        //{
+        //    List<AssetDownload> assetList = new List<AssetDownload>();
+        //    try
+        //    {
+        //        CacheHelper cache = new CacheHelper();
+        //        List<mongoAssetProfile> cacheList = cache.getAllAssets();
+        //        if (subAreaId == null && areaId == null)
+        //        {
+        //            foreach (mongoAssetProfile item in cacheList)
+        //            {
+        //                AssetDownload asset = new AssetDownload();
+        //                asset.i_assetId = item.assetId;
+        //                asset.i_assetClassId = item.assetClassId;
+        //                asset.vc_tagId = item.rfidTag;
+        //                asset.vc_serialNumber = item.rfidTag;
+        //                asset.i_locationId = item.locationId;
+        //                asset.i_areaSubId = item.location.areaSubId;
+        //                asset.longitude = item.location.longitude;
+        //                asset.latitude = item.location.latitude;
+        //                asset.lastDate = item.previousDate;
+        //                asset.maintenance = "0";
+        //                asset.assetDesc = item.assetClass.description;
+        //                asset.imagePath = item.picture.fileLocation;
+        //                asset.imageDesc = item.picture.description;
+        //                asset.frequencyId = item.maintenanceCycle;
+        //                assetList.Add(asset);
+        //            }
+        //        }
+        //        else if (areaId != null)
+        //        {
+        //            foreach (mongoAssetProfile item in cacheList)
+        //            {
+        //                if (item.location.areaId == areaId)
+        //                {
+        //                    AssetDownload asset = new AssetDownload();
+        //                    asset.i_assetId = item.assetId;
+        //                    asset.i_assetClassId = item.assetClassId;
+        //                    asset.vc_tagId = item.rfidTag;
+        //                    asset.vc_serialNumber = item.rfidTag;
+        //                    asset.i_locationId = item.locationId;
+        //                    asset.i_areaSubId = item.location.areaSubId;
+        //                    asset.longitude = item.location.longitude;
+        //                    asset.latitude = item.location.latitude;
+        //                    asset.lastDate = item.previousDate;
+        //                    asset.maintenance = "0";
+        //                    asset.assetDesc = item.assetClass.description;
+        //                    asset.imagePath = item.picture.fileLocation;
+        //                    asset.imageDesc = item.picture.description;
+        //                    asset.frequencyId = item.maintenanceCycle;
+        //                    assetList.Add(asset);
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            foreach (mongoAssetProfile item in cacheList)
+        //            {
+        //                if (item.location.areaSubId == subAreaId)
+        //                {
+        //                    AssetDownload asset = new AssetDownload();
+        //                    asset.i_assetId = item.assetId;
+        //                    asset.i_assetClassId = item.assetClassId;
+        //                    asset.vc_tagId = item.rfidTag;
+        //                    asset.vc_serialNumber = item.rfidTag;
+        //                    asset.i_locationId = item.locationId;
+        //                    asset.i_areaSubId = item.location.areaSubId;
+        //                    asset.longitude = item.location.longitude;
+        //                    asset.latitude = item.location.latitude;
+        //                    asset.lastDate = item.previousDate;
+        //                    asset.maintenance = "0";
+        //                    asset.assetDesc = item.assetClass.description;
+        //                    asset.imagePath = item.picture.fileLocation;
+        //                    asset.imageDesc = item.picture.description;
+        //                    asset.frequencyId = item.maintenanceCycle;
+        //                    assetList.Add(asset);
+        //                }
+        //            }
+        //        }
 
-                return Json(assetList);
-            }
-            catch (Exception err)
-            {
-                Logging log = new Logging();
-                log.log("Failed to get Asset Profiles: " + err.Message, "getAllAssetProfiles", Logging.logTypes.Error, User.Identity.Name);
-                return Json(assetList);
-            }
-        }
+        //        return Json(assetList);
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Logging log = new Logging();
+        //        log.log("Failed to get Asset Profiles: " + err.Message, "getAllAssetProfiles", Logging.logTypes.Error, User.Identity.Name);
+        //        return Json(assetList);
+        //    }
+        //}
     }
 }

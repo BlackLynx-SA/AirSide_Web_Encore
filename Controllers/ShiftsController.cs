@@ -32,6 +32,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult Calendar()
         {
+            ViewBag.maintenanceTasks = new SelectList(db.as_maintenanceProfile.OrderBy(q => q.vc_description).Distinct(), "i_maintenanceId", "vc_description");
             return View();
         }
 
@@ -118,7 +119,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               select new { 
                                 description = z.vc_description + "(" + y.vc_description + ")",
                                 dateTime = x.dt_scheduledDate,
-                                groupName = a.vc_groupName
+                                groupName = a.vc_groupName,
+                                validation = x.i_maintenanceValidationId
                               }).ToList();
 
                 List<shiftInfo> shiftList = new List<shiftInfo>();
@@ -128,6 +130,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     newItem.description = item.description;
                     newItem.dateTime = item.dateTime.ToString("dd-MM-yyyy h:mm tt");
                     newItem.groupName = item.groupName;
+                    newItem.validationId = item.validation;
 
                     //Push to list
                     shiftList.Add(newItem);
@@ -243,6 +246,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        //[HttpPost]
+        //public JsonResult getValidationTasks(int areaSubId, int maintenanceId)
+        //{
+        //    try
+        //    {
+        //        //Get the relevant validation tasks for a shift
+        //        //Create Date: 2014/01/01
+        //        //Author: Bernard Willer
+
+        //        var validation = (from x in db.as_maintenanceValidation
+        //                              join y in asset)
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Logging log = new Logging();
+        //        log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+        //        Response.StatusCode = 500;
+        //        return Json(new { message = err.Message });
+        //    }
+        
+        //}
+        
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]

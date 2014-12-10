@@ -1,4 +1,18 @@
-﻿using MongoDB.Bson;
+﻿#region Copyright
+// BlackLynx (Pty) Ltd.
+// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+//
+// THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
+// THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
+// PLEASE OBTAIN APPROPRIATE APPROVAL FROM BL AT INFO@BLACKLYNX.CO.ZA
+//
+// AUTHOR: Bernard Willer
+// EMAIL: bernard.willer@blacklynx.co.za
+// CREATE DATE: 2014/11/01
+// SUMMARY: This class contains all controller calls for the Home route
+#endregion
+
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +21,7 @@ using System.Web;
 
 namespace ADB.AirSide.Encore.V1.Models
 {
+    #region Enums
     public enum maintenanceColours
     {
         grey = 0,
@@ -23,6 +38,10 @@ namespace ADB.AirSide.Encore.V1.Models
         uploaded = 3
     }
 
+    #endregion
+
+    #region General Models
+
     public class AssetStatus
     {
         public int i_assetProfileId { get; set; }
@@ -32,6 +51,15 @@ namespace ADB.AirSide.Encore.V1.Models
     public class HomeStats
     {
         public int color { get; set; }
+    }
+
+    public class ToDoList
+    {
+        public string date { get; set; }
+        public string vc_description { get; set; }
+        public int i_todoProfileId { get; set; }
+        public int i_todoCatId { get; set; }
+        public Boolean bt_active { get; set; }
     }
 
     public class activeShifts
@@ -49,67 +77,7 @@ namespace ADB.AirSide.Encore.V1.Models
         public double persentage { get; set; }
     }
 
-    public class mongoLogging
-    {
-        public ObjectId Id { get; set; }
-        public int logTypeId { get; set; }
-        public string logdescription { get; set; }
-        public System.DateTime logTimeStamp { get; set; }
-        public string logModule { get; set; }
-        public string aspUserId { get; set; }
-    }
-
-    public class mongoAssetProfile
-    {
-        public ObjectId Id { get; set; }
-        public int assetId { get; set; }
-        public int locationId { get; set; }
-        public int assetClassId { get; set; }
-        public string rfidTag { get; set; }
-        public string serialNumber { get; set; }
-        public int maintenanceCycle { get; set; }
-        public string previousDate { get; set; }
-        public string nextDate { get; set; }
-
-        public location location { get; set; }
-        public assetClass assetClass { get; set; }
-        public frequency frequency { get; set; }
-        public picture picture { get; set; }
-    }
-
-    public class location
-    {
-        public int locationId { get; set; }
-        public double longitude { get; set; }
-        public double latitude { get; set; }
-        public string designation { get; set; }
-        public int areaSubId { get; set; }
-        public int areaId { get; set; }
-    }
-
-    public class assetClass
-    {
-        public int assetClassId { get; set; }
-        public string description { get; set; }
-        public int pictureId { get; set; }
-        public string manufacturer { get; set; }
-        public string model { get; set; }
-        public int frequencyId { get; set; }
-    }
-
-    public class frequency
-    {
-        public int frequencyId { get; set; }
-        public string description { get; set; }
-        public double frequencyValue { get; set; }
-    }
-
-    public class picture
-    {
-        public int pictureId { get; set; }
-        public string fileLocation { get; set; }
-        public string description { get; set; }
-    }
+   
 
     public class RegisterModel
     {
@@ -344,6 +312,7 @@ namespace ADB.AirSide.Encore.V1.Models
         public string description { get; set; }
         public string groupName { get; set; }
         public string dateTime { get; set; }
+        public int validationId { get; set; }
     }
 
     public class EventInfo
@@ -381,6 +350,8 @@ namespace ADB.AirSide.Encore.V1.Models
         public string frequency { get; set; }
         public List<validationProfile> validation { get; set; }
     }
+
+    #endregion
 
     #region MongoDB Models
 
@@ -460,6 +431,75 @@ namespace ADB.AirSide.Encore.V1.Models
         public int UserId { get; set; }
         public string tagId { get; set; }
         public string serialNumber { get; set; }
+    }
+
+    public class mongoLogging
+    {
+        public ObjectId Id { get; set; }
+        public int logTypeId { get; set; }
+        public string logdescription { get; set; }
+        public System.DateTime logTimeStamp { get; set; }
+        public string logModule { get; set; }
+        public string aspUserId { get; set; }
+    }
+
+    public class mongoAssetProfile
+    {
+        public ObjectId Id { get; set; }
+        public int assetId { get; set; }
+        public int locationId { get; set; }
+        public int assetClassId { get; set; }
+        public string rfidTag { get; set; }
+        public string serialNumber { get; set; }
+
+        public location location { get; set; }
+        public assetClass assetClass { get; set; }
+        public frequency frequency { get; set; }
+        public picture picture { get; set; }
+        public List<maintenance> maintenance { get; set; }
+    }
+
+    public class maintenance
+    {
+        public string maintenanceTask { get; set; }
+        public string previousDate { get; set; }
+        public string nextDate { get; set; }
+        public int maintenanceCycle { get; set; }
+        public int maintenanceId { get; set; }
+    }
+
+    public class location
+    {
+        public int locationId { get; set; }
+        public double longitude { get; set; }
+        public double latitude { get; set; }
+        public string designation { get; set; }
+        public int areaSubId { get; set; }
+        public int areaId { get; set; }
+    }
+
+    public class assetClass
+    {
+        public int assetClassId { get; set; }
+        public string description { get; set; }
+        public int pictureId { get; set; }
+        public string manufacturer { get; set; }
+        public string model { get; set; }
+        public int frequencyId { get; set; }
+    }
+
+    public class frequency
+    {
+        public int frequencyId { get; set; }
+        public string description { get; set; }
+        public double frequencyValue { get; set; }
+    }
+
+    public class picture
+    {
+        public int pictureId { get; set; }
+        public string fileLocation { get; set; }
+        public string description { get; set; }
     }
     #endregion
 }

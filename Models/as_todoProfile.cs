@@ -21,5 +21,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public bool bt_active { get; set; }
         public bool bt_private { get; set; }
         public int UserId { get; set; }
+        public System.DateTime dt_completedDate { get; set; }
     }
 }

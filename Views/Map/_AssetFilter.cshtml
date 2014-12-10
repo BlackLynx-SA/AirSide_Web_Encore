@@ -12,7 +12,7 @@
                     <div class="row">
                         <section class="col col-10">
                             <label class="radio">
-                                <input type="radio" name="assetFilterRadio" checked="checked" value="allassets">
+                                <input type="radio" name="assetFilterRadio" checked="checked" value="allassets" id="allAssetRadio">
                                 <i></i>Show All Assets
                             </label>
                         </section>
@@ -20,7 +20,7 @@
                     <div class="row">
                         <section class="col col-10">
                             <label class="radio">
-                                <input type="radio" name="assetFilterRadio" value="asset">
+                                <input type="radio" name="assetFilterRadio" value="asset" id="assetTypeRadio">
                                 <i></i>Show Specific Assets Type
                             </label>
                             <label class="select">
@@ -29,27 +29,39 @@
                             <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This is all loaded asset types in the system. To view all click <a href="~/assetclass/assetclasses">here.</a></div>
                         </section>
                     </div>
+
                     <div class="row">
                         <section class="col col-10">
                             <label class="radio">
-                                <input type="radio" name="assetFilterRadio" value="maintain">
-                                <i></i>Show Maintenance Cycle
+                                <input type="radio" name="assetFilterRadio" value="maintain" id="assetMaintenanceRadio">
+                                <i></i>Maintenance Task
                             </label>
+                        </section>
+                    </div>
+
+                    <div class="row">
+                        @*<section class="col col-6">
+                                <label class="select">
+                                    @Html.DropDownList("maintenanceTasks", null, String.Empty)<i></i>
+                                </label>
+                                <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> These tasks are assosiated with each asset type and can be viewed <a href="~/assetClass/assetClasses">here</a></div>
+                            </section>*@
+                        <section class="col col-10">
                             <label class="select">
                                 <select id="maintenanceSelect">
-                                    <option value="0">No Data</option>
+                                    <option value="0" selected="selected">No Data</option>
                                     <option value="1">Recently Updated</option>
                                     <option value="2">Mid Cycle</option>
                                     <option value="3">Almost Due</option>
                                     <option value="4">Over Due</option>
                                 </select><i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance task.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance task and maintenance cycle.</div>
                         </section>
                     </div>
                     <hr /><br />
                     <div class="row">
-                        <section class="col col-11">
+                        <section class="col col-10">
                             <label class="checkbox">
                                 <input id="clusteredChk" type="checkbox" name="checkbox">
                                 <i></i>Show Asset Clustered
@@ -94,29 +106,35 @@
         }
         $('#assetFilterModal').modal('hide');
         $('#assetLoader').hide();
+        lastFilter = "assets";
     }
 
     //Asset Filters
     function showAllAssets(clustered) {
-        var i = 0;
         markers = [];
-        $.each(Assets.jsonData, function () {
-            //Add Marker to Map
-            addMarker(Assets.jsonData[i]);
-            i++;
+        $.each(Assets.jsonData, function (i,v) {
+            var flag = false;
+            $.each(v.maintenance, function (index, value) {
+                if (value.maintenanceId == selectedTask) {
+                    addMarker(v);
+                    return false;
+                }
+            });
         });
         if (clustered) markerClusterer = new MarkerClusterer(map, markers);
     }
 
     function showAssetClass(asset, clustered) {
-        var i = 0;
         markers = [];
-        $.each(Assets.jsonData, function () {
-            if (asset == Assets.jsonData[i].assetClassId) {
-                //Add Marker to Map
-                addMarker(Assets.jsonData[i]);
+        $.each(Assets.jsonData, function (i,v) {
+            if (asset == v.assetClassId) {
+                $.each(v.maintenance, function (index, value) {
+                    if (value.maintenanceId == selectedTask) {
+                        addMarker(v);
+                        return false;
+                    }
+                });
             }
-            i++;
         });
 
         if (clustered) markerClusterer = new MarkerClusterer(map, markers);
@@ -125,12 +143,16 @@
     function showMaintenanceCycle(cycle, clustered) {
         var i = 0;
         markers = [];
-        $.each(Assets.jsonData, function () {
-            if (cycle == Assets.jsonData[i].maintenanceCycle) {
-                //Add Marker to Map
-                addMarker(Assets.jsonData[i]);
-            }
-            i++;
+        $.each(Assets.jsonData, function (i, v) {
+            $.each(v.maintenance, function (index, value) {
+                if (value.maintenanceId == selectedTask) {
+                    if (cycle == value.maintenanceCycle) {
+                        //Add Marker to Map
+                        addMarker(v);
+                        return false;
+                    }
+                }
+            });
         });
 
         if (clustered) markerClusterer = new MarkerClusterer(map, markers);

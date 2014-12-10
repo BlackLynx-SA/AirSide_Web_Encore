@@ -19,12 +19,12 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         private Entities db = new Entities();
 
-        public Boolean log(Exception err, [CallerMemberName]string memberName = "")
+        public Boolean logError(Exception err, string user, [CallerMemberName]string memberName = "")
         {
             try
             {
                 mongoLogging log = new mongoLogging();
-                if (err.InnerException.Message != null)
+                if (err.InnerException != null)
                     log.logdescription = err.InnerException.Message;
                 else
                     log.logdescription = err.Message;
@@ -32,7 +32,7 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                 log.logTimeStamp = DateTime.Now;
                 log.logTypeId = (int)logTypes.Error;
                 log.logModule = memberName;
-                log.aspUserId = "";
+                log.aspUserId = user;
 
                 //Commit to Mongo
                 CacheHelper cache = new CacheHelper();
@@ -40,33 +40,33 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
                 if (!flag)
                 {
-                    flag = writeLogToFile(err, memberName);
+                    flag = writeLogToFile(err, memberName, user);
                 }
                 return true;
             }
             catch (Exception error)
             {
-                writeLogToFile(error, memberName);
+                writeLogToFile(error, memberName, user);
                 return false;
             }
         }
 
-        private Boolean writeLogToFile(Exception err, string memberName)
+        private Boolean writeLogToFile(Exception err, string memberName, string user)
         {
             if (!File.Exists(getLogFile()))
             {
                 StreamWriter f = new StreamWriter(getLogFile());
-                if (err.InnerException.Message != null)
-                    f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.InnerException.Message + "|" + "");
+                if (err.InnerException != null)
+                    f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.InnerException.Message + "|" + user);
                 else
-                    f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.Message + "|" + "");
+                    f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.Message + "|" + user);
 
                 f.Close();
             }
             else
             {
                 StreamWriter f = File.AppendText(getLogFile());
-                if (err.InnerException.Message != null)
+                if (err.InnerException != null)
                     f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.InnerException.Message + "|" + "");
                 else
                     f.WriteLine(DateTime.Now.ToString("yyy/MM/dd hh:mm:ss") + "|Mongo DB Write Failed|Log detail: " + memberName + "|" + logTypes.Error.ToString() + "|" + err.Message + "|" + "");
