@@ -650,6 +650,27 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         #region Cache Queries
 
+        public mongoEmailSettings getEmailSettings()
+        {
+            MongoCollection collection = database.GetCollection<mongoEmailSettings>("md_emailSettings");
+            mongoEmailSettings settings = (from x in collection.AsQueryable<mongoEmailSettings>()
+                                           select x).FirstOrDefault();
+            if(settings == null)
+            {
+                //create default settings if it doesn't exist
+                BsonDocument mdSettings = new BsonDocument();
+                mdSettings.Add("apiKey", "key-82e66599b538527a71b035abfcd0a0ae");
+                mdSettings.Add("domain", "adb-airside.com");
+                mdSettings.Add("fromAddress", "info@adb-airside.com");
+                collection.Insert(mdSettings);
+                
+                //retry
+                settings = (from x in collection.AsQueryable<mongoEmailSettings>()
+                            select x).FirstOrDefault();
+            }
+            return settings;
+        }
+
         public List<mongoAssetDownload> getAssetAssosiations(int areaSubId)
         {
             MongoCollection collection = database.GetCollection<mongoAssetDownload>("md_assetDownload");

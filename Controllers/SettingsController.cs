@@ -28,10 +28,46 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         public ActionResult ImageLibrary()
         {
             return View();
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult EmailSettings()
+        {
+            CacheHelper cache = new CacheHelper();
+            mongoEmailSettings mailSettings = cache.getEmailSettings();
+            ViewBag.apiKey = mailSettings.apiKey;
+            ViewBag.domain = mailSettings.domain;
+            ViewBag.fromAddress = mailSettings.fromAddress;
+            return View();
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public JsonResult UpdateEmailSettings(string apiKey, string fromAddress, string domain)
+        //{
+        //    //Gets the next maintenance date for a asset
+        //    //Create Date: 2014/12/09
+        //    //Author: Bernard Willer
+
+        //    try
+        //    {
+
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        Logging log = new Logging();
+        //        log.logError(err, "SYSTEM Cache");
+        //        return new DateTime(1970, 1, 1);
+        //    }
+        //}
 
         [HttpPost]
         public JsonResult GetAllAirSideImages()
@@ -50,6 +86,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult EditImage(int imageId, string description)
         {
@@ -73,6 +111,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult DeleteImage(int imageId)
         {
@@ -110,6 +150,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult UploadClientImage(HttpPostedFileBase file, string description)
         {
@@ -151,5 +193,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 return Json(err.Message);
             }
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
     }
 }

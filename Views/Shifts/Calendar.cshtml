@@ -606,7 +606,7 @@
                 icon = icon.length === 0 ? " " : icon;
                 priority = priority.length === 0 ? "label label-default" : priority;
 
-                var html = $('<li><span class="' + priority + '" data-description="' + description + '" data-icon="' +
+                var html = $('<li data-event-type="1"><span class="' + priority + '" data-description="' + description + '" data-icon="' +
                     icon + '">' + title + '</span></li>').prependTo('ul#external-events').hide().fadeIn();
 
                 $("#event-container").effect("highlight", 800);
@@ -638,6 +638,7 @@
                         data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                         dataType: "json",
                         success: function (json) {
+                            eventGroups.push(json);
                             addEvent(title, priority, description, icon);
                         },
                         error: function (err) {

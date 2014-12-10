@@ -1,0 +1,108 @@
+﻿<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-editbutton="false" data-widget-deletebutton="false">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+        <h2> All Events </h2>
+        <div class="widget-toolbar">
+            <!-- add: non-hidden - to disable auto hide -->
+            <div class="btn-group">
+                <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                    Showing <i class="fa fa-caret-down"></i>
+                </button>
+                <ul class="dropdown-menu js-status-update pull-right">
+                    <li>
+                        <a href="javascript:void(0);" id="mt">Month</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" id="ag">Agenda</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" id="td">Today</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <!-- widget div-->
+    <div>
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <input class="form-control" type="text">
+        </div>
+        <!-- end widget edit box -->
+        <div class="widget-body no-padding">
+            <!-- content goes here -->
+            <div class="widget-body-toolbar">
+                <div id="calendar-buttons">
+                    <div class="btn-group">
+                        <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            <img src="~/Content/img/adb_img/startup_loader.GIF" id="calendarLoader" style="zoom:0.5;" />
+            <div id="calendar" style="display:none;"></div>
+            <!-- end content -->
+        </div>
+    </div>
+    <!-- end widget div -->
+</div>
+
+<script type="text/javascript">
+    function requestAllShifts() {
+        $.ajax({
+            url: "../../shifts/getAllShifts",
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
+                $.each(json, function (i, v) {
+                    var dateTime = Date.parseExact(v.dateTime, "dd-MM-yyyy h:mm tt");
+
+                    var colour = "bg-color-blue txt-color-white";
+                    if (v.validationId === 1)
+                        colour = "bg-color-pink txt-color-white";
+
+                    var newEvent = { allDay: false, className: colour, icon: 'fa-users', description: v.description, start: dateTime, title: v.groupName };
+                    $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                });
+                requestAllEvents();
+            },
+            error: function (err) {
+                $.smallBox({
+                    title: "Failed to load shifts",
+                    content: err.responseText,
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                $("#calendarLoader").fadeOut(500);
+            }
+        });
+    }
+
+    function requestAllEvents() {
+        $.ajax({
+            url: "../../shifts/getUserActiveEvents",
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
+                $.each(json, function (i, v) {
+                    var dateTime = Date.parseExact(v.start, "dd-MM-yyyy h:mm tt");
+                    var newEvent = { allDay: false, className: v.color, icon: v.icon, description: v.description, start: dateTime, title: v.title };
+                    $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                });
+                $("#calendarLoader").fadeOut(500);
+                $('#calendar').fadeIn(500);
+            },
+            error: function (err) {
+                $.smallBox({
+                    title: "Failed to load events",
+                    content: err.responseText,
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+                $("#calendarLoader").fadeOut(500);
+            }
+        });
+    }
+</script>

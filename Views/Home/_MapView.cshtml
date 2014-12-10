@@ -1,0 +1,267 @@
+﻿<div class="jarviswidget" id="wid-id-2" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
+        <h2>Birds Eye</h2>
+        <div class="widget-toolbar" role="menu">
+            <div class="btn-group">
+                <button id="taskBtn" class="btn dropdown-toggle btn-xs btn-primary" data-toggle="dropdown"><i class="fa fa-wrench"></i> <span id="taskLabel">@ViewBag.taskdesc</span> <i class="fa fa-caret-down"></i></button>
+                <ul class="dropdown-menu pull-right js-status-update">
+                    @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
+                    {
+                        <li><a href="#" onclick="setTask(@prod.i_maintenanceId, '@prod.vc_description');">@prod.vc_description</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </header>
+    <!-- widget div-->
+    <div>
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <div>
+                <label>Title:</label>
+                <input type="text" />
+            </div>
+        </div>
+        <!-- end widget edit box -->
+        <div class="widget-body no-padding" id="map-content">
+            <!-- content goes here -->
+            <img src="~/Content/img/adb_img/startup_loader.GIF" id="mapLoader" style="zoom:0.5;" />
+            <div id="map-canvas" class="google_maps" style="height:500px;"></div>
+            <!-- end content -->
+        </div>
+    </div>
+    <!-- end widget div -->
+</div>
+
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+</script>
+
+<script type="text/javascript">
+    var map;
+    var markers = [];
+    var Assets = new AllAssets();
+
+    function setTask(id, desc)
+    {
+        selectedTask = id;
+        $('#taskLabel').html(desc);
+        clearAllMarkers();
+        showAllAssets();
+    }
+
+    function requestAllAssetData() {
+        $.ajax({
+            url: '../../Map/getAllAssets',
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                Assets.jsonData = json;
+                $('#mapLoader').fadeOut(500);
+                initMap();
+            }
+        });
+    }
+
+    function AllAssets() {
+        this.jsonData = {};
+    }
+
+    function clearAllMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = null;
+    }
+
+    function showAllAssets() {
+        markers = [];
+        $.each(Assets.jsonData, function (i,v) {
+            var flag = false;
+            $.each(v.maintenance, function (index, value) {
+                if (value.maintenanceId == selectedTask) {
+                    addMarker(v);
+                    return false;
+                }
+            });
+        });
+    }
+
+    function addMarker(json) {
+        var long = json.location.longitude;
+        var lat = json.location.latitude;
+        var latLongMarker = new google.maps.LatLng(lat, long);
+        var image = getImage(json.maintenance);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: latLongMarker,
+            title: json.assetId.toString(),
+            icon: image
+        });
+        markers.push(marker);
+    }
+
+    function getImage(value) {
+        var image, cycle;
+        $.each(value, function (i, v) {
+            if (v.maintenanceId === selectedTask)
+                cycle = v.maintenanceCycle;
+        });
+
+        switch (cycle) {
+            case 0: image = '/images/map_images/NutralMarker.png';
+                break;
+            case 1: image = '/images/map_images/GreenMarker.png';
+                break;
+            case 2: image = '/images/map_images/YellowMarker.png';
+                break;
+            case 3: image = '/images/map_images/OrangeMarker.png';
+                break;
+            case 4: image = '/images/map_images/RedMarker.png';
+                break;
+
+            default:
+                break;
+        }
+
+        return image;
+    }
+
+    function initMap() {
+        // Black & White
+        var monochrome_style = [{
+            "featureType": "road.highway",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "landscape",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "transit",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "poi.park",
+            "elementType": "labels",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "poi.park",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#d3d3d3"
+            }, {
+                "visibility": "on"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "geometry.stroke",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "landscape",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#cecece"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#000000"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "administrative",
+            "elementType": "labels.text.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#000000"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "visibility": "on"
+            }, {
+                "color": "#000000"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "labels.icon",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "labels",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "poi",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }];
+
+        var monoChromeStyleMap = new google.maps.StyledMapType(monochrome_style, {
+            name: "Mono Chrome"
+        });
+
+        $.ajax({
+            url: '../../Map/getMapCenter',
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                centerLat = json[0];
+                centerLong = json[1];
+
+                var zoom = 14;
+
+                var mapOptions = {
+                    center: new google.maps.LatLng(json[0], json[1]),
+                    zoom: zoom,
+                    disableDefaultUI: true,
+                };
+                map = new google.maps.Map(document.getElementById("map-canvas"),
+                    mapOptions);
+
+                // Setup skin for the map
+                //map.mapTypes.set('monochrome_style', monoChromeStyleMap);
+                //map.setMapTypeId('monochrome_style');
+
+                showAllAssets();
+            }
+        });
+    }
+
+
+</script>

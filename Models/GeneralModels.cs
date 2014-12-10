@@ -355,6 +355,14 @@ namespace ADB.AirSide.Encore.V1.Models
 
     #region MongoDB Models
 
+    public class mongoEmailSettings
+    {
+        public ObjectId Id { get; set; }
+        public string apiKey { get; set; }
+        public string domain { get; set; }
+        public string fromAddress { get; set; }
+    }
+
     public class mongoFullAsset
     {
         public ObjectId Id { get; set; }

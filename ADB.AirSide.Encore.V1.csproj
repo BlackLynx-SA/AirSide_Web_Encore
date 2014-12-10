@@ -1263,6 +1263,10 @@
     <Content Include="Views\Map\_ShiftCreate.cshtml" />
     <Content Include="Views\Shifts\_CalendarShift.cshtml" />
     <Content Include="Views\Shifts\_CalendarEvent.cshtml" />
+    <Content Include="Views\Home\_ToDoView.cshtml" />
+    <Content Include="Views\Home\_MapView.cshtml" />
+    <Content Include="Views\Home\_CalendarView.cshtml" />
+    <Content Include="Views\Settings\EmailSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

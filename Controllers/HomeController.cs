@@ -49,6 +49,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         // GET: home/index
         public ActionResult Index()
         {
+
+            //Section for all Map Events for maintenance tasks
+            var maintenanceTasks = db.as_maintenanceProfile.OrderBy(q => q.vc_description).ToList();
+            ViewData["maintenanceTasks"] = maintenanceTasks;
+            ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
+            ViewBag.taskDesc = maintenanceTasks[0].vc_description;
+
             return View();
         }
 
@@ -223,7 +230,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     date = todo.dt_dateTime.ToString("yyyy/MM/dd"),
                     vc_description = todo.vc_description,
                     i_todoProfileId = todo.i_todoProfileId,
-                    i_todoCatId = todo.i_todoCatId
+                    i_todoCatId = todo.i_todoCatId,
+                    bt_active = todo.bt_active
                 });
             }
             catch (Exception err)

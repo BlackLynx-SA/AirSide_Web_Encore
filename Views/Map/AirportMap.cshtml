@@ -78,7 +78,7 @@
         @* Shifts Buttons *@
         <div class="btn-group  hidden-lg">
             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-calendar "></i>
+                <i class="fa fa-calendar "></i> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
@@ -90,7 +90,7 @@
                 <span class="btn-label">
                     <i class="fa fa-calendar "></i>
                 </span>
-                Shifts
+                Shifts <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
@@ -102,7 +102,7 @@
         @* Map Type Buttons *@
         <div class="btn-group  hidden-lg">
             <button type="button" class="btn btn-primary dropdown-toggle maintenanceBtn" data-toggle="dropdown">
-                <i class="fa fa-wrench"></i>
+                <i class="fa fa-wrench"></i> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
@@ -117,7 +117,7 @@
                 <span class="btn-label">
                     <i class="fa fa-wrench "></i>
                 </span>
-                <span id="taskLabel">@ViewBag.taskDesc</span>
+                <span id="taskLabel">@ViewBag.taskDesc</span> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
@@ -130,7 +130,7 @@
         @* Map Type Buttons *@
         <div class="btn-group  hidden-lg">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-map-marker"></i>
+                <i class="fa fa-map-marker"></i> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
@@ -144,7 +144,7 @@
                 <span class="btn-label">
                     <i class="fa fa-map-marker "></i>
                 </span>
-                Map Type
+                Map Type <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
@@ -431,9 +431,6 @@
                 var bounds = new google.maps.LatLngBounds(
                     new google.maps.LatLng(c.k - 0.001, c.B - 0.002),
                     new google.maps.LatLng(c.k + 0.001, c.B + 0.002)
-
-                      //new google.maps.LatLng(44.490, -78.649),
-                      //new google.maps.LatLng(44.599, -78.443)
                   );
 
                 // Define a rectangle and set its editable property to true.
