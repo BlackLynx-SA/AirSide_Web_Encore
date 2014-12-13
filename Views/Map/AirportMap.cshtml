@@ -429,8 +429,8 @@
                 var c = map.getCenter();
 
                 var bounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(c.k - 0.001, c.B - 0.002),
-                    new google.maps.LatLng(c.k + 0.001, c.B + 0.002)
+                    new google.maps.LatLng(c.lat() - 0.001, c.lng() - 0.002),
+                    new google.maps.LatLng(c.lat() + 0.001, c.lng() + 0.002)
                   );
 
                 // Define a rectangle and set its editable property to true.
@@ -460,23 +460,23 @@
         function getSelectedAssets() {
             selectedAssets = [];
 
-            var selectorNWLat = rectangle.bounds.Fa.j;
-            var selectorNWLong = rectangle.bounds.wa.j;
-            var selectorSELat = rectangle.bounds.Fa.k;
-            var selectorSELong = rectangle.bounds.wa.k;
+            var selectorNELat = rectangle.bounds.getNorthEast().lat();
+            var selectorNELong = rectangle.bounds.getNorthEast().lng();
+            var selectorSWLat = rectangle.bounds.getSouthWest().lat();
+            var selectorSWLong = rectangle.bounds.getSouthWest().lng();
 
             $.each(markers, function (i, v) {
                 var markerLat = 0;
                 var markerLong = 0;
 
-                markerLat = v.position.k;
-                markerLong = v.position.B;
+                markerLat = v.position.lat();
+                markerLong = v.position.lng();
 
                 var latFlag = false;
                 var longFlag = false;
 
-                if (markerLat >= selectorSELat && markerLat <= selectorNWLat) latFlag = true;
-                if (markerLong <= selectorSELong && markerLong >= selectorNWLong) longFlag = true;
+                if (markerLat >= selectorSWLat && markerLat <= selectorNELat) latFlag = true;
+                if (markerLong >= selectorSWLong && markerLong <= selectorNELong) longFlag = true;
 
                 if (latFlag && longFlag)
                     selectedAssets.push(v);

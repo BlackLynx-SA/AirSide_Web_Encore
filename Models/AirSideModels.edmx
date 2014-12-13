@@ -193,6 +193,7 @@
           <Property Name="i_maintenanceId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vc_description" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="i_maintenanceCategoryId" Type="int" Nullable="false" />
+          <Property Name="i_maintenanceValidationId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_maintenanceValidation">
           <Key>
@@ -201,14 +202,6 @@
           <Property Name="i_maintenanceValidationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vc_validationName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_validationDescription" Type="nvarchar" MaxLength="500" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_maintenanceValidationProfile">
-          <Key>
-            <PropertyRef Name="i_maintenanceValidationProfileId" />
-          </Key>
-          <Property Name="i_maintenanceValidationProfileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="i_maintenanceProfileId" Type="int" Nullable="false" />
-          <Property Name="i_maintenanceValidationId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_nodeRegionProfile">
           <Key>
@@ -279,7 +272,6 @@
           <Property Name="i_areaSubId" Type="int" Nullable="false" />
           <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="i_maintenanceId" Type="int" Nullable="false" />
-          <Property Name="i_maintenanceValidationId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_shiftsCustom">
           <Key>
@@ -523,7 +515,6 @@
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="as_maintenanceValidationProfile" EntityType="Self.as_maintenanceValidationProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="dbo" store:Type="Tables" />
@@ -739,30 +730,6 @@
           <Property Name="vc_maintenanceCategory" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vc_categoryDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="i_categoryType" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_maintenanceProfile">
-          <Key>
-            <PropertyRef Name="i_maintenanceId" />
-          </Key>
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_maintenanceValidation">
-          <Key>
-            <PropertyRef Name="i_maintenanceValidationId" />
-          </Key>
-          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="vc_validationName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_validationDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_maintenanceValidationProfile">
-          <Key>
-            <PropertyRef Name="i_maintenanceValidationProfileId" />
-          </Key>
-          <Property Name="i_maintenanceValidationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_maintenanceProfileId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_nodeRegionProfile">
           <Key>
@@ -1010,9 +977,6 @@
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" />
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" />
-          <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" />
-          <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" />
-          <EntitySet Name="as_maintenanceValidationProfile" EntityType="Self.as_maintenanceValidationProfile" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" />
@@ -1047,6 +1011,8 @@
           <EntitySet Name="as_todoProfile" EntityType="airside.encoreModel.as_todoProfile" />
           <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
           <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="airside.encoreModel.as_assetClassMaintenanceProfile" />
+          <EntitySet Name="as_maintenanceProfile" EntityType="airside.encoreModel.as_maintenanceProfile" />
+          <EntitySet Name="as_maintenanceValidation" EntityType="airside.encoreModel.as_maintenanceValidation" />
           <EntitySet Name="as_shifts" EntityType="airside.encoreModel.as_shifts" />
         </EntityContainer>
         <EntityType Name="as_todoProfile">
@@ -1082,6 +1048,23 @@
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
           <Property Name="i_frequencyId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="as_maintenanceProfile">
+          <Key>
+            <PropertyRef Name="i_maintenanceId" />
+          </Key>
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="i_maintenanceCategoryId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_maintenanceValidation">
+          <Key>
+            <PropertyRef Name="i_maintenanceValidationId" />
+          </Key>
+          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_validationName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vc_validationDescription" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="as_shifts">
           <Key>
             <PropertyRef Name="i_shiftId" />
@@ -1094,7 +1077,6 @@
           <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
           <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceValidationId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1288,33 +1270,6 @@
                 <ScalarProperty Name="vc_maintenanceCategory" ColumnName="vc_maintenanceCategory" />
                 <ScalarProperty Name="vc_categoryDescription" ColumnName="vc_categoryDescription" />
                 <ScalarProperty Name="i_categoryType" ColumnName="i_categoryType" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceProfile">
-              <MappingFragment StoreEntitySet="as_maintenanceProfile">
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceValidation">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidation">
-              <MappingFragment StoreEntitySet="as_maintenanceValidation">
-                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
-                <ScalarProperty Name="vc_validationName" ColumnName="vc_validationName" />
-                <ScalarProperty Name="vc_validationDescription" ColumnName="vc_validationDescription" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_maintenanceValidationProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidationProfile">
-              <MappingFragment StoreEntitySet="as_maintenanceValidationProfile">
-                <ScalarProperty Name="i_maintenanceValidationProfileId" ColumnName="i_maintenanceValidationProfileId" />
-                <ScalarProperty Name="i_maintenanceProfileId" ColumnName="i_maintenanceProfileId" />
-                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1569,10 +1524,28 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="as_maintenanceProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceProfile">
+              <MappingFragment StoreEntitySet="as_maintenanceProfile">
+                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
+                <ScalarProperty Name="i_maintenanceCategoryId" ColumnName="i_maintenanceCategoryId" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_maintenanceValidation">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_maintenanceValidation">
+              <MappingFragment StoreEntitySet="as_maintenanceValidation">
+                <ScalarProperty Name="vc_validationDescription" ColumnName="vc_validationDescription" />
+                <ScalarProperty Name="vc_validationName" ColumnName="vc_validationName" />
+                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="as_shifts">
             <EntityTypeMapping TypeName="airside.encoreModel.as_shifts">
               <MappingFragment StoreEntitySet="as_shifts">
-                <ScalarProperty Name="i_maintenanceValidationId" ColumnName="i_maintenanceValidationId" />
                 <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
                 <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
                 <ScalarProperty Name="i_areaSubId" ColumnName="i_areaSubId" />

@@ -51,13 +51,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult removeTaskAssosiation(int maintenanceId)
+        public JsonResult removeTaskAssosiation(int assetMaintenanceId)
         {
             try
             {
-                var assosiation = db.as_assetClassMaintenanceProfile.Find(maintenanceId);
+                var assosiation = db.as_assetClassMaintenanceProfile.Find(assetMaintenanceId);
+                int assetClassId = assosiation.i_assetClassId;
                 db.as_assetClassMaintenanceProfile.Remove(assosiation);
                 db.SaveChanges();
+
+                //Rebuild cache
+                CacheHelper cache = new CacheHelper();
+                cache.rebuildAssetProfileForAssetClass(assetClassId);
 
                 return Json(new { message = "Success" });
             }
@@ -78,47 +83,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 var assetMaintenance = (from x in db.as_assetClassMaintenanceProfile
                                         join y in db.as_frequencyProfile on x.i_frequencyId equals y.i_frequencyId
                                         join z in db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
+                                        join a in db.as_maintenanceValidation on z.i_maintenanceValidationId equals a.i_maintenanceValidationId
                                         where x.i_assetClassId == assetClassId
-                                        select new { 
-                                            task = z.vc_description,
+                                        select new
+                                        {
+                                            maintenanceTask = z.vc_description,
                                             frequency = y.f_frequency,
-                                            assetMaintenanceId = x.i_assetMaintenanceId,
-                                            maintenanceId = x.i_maintenanceId
+                                            maintenanceId = x.i_maintenanceId,
+                                            validation = a.vc_validationName,
+                                            assetMaintenanceId = x.i_assetMaintenanceId
                                         }).ToList();
 
-                List<MaintenanceTasksDownload> assosiated = new List<MaintenanceTasksDownload>();
-                foreach(var item in assetMaintenance)
-                {
-                    MaintenanceTasksDownload newItem = new MaintenanceTasksDownload();
-                    newItem.maintenanceId = item.assetMaintenanceId;
-                    newItem.maintenanceTask = item.task;
-                    newItem.frequency = item.frequency.ToString();
-
-                    var validators = (from x in db.as_maintenanceValidationProfile
-                                      join y in db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
-                                      where x.i_maintenanceProfileId == item.maintenanceId
-                                      select new
-                                      {
-                                          desc = y.vc_validationName,
-                                          id = y.i_maintenanceValidationId
-                                      }).ToList();
-
-                    newItem.validation = new List<validationProfile>();
-                    foreach(var valid in validators)
-                    {
-                        validationProfile validItem = new validationProfile();
-                        validItem.description = valid.desc;
-                        validItem.validationId = valid.id;
-
-                        newItem.validation.Add(validItem);
-                    }
-
-                    assosiated.Add(newItem);
-                }
-
-                return Json(assosiated);
+                return Json(assetMaintenance);
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                 Logging log = new Logging();
                 log.log("Failed to retrieve Assosiated Maintenance Tasks: " + err.Message, "getAllMaintenanceValidators", Logging.logTypes.Error, Request.UserHostAddress);
@@ -129,7 +107,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertMaintenanceTask(int assetClassId, int maintenanceId, int frequencyId, [System.Web.Http.FromUri] int[] validationIds)
+        public JsonResult insertMaintenanceTask(int assetClassId, int maintenanceId, int frequencyId)//, [System.Web.Http.FromUri] int[] validationIds)
         {
             try
             {
@@ -145,23 +123,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.as_assetClassMaintenanceProfile.Add(newAssosiation);
                 db.SaveChanges();
 
-                //Remove existing validation types
-                var validationTypes = db.as_maintenanceValidationProfile.Where(q => q.i_maintenanceProfileId == maintenanceId);
-                foreach(as_maintenanceValidationProfile item in validationTypes)
-                {
-                    db.as_maintenanceValidationProfile.Remove(item);
-                }
-                db.SaveChanges();
-
-                //Create Validation Types
-                foreach (int item in validationIds)
-                {
-                    as_maintenanceValidationProfile newValidation = new as_maintenanceValidationProfile();
-                    newValidation.i_maintenanceProfileId = maintenanceId;
-                    newValidation.i_maintenanceValidationId = item;
-                    db.as_maintenanceValidationProfile.Add(newValidation);
-                }
-                db.SaveChanges();
+                //Build cache for newly added task
+                CacheHelper cache = new CacheHelper();
+                cache.rebuildAssetProfileForAssetClass(assetClassId);
 
                 return Json(new { message = "Success"});
             }
@@ -179,7 +143,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var tasks = db.as_maintenanceProfile.ToList();
+                var tasks = (from x in db.as_maintenanceProfile 
+                                 join y in db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
+                                 select new {
+                                     vc_description = x.vc_description,
+                                     i_maintenanceId = x.i_maintenanceId,
+                                     i_maintenanceCategoryId = x.i_maintenanceCategoryId,
+                                     vc_validation = y.vc_validationName,
+                                     i_validationId = y.i_maintenanceValidationId
+                                 }).ToList();
                 return Json(tasks);
             }
             catch (Exception err)
@@ -240,12 +212,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult editMaintenanceTask(int id, string taskName)
+        public JsonResult editMaintenanceTask(int id, string taskName, string validationName)
         {
             try
             {
+                var validation = db.as_maintenanceValidation.Where(q => q.vc_validationName == validationName).FirstOrDefault();
                 var task = db.as_maintenanceProfile.Find(id);
                 task.vc_description = taskName;
+                task.i_maintenanceValidationId = validation.i_maintenanceValidationId;
+
                 db.Entry(task).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
@@ -342,13 +317,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertMaintenanceTaskType(string description, int catId)
+        public JsonResult insertMaintenanceTaskType(string description, int catId, int validationId)
         {
             try
             {
                 as_maintenanceProfile newTask = new as_maintenanceProfile();
                 newTask.i_maintenanceCategoryId = catId;
                 newTask.vc_description = description;
+                newTask.i_maintenanceValidationId = validationId;
 
                 db.as_maintenanceProfile.Add(newTask);
                 db.SaveChanges();

@@ -42,9 +42,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_frequencyProfile> as_frequencyProfile { get; set; }
         public virtual DbSet<as_locationProfile> as_locationProfile { get; set; }
         public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
-        public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
-        public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
-        public virtual DbSet<as_maintenanceValidationProfile> as_maintenanceValidationProfile { get; set; }
         public virtual DbSet<as_nodeRegionProfile> as_nodeRegionProfile { get; set; }
         public virtual DbSet<as_pictureProfile> as_pictureProfile { get; set; }
         public virtual DbSet<as_reportParameters> as_reportParameters { get; set; }
@@ -67,6 +64,8 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_todoProfile> as_todoProfile { get; set; }
         public virtual DbSet<as_validationTaskProfile> as_validationTaskProfile { get; set; }
         public virtual DbSet<as_assetClassMaintenanceProfile> as_assetClassMaintenanceProfile { get; set; }
+        public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
+        public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
     }
 }

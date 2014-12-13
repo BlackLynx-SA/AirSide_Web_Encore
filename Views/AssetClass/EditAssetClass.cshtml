@@ -9,6 +9,11 @@
     </div>
 }
 
+<style>
+    .select2-hidden-accessible{
+        display: none;
+    }
+</style>
 <div id="content">
     <div class="row ">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -116,7 +121,7 @@
         </div>
     </div>
 
-    <!--Modal for add Technician Shift-->
+    <!--Modal for Maintenance Task-->
     <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -133,15 +138,8 @@
                                 <div class="col-11">
                                     <div class="form-group">
                                         <label>Select the Task</label>
-                                        <select multiple style="width:100%" class="select2" id="taskSelect"></select>
+                                        <select multiple style="width:100%" class="select2" id="taskSelect"></select><i></i>
                                     </div><br />
-
-                                    <hr /><br />
-
-                                    <div class="form-group">
-                                        <label>Select the Validation Tasks</label>
-                                        <select multiple style="width:100%" class="select2" id="validationSelect"></select>
-                                    </div><br />                                  
 
                                     <hr /><br />
 
@@ -184,12 +182,8 @@
         $.each(allTasks, function(i,v){
             var maintenanceId = allTasks[i];
             var frequencyId = frequencyVal;
-            var validationIds = $('#validationSelect').val();
             var url = "../../assetclass/insertMaintenanceTask?assetClassId=" + assetClassId + "&maintenanceId=" + maintenanceId +"&frequencyId=" + frequencyId;
-            $.each(validationIds, function(i,v){
-                url += "&validationIds=" + v;
-            });
-
+           
             $.ajax({
                 url: url,
                 data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
@@ -224,14 +218,9 @@
                     console.log(json);
                     html = "";
                     $.each(json, function(i,v){
-                        html += '<tr><td>' + json[i].maintenanceTask + '</td><td>' + json[i].frequency + '</td><td>';
-                        $.each(json[i].validation, function(index, value){
-                            if (index === 0)
-                                html += json[i].validation[index].description;
-                            else
-                                html += ', ' +  json[i].validation[index].description;
-                        });
-                        html += '</td><td><a href="#" onclick="removeAssosiatedTask(' + json[i].maintenanceId + ')"><i class="fa fa-times txt-color-red"></i> Remove</a></td></tr>'
+                        html += '<tr><td>' + json[i].maintenanceTask + '</td><td>' + v.frequency + '</td><td>' + v.validation;
+                       
+                        html += '</td><td><a href="#" onclick="removeAssosiatedTask(' + v.assetMaintenanceId + ')"><i class="fa fa-times txt-color-red"></i> Remove</a></td></tr>'
                     });
 
                     $('#dt_maintenanceTasks tbody').html(html);
@@ -255,7 +244,7 @@
         {
             $('#adbloader4').fadeIn(500);
             $.ajax({
-                url: "../../assetclass/removeTaskAssosiation?maintenanceId=" + id,
+                url: "../../assetclass/removeTaskAssosiation?assetMaintenanceId=" + id,
                 type: "POST",
                 dataType: "json",
                 data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
@@ -283,32 +272,6 @@
             });
         }
 
-        function getValidators()
-        {
-            $.ajax({
-                url: "../../assetclass/getAllMaintenanceValidators",
-                type: "POST",
-                dataType: "json",
-                success: function (json) {
-                    var html = "";
-                    $.each(json, function (i, v) {
-                        html += '<option value="' + json[i].i_maintenanceValidationId + '">' + json[i].vc_validationName + '</option>';
-                    });
-
-                    $('#validationSelect').html(html);
-                },
-                error: function (err) {
-                    $.smallBox({
-                        title: "Error Retrieving Tasks",
-                        content: err.responseText,
-                        color: "#f51414",
-                        timeout: 5000,
-                        icon: "fa fa-bell swing animated"
-                    });
-                }
-            });
-        }
-
         function getAllMaintenanceTasks()
         {
             $.ajax({
@@ -318,10 +281,9 @@
                 success: function (json) {
                     var html = "";
                     $.each(json, function (i, v) {
-                        html = '<option value="' + json[i].i_maintenanceId + '">' + json[i].vc_description + '</option>';
-                        $('#optgrp_' + json[i].i_maintenanceCategoryId).append(html);
+                        html = '<option value="' + v.i_maintenanceId + '">' + v.vc_description + '( ' + v.vc_validation + ' )</option>';
+                        $('#optgrp_' + v.i_maintenanceCategoryId).append(html);
                     });
-                    getValidators();
                 },
                 error: function (err) {
                     $.smallBox({

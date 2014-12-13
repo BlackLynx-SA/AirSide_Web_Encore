@@ -337,20 +337,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public int assets { get; set; }
     }
 
-    public class validationProfile
-    {
-        public int validationId { get; set; }
-        public string description { get; set; }
-    }
-
-    public class MaintenanceTasksDownload
-    {
-        public int maintenanceId { get; set; }
-        public string maintenanceTask { get; set; }
-        public string frequency { get; set; }
-        public List<validationProfile> validation { get; set; }
-    }
-
     #endregion
 
     #region MongoDB Models

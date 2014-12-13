@@ -22,9 +22,6 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_frequencyProfile" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_locationProfile" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCategory" Width="1.5" PointX="11.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceProfile" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceValidation" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceValidationProfile" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_nodeRegionProfile" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_pictureProfile" Width="1.5" PointX="10.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_reportParameters" Width="1.5" PointX="12.75" PointY="12.75" IsExpanded="true" />
@@ -50,6 +47,8 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_todoProfile" Width="1.5" PointX="15.375" PointY="16.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_validationTaskProfile" Width="1.5" PointX="18.375" PointY="0.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_assetClassMaintenanceProfile" Width="1.5" PointX="18.375" PointY="3.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceProfile" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceValidation" Width="1.5" PointX="13.75" PointY="6.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_shifts" Width="1.5" PointX="17.375" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>

@@ -71,6 +71,10 @@
                                                 <label class="sr-only">Description</label>
                                                 <input type="text" class="form-control input-sm" placeholder="Description" id="descTxt">
                                             </div>
+                                            <div class="form-group" id="validationGrp" style="display:none;">
+                                                <label class="sr-only">Validation</label>
+                                                @Html.DropDownList("maintenanceValidation", null, "Select Validation", new { @class = "form-control input-sm" })<i></i>
+                                            </div>
                                             <div class="form-group">
                                                 <img src="~/Content/img/adb_img/adb_loader_tr.GIF" id="formLoader" style="zoom:0.2; display:none;" />
                                             </div>
@@ -137,7 +141,7 @@
             getAllCategories();
         });
 
-        function modifyTask(id, name)
+        function modifyTask(id, name, validation)
         {
             $.SmartMessageBox({
                 title: '<i class="fa fa-pencil-square-o fa-lg txt-color-blue"></i> Modify Task?',
@@ -151,10 +155,53 @@
                     removeTask(id, name);
                 }
                 else if (ButtonPressed === "Edit") {
-                    console.log('Edit');
+                    editValidation(value, id, validation);
                 }
                 else if (ButtonPressed === "Cancel") {
                     
+                }
+            });
+        }
+
+        function editValidation(task, id, validation)
+        {
+            $.SmartMessageBox({
+                title: "Change " + task + "'s Validation",
+                content: "Please select the prefered validation",
+                buttons: "[Cancel][Accept]",
+                input: "select",
+                options: "[Scan Asset][Torque Asset]",
+                inputValue: validation,
+                placeholder: "Validation Type"
+            }, function (ButtonPress, Value) {
+                if (ButtonPress === "Accept") {
+                    $.ajax({
+                        url: "../../AssetClass/editMaintenanceTask?id=" + id + "&taskName=" + task + "&validationName=" + Value,
+                        type: "POST",
+                        data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                        dataType: "json",
+                        success: function (json) {
+                            $.smallBox({
+                                title: "Task Updated",
+                                content: json.message,
+                                color: "#5384AF",
+                                timeout: 4000,
+                                icon: "fa fa-thumbs-up"
+                            });
+                            getAllMaintenanceTasks();
+                            $('#formLoader').fadeOut(300);
+                        },
+                        error: function (json) {
+                            $.smallBox({
+                                title: "Error updating task",
+                                content: json.responseJSON.message,
+                                color: "#f51414",
+                                timeout: 5000,
+                                icon: "fa fa-bell swing animated"
+                            });
+                            $('#formLoader').fadeOut(300);
+                        }
+                    });
                 }
             });
         }
@@ -176,37 +223,6 @@
                 }
                 else if (ButtonPressed === "Cancel") {
 
-                }
-            });
-        }
-
-        function editTask(id, name)
-        {
-            $.ajax({
-                url: "../../AssetClass/editMaintenanceTask?id=" + id + "&taskName=" + name,
-                type: "POST",
-                data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
-                dataType: "json",
-                success: function (json) {
-                    $.smallBox({
-                        title: "Task Updated",
-                        content: json.responseJSON.message,
-                        color: "#5384AF",
-                        timeout: 4000,
-                        icon: "fa fa-thumbs-up"
-                    });
-                    getAllMaintenanceTasks();
-                    $('#formLoader').fadeOut(300);
-                },
-                error: function (json) {
-                    $.smallBox({
-                        title: "Error updating task",
-                        content: json.responseJSON.message,
-                        color: "#f51414",
-                        timeout: 5000,
-                        icon: "fa fa-bell swing animated"
-                    });
-                    $('#formLoader').fadeOut(300);
                 }
             });
         }
@@ -349,6 +365,7 @@
             var type = $('#typeSelect').val();
             var name = $('#nameTxt').val();
             var desc = $('#descTxt').val();
+            var validation = $('#maintenanceValidation').val();
 
             switch (type) {
                 //Category Create
@@ -421,7 +438,7 @@
                             if (ButtonPressed === "Yes") {
                                 var catId = $('#categoryLst').val();
                                 $.ajax({
-                                    url: "../../AssetClass/insertMaintenanceTaskType?description=" + name + "&catId=" + catId,
+                                    url: "../../AssetClass/insertMaintenanceTaskType?description=" + name + "&catId=" + catId + "&validationId=" + validation,
                                     type: "POST",
                                     data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                                     dataType: "json",
@@ -489,10 +506,12 @@
                 $('#categoryLst').html(html);
                 $('#categoryListGrp').fadeIn(300);
                 $('#descTxt').fadeOut(300);
+                $('#validationGrp').fadeIn(300);
             }
             else {
                 $('#descTxt').fadeIn(300);
                 $('#categoryListGrp').fadeOut(300);
+                $('#validationGrp').fadeOut(300);
             }
         }
 
@@ -523,13 +542,16 @@
                     var html = "";
                     $('.maintenanceCat').html('');
                     $.each(json, function (i, v) {
-                        html = '<li><span><i class="fa fa-cog"></i> ' + json[i].vc_description + '</span> – <a class="txt-color-green" href="#" onclick="modifyTask(' + json[i].i_maintenanceId + ',\'' + json[i].vc_description + '\')"><i class="fa fa-cogs"></i> Modify</a></li>';
-                        $('#cat_' + json[i].i_maintenanceCategoryId).append(html);
+                        var color = 'txt-color-pink';
+                        if (v.i_validationId === 2)
+                            color = 'txt-color-blue';
+
+                        html = '<li class="' + color + '"><span><i class="fa fa-cog"></i> ' + v.vc_description + ' ( ' + v.vc_validation + ' )</span> – <a class="txt-color-green" href="#" onclick="modifyTask(' + v.i_maintenanceId + ',\'' + v.vc_description + '\',\'' + v.vc_validation  +'\')"><i class="fa fa-cogs"></i> Modify</a></li>';
+                        $('#cat_' + v.i_maintenanceCategoryId).append(html);
                     });
                     initTree();
                     $('#treeLoader').fadeOut(300);
                     $('#mainTree').fadeIn(500);
-                    //getValidators();
                 },
                 error: function (err) {
                     $.smallBox({
@@ -556,7 +578,7 @@
                     var tree = "";
                     $('#type_1').html('');
                     $('#type_2').html('');
-
+                    $('#categoryLst').html('');
                     $.each(json, function (i, v) {
                         html += '<option value="' + json[i].i_maintenanceCategoryId + '">' + json[i].vc_maintenanceCategory + '</option>';
 

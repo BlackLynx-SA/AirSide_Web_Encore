@@ -40,6 +40,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         public ActionResult MaintenanceTasks()
         {
+            ViewBag.maintenanceValidation = new SelectList(db.as_maintenanceValidation.OrderBy(q => q.vc_validationName).Distinct(), "i_maintenanceValidationId", "vc_validationName");
             return View();
         }
 
@@ -115,12 +116,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
                               join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
                               join a in db.as_technicianGroups on x.UserId equals a.i_groupId
+                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
                               where x.bt_completed == false
                               select new { 
                                 description = z.vc_description + "(" + y.vc_description + ")",
                                 dateTime = x.dt_scheduledDate,
                                 groupName = a.vc_groupName,
-                                validation = x.i_maintenanceValidationId
+                                validation = c.i_maintenanceValidationId
                               }).ToList();
 
                 List<shiftInfo> shiftList = new List<shiftInfo>();
@@ -379,7 +382,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId)
+        public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId, int maintenanceId)
         {
             try
             {
@@ -398,6 +401,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             newShift.UserId = groupId;
                             newShift.i_areaSubId = subAreaId;
                             newShift.vc_permitNumber = workPermit;
+                            newShift.i_maintenanceId = maintenanceId;
 
                             db.as_shifts.Add(newShift);
                             db.SaveChanges();

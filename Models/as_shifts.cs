@@ -22,6 +22,5 @@ namespace ADB.AirSide.Encore.V1.Models
         public int i_areaSubId { get; set; }
         public string vc_permitNumber { get; set; }
         public int i_maintenanceId { get; set; }
-        public int i_maintenanceValidationId { get; set; }
     }
 }

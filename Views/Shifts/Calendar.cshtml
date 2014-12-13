@@ -322,6 +322,7 @@
                 success: function (json) {
                     $("#modalLoader2").fadeOut(500);
                     $('#eventModal').modal('hide');
+
                     $('#calendar').fullCalendar('renderEvent', currentEvent, true);
                 },
                 error: function (err) {
@@ -342,10 +343,10 @@
             var dateTxt = $('#shiftdate').val();
             var timeTxt = $('#timepicker').val();
             var workPermit = $('#workpermitTxt').val();
-            var recuring = $('#recuring').val();
             var subArea = $('#subAreaSelect').val();
             var area = $('#areaSelect').val();
             var selectedGroup = getTechGroupId(currentEvent.title);
+            var task = $('#maintenanceTasks').val();
 
             var dateTimeTxt = dateTxt + ' ' + timeTxt;
             var time = Date.parseExact(dateTimeTxt, "dd/MM/yyyy h:mm tt");
@@ -356,14 +357,14 @@
 
             //Submit to Server
             $.ajax({
-                url: "../../shifts/insertNewShift?dateTime=" + dateTimeTxt + '&workpermit=' + workPermit + '&recuring=' + recuring + '&groupId=' + selectedGroup + '&subAreaId=' + subArea,
+                url: "../../shifts/insertNewShift?dateTime=" + dateTimeTxt + '&workpermit=' + workPermit + '&recuring=0&groupId=' + selectedGroup + '&subAreaId=' + subArea + "&maintenanceId=" + task,
                 type: "POST",
                 dataType: "json",
                 data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                 success: function (json) {
                     $("#modalLoader").fadeOut(500);
                     $('#techModal').modal('hide');
-                    $('#calendar').fullCalendar('renderEvent', currentEvent, true);
+                    $('#calendar').fullCalendar('renderEvent', currentEvent, true); 
                 },
                 error: function (err) {
                     $.smallBox({
