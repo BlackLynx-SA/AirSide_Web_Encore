@@ -42,6 +42,16 @@ namespace ADB.AirSide.Encore.V1.Models
 
     #region General Models
 
+    public class CustomShiftClass
+    {
+        public DateTime scheduledDate { get; set; }
+        public int techGroupId { get; set; }
+        public int maintenanceId { get; set; }
+        public string permitNumber { get; set; }
+        public string externalRef { get; set; }
+        public int[] selectedAssets { get; set; }
+    }
+
     public class AssetStatus
     {
         public int i_assetProfileId { get; set; }

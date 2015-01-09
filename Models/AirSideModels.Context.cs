@@ -48,7 +48,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_reportProfile> as_reportProfile { get; set; }
         public virtual DbSet<as_settingsProfile> as_settingsProfile { get; set; }
         public virtual DbSet<as_shiftData> as_shiftData { get; set; }
-        public virtual DbSet<as_shiftsCustom> as_shiftsCustom { get; set; }
         public virtual DbSet<as_shiftsCustomProfile> as_shiftsCustomProfile { get; set; }
         public virtual DbSet<as_technicianGroupProfile> as_technicianGroupProfile { get; set; }
         public virtual DbSet<as_technicianGroups> as_technicianGroups { get; set; }
@@ -67,5 +66,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
         public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
+        public virtual DbSet<as_shiftsCustom> as_shiftsCustom { get; set; }
     }
 }

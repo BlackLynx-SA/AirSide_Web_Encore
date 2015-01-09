@@ -21,5 +21,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public bool bt_completed { get; set; }
         public string vc_permitNumber { get; set; }
         public string vc_externalReference { get; set; }
+        public int i_maintenanceId { get; set; }
     }
 }

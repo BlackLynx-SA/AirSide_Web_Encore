@@ -284,6 +284,7 @@
           <Property Name="bt_completed" Type="bit" Nullable="false" />
           <Property Name="vc_permitNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_externalReference" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_shiftsCustomProfile">
           <Key>
@@ -788,18 +789,6 @@
           <Property Name="f_capturedValue" Type="Double" Nullable="false" />
           <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_shiftsCustom">
-          <Key>
-            <PropertyRef Name="i_shiftCustomId" />
-          </Key>
-          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_techGroupId" Type="Int32" Nullable="false" />
-          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="bt_completed" Type="Boolean" Nullable="false" />
-          <Property Name="vc_permitNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_externalReference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_shiftsCustomProfile">
           <Key>
             <PropertyRef Name="i_shiftCustomProfileId" />
@@ -983,7 +972,6 @@
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" />
           <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" />
           <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" />
-          <EntitySet Name="as_shiftsCustom" EntityType="Self.as_shiftsCustom" />
           <EntitySet Name="as_shiftsCustomProfile" EntityType="Self.as_shiftsCustomProfile" />
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" />
           <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" />
@@ -1014,6 +1002,7 @@
           <EntitySet Name="as_maintenanceProfile" EntityType="airside.encoreModel.as_maintenanceProfile" />
           <EntitySet Name="as_maintenanceValidation" EntityType="airside.encoreModel.as_maintenanceValidation" />
           <EntitySet Name="as_shifts" EntityType="airside.encoreModel.as_shifts" />
+          <EntitySet Name="as_shiftsCustom" EntityType="airside.encoreModel.as_shiftsCustom" />
         </EntityContainer>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -1076,6 +1065,19 @@
           <Property Name="bt_completed" Type="Boolean" Nullable="false" />
           <Property Name="i_areaSubId" Type="Int32" Nullable="false" />
           <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_shiftsCustom">
+          <Key>
+            <PropertyRef Name="i_shiftCustomId" />
+          </Key>
+          <Property Name="i_shiftCustomId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_techGroupId" Type="Int32" Nullable="false" />
+          <Property Name="dt_scheduledDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dt_completionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bt_completed" Type="Boolean" Nullable="false" />
+          <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vc_externalReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
@@ -1336,19 +1338,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_shiftsCustom">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustom">
-              <MappingFragment StoreEntitySet="as_shiftsCustom">
-                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
-                <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
-                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
-                <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
-                <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
-                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
-                <ScalarProperty Name="vc_externalReference" ColumnName="vc_externalReference" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_shiftsCustomProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustomProfile">
               <MappingFragment StoreEntitySet="as_shiftsCustomProfile">
@@ -1554,6 +1543,20 @@
                 <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_shiftsCustom">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftsCustom">
+              <MappingFragment StoreEntitySet="as_shiftsCustom">
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="vc_externalReference" ColumnName="vc_externalReference" />
+                <ScalarProperty Name="vc_permitNumber" ColumnName="vc_permitNumber" />
+                <ScalarProperty Name="bt_completed" ColumnName="bt_completed" />
+                <ScalarProperty Name="dt_completionDate" ColumnName="dt_completionDate" />
+                <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
+                <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
+                <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

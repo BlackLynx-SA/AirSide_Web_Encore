@@ -28,8 +28,47 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        //2015/01/08--------------------------------------------------------------------------------------------------------------------------------------------------
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult addCustomShift(CustomShiftClass shift)
+        {
+            try
+            {
+                as_shiftsCustom newShift = new as_shiftsCustom();
+                newShift.bt_completed = false;
+                newShift.dt_completionDate = new DateTime(1970, 1, 1);
+                newShift.dt_scheduledDate = shift.scheduledDate;
+                newShift.i_techGroupId = shift.techGroupId;
+                newShift.vc_externalReference = shift.externalRef;
+                newShift.vc_permitNumber = shift.permitNumber;
+
+                db.as_shiftsCustom.Add(newShift);
+                db.SaveChanges();
+
+                foreach(int item in shift.selectedAssets)
+                {
+                    as_shiftsCustomProfile newShiftProfile = new as_shiftsCustomProfile();
+                    newShiftProfile.i_assetId = item;
+                    newShiftProfile.i_shiftCustomId = newShift.i_shiftCustomId;
+
+                    db.as_shiftsCustomProfile.Add(newShiftProfile);
+                }
+                db.SaveChanges();
+
+                return Json(new { message = "Success", count = shift.selectedAssets.Count() });
+            } catch(Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+        
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult Calendar()
         {
             ViewBag.maintenanceTasks = new SelectList(db.as_maintenanceProfile.OrderBy(q => q.vc_description).Distinct(), "i_maintenanceId", "vc_description");

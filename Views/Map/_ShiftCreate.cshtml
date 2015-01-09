@@ -37,6 +37,18 @@
                                 </label>
                                 <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> This list contains all the technician groups loaded. To view all click <a href="~/users/techniciangroups">here.</a></div>
                             </section>
+                            <section class="col col-6">
+                                <label class="label">Maintenance Task</label>
+                                <label class="select">
+                                    <select id="shiftTasks">
+                                        @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
+                                        {
+                                            <option value="@prod.i_maintenanceId">@prod.vc_description</option>
+                                        }
+                                    </select><i></i>
+                                </label>
+                                <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> This is the list of all maintenance tasks. To view all click <a href="~/shifts/maintenancetasks">here.</a></div>
+                            </section>
                         </fieldset>
                     </div>
                     <div class="row">
@@ -53,7 +65,7 @@
                                 <label class="label">External Reference</label>
                                 <label class="input">
                                     <i class="fa fa-magic icon-prepend"></i>
-                                    <input class="form-control" id="workpermitTxt" type="text" placeholder="Enter an External Reference">
+                                    <input class="form-control" id="externalRefTxt" type="text" placeholder="Enter an External Reference">
                                 </label>
                                 <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> Please supply any external system references here.</div>
                             </section>
@@ -63,9 +75,129 @@
             </div>
             <div class="modal-footer">
                 <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="shiftLoader" style="height:20px; display:none;" />
-                <button class="btn btn-primary" onclick=""><i class="fa fa-plus"></i> Add Shift</button>
+                <button class="btn btn-primary" onclick="sendCustomShift()"><i class="fa fa-plus"></i> Add Shift</button>
                 <button class="btn btn-danger" onclick="$('#shiftModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
             </div>
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    //Shifts Functions
+    function showRectangle() {
+        if (!rectFlag) {
+            var c = map.getCenter();
+
+            var bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng(c.lat() - 0.001, c.lng() - 0.002),
+                new google.maps.LatLng(c.lat() + 0.001, c.lng() + 0.002)
+              );
+
+            // Define a rectangle and set its editable property to true.
+            rectangle = new google.maps.Rectangle({
+                bounds: bounds,
+                editable: true,
+                draggable: true
+            });
+
+            rectangle.setMap(map);
+
+            rectFlag = true;
+
+            //enable button
+            $('.createShift').removeClass("disabled");
+
+        } else {
+            rectangle.setMap(null);
+            rectFlag = false;
+
+            //disable creatShift
+            $('.createShift').addClass("disabled");
+        }
+    }
+
+    var selectedAssets = [];
+
+    function getSelectedAssets() {
+        selectedAssets = [];
+
+        var selectorNELat = rectangle.bounds.getNorthEast().lat();
+        var selectorNELong = rectangle.bounds.getNorthEast().lng();
+        var selectorSWLat = rectangle.bounds.getSouthWest().lat();
+        var selectorSWLong = rectangle.bounds.getSouthWest().lng();
+
+        $.each(markers, function (i, v) {
+            var markerLat = 0;
+            var markerLong = 0;
+
+            markerLat = v.position.lat();
+            markerLong = v.position.lng();
+
+            var latFlag = false;
+            var longFlag = false;
+
+            if (markerLat >= selectorSWLat && markerLat <= selectorNELat) latFlag = true;
+            if (markerLong >= selectorSWLong && markerLong <= selectorNELong) longFlag = true;
+
+            if (latFlag && longFlag)
+                selectedAssets.push(v);
+        });
+
+        var assetArray = [];
+        $.each(selectedAssets, function (i, v) {
+            assetArray.push(v.title);
+        });
+
+        if (selectedAssets.length > 0) {
+            $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift for ' + selectedAssets.length + ' assets');
+            $('#shiftModal').modal('show');
+        }
+        else {
+            $.smallBox({
+                title: "Not Assets",
+                content: "Please select assets to create a shift",
+                color: "#dfb56c",
+                timeout: 4000,
+                icon: "fa fa-warning swing animated"
+            });
+        }
+    }
+
+    function sendCustomShift() {
+        var dateTVal = $('#shiftdate').val();
+        var timeVal = $('#timepicker').val();
+        var sheduledDate = dateTVal + ' ' + timeVal;
+        var techGroup = $('#techgroups').val();
+        var maintenance = $('#shiftTasks').val();
+        var externalRef = $('#externalRefTxt').val();
+        var permitNumber = $('#workpermitTxt').val();
+
+        //public DateTime scheduledDate { get; set; }
+        //public int techGroupId { get; set; }
+        //public int maintenanceId { get; set; }
+        //public string permitNumber { get; set; }
+        //public string externalRef { get; set; }
+        //public int[] selectedAssets { get; set; }
+
+        var data = {
+            scheduledDate: sheduledDate,
+            techGroupId: techGroup,
+            maintenanceId: maintenance,
+            permitNumber: permitNumber,
+            externalRef: externalRef,
+            selectedAssets: selectedAssets,
+            __RequestVerificationToken: $('<form>@Html.AntiForgeryToken()</form>').serialize()
+        };
+
+        //Ajax Call
+        $.ajax({
+            url: '../../Shifts/addCustomShift',
+            data: data,
+            type: 'post',
+            dataType: 'json',
+            success: function (json) {
+                console.log('success');
+            }
+        });
+    }
+</script>

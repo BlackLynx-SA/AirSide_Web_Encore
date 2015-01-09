@@ -423,84 +423,9 @@
             markers = null;
         }
 
-        //Shifts Functions
-        function showRectangle() {
-            if (!rectFlag) {
-                var c = map.getCenter();
+       
 
-                var bounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(c.lat() - 0.001, c.lng() - 0.002),
-                    new google.maps.LatLng(c.lat() + 0.001, c.lng() + 0.002)
-                  );
-
-                // Define a rectangle and set its editable property to true.
-                rectangle = new google.maps.Rectangle({
-                    bounds: bounds,
-                    editable: true,
-                    draggable: true
-                });
-
-                rectangle.setMap(map);
-
-                rectFlag = true;
-
-                //enable button
-                $('.createShift').removeClass("disabled");
-
-            } else {
-                rectangle.setMap(null);
-                rectFlag = false;
-
-                //disable creatShift
-                $('.createShift').addClass("disabled");
-            }
-        }
-
-        var selectedAssets = [];
-        function getSelectedAssets() {
-            selectedAssets = [];
-
-            var selectorNELat = rectangle.bounds.getNorthEast().lat();
-            var selectorNELong = rectangle.bounds.getNorthEast().lng();
-            var selectorSWLat = rectangle.bounds.getSouthWest().lat();
-            var selectorSWLong = rectangle.bounds.getSouthWest().lng();
-
-            $.each(markers, function (i, v) {
-                var markerLat = 0;
-                var markerLong = 0;
-
-                markerLat = v.position.lat();
-                markerLong = v.position.lng();
-
-                var latFlag = false;
-                var longFlag = false;
-
-                if (markerLat >= selectorSWLat && markerLat <= selectorNELat) latFlag = true;
-                if (markerLong >= selectorSWLong && markerLong <= selectorNELong) longFlag = true;
-
-                if (latFlag && longFlag)
-                    selectedAssets.push(v);
-            });
-
-            var assetArray = [];
-            $.each(selectedAssets, function (i, v) {
-                assetArray.push(v.title);
-            });
-
-            if (selectedAssets.length > 0) {
-                $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift for ' + selectedAssets.length + ' assets');
-                $('#shiftModal').modal('show');
-            }
-            else {
-                $.smallBox({
-                    title: "Not Assets",
-                    content: "Please select assets to create a shift",
-                    color: "#dfb56c",
-                    timeout: 4000,
-                    icon: "fa fa-warning swing animated"
-                });
-            }
-        }
+        
 
         $(document).ready(function () {
             $('#map-canvas').css('height', Math.round($(window).height() - 170));
