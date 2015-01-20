@@ -147,7 +147,6 @@
                             dataType: "json",
                             data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                             success: function (json) {
-                                console.log(json);
                                 $.smallBox({
                                     title: "Password Changed.",
                                     content: json.FirstName + " " + json.LastName + "'s password has been changed",

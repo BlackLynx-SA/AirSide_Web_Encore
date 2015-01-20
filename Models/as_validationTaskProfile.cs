@@ -19,6 +19,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public int i_assetId { get; set; }
         public System.DateTime dt_dateTimeStamp { get; set; }
         public bool bt_validated { get; set; }
-        public int i_maintenanceId { get; set; }
+        public int i_shiftId { get; set; }
     }
 }

@@ -83,6 +83,7 @@
 </div>
 
 <script type="text/javascript">
+    var NELat, NELong, SWLat, SWLong;
     //Shifts Functions
     function showRectangle() {
         if (!rectFlag) {
@@ -126,6 +127,12 @@
         var selectorSWLat = rectangle.bounds.getSouthWest().lat();
         var selectorSWLong = rectangle.bounds.getSouthWest().lng();
 
+        //set globals
+        NELat = selectorNELat;
+        NELong = selectorNELong;
+        SWLat = selectorSWLat;
+        SWLong = selectorSWLong;
+
         $.each(markers, function (i, v) {
             var markerLat = 0;
             var markerLong = 0;
@@ -164,6 +171,7 @@
     }
 
     function sendCustomShift() {
+        $('#shiftLoader').fadeIn(300);
         var dateTVal = $('#shiftdate').val();
         var timeVal = $('#timepicker').val();
         var sheduledDate = dateTVal + ' ' + timeVal;
@@ -171,32 +179,34 @@
         var maintenance = $('#shiftTasks').val();
         var externalRef = $('#externalRefTxt').val();
         var permitNumber = $('#workpermitTxt').val();
-
-        //public DateTime scheduledDate { get; set; }
-        //public int techGroupId { get; set; }
-        //public int maintenanceId { get; set; }
-        //public string permitNumber { get; set; }
-        //public string externalRef { get; set; }
-        //public int[] selectedAssets { get; set; }
-
-        var data = {
-            scheduledDate: sheduledDate,
-            techGroupId: techGroup,
-            maintenanceId: maintenance,
-            permitNumber: permitNumber,
-            externalRef: externalRef,
-            selectedAssets: selectedAssets,
-            __RequestVerificationToken: $('<form>@Html.AntiForgeryToken()</form>').serialize()
-        };
+        var maintenanceFilter = selectedTask;
 
         //Ajax Call
         $.ajax({
-            url: '../../Shifts/addCustomShift',
-            data: data,
+            url: '../../Shifts/addCustomShift?scheduledDate=' + sheduledDate + '&techGroupId=' + techGroup + '&maintenanceId=' + maintenance + '&permitNumber=' + permitNumber + '&externalRef=' 
+                + externalRef + '&NELat=' + NELat + '&NELong=' + NELong + '&SWLat=' + SWLat + '&SWLong=' + SWLong + '&filterType=' + filterEnum + '&filterValue=' + filterValue + '&maintenanceFilter=' + maintenanceFilter,
+            data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
             type: 'post',
             dataType: 'json',
             success: function (json) {
-                console.log('success');
+                $.smallBox({
+                    title: "Shift Created",
+                    content: json.count + " assets were added to this custom shift. You can view all shifts under the Shift Planning section.",
+                    color: "#5384AF",
+                    timeout: 4000,
+                    icon: "fa fa-calendar"
+                });
+                $('#shiftLoader').fadeOut(300);
+                $('#shiftModal').modal('hide');
+            },
+            error: function (err) {
+                    $.smallBox({
+                        title: "Error creating custom shift",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
             }
         });
     }

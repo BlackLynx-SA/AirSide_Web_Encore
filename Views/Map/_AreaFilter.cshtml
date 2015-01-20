@@ -81,10 +81,14 @@
         if (filterType === 'main') {
             var main = $('#mainAreas').val();
             showMainAreas(main, clustered);
+            filterEnum = 104;
+            filterValue = main;
         }
         else if (filterType === 'sub') {
             var sub = $('#subAreas').val();
             showSubAreas(sub, clustered);
+            filterEnum = 105;
+            filterValue = sub;
         }
         $('#areaFilterModal').modal('hide');
         $('#areaLoader').hide();

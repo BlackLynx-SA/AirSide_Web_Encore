@@ -47,11 +47,13 @@
     @if (Request.IsAuthenticated)
     {
         Html.RenderPartial("_Footer");
-        Html.RenderPartialIf("_Tiles", Settings.EnableTiles);
+        //Html.RenderPartialIf("_Tiles", Settings.EnableTiles);
     }
     @{ Html.RenderPartial("_Scripts", RenderSection("pagespecific", false));
        
-     }
+    }
+
+    @RenderSection("PageScripts", false);
 </body>
 
 </html>

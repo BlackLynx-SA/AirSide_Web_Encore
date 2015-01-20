@@ -207,6 +207,35 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return assets.vc_rfidTag;
         }
 
+		[HttpPost]
+        //TODO: Change date time to come from iPad not server
+        public JsonResult insertAssetValidation(List<as_validationTaskProfile> validations)
+        {
+            try
+            {
+                DateTime now = DateTime.Now;
+                foreach (as_validationTaskProfile item in validations)
+                {
+                    item.dt_dateTimeStamp = now;
+                    db.as_validationTaskProfile.Add(item);
+                    db.SaveChanges();
+
+                    //rebuild cache for asset
+                    CacheHelper cache = new CacheHelper();
+                    cache.rebuildAssetProfileForAsset(item.i_assetId);
+                }
+
+                return Json(new { status = "success", count = validations.Count});
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.log("Failed to insert validation values: " + err.Message, "insertAssetValidation(iOS)", Logging.logTypes.Error, "iOS Device");
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+		
         [HttpPost]
         public JsonResult getTechnicianShifts(int userId, int closeShifts)
         {
@@ -218,6 +247,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
                               join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
                               join a in db.as_technicianGroups on x.UserId equals a.i_groupId
+                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
                               where x.UserId == userId && x.bt_completed == closeShiftsFlag
                               select new
                               {
@@ -227,7 +257,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                   sheduleTime = x.dt_scheduledDate,
                                   permitNumber = x.vc_permitNumber,
                                   techGroup = a.vc_groupName,
-                                  areaName = z.vc_description
+                                  areaName = z.vc_description,
+								  validation = b.i_maintenanceValidationId,
+                                  maintenanceId = x.i_maintenanceId
                               }
                               ).ToList();
                 List<technicianShift> shiftList = new List<technicianShift>();
@@ -241,8 +273,70 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.permitNumber = item.permitNumber;
                     shift.techGroup = item.techGroup;
                     shift.areaName = item.areaName;
+					if (item.validation == 1)
+                        shift.validation = "YES";
+                    else if (item.validation == 2)
+                        shift.validation = "NO";
+                    
+                    //2015/01/19
+                    //Add functionality for custom shifts
+                    shift.shiftType = 0;
+                    shift.assets = new int[0];
+                    shift.maintenanceId = item.maintenanceId;
+
                     shiftList.Add(shift);
                 }
+
+                //Add custom shifts to array
+                var customShifts = (from x in db.as_shiftsCustom
+                                   join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
+                                   join z in db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
+                                   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag
+                                   select new
+                                   {
+                                       i_shiftId = x.i_shiftCustomId,
+                                       sheduledDate = x.dt_scheduledDate,
+                                       i_areaSubId = 0,
+                                       sheduleTime = x.dt_scheduledDate,
+                                       permitNumber = x.vc_permitNumber,
+                                       techGroup = y.vc_groupName,
+                                       areaName = "Custom",
+                                       validation = z.i_maintenanceValidationId,
+                                       maintenanceId = x.i_maintenanceId
+                                   }).ToList();
+
+                foreach (var item in customShifts)
+                {
+                    technicianShift shift = new technicianShift();
+                    shift.i_shiftId = item.i_shiftId;
+                    shift.sheduledDate = item.sheduledDate.ToString("yyy/MM/dd");
+                    shift.i_areaSubId = item.i_areaSubId;
+                    shift.sheduleTime = item.sheduleTime.ToString("hh:mm:ss");
+                    shift.permitNumber = item.permitNumber;
+                    shift.techGroup = item.techGroup;
+                    shift.areaName = item.areaName;
+                    if (item.validation == 1)
+                        shift.validation = "YES";
+                    else if (item.validation == 2)
+                        shift.validation = "NO";
+
+                    shift.shiftType = 1;
+                    shift.maintenanceId = item.maintenanceId;
+                    var assets = (from x in db.as_shiftsCustomProfile
+                                  where x.i_shiftCustomId == item.i_shiftId
+                                  select x.i_assetId).ToList();
+
+                    shift.assets = new int[assets.Count];
+                    int i = 0;
+                    foreach(int asset in assets)
+                    {
+                        shift.assets[i] = asset;
+                        i++;
+                    }
+
+                    shiftList.Add(shift);
+                }
+
                 return Json(shiftList);
             }
             catch (Exception err)
@@ -883,7 +977,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         }
                         catch (Exception err)
                         {
-                            Console.WriteLine(err.Message);
+						
+                            Logging log = new Logging();
+                            log.log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", Logging.logTypes.Error, "iOS");
                         }
                     }
 
@@ -915,15 +1011,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             Bitmap bmp1 = new Bitmap(file);
             ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
 
-            // Create an Encoder object based on the GUID 
-            // for the Quality parameter category.
             System.Drawing.Imaging.Encoder myEncoder =
                 System.Drawing.Imaging.Encoder.Quality;
 
-            // Create an EncoderParameters object. 
-            // An EncoderParameters object has an array of EncoderParameter 
-            // objects. In this case, there is only one 
-            // EncoderParameter object in the array.
             EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
             EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);

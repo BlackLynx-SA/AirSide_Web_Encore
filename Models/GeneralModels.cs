@@ -42,14 +42,31 @@ namespace ADB.AirSide.Encore.V1.Models
 
     #region General Models
 
+    public class AssetHistory
+    {
+        public DateTime dateStamp { get; set; }
+        public string dateString { get; set; }
+        public string heading { get; set; }
+        public string[] content { get; set; }
+        public string icon { get; set; }
+        public string colour { get; set; }
+        public int type { get; set; }
+    }
+
     public class CustomShiftClass
     {
-        public DateTime scheduledDate { get; set; }
+        public string scheduledDate { get; set; }
         public int techGroupId { get; set; }
         public int maintenanceId { get; set; }
         public string permitNumber { get; set; }
         public string externalRef { get; set; }
-        public int[] selectedAssets { get; set; }
+        public float NELat { get; set; }
+        public float NELong { get; set; }
+        public float SWLat { get; set; }
+        public float SWLong { get; set; }
+        public int filterType { get; set; }
+        public int filterValue { get; set; }
+        public int maintenanceFilter { get; set; }
     }
 
     public class AssetStatus
@@ -276,6 +293,20 @@ namespace ADB.AirSide.Encore.V1.Models
         public string permitNumber { get; set; }
         public string areaName { get; set; }
         public string techGroup { get; set; }
+        public string validation { get; set; }
+        public int shiftType { get; set; }
+        public int[] assets { get; set; }
+        public int maintenanceId { get; set; }
+    }
+
+    public class iOsValidation
+    {
+        public int i_validationProfileId { get; set; }
+        public int UserId { get; set; }
+        public int i_assetId { get; set; }
+        public System.DateTime dt_dateTimeStamp { get; set; }
+        public bool bt_validated { get; set; }
+        public int shiftId { get; set; }
     }
 
     public class BigExcelDump
@@ -345,6 +376,14 @@ namespace ADB.AirSide.Encore.V1.Models
         public string subArea { get; set; }
         public int shiftData { get; set; }
         public int assets { get; set; }
+        public int shiftId { get; set; }
+        public int shiftType { get; set; }
+    }
+
+    public class ActivityChart
+    {
+        public double dateOfActivity { get; set; }
+        public int numberOfActivities { get; set; }
     }
 
     #endregion

@@ -22,6 +22,7 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <ApplicationInsightsResourceId>/subscriptions/7a64b313-2774-4b61-a5e0-d9b83ba97657/resourcegroups/Default-Web-NorthEurope/providers/microsoft.insights/components/airsideencore</ApplicationInsightsResourceId>
+    <NuGetPackageImportStamp>c4a5b3f2</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,11 +50,11 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\lib\net40\Microsoft.ApplicationInsights.dll</HintPath>
@@ -74,8 +75,9 @@
       <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource">
-      <HintPath>..\..\..\Documents\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.0.24\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
+    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.0.26.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.0.26\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -117,7 +119,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -592,7 +594,9 @@
     <Content Include="Images\map_images\RedMarker.png" />
     <Content Include="Images\map_images\WholeMap.gif" />
     <Content Include="Images\map_images\YellowMarker.png" />
+    <Content Include="Images\uploads\1_3502_memo.m4a" />
     <Content Include="Images\uploads\empty.txt" />
+    <Content Include="Images\uploads\IREL_LightType.jpg" />
     <Content Include="packages.config" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -1161,62 +1165,7 @@
     <Content Include="Views\Account\_ErrorText.cshtml" />
     <Content Include="Views\Account\_LoginText.cshtml" />
     <Content Include="Views\Account\_SocialMedia.cshtml" />
-    <Content Include="Views\Home\Inbox.cshtml" />
-    <Content Include="Views\Home\Calendar.cshtml" />
-    <Content Include="Views\Home\Googlemap.cshtml" />
-    <Content Include="Views\Home\Widgets.cshtml" />
-    <Content Include="Views\Graphs\Flot.cshtml" />
-    <Content Include="Views\Graphs\Morris.cshtml" />
-    <Content Include="Views\Graphs\Inline.cshtml" />
-    <Content Include="Views\Graphs\Dygraphs.cshtml" />
-    <Content Include="Views\Graphs\ChartJS.cshtml" />
-    <Content Include="Views\Tables\Normal.cshtml" />
-    <Content Include="Views\Tables\DataTables.cshtml" />
-    <Content Include="Views\Tables\JQGrid.cshtml" />
-    <Content Include="Views\Forms\SmartElements.cshtml" />
-    <Content Include="Views\Forms\Templates.cshtml" />
-    <Content Include="Views\Forms\Validation.cshtml" />
-    <Content Include="Views\Forms\Bootstrap.cshtml" />
-    <Content Include="Views\Forms\Plugins.cshtml" />
-    <Content Include="Views\Forms\Wizards.cshtml" />
-    <Content Include="Views\Forms\Editors.cshtml" />
-    <Content Include="Views\Forms\Dropzone.cshtml" />
-    <Content Include="Views\Forms\Cropping.cshtml" />
-    <Content Include="Views\Element\General.cshtml" />
-    <Content Include="Views\Element\Buttons.cshtml" />
-    <Content Include="Views\Icons\FontAwesome.cshtml" />
-    <Content Include="Views\Icons\GlyphIcons.cshtml" />
-    <Content Include="Views\Icons\Flags.cshtml" />
-    <Content Include="Views\Icons\Grid.cshtml" />
-    <Content Include="Views\Icons\TreeView.cshtml" />
-    <Content Include="Views\Icons\NestedLists.cshtml" />
-    <Content Include="Views\Icons\JQueryUI.cshtml" />
-    <Content Include="Views\Icons\Typography.cshtml" />
-    <Content Include="Views\Forum\GeneralView.cshtml" />
-    <Content Include="Views\Forum\TopicView.cshtml" />
-    <Content Include="Views\Forum\PostView.cshtml" />
-    <Content Include="Views\AppViews\Profile.cshtml" />
-    <Content Include="Views\AppViews\TimeLine.cshtml" />
-    <Content Include="Views\Misc\Pricing.cshtml" />
-    <Content Include="Views\Misc\Invoice.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
-    <Content Include="Views\Misc\Blank.cshtml" />
-    <Content Include="Views\Misc\EmailTemplate.cshtml" />
-    <Content Include="Views\Misc\Search.cshtml" />
-    <Content Include="Views\Misc\CKEditor.cshtml" />
-    <Content Include="Views\Home\Chat.cshtml" />
-    <Content Include="Views\Intel\Settings.cshtml" />
-    <Content Include="Views\Intel\Versions.cshtml" />
-    <Content Include="Views\AppViews\Gallery.cshtml" />
-    <Content Include="Views\EmailTemplates\Basic.cshtml" />
-    <Content Include="Views\EmailTemplates\SideBar.cshtml" />
-    <Content Include="Views\EmailTemplates\Hero.cshtml" />
-    <Content Include="Views\EmailTemplates\SideBarHero.cshtml" />
-    <Content Include="Views\EmailTemplates\NewsLetter.cshtml" />
-    <Content Include="Views\Misc\Error404.cshtml" />
-    <Content Include="Views\Misc\Error500.cshtml" />
-    <Content Include="Views\AppViews\Blog.cshtml" />
-    <Content Include="Views\AppViews\Projects.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
     <EntityDeploy Include="Models\AirSideModels.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
@@ -1267,6 +1216,8 @@
     <Content Include="Views\Home\_MapView.cshtml" />
     <Content Include="Views\Home\_CalendarView.cshtml" />
     <Content Include="Views\Settings\EmailSettings.cshtml" />
+    <Content Include="Views\History\AssetHistory.cshtml" />
+    <Content Include="Views\Home\_ActivityChart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1297,23 +1248,14 @@
     <Compile Include="Areas\Landing\Controllers\LandingController.cs" />
     <Compile Include="Areas\Landing\LandingAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AppViewsController.cs" />
     <Compile Include="Controllers\AssetClassController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
-    <Compile Include="Controllers\ElementController.cs" />
-    <Compile Include="Controllers\EmailTemplatesController.cs" />
-    <Compile Include="Controllers\FormsController.cs" />
-    <Compile Include="Controllers\ForumController.cs" />
-    <Compile Include="Controllers\GraphsController.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\IconsController.cs" />
-    <Compile Include="Controllers\IntelController.cs" />
     <Compile Include="Controllers\iOSController.cs" />
     <Compile Include="Controllers\MapController.cs" />
-    <Compile Include="Controllers\MiscController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
-    <Compile Include="Controllers\TablesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1393,6 +1335,9 @@
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_frequencyProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_geoSpatialProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_locationProfile.cs">
@@ -1523,17 +1468,14 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
-  <Import Project="..\..\..\Documents\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\..\Documents\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\..\..\Documents\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\..\..\Documents\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
   <Import Project="..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\tools\net40\Microsoft.ApplicationInsights.targets" Condition="Exists('..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\tools\net40\Microsoft.ApplicationInsights.targets')" />
   <Target Name="EnsureApplicationInsightsImported" BeforeTargets="BeforeBuild" Condition="'$(ApplicationInsightsImported)' == ''">
     <Error Condition="!Exists('..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\tools\net40\Microsoft.ApplicationInsights.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
     <Error Condition="Exists('..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\tools\net40\Microsoft.ApplicationInsights.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." />
   </Target>
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

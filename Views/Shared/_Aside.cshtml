@@ -43,7 +43,7 @@
             </li>
 
             @* Inspection *@
-            <li class="@Html.RouteIf("inspection", "active")">
+            @*<li class="@Html.RouteIf("inspection", "active")">
                 <a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Inspection</span></a>
                 <ul>
                     <li class="@Html.RouteIf("normal", "active")">
@@ -53,7 +53,7 @@
                         <a href="@Url.Action("jqgrid", "tables")">Movement Areas</a>
                     </li>
                 </ul>
-            </li>
+            </li>*@
 
             @* Assets *@
             <li class="@Html.RouteIf("AssetClass", "active") @Html.RouteIf("Asset", "active")">
@@ -64,6 +64,16 @@
                     </li>
                     <li class="@Html.RouteIf("Assets", "active")">
                         <a href="@Url.Action("Assets", "Asset")">Loaded Assets</a>
+                    </li>
+                </ul>
+            </li>
+
+            @* History *@
+            <li class="@Html.RouteIf("history", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-history"></i> <span class="menu-item-parent">History</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("assethistory", "active")">
+                        <a href="@Url.Action("assethistory", "history")">Asset History</a>
                     </li>
                 </ul>
             </li>

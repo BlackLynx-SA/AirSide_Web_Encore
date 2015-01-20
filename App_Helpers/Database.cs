@@ -384,6 +384,48 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         #endregion
 
+        #region Procedures
+
+        public List<ActivityChart> getActivitiesForMonth()
+        {
+            try
+            {
+                //This procedure send metrics for the activity chart
+                //Create Date: 2015/01/20
+                //Author: Bernard Willer
+
+                List<ActivityChart> activities = new List<ActivityChart>();
+
+                //collect all shifts
+                var shifts = (from x in db.as_shiftData
+                              group x by new { y = x.dt_captureDate.Year, m = x.dt_captureDate.Month, d = x.dt_captureDate.Day } into shiftGroup
+                              select new {
+                                  dateOfActivity = shiftGroup.Key,
+                                  numberOfActivities = shiftGroup.Count()
+                              }).ToList();
+
+                foreach(var shift in shifts)
+                {
+                    ActivityChart activity = new ActivityChart();
+                    activity.dateOfActivity = new DateTime(shift.dateOfActivity.y, shift.dateOfActivity.m, shift.dateOfActivity.d).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                    activity.numberOfActivities = shift.numberOfActivities;
+                    activities.Add(activity);
+                }
+
+                return activities;
+            }
+            catch (Exception err)
+            {
+                List<ActivityChart> activities = new List<ActivityChart>();
+                Logging log = new Logging();
+                log.logError(err, "SYSTEM");
+                return activities;
+            }
+        
+        }
+
+        #endregion
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

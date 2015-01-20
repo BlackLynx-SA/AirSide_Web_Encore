@@ -140,6 +140,49 @@
             });
         }
 
+        function RemoveActiveShift(id, type)
+        {
+            $.SmartMessageBox({
+                title: '<i class="fa fa-check fa-lg txt-color-green"></i> Mark as complete?',
+                content: "This will change the status of the shift to close.",
+                buttons: '[No][Yes]'
+            }, function (ButtonPressed) {
+
+                if (ButtonPressed === "Yes") {
+                    $.ajax({
+                        url: "../../Shifts/UpdateShiftStatus?shiftId=" + id + '&shiftType=' + type,
+                        type: "POST",
+                        dataType: "json",
+                        data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                        success: function (json) {
+                            $('#dt_shifts tbody').empty();
+                            $.smallBox({
+                                title: "Shift Status Changed",
+                                content: "The shift has been set to complete. You can create a new shift by clicking 'Create New Event'.",
+                                color: "#5384AF",
+                                timeout: 4000,
+                                icon: "fa fa-calendar"
+                            });
+                            requestAllActiveShifts();
+                            var table = $('#dt_shifts').DataTable();
+                            table.draw();
+                        },
+                        error: function (err) {
+                            $.smallBox({
+                                title: "Error changing the shift status",
+                                content: err.responseText,
+                                color: "#f51414",
+                                timeout: 5000,
+                                icon: "fa fa-bell swing animated"
+                            });
+                        }
+                    });
+                }
+                if (ButtonPressed === "No") {
+                }
+            });
+        }
+
         function requestAllActiveShifts() {
             $("#adbloader").fadeIn(500);
             $.ajax({
@@ -147,13 +190,14 @@
                 type: "POST",
                 dataType: "json",
                 success: function (json) {
+                    
                     var html = "";
                     var i = 0;
                     $.each(json, function (i, v) {
                         html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
                         html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
                         html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
-                        html += '<td></td></tr>';
+                        html += '<td><button class="btn btn-xs btn-danger" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-times"></i> Remove Shift</button></td></tr>';
                         i++;
                         $('#activeBadge').html(i);
                         $('#activeBadge').removeClass('hiddenbadge');

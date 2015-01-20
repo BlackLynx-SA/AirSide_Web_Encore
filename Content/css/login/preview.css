@@ -140,7 +140,7 @@ html.is-touch-device #navigation_menu a.current-section {
   background: #ff7000;
 }
 #authenty_preview > section {
-  min-height: 1024px;
+  /*min-height: 1024px;*/
   background-position: center center;
   background-size: cover;
 }

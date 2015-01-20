@@ -34,18 +34,12 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="assetFilterRadio" value="maintain" id="assetMaintenanceRadio">
-                                <i></i>Maintenance Task
+                                <i></i>Maintenance Cycle
                             </label>
                         </section>
                     </div>
 
                     <div class="row">
-                        @*<section class="col col-6">
-                                <label class="select">
-                                    @Html.DropDownList("maintenanceTasks", null, String.Empty)<i></i>
-                                </label>
-                                <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> These tasks are assosiated with each asset type and can be viewed <a href="~/assetClass/assetClasses">here</a></div>
-                            </section>*@
                         <section class="col col-10">
                             <label class="select">
                                 <select id="maintenanceSelect">
@@ -56,7 +50,7 @@
                                     <option value="4">Over Due</option>
                                 </select><i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance task and maintenance cycle.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance cycle for the selected task.</div>
                         </section>
                     </div>
                     <hr /><br />
@@ -86,6 +80,7 @@
 </div>
 
 <script type="text/javascript">
+
     function filterAssets() {
         $('#assetLoader').fadeIn(500);
 
@@ -95,14 +90,20 @@
 
         var clustered = $('#clusteredChk').prop("checked");
         var filterType = $('input[name=assetFilterRadio]:checked').val();
-        if (filterType === 'allassets')
+        if (filterType === 'allassets') {
             showAllAssets(clustered);
-        else if (filterType === 'maintain') {
+            filterEnum = 101;
+            filterValue = 0;
+        } else if (filterType === 'maintain') {
             var cycle = $('#maintenanceSelect').val();
             showMaintenanceCycle(cycle, clustered);
+            filterEnum = 103;
+            filterValue = cycle;
         } else if (filterType === 'asset') {
             var asset = $('#assetClasses').val();
             showAssetClass(asset, clustered)
+            filterEnum = 102;
+            filterValue = asset;
         }
         $('#assetFilterModal').modal('hide');
         $('#assetLoader').hide();

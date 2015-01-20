@@ -17,6 +17,7 @@ using ADB.AirSide.Encore.V1.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -28,47 +29,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
-        //2015/01/08--------------------------------------------------------------------------------------------------------------------------------------------------
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult addCustomShift(CustomShiftClass shift)
-        {
-            try
-            {
-                as_shiftsCustom newShift = new as_shiftsCustom();
-                newShift.bt_completed = false;
-                newShift.dt_completionDate = new DateTime(1970, 1, 1);
-                newShift.dt_scheduledDate = shift.scheduledDate;
-                newShift.i_techGroupId = shift.techGroupId;
-                newShift.vc_externalReference = shift.externalRef;
-                newShift.vc_permitNumber = shift.permitNumber;
-
-                db.as_shiftsCustom.Add(newShift);
-                db.SaveChanges();
-
-                foreach(int item in shift.selectedAssets)
-                {
-                    as_shiftsCustomProfile newShiftProfile = new as_shiftsCustomProfile();
-                    newShiftProfile.i_assetId = item;
-                    newShiftProfile.i_shiftCustomId = newShift.i_shiftCustomId;
-
-                    db.as_shiftsCustomProfile.Add(newShiftProfile);
-                }
-                db.SaveChanges();
-
-                return Json(new { message = "Success", count = shift.selectedAssets.Count() });
-            } catch(Exception err)
-            {
-                Logging log = new Logging();
-                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
-                Response.StatusCode = 500;
-                return Json(err.Message);
-            }
-        }
-        
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
         public ActionResult Calendar()
         {
             ViewBag.maintenanceTasks = new SelectList(db.as_maintenanceProfile.OrderBy(q => q.vc_description).Distinct(), "i_maintenanceId", "vc_description");
@@ -86,41 +46,252 @@ namespace ADB.AirSide.Encore.V1.Controllers
         #region Custom Shifts
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
         [HttpPost]
-        public JsonResult insertCustomShift(as_shiftsCustom shiftData, int[] assetIds)
+        [ValidateAntiForgeryToken]
+        public JsonResult addCustomShift(CustomShiftClass shift)
         {
             try
             {
-                //set default values for creation
-                shiftData.bt_completed = false;
-                shiftData.dt_completionDate = new DateTime(1970, 1, 1);
+                CultureInfo provider = CultureInfo.InvariantCulture;
 
-                db.as_shiftsCustom.Add(shiftData);
+                //2015/01/19 - Custom Shift Creation
+                //  Types:
+                //  1. Asset Filter -> All Assets, Asset Type, Selected task's cycle
+                //  2. Area Filter -> Main and Sub Area
+                //  Enums:
+                //  101 - All Assets
+                //  102 - Asset Type
+                //  103 - Maintenance Cycle
+                //  104 - Main Area
+                //  105 - Sub Area
+
+                as_shiftsCustom newShift = new as_shiftsCustom();
+                newShift.bt_completed = false;
+                newShift.dt_completionDate = new DateTime(1970, 1, 1);
+                newShift.dt_scheduledDate = DateTime.ParseExact(shift.scheduledDate, "dd/MM/yyyy h:mm tt", provider);
+                newShift.i_maintenanceId = shift.maintenanceId;
+                newShift.i_techGroupId = shift.techGroupId;
+                newShift.vc_externalReference = shift.externalRef;
+                newShift.vc_permitNumber = shift.permitNumber;
+
+                db.as_shiftsCustom.Add(newShift);
                 db.SaveChanges();
 
-                //create the profile for this shift
-                foreach (int item in assetIds)
+                List<int> assets = findAssets(shift);
+                foreach(int asset in assets)
                 {
-                    as_shiftsCustomProfile newProfile = new as_shiftsCustomProfile();
-                    newProfile.i_assetId = item;
-                    newProfile.i_shiftCustomId = shiftData.i_shiftCustomId;
-                    db.as_shiftsCustomProfile.Add(newProfile);
+                    as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile();
+                    shiftProfile.i_assetId = asset;
+                    shiftProfile.i_shiftCustomId = newShift.i_shiftCustomId;
+                    db.as_shiftsCustomProfile.Add(shiftProfile);
                 }
 
-                //commit to db
                 db.SaveChanges();
 
-                return Json(new { message = "Successfully added custom shift", count = assetIds.Count() });
-            } catch(Exception err)
+                return Json(new { message = "Success", count = assets.Count() });
+            }
+            catch (Exception err)
             {
                 Logging log = new Logging();
-                log.log("Failed to insert a custom shift: " + err.InnerException.Message, "insertCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
+                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
-                return Json(new { message = err.InnerException.Message });
+                return Json(err.Message);
             }
         }
 
+        //2015/01/19 Custom Shift Helpers----------------------------------------------------------------------------------------------------------------------------
+        private List<int> findAssets(CustomShiftClass shift)
+        {
+            try
+            {
+                //This helper function takes the parameters send by the frontend and calculates which assets it applies to
+                //Create Date: 2015/01/19
+                //Author: Bernard Willer
+
+                List<int> assets = new List<int>(); ;
+
+                switch (shift.filterType)
+                {   case 101:   //Process All
+                        assets = processAllAssets(shift);
+                        break;
+                    case 102: //Process Asset Type
+                        assets = processAssetType(shift);
+                        break;
+                    case 103: //Process Maintneace Cycle
+                        assets = processAssetCycle(shift);
+                        break;
+                    case 104: //Main Area
+                        assets = processMainArea(shift);
+                        break;
+                    case 105: //Sub Area
+                        assets = processSubArea(shift);
+                        break;
+                    default:
+                        break;
+                }
+                return assets;
+            }
+            catch (Exception err)
+            {
+                List<int> assets = new List<int>();
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                return assets;
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<int> processAssetCycle(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<int> assetList = new List<int>();
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
+                if (asset.location.longitude  >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag)
+                {
+                    foreach (var item in asset.maintenance)
+                    {
+                        if(item.maintenanceCycle == shift.filterValue && item.maintenanceId == shift.maintenanceFilter)
+                            assetList.Add(asset.assetId);
+                    }
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<int> processSubArea(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<int> assetList = new List<int>();
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
+                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag && asset.subAreaId == shift.filterValue)
+                {
+                    int task = (from x in db.as_assetClassProfile
+                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                    if (task > 0)
+                        assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<int> processMainArea(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<int> assetList = new List<int>();
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
+                if (asset.location.longitude >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag && asset.location.areaId == shift.filterValue)
+                {
+                    int task = (from x in db.as_assetClassProfile
+                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                    if (task > 0)
+                        assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<int> processAssetType(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<int> assetList = new List<int>();
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
+                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag && asset.assetClassId == shift.filterValue)
+                {
+                    int task = (from x in db.as_assetClassProfile
+                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                    if (task > 0)
+                        assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<int> processAllAssets(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<int> assetList = new List<int>();
+            foreach(var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
+                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+
+                if(latFlag && longFlag)
+                {
+                    int task = (from x in db.as_assetClassProfile
+                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                    if (task > 0)
+                        assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         #endregion
 
         #region Area Based Shifts
@@ -290,27 +461,86 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        //[HttpPost]
-        //public JsonResult getValidationTasks(int areaSubId, int maintenanceId)
-        //{
-        //    try
-        //    {
-        //        //Get the relevant validation tasks for a shift
-        //        //Create Date: 2014/01/01
-        //        //Author: Bernard Willer
+        public ActionResult getAirSideCalendar()
+        {
+            MemoryStream mStream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(mStream);
 
-        //        var validation = (from x in db.as_maintenanceValidation
-        //                              join y in asset)
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        Logging log = new Logging();
-        //        log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-        //        Response.StatusCode = 500;
-        //        return Json(new { message = err.Message });
-        //    }
-        
-        //}
+            writer.AutoFlush = true;
+
+            string airportName = db.as_settingsProfile.Where(q=>q.vc_settingDescription == "Airport Name").Select(q=>q.vc_settingValue).FirstOrDefault();
+
+            var shifts = (from x in db.as_shifts
+                          join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                          join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
+                          join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
+                          where x.bt_completed == false
+                          select new { 
+                                beginDate = x.dt_scheduledDate,
+                                location = airportName + " - " + a.vc_description + " (" + z.vc_description + ")",
+                                description = y.vc_description
+                          }).ToList();
+
+            foreach (var shift in shifts)
+            {
+                //header
+                writer.WriteLine("BEGIN:VCALENDAR");
+                writer.WriteLine("PRODID:-//ADB Airfield Solutions//AirSide//EN");
+                writer.WriteLine("BEGIN:VEVENT");
+
+                //BODY
+                writer.WriteLine("DTSTART:" + shift.beginDate);
+                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2));
+                writer.WriteLine("LOCATION:" + shift.location);
+                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description);
+                writer.WriteLine("SUMMARY:AirSide Planned Event");
+                writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:OOF");
+
+                //FOOTER
+                writer.WriteLine("PRIORITY:5");
+                writer.WriteLine("END:VEVENT");
+                writer.WriteLine("END:VCALENDAR");
+            }
+
+            var customShifts = (from x in db.as_shiftsCustom
+                                join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                                where x.bt_completed == false
+                                select new {
+                                    beginDate = x.dt_scheduledDate,
+                                    location = airportName + " - Custom Shift",
+                                    description = y.vc_description
+                                }).ToList();
+
+            foreach (var shift in customShifts)
+            {
+                //header
+                writer.WriteLine("BEGIN:VCALENDAR");
+                writer.WriteLine("PRODID:-//ADB Airfield Solutions//AirSide//EN");
+                writer.WriteLine("BEGIN:VEVENT");
+
+                //BODY
+                writer.WriteLine("DTSTART:" + shift.beginDate);
+                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2));
+                writer.WriteLine("LOCATION:" + shift.location);
+                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description);
+                writer.WriteLine("SUMMARY:AirSide Planned Event");
+                writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:OOF");
+
+                //FOOTER
+                writer.WriteLine("PRIORITY:5");
+                writer.WriteLine("END:VEVENT");
+                writer.WriteLine("END:VCALENDAR");
+            }
+
+            //MAKE IT DOWNLOADABLE
+            Response.Clear(); //clears the current output content from the buffer
+            Response.AppendHeader("Content-Disposition", "attachment; filename=AirSideEvents.vcs");
+            Response.AppendHeader("Content-Length", mStream.Length.ToString());
+            Response.ContentType = "application/download";
+            Response.BinaryWrite(mStream.ToArray());
+            Response.End();
+            return File(mStream.ToArray(), "application/hbs-vcs, text/calendar, text/x-vcalendar");
+        }
         
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -348,6 +578,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
                     shift.subArea = item.subArea;
                     shift.team = item.team;
+                    shift.shiftId = item.shiftId;
+                    shift.shiftType = 1;
 
                     //Calculate the shift progress
                     if (active)
@@ -374,6 +606,53 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult UpdateShiftStatus(int shiftId, int shiftType)
+        {
+            try
+            {
+                //This function will update a active shift's status to complete
+                //Create Date: 2015/01/19
+                //Author: Bernard Willer
+
+                if(shiftType == 1)
+                {
+                    var shift = db.as_shifts.Find(shiftId);
+                    shift.bt_completed = true;
+                    shift.dt_completionDate = DateTime.Now;
+                    db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                    return Json(new { message = "success" });
+                } else if (shiftType == 2)
+                {
+                    var shift = db.as_shiftsCustom.Find(shiftId);
+                    shift.bt_completed = true;
+                    shift.dt_completionDate = DateTime.Now;
+                    db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+
+                    return Json(new { message = "success" });
+                } else
+                {
+                    Response.StatusCode = 500;
+                    return Json(new { message = "No valid shift type was specified."});
+                }
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                Response.Status = err.Message;
+                return Json(new { message = err.Message });
+            }
+        
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------

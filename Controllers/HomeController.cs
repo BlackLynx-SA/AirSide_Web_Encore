@@ -55,9 +55,161 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewData["maintenanceTasks"] = maintenanceTasks;
             ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
             ViewBag.taskDesc = maintenanceTasks[0].vc_description;
+            ViewBag.NumberAssets = db.as_assetProfile.Count();
+            ViewBag.AssetInit = getAssetsInit();
+            ViewBag.NumberUsers = db.UserProfiles.Count();
+            ViewBag.NumberActiveShifts = db.as_shifts.Where(q => q.bt_completed == false).Count();
+            ViewBag.CompletedShifts = getCompletedShifts();
+
+            //Maintenance
+            ViewBag.completedMaint = getCompletedAssets();
+            ViewBag.midMaint = getMidAssets();
+            ViewBag.almostMaint = getAlmostAssets();
+            ViewBag.dueAssets = getDueAssets();
+            ViewBag.totalTasks = getTotalTasks();
 
             return View();
         }
+
+        #region Dashboard Helpers
+
+        private string getCompletedAssets()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            double assetCount = 0;
+            double total = 0;
+            foreach(mongoAssetProfile asset in assets)
+            {
+                foreach(maintenance maint in asset.maintenance)
+                {
+                    if (maint.maintenanceCycle == 1) assetCount++;
+                    total++;
+                }
+            }
+
+            double persentage = ((assetCount / total) * 100);
+
+            return Math.Round(persentage, 2).ToString();
+        }
+
+        private string getMidAssets()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            double assetCount = 0;
+            double total = 0;
+            foreach (mongoAssetProfile asset in assets)
+            {
+                foreach (maintenance maint in asset.maintenance)
+                {
+                    if (maint.maintenanceCycle == 2) assetCount++;
+                    total++;
+                }
+            }
+
+            double persentage = ((assetCount / total) * 100);
+
+            return Math.Round(persentage,2).ToString();
+        }
+
+        private string getAlmostAssets()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            int assetCount = 0;
+            int total = 0;
+            foreach (mongoAssetProfile asset in assets)
+            {
+                foreach (maintenance maint in asset.maintenance)
+                {
+                    if (maint.maintenanceCycle == 3) assetCount++;
+                    total++;
+                }
+            }
+
+            double persentage = ((assetCount / total) * 100);
+
+            return Math.Round(persentage, 2).ToString();
+        }
+
+        private string getDueAssets()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            double assetCount = 0;
+            double total = 0;
+            foreach (mongoAssetProfile asset in assets)
+            {
+                foreach (maintenance maint in asset.maintenance)
+                {
+                    if (maint.maintenanceCycle == 4) assetCount++;
+                    total++;
+                }
+            }
+
+            double persentage = ((assetCount / total) * 100);
+
+            return Math.Round(persentage, 2).ToString();
+        }
+
+        private string getTotalTasks()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            double total = 0;
+            foreach (mongoAssetProfile asset in assets)
+            {
+                foreach (maintenance maint in asset.maintenance)
+                {
+                    total++;
+                }
+            }
+
+            return total.ToString();
+        }
+
+        private string getCompletedShifts()
+        {
+            var shifts = (from x in db.as_shifts
+                          join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
+                          group x by new { y = y.dt_captureDate.Year, m = y.dt_captureDate.Month, d = y.dt_captureDate.Day } into shiftGroup
+                          select shiftGroup.Count());
+            string valueString = "";
+            foreach (var shift in shifts)
+            {
+                valueString += shift.ToString() + ",";
+            }
+
+            return valueString;
+
+        }
+
+        private string getAssetsInit()
+        {
+            var assets = (from x in db.as_assetProfile
+                          group x by new { y = x.dt_initDate.Year, m = x.dt_initDate.Month, d = x.dt_initDate.Day } into assetGroup
+                          select assetGroup.Count()).ToList();
+            string valueString = "";
+            foreach(var asset in assets)
+            {
+                valueString += asset.ToString() + ",";
+            }
+
+            return valueString;
+        }
+        
+        [HttpPost]
+        public JsonResult getActivities()
+        {
+            DatabaseHelper database = new DatabaseHelper();
+
+            List<ActivityChart> activities = database.getActivitiesForMonth();
+
+            return Json(activities);
+        }
+
+        #endregion
 
         // GET: home/inbox
         public ActionResult Inbox()

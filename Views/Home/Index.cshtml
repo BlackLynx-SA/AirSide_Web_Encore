@@ -7,21 +7,18 @@
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
             <ul id="sparks" class="">
                 <li class="sparks-info">
-                    <h5> Activity <span class="txt-color-blue"> 40 450</span></h5>
+                    <h5> Number of Assets <span class="txt-color-blue"><i class="fa fa-lightbulb-o"></i> @ViewBag.NumberAssets</span></h5>
                     <div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
-                        1300, 1877, 2500, 2577, 2000, 2100, 3000, 2700, 3631, 2471, 2700, 3631, 2471
+                        @ViewBag.AssetInit
                     </div>
                 </li>
                 <li class="sparks-info">
-                    <h5> Site Traffic <span class="txt-color-purple"><i class="fa fa-arrow-circle-up"></i>&nbsp;45%</span></h5>
-                    <div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
-                        110,150,300,130,400,240,220,310,220,300, 270, 210
-                    </div>
+                    <h5> Loaded Users <span class="txt-color-purple"><i class="fa fa-users"></i> @ViewBag.NumberUsers</span></h5>
                 </li>
                 <li class="sparks-info">
-                    <h5> New Events <span class="txt-color-greenDark"><i class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+                    <h5> Active Shifts <span class="txt-color-greenDark"><i class="fa fa-calendar"></i> @ViewBag.NumberActiveShifts</span></h5>
                     <div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
-                        110,150,300,130,400,240,220,310,220,300, 270, 210
+                        @ViewBag.CompletedShifts
                     </div>
                 </li>
             </ul>
@@ -49,7 +46,7 @@
                     -->
                     <header>
                         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>Live Feeds </h2>
+                        <h2>AirSide&trade; Activity (Last 30 days)</h2>
                         <ul class="nav nav-tabs pull-right in" id="myTab">
                             <li class="active">
                                 <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Live Stats</span></a>
@@ -67,117 +64,63 @@
                             <!-- content -->
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade active in padding-10 no-padding-bottom" id="s1">
-                                    <div class="row no-space">
-                                        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                                            <span class="demo-liveupdate-1">
-                                                <span class="onoffswitch-title">Live switch</span> <span class="onoffswitch">
-                                                    <input type="checkbox" name="start_interval" class="onoffswitch-checkbox" id="start_interval">
-                                                    <label class="onoffswitch-label" for="start_interval">
-                                                        <span class="onoffswitch-inner" data-swchon-text="ON" data-swchoff-text="OFF"></span>
-                                                        <span class="onoffswitch-switch"></span>
-                                                    </label>
-                                                </span>
-                                            </span>
-                                            <div id="updating-chart" class="chart-large txt-color-blue"></div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 show-stats">
-                                            <div class="row">
-                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                                                    <span class="text"> My Tasks <span class="pull-right">130/200</span> </span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-color-blueDark" style="width: 65%;"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                                                    <span class="text"> Photmetric Data <span class="pull-right">440 GB</span> </span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-color-blue" style="width: 34%;"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                                                    <span class="text"> Current Shifts<span class="pull-right">77%</span> </span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-color-blue" style="width: 77%;"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6 col-sm-6 col-md-12 col-lg-12">
-                                                    <span class="text"> Surveyor&trade; <span class="pull-right">7 Days</span> </span>
-                                                    <div class="progress">
-                                                        <div class="progress-bar bg-color-greenLight" style="width: 84%;"></div>
-                                                    </div>
-                                                </div>
-                                                <span class="show-stat-buttons"> <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="javascript:void(0);" class="btn btn-default btn-block hidden-xs">Generate PDF</a> </span> <span class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="javascript:void(0);" class="btn btn-default btn-block hidden-xs">Report a bug</a> </span> </span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @{Html.RenderPartial("_ActivityChart");}
                                     <div class="show-stat-microcharts">
                                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="easy-pie-chart txt-color-orangeDark" data-percent="33" data-pie-size="50">
-                                                <span class="percent percent-sign">35</span>
+                                            <div class="easy-pie-chart txt-color-green" data-percent="@ViewBag.completedMaint" data-pie-size="50">
+                                                <span class="percent percent-sign">@ViewBag.completedMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Tasks Done <i class="fa fa-caret-up icon-color-bad"></i> </span>
+                                            <span class="easy-pie-title"> Updated </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-greenLight"><i class="fa fa-caret-up"></i> 97%</span>
+                                                    <span class="label bg-color-green"> @{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100); } @Math.Round(numberAssets,0) </span>
                                                 </li>
                                                 <li>
-                                                    <span class="label bg-color-blueLight"><i class="fa fa-caret-down"></i> 44%</span>
+                                                    <span class="label bg-color-green"> @ViewBag.totalTasks</span>
                                                 </li>
                                             </ul>
-                                            <div class="sparkline txt-color-greenLight hidden-sm hidden-md pull-right" data-sparkline-type="line" data-sparkline-height="33px" data-sparkline-width="70px" data-fill-color="transparent">
-                                                130, 187, 250, 257, 200, 210, 300, 270, 363, 247, 270, 363, 247
-                                            </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="easy-pie-chart txt-color-greenLight" data-percent="78.9" data-pie-size="50">
-                                                <span class="percent percent-sign">78.9 </span>
+                                            <div class="easy-pie-chart text-warning" data-percent="@ViewBag.midMaint" data-pie-size="50">
+                                                <span class="percent percent-sign">@ViewBag.midMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Overdue <i class="fa fa-caret-down icon-color-good"></i></span>
+                                            <span class="easy-pie-title"> Mid Cycle </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-blueDark"><i class="fa fa-caret-up"></i> 76%</span>
+                                                    <span class="label bg-color-yellow"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.midMaint) / 100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
-                                                    <span class="label bg-color-blue"><i class="fa fa-caret-down"></i> 3%</span>
+                                                    <span class="label bg-color-yellow"> @ViewBag.totalTasks</span>
                                                 </li>
                                             </ul>
-                                            <div class="sparkline txt-color-blue hidden-sm hidden-md pull-right" data-sparkline-type="line" data-sparkline-height="33px" data-sparkline-width="70px" data-fill-color="transparent">
-                                                257, 200, 210, 300, 270, 363, 130, 187, 250, 247, 270, 363, 247
-                                            </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="easy-pie-chart txt-color-blue" data-percent="23" data-pie-size="50">
-                                                <span class="percent percent-sign">23 </span>
+                                            <div class="easy-pie-chart txt-color-pink" data-percent="@ViewBag.almostMaint" data-pie-size="50">
+                                                <span class="percent percent-sign">@ViewBag.almostMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Shifts <i class="fa fa-caret-up icon-color-good"></i></span>
+                                            <span class="easy-pie-title"> Almost Due </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-darken">10</span>
+                                                    <span class="label bg-color-pink"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.almostMaint) / 100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
-                                                    <span class="label bg-color-blueDark"><i class="fa fa-caret-up"></i> 10%</span>
+                                                    <span class="label bg-color-pink"> @ViewBag.totalTasks</span>
                                                 </li>
                                             </ul>
-                                            <div class="sparkline txt-color-darken hidden-sm hidden-md pull-right" data-sparkline-type="line" data-sparkline-height="33px" data-sparkline-width="70px" data-fill-color="transparent">
-                                                200, 210, 363, 247, 300, 270, 130, 187, 250, 257, 363, 247, 270
-                                            </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                                            <div class="easy-pie-chart txt-color-darken" data-percent="36" data-pie-size="50">
-                                                <span class="percent degree-sign">36 <i class="fa fa-caret-up"></i></span>
+                                            <div class="easy-pie-chart txt-color-red" data-percent="@ViewBag.dueAssets" data-pie-size="50">
+                                                <span class="percent percent-sign">@ViewBag.dueAssets</span>
                                             </div>
-                                            <span class="easy-pie-title"> Movement <i class="fa fa-caret-down icon-color-good"></i></span>
+                                            <span class="easy-pie-title"> Over Due </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-red"><i class="fa fa-caret-up"></i> 124</span>
+                                                    <span class="label bg-color-red"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
-                                                    <span class="label bg-color-blue"><i class="fa fa-caret-down"></i> 40 F</span>
+                                                    <span class="label bg-color-red"> @ViewBag.totalTasks</span>
                                                 </li>
                                             </ul>
-                                            <div class="sparkline txt-color-red hidden-sm hidden-md pull-right" data-sparkline-type="line" data-sparkline-height="33px" data-sparkline-width="70px" data-fill-color="transparent">
-                                                2700, 3631, 2471, 2700, 3631, 2471, 1300, 1877, 2500, 2577, 2000, 2100, 3000
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -220,8 +163,112 @@
 @section pagespecific {
 <script src="~/scripts/plugin/date/date.js"></script>
     <script>
+        /* chart colors default */
+        var $chrt_border_color = "#efefef";
+        var $chrt_grid_color = "#DDD"
+        var $chrt_main = "#E24913";
+        /* red       */
+        var $chrt_second = "#6595b4";
+        /* blue      */
+        var $chrt_third = "#FF9F01";
+        /* orange    */
+        var $chrt_fourth = "#7e9d3a";
+        /* green     */
+        var $chrt_fifth = "#BD362F";
+        /* dark red  */
+        var $chrt_mono = "#000";
+
         var todoCategoriesTxt;
         var selectedTask = @ViewBag.firstTask;
+
+        function getActivities()
+        {
+            $.ajax({
+                type: "POST",
+                url: "../../Home/getActivities",
+                success: function (json) {
+                    if ($("#saleschart").length) {
+                        var d = [];
+                        $.each(json, function(i,v){
+                            var plot = [];
+                            plot.push(v.dateOfActivity);
+                            plot.push(v.numberOfActivities);
+                            d.push(plot);
+                        });
+
+                        for (var i = 0; i < d.length; ++i)
+                            d[i][0] += 60 * 60 * 1000;
+
+                        function weekendAreas(axes) {
+                            var markings = [];
+                            var d = new Date(axes.xaxis.min);
+                            // go to the first Saturday
+                            d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
+                            d.setUTCSeconds(0);
+                            d.setUTCMinutes(0);
+                            d.setUTCHours(0);
+                            var i = d.getTime();
+                            do {
+                                // when we don't set yaxis, the rectangle automatically
+                                // extends to infinity upwards and downwards
+                                markings.push({
+                                    xaxis : {
+                                        from : i,
+                                        to : i + 2 * 24 * 60 * 60 * 1000
+                                    }
+                                });
+                                i += 7 * 24 * 60 * 60 * 1000;
+                            } while (i < axes.xaxis.max);
+
+                            return markings;
+                        }
+
+                        var options = {
+                            xaxis : {
+                                mode : "time",
+                            },
+                            series : {
+                                lines : {
+                                    show : true,
+                                    lineWidth : 1,
+                                    fill : true,
+                                    fillColor : {
+                                        colors : [{
+                                            opacity : 0.1
+                                        }, {
+                                            opacity : 0.15
+                                        }]
+                                    }
+                                },
+                                points: { show: true },
+                                shadowSize : 0
+                            },
+                            selection : {
+                                mode : "x"
+                            },
+                            grid : {
+                                hoverable : true,
+                                clickable : true,
+                                tickColor : $chrt_border_color,
+                                borderWidth : 0,
+                                borderColor : $chrt_border_color,
+                            },
+                            tooltip : true,
+                            tooltipOpts : {
+                                content : "Activities were <span>%y</span>",
+                                dateFormat : "%y-%0m-%0d",
+                                defaultTheme : false
+                            },
+                            colors : [$chrt_second],
+
+                        };
+
+                        var plot = $.plot($("#saleschart"), [d], options);
+                        $('#activityChartLoader').fadeOut(300);
+                    };
+                }
+            });
+        }
 
         function getTodoCategories() {
             $.ajax({
@@ -384,10 +431,12 @@
                 //Init Calendar 
                 requestAllShifts();
 
+                //Init Activities Chart
+                getActivities();
+
                 //init button clicks
                 $(document).on('click', '#todoAddBtn', function () {
                     var itemDesc, itemCat;
-
                     $.SmartMessageBox({
                         title: '<i class="fa fa-check fa-lg txt-color-blue"></i> New To-Do Item',
                         content: "Please enter the item description",
@@ -433,167 +482,9 @@
                 * RUN PAGE GRAPHS
                 */
 
-                /* TAB 1: UPDATING CHART */
-                // For the demo we use generated data, but normally it would be coming from the server
+                
 
-                var data = [], totalPoints = 200, $UpdatingChartColors = $("#updating-chart").css('color');
-
-                function getRandomData() {
-                    if (data.length > 0)
-                        data = data.slice(1);
-
-                    // do a random walk
-                    while (data.length < totalPoints) {
-                        var prev = data.length > 0 ? data[data.length - 1] : 50;
-                        var y = prev + Math.random() * 10 - 5;
-                        if (y < 0)
-                            y = 0;
-                        if (y > 100)
-                            y = 100;
-                        data.push(y);
-                    }
-
-                    // zip the generated y values with the x values
-                    var res = [];
-                    for (var i = 0; i < data.length; ++i)
-                        res.push([i, data[i]])
-                    return res;
-                }
-
-                // setup control widget
-                var updateInterval = 1500;
-                $("#updating-chart").val(updateInterval).change(function () {
-
-                    var v = $(this).val();
-                    if (v && !isNaN(+v)) {
-                        updateInterval = +v;
-                        $(this).val("" + updateInterval);
-                    }
-
-                });
-
-                // setup plot
-                var options = {
-                    yaxis: {
-                        min: 0,
-                        max: 100
-                    },
-                    xaxis: {
-                        min: 0,
-                        max: 100
-                    },
-                    colors: [$UpdatingChartColors],
-                    series: {
-                        lines: {
-                            lineWidth: 1,
-                            fill: true,
-                            fillColor: {
-                                colors: [{
-                                    opacity: 0.4
-                                }, {
-                                    opacity: 0
-                                }]
-                            },
-                            steps: false
-
-                        }
-                    }
-                };
-
-                var plot = $.plot($("#updating-chart"), [getRandomData()], options);
-
-                /* live switch */
-                $('input[type="checkbox"]#start_interval').click(function () {
-                    if ($(this).prop('checked')) {
-                        $on = true;
-                        updateInterval = 1500;
-                        update();
-                    } else {
-                        clearInterval(updateInterval);
-                        $on = false;
-                    }
-                });
-
-                function update() {
-                    if ($on == true) {
-                        plot.setData([getRandomData()]);
-                        plot.draw();
-                        setTimeout(update, updateInterval);
-
-                    } else {
-                        clearInterval(updateInterval)
-                    }
-
-                }
-
-                var $on = false;
-
-                /*end updating chart*/
-
-                /* TAB 2: Social Network  */
-
-                $(function () {
-                    // jQuery Flot Chart
-                    var twitter = [[1, 27], [2, 34], [3, 51], [4, 48], [5, 55], [6, 65], [7, 61], [8, 70], [9, 65], [10, 75], [11, 57], [12, 59], [13, 62]], facebook = [[1, 25], [2, 31], [3, 45], [4, 37], [5, 38], [6, 40], [7, 47], [8, 55], [9, 43], [10, 50], [11, 47], [12, 39], [13, 47]], data = [{
-                        label: "Twitter",
-                        data: twitter,
-                        lines: {
-                            show: true,
-                            lineWidth: 1,
-                            fill: true,
-                            fillColor: {
-                                colors: [{
-                                    opacity: 0.1
-                                }, {
-                                    opacity: 0.13
-                                }]
-                            }
-                        },
-                        points: {
-                            show: true
-                        }
-                    }, {
-                        label: "Facebook",
-                        data: facebook,
-                        lines: {
-                            show: true,
-                            lineWidth: 1,
-                            fill: true,
-                            fillColor: {
-                                colors: [{
-                                    opacity: 0.1
-                                }, {
-                                    opacity: 0.13
-                                }]
-                            }
-                        },
-                        points: {
-                            show: true
-                        }
-                    }];
-
-                    var options = {
-                        grid: {
-                            hoverable: true
-                        },
-                        colors: ["#568A89", "#3276B1"],
-                        tooltip: true,
-                        tooltipOpts: {
-                            //content : "Value <b>$x</b> Value <span>$y</span>",
-                            defaultTheme: false
-                        },
-                        xaxis: {
-                            ticks: [[1, "JAN"], [2, "FEB"], [3, "MAR"], [4, "APR"], [5, "MAY"], [6, "JUN"], [7, "JUL"], [8, "AUG"], [9, "SEP"], [10, "OCT"], [11, "NOV"], [12, "DEC"], [13, "JAN+1"]]
-                        },
-                        yaxes: {
-
-                        }
-                    };
-
-                    var plot3 = $.plot($("#statsChart"), data, options);
-                });
-
-                // END TAB 2
+                
 
                 // TAB THREE GRAPH //
                 /* TAB 3: Revenew  */
@@ -683,49 +574,7 @@
 
                 });
 
-                /*
-                 * VECTOR MAP
-                 */
-
-                data_array = {
-                    "US": 4977,
-                    "AU": 4873,
-                    "IN": 3671,
-                    "BR": 2476,
-                    "TR": 1476,
-                    "CN": 146,
-                    "CA": 134,
-                    "BD": 100
-                };
-
-                $('#vector-map').vectorMap({
-                    map: 'world_mill_en',
-                    backgroundColor: '#fff',
-                    regionStyle: {
-                        initial: {
-                            fill: '#c4c4c4'
-                        },
-                        hover: {
-                            "fill-opacity": 1
-                        }
-                    },
-                    series: {
-                        regions: [{
-                            values: data_array,
-                            scale: ['#85a8b6', '#4d7686'],
-                            normalizeFunction: 'polynomial'
-                        }]
-                    },
-                    onRegionLabelShow: function (e, el, code) {
-                        if (typeof data_array[code] == 'undefined') {
-                            e.preventDefault();
-                        } else {
-                            var countrylbl = data_array[code];
-                            el.html(el.html() + ': ' + countrylbl + ' visits');
-                        }
-                    }
-                });
-
+          
                 /*
                  * FULL CALENDAR JS
                  */

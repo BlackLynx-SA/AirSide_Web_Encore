@@ -12,13 +12,11 @@ namespace ADB.AirSide.Encore.V1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_assetProfile
+    public partial class as_geoSpatialProfile
     {
-        public int i_assetId { get; set; }
-        public int i_locationId { get; set; }
-        public int i_assetClassId { get; set; }
-        public string vc_rfidTag { get; set; }
-        public string vc_serialNumber { get; set; }
-        public System.DateTime dt_initDate { get; set; }
+        public int i_geoSpatialId { get; set; }
+        public System.Data.Entity.Spatial.DbGeography geo_polygon { get; set; }
+        public string vc_description { get; set; }
+        public int i_geoType { get; set; }
     }
 }

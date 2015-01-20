@@ -14,7 +14,6 @@ namespace ADB.AirSide.Encore.V1.Models
     
     public partial class as_fileUploadProfile
     {
-        public int i_fileUploadId { get; set; }
         public System.Guid guid_file { get; set; }
         public string vc_filePath { get; set; }
         public string vc_fileDescription { get; set; }

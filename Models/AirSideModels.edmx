@@ -77,6 +77,7 @@
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
           <Property Name="vc_rfidTag" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_serialNumber" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="dt_initDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetStatusProfile">
           <Key>
@@ -137,9 +138,8 @@
         </EntityType>
         <EntityType Name="as_fileUploadInfo">
           <Key>
-            <PropertyRef Name="i_fileUploadId" />
+            <PropertyRef Name="guid_file" />
           </Key>
-          <Property Name="i_fileUploadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="guid_file" Type="uniqueidentifier" Nullable="false" />
           <Property Name="vc_description" Type="ntext" Nullable="false" />
           <Property Name="f_latitude" Type="float" Nullable="false" />
@@ -149,9 +149,8 @@
         </EntityType>
         <EntityType Name="as_fileUploadProfile">
           <Key>
-            <PropertyRef Name="i_fileUploadId" />
+            <PropertyRef Name="guid_file" />
           </Key>
-          <Property Name="i_fileUploadId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="guid_file" Type="uniqueidentifier" Nullable="false" />
           <Property Name="vc_filePath" Type="ntext" Nullable="false" />
           <Property Name="vc_fileDescription" Type="ntext" Nullable="false" />
@@ -166,6 +165,15 @@
           <Property Name="vc_description" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="f_frequency" Type="float" Nullable="false" />
           <Property Name="i_frequencyType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_geoSpatialProfile">
+          <Key>
+            <PropertyRef Name="i_geoSpatialId" />
+          </Key>
+          <Property Name="i_geoSpatialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="geo_polygon" Type="geography" Nullable="false" />
+          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="i_geoType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_locationProfile">
           <Key>
@@ -360,7 +368,7 @@
           <Property Name="i_assetId" Type="int" Nullable="false" />
           <Property Name="dt_dateTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="bt_validated" Type="bit" Nullable="false" />
-          <Property Name="i_maintenanceId" Type="int" Nullable="false" />
+          <Property Name="i_shiftId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_wrenchProfile">
           <Key>
@@ -512,6 +520,7 @@
           <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_geoSpatialProfile" EntityType="Self.as_geoSpatialProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="dbo" store:Type="Tables" />
@@ -614,16 +623,6 @@
           <Property Name="vc_description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vc_value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_assetProfile">
-          <Key>
-            <PropertyRef Name="i_assetId" />
-          </Key>
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-          <Property Name="i_locationId" Type="Int32" Nullable="false" />
-          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
-          <Property Name="vc_rfidTag" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_serialNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_assetStatusProfile">
           <Key>
             <PropertyRef Name="i_assetProfileId" />
@@ -680,29 +679,6 @@
           <Property Name="i_pictureId" Type="Int32" Nullable="false" />
           <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="bt_pass" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fileUploadInfo">
-          <Key>
-            <PropertyRef Name="i_fileUploadId" />
-          </Key>
-          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="f_latitude" Type="Double" Nullable="false" />
-          <Property Name="f_longitude" Type="Double" Nullable="false" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="i_userId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fileUploadProfile">
-          <Key>
-            <PropertyRef Name="i_fileUploadId" />
-          </Key>
-          <Property Name="i_fileUploadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_filePath" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_fileDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="i_fileType" Type="Int32" Nullable="false" />
-          <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
         <EntityType Name="as_frequencyProfile">
           <Key>
@@ -955,14 +931,11 @@
           <EntitySet Name="as_areaSubProfile" EntityType="Self.as_areaSubProfile" />
           <EntitySet Name="as_assetClassProfile" EntityType="Self.as_assetClassProfile" />
           <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" />
-          <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" />
           <EntitySet Name="as_assetStatusProfile" EntityType="Self.as_assetStatusProfile" />
           <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" />
           <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" />
-          <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" />
-          <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" />
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" />
@@ -997,12 +970,16 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
           <EntitySet Name="as_todoProfile" EntityType="airside.encoreModel.as_todoProfile" />
-          <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
           <EntitySet Name="as_assetClassMaintenanceProfile" EntityType="airside.encoreModel.as_assetClassMaintenanceProfile" />
           <EntitySet Name="as_maintenanceProfile" EntityType="airside.encoreModel.as_maintenanceProfile" />
           <EntitySet Name="as_maintenanceValidation" EntityType="airside.encoreModel.as_maintenanceValidation" />
           <EntitySet Name="as_shifts" EntityType="airside.encoreModel.as_shifts" />
           <EntitySet Name="as_shiftsCustom" EntityType="airside.encoreModel.as_shiftsCustom" />
+          <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
+          <EntitySet Name="as_geoSpatialProfile" EntityType="airside.encoreModel.as_geoSpatialProfile" />
+          <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
+          <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
+          <EntitySet Name="as_assetProfile" EntityType="airside.encoreModel.as_assetProfile" />
         </EntityContainer>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -1016,17 +993,6 @@
           <Property Name="bt_private" Type="Boolean" Nullable="false" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="dt_completedDate" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="as_validationTaskProfile">
-          <Key>
-            <PropertyRef Name="i_validationProfileId" />
-          </Key>
-          <Property Name="i_validationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="bt_validated" Type="Boolean" Nullable="false" />
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_assetClassMaintenanceProfile">
           <Key>
@@ -1079,6 +1045,58 @@
           <Property Name="vc_permitNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="vc_externalReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_fileUploadInfo">
+          <Key>
+            <PropertyRef Name="guid_file" />
+          </Key>
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="f_latitude" Type="Double" Nullable="false" />
+          <Property Name="f_longitude" Type="Double" Nullable="false" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+          <Property Name="i_userId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_geoSpatialProfile">
+          <Key>
+            <PropertyRef Name="i_geoSpatialId" />
+          </Key>
+          <Property Name="i_geoSpatialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="geo_polygon" Type="Geography" Nullable="false" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="i_geoType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_fileUploadProfile">
+          <Key>
+            <PropertyRef Name="guid_file" />
+          </Key>
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_filePath" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="vc_fileDescription" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="i_fileType" Type="Int32" Nullable="false" />
+          <Property Name="dt_datetime" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <EntityType Name="as_validationTaskProfile">
+          <Key>
+            <PropertyRef Name="i_validationProfileId" />
+          </Key>
+          <Property Name="i_validationProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="bt_validated" Type="Boolean" Nullable="false" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_assetProfile">
+          <Key>
+            <PropertyRef Name="i_assetId" />
+          </Key>
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="i_locationId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
+          <Property Name="vc_rfidTag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="vc_serialNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="dt_initDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1146,17 +1164,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_assetProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_assetProfile">
-              <MappingFragment StoreEntitySet="as_assetProfile">
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="i_locationId" ColumnName="i_locationId" />
-                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
-                <ScalarProperty Name="vc_rfidTag" ColumnName="vc_rfidTag" />
-                <ScalarProperty Name="vc_serialNumber" ColumnName="vc_serialNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_assetStatusProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_assetStatusProfile">
               <MappingFragment StoreEntitySet="as_assetStatusProfile">
@@ -1216,31 +1223,6 @@
                 <ScalarProperty Name="i_pictureId" ColumnName="i_pictureId" />
                 <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
                 <ScalarProperty Name="bt_pass" ColumnName="bt_pass" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadInfo">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
-              <MappingFragment StoreEntitySet="as_fileUploadInfo">
-                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
-                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
-              <MappingFragment StoreEntitySet="as_fileUploadProfile">
-                <ScalarProperty Name="i_fileUploadId" ColumnName="i_fileUploadId" />
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
-                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
-                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
-                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1491,18 +1473,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_validationTaskProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_validationTaskProfile">
-              <MappingFragment StoreEntitySet="as_validationTaskProfile">
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
-                <ScalarProperty Name="bt_validated" ColumnName="bt_validated" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="i_validationProfileId" ColumnName="i_validationProfileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_assetClassMaintenanceProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_assetClassMaintenanceProfile">
               <MappingFragment StoreEntitySet="as_assetClassMaintenanceProfile">
@@ -1557,6 +1527,63 @@
                 <ScalarProperty Name="dt_scheduledDate" ColumnName="dt_scheduledDate" />
                 <ScalarProperty Name="i_techGroupId" ColumnName="i_techGroupId" />
                 <ScalarProperty Name="i_shiftCustomId" ColumnName="i_shiftCustomId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadInfo">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
+              <MappingFragment StoreEntitySet="as_fileUploadInfo">
+                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
+                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_geoSpatialProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_geoSpatialProfile">
+              <MappingFragment StoreEntitySet="as_geoSpatialProfile">
+                <ScalarProperty Name="i_geoType" ColumnName="i_geoType" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="geo_polygon" ColumnName="geo_polygon" />
+                <ScalarProperty Name="i_geoSpatialId" ColumnName="i_geoSpatialId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadProfile">
+              <MappingFragment StoreEntitySet="as_fileUploadProfile">
+                <ScalarProperty Name="dt_datetime" ColumnName="dt_datetime" />
+                <ScalarProperty Name="i_fileType" ColumnName="i_fileType" />
+                <ScalarProperty Name="vc_fileDescription" ColumnName="vc_fileDescription" />
+                <ScalarProperty Name="vc_filePath" ColumnName="vc_filePath" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_validationTaskProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_validationTaskProfile">
+              <MappingFragment StoreEntitySet="as_validationTaskProfile">
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="bt_validated" ColumnName="bt_validated" />
+                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="i_validationProfileId" ColumnName="i_validationProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_assetProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_assetProfile">
+              <MappingFragment StoreEntitySet="as_assetProfile">
+                <ScalarProperty Name="dt_initDate" ColumnName="dt_initDate" />
+                <ScalarProperty Name="vc_serialNumber" ColumnName="vc_serialNumber" />
+                <ScalarProperty Name="vc_rfidTag" ColumnName="vc_rfidTag" />
+                <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
+                <ScalarProperty Name="i_locationId" ColumnName="i_locationId" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
