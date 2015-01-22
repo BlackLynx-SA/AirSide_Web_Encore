@@ -22,6 +22,14 @@ using ADB.AirSide.Encore.V1.App_Helpers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
+using Microsoft.Reporting.WebForms;
+using System.Globalization;
+using System.Web;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.Storage;
+using System.Configuration;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System.IO;
 
 #endregion
 
@@ -44,6 +52,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
         public ActionResult StartUp()
         {
             return View();
+        }
+
+        public ActionResult uploadBlob()
+        {
+            return View();
+        }
+
+        public ActionResult uploadBlobFile(HttpPostedFileBase file)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve reference to a previously created container.
+            CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+
+            // Retrieve reference to a blob named "myblob".
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(file.FileName);
+
+            blockBlob.UploadFromStream(file.InputStream);
+
+            Response.StatusCode = 200;
+            return Json(new { message= "success"});
         }
 
         // GET: home/index
@@ -144,6 +175,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 foreach (maintenance maint in asset.maintenance)
                 {
                     if (maint.maintenanceCycle == 4) assetCount++;
+                    total++;
+                }
+            }
+
+            double persentage = ((assetCount / total) * 100);
+
+            return Math.Round(persentage, 2).ToString();
+        }
+
+        private string getNoDataAssets()
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            double assetCount = 0;
+            double total = 0;
+            foreach (mongoAssetProfile asset in assets)
+            {
+                foreach (maintenance maint in asset.maintenance)
+                {
+                    if (maint.maintenanceCycle == 0) assetCount++;
                     total++;
                 }
             }
@@ -438,6 +489,169 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             // Return the hexadecimal string. 
             return sBuilder.ToString();
+        }
+
+        #endregion
+
+        #region Reporting
+
+        public ActionResult AnalyticsReport(string fileType)
+        {
+            Logging log = new Logging();
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
+
+                LocalReport localReport = new LocalReport();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    blockBlob.DownloadToStream(memoryStream);
+                    memoryStream.Position = 0;
+                    localReport.LoadReportDefinition(memoryStream);
+                }
+
+                ReportDataSource reportDataSource = new ReportDataSource("MaintenanceDS", getAnalyticReportCycles());
+                localReport.DataSources.Add(reportDataSource);
+
+                reportDataSource = new ReportDataSource("ShiftsDS", getShifts().OrderBy(q=>q.start));
+                localReport.DataSources.Add(reportDataSource);
+
+                string reportType = fileType;
+                string mimeType;
+                string encoding;
+                string fileNameExtension;
+
+                string deviceInfo =
+                "<DeviceInfo>" +
+                "  <OutputFormat>" + fileType + "</OutputFormat>" +
+                "  <PageWidth>210mm</PageWidth>" +
+                "  <PageHeight>297mm</PageHeight>" +
+                "  <MarginTop>1cm</MarginTop>" +
+                "  <MarginLeft>1cm</MarginLeft>" +
+                "  <MarginRight>1cm</MarginRight>" +
+                "  <MarginBottom>1cm</MarginBottom>" +
+                "</DeviceInfo>";
+
+                Warning[] warnings;
+                string[] streams;
+                byte[] renderedBytes;
+
+                //Render the report
+                renderedBytes = localReport.Render(
+                    reportType,
+                    deviceInfo,
+                    out mimeType,
+                    out encoding,
+                    out fileNameExtension,
+                    out streams,
+                    out warnings);
+                Response.AddHeader("content-disposition", "attachment; filename=AirSideAnalyticReport." + fileNameExtension);
+                log.log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", Logging.logTypes.Info, User.Identity.Name);
+                return File(renderedBytes, mimeType);
+            }
+            catch (Exception err)
+            {
+                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", Logging.logTypes.Error, User.Identity.Name);
+                Response.StatusCode = 500;
+                return Json(new { error = err.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        private MemoryStream getBlobStream(string reportName)
+        {
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve reference to a previously created container.
+            CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+
+            // Retrieve reference to a blob named "myblob.txt"
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(reportName);
+
+            MemoryStream memoryStream = new MemoryStream();
+            blockBlob.DownloadToStream(memoryStream);
+            
+            return memoryStream;
+        }
+
+        private List<Analytic_Cycles> getAnalyticReportCycles()
+        {
+            Analytic_Cycles cycles = new Analytic_Cycles();
+            cycles.completed = double.Parse(getCompletedAssets());
+            cycles.almostDue = double.Parse(getAlmostAssets());
+            cycles.due = double.Parse(getDueAssets());
+            cycles.midCycle = double.Parse(getMidAssets());
+            cycles.noData = double.Parse(getNoDataAssets());
+            cycles.totalAssets = db.as_assetProfile.Count();
+            cycles.totalTasks = double.Parse(getTotalTasks());
+            cycles.totalShifts = db.as_shifts.Where(q => q.bt_completed == false).Count() + db.as_shiftsCustom.Where(q => q.bt_completed == false).Count();
+
+            List<Analytic_Cycles> allCycles = new List<Analytic_Cycles>();
+            allCycles.Add(cycles);
+
+            return allCycles;
+        }
+
+        private List<ShiftData> getShifts()
+        {
+            try
+            {
+                DatabaseHelper dbHelper = new DatabaseHelper();
+
+                var shifts = (from x in db.as_shifts
+                              join y in db.as_technicianGroups on x.UserId equals y.i_groupId
+                              join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
+                              join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
+                              where x.bt_completed == false
+                              select new
+                              {
+                                  eventType = "Shift",
+                                  start = x.dt_scheduledDate,
+                                  end = x.dt_completionDate,
+                                  area = a.vc_description,
+                                  subArea = z.vc_description,
+                                  progress = 0,
+                                  team = y.vc_groupName,
+                                  shiftId = x.i_shiftId,
+                                  subAreaId = z.i_areaSubId
+                              }).ToList();
+
+                List<ShiftData> shiftList = new List<ShiftData>();
+                foreach (var item in shifts)
+                {
+                    ShiftData shift = new ShiftData();
+                    shift.area = item.area;
+                    shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
+                    shift.eventType = "Shift";
+                    shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
+                    shift.subArea = item.subArea;
+                    shift.team = item.team;
+                    shift.shiftId = item.shiftId;
+                    shift.shiftType = 1;
+                   
+                    shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                    shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                    if (shift.assets == 0) shift.progress = 0;
+                    else
+                        shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+
+                    shiftList.Add(shift);
+                }
+
+                return shiftList;
+            }
+            catch (Exception err)
+            {
+                List<ShiftData> shiftList = new List<ShiftData>();
+                Logging log = new Logging();
+                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", Logging.logTypes.Error, Request.UserHostAddress);
+                return shiftList;
+            }
         }
 
         #endregion

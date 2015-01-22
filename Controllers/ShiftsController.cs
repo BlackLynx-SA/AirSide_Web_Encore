@@ -14,6 +14,9 @@
 
 using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using Microsoft.Reporting.WebForms;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -348,6 +351,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     //Push to list
                     shiftList.Add(newItem);
                 }
+
+                //Custom Shifts
+                var customShifts = (from x in db.as_shiftsCustom
+                                    join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
+                                    join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                                    join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                                    where x.bt_completed == false
+                                    select new {
+                                        description = "Custom Defined",
+                                        dateTime = x.dt_scheduledDate,
+                                        groupName = y.vc_groupName,
+                                        validation = c.i_maintenanceValidationId
+                                    }).ToList();
+
+                foreach (var item in customShifts)
+                {
+                    shiftInfo newItem = new shiftInfo();
+                    newItem.description = item.description;
+                    newItem.dateTime = item.dateTime.ToString("dd-MM-yyyy h:mm tt");
+                    newItem.groupName = item.groupName;
+                    newItem.validationId = item.validation;
+
+                    //Push to list
+                    shiftList.Add(newItem);
+                }
+
                 return Json(shiftList);
             }
             catch (Exception err)
@@ -597,6 +626,52 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shiftList.Add(shift);
                 }
 
+                //Custom Shifts 
+                var customShifts = (from x in db.as_shiftsCustom
+                                      join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
+                                      where x.bt_completed != active
+                                      select new
+                                      {
+                                          eventType = "Custom Shift",
+                                          start = x.dt_scheduledDate,
+                                          end = x.dt_completionDate,
+                                          area = "Selected Assets",
+                                          subArea = "",
+                                          progress = 0,
+                                          team = y.vc_groupName,
+                                          shiftId = x.i_shiftCustomId,
+                                          subAreaId = 0
+                                      }).ToList();
+
+                foreach (var item in customShifts)
+                {
+                    ShiftData shift = new ShiftData();
+                    shift.area = item.area;
+                    shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
+                    shift.eventType = "Custom Shift";
+                    shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
+                    shift.subArea = item.subArea;
+                    shift.team = item.team;
+                    shift.shiftId = item.shiftId;
+                    shift.shiftType = 2;
+
+                    //Calculate the shift progress
+                    if (active)
+                    {
+                        shift.shiftData = dbHelper.getCompletedAssetsForCustomShift(item.shiftId);
+                        shift.assets = dbHelper.getAssetCountPerCustomShift(item.shiftId);
+                        if (shift.assets == 0) shift.progress = 0;
+                        else
+                            shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                    }
+                    else
+                    {
+                        shift.progress = 0;
+                    }
+
+                    shiftList.Add(shift);
+                }
+
                 return Json(shiftList);
             }
             catch (Exception err)
@@ -753,6 +828,340 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
     
+        #endregion
+
+        #region Reporting
+
+        public ActionResult ShiftDataDump(int shiftId, int type, string fileType)
+        {
+            Logging log = new Logging(); 
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference("ExcelDataDump.rdlc");
+
+                LocalReport localReport = new LocalReport();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    blockBlob.DownloadToStream(memoryStream);
+                    memoryStream.Position = 0;
+                    localReport.LoadReportDefinition(memoryStream);
+                }
+
+                ReportDataSource reportDataSource = new ReportDataSource("AirSide_Reporting", getReportData(shiftId, type));
+                localReport.DataSources.Add(reportDataSource);
+
+                string reportType = fileType;
+                string mimeType;
+                string encoding;
+                string fileNameExtension;
+
+                string deviceInfo =
+                "<DeviceInfo>" +
+                "  <OutputFormat>" + fileType + "</OutputFormat>" +
+                "  <PageWidth>210mm</PageWidth>" +
+                "  <PageHeight>297mm</PageHeight>" +
+                "  <MarginTop>1cm</MarginTop>" +
+                "  <MarginLeft>1cm</MarginLeft>" +
+                "  <MarginRight>1cm</MarginRight>" +
+                "  <MarginBottom>1cm</MarginBottom>" +
+                "</DeviceInfo>";
+
+                Warning[] warnings;
+                string[] streams;
+                byte[] renderedBytes;
+
+                //Render the report
+                renderedBytes = localReport.Render(
+                    reportType,
+                    deviceInfo,
+                    out mimeType,
+                    out encoding,
+                    out fileNameExtension,
+                    out streams,
+                    out warnings);
+                Response.AddHeader("content-disposition", "attachment; filename=ShiftDataDump." + fileNameExtension);
+                log.log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", Logging.logTypes.Info, User.Identity.Name);
+                return File(renderedBytes, mimeType);
+            }
+            catch (Exception err)
+            {
+                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", Logging.logTypes.Error, User.Identity.Name);
+                Response.StatusCode = 500;
+                return Json(new { error = err.Message });
+            }
+        }
+
+        private List<BigExcelDump> getReportData(int shiftId, int type)
+        {
+            if (type == 1)
+            {
+                var data = (from x in db.as_shiftData
+                            join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                            join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
+                            join a in db.as_locationProfile on z.i_locationId equals a.i_locationId
+                            join b in db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
+                            join c in db.as_areaProfile on b.i_areaId equals c.i_areaId
+                            join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
+                            where x.i_shiftId == shiftId
+                            select new
+                            {
+                                dt_captureDate = x.dt_captureDate,
+                                f_capturedValue = x.f_capturedValue,
+                                i_assetCheckId = x.i_assetCheckId,
+                                bt_completed = y.bt_completed,
+                                dt_scheduledDate = y.dt_scheduledDate,
+                                dt_completionDate = y.dt_completionDate,
+                                vc_permitNumber = y.vc_permitNumber,
+                                vc_rfidTag = z.vc_rfidTag,
+                                vc_serialNumber = z.vc_serialNumber,
+                                assetClass = d.vc_description,
+                                vc_manufacturer = d.vc_manufacturer,
+                                vc_model = d.vc_model,
+                                f_latitude = a.f_latitude,
+                                f_longitude = a.f_longitude,
+                                vc_designation = a.vc_designation,
+                                subArea = b.vc_description,
+                                mainArea = c.vc_description
+                            }).ToList();
+
+                List<BigExcelDump> returnList = new List<BigExcelDump>();
+
+                foreach (var item in data)
+                {
+                    BigExcelDump newItem = new BigExcelDump();
+                    newItem.assetClass = item.assetClass;
+                    newItem.bt_completed = item.bt_completed;
+                    newItem.dt_captureDate = item.dt_captureDate;
+                    newItem.dt_completionDate = item.dt_completionDate;
+                    newItem.dt_scheduledDate = item.dt_scheduledDate;
+                    newItem.f_capturedValue = item.f_capturedValue;
+                    newItem.f_latitude = item.f_latitude;
+                    newItem.f_longitude = item.f_longitude;
+                    newItem.i_assetCheckId = item.i_assetCheckId;
+                    newItem.mainArea = item.mainArea;
+                    newItem.subArea = item.subArea;
+                    newItem.vc_designation = item.vc_designation;
+                    newItem.vc_manufacturer = item.vc_manufacturer;
+                    newItem.vc_model = item.vc_model;
+                    newItem.vc_permitNumber = item.vc_permitNumber;
+                    newItem.vc_rfidTag = item.vc_rfidTag;
+                    newItem.vc_serialNumber = item.vc_serialNumber;
+
+                    returnList.Add(newItem);
+
+                }
+
+                return returnList;
+            } else if(type == 2)
+            {
+                var data = (from x in db.as_shiftData
+                            join y in db.as_shiftsCustom on x.i_shiftId equals y.i_shiftCustomId
+                            join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
+                            join a in db.as_locationProfile on z.i_locationId equals a.i_locationId
+                            join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
+                            where x.i_shiftId == shiftId
+                            select new
+                            {
+                                dt_captureDate = x.dt_captureDate,
+                                f_capturedValue = x.f_capturedValue,
+                                i_assetCheckId = x.i_assetCheckId,
+                                bt_completed = y.bt_completed,
+                                dt_scheduledDate = y.dt_scheduledDate,
+                                dt_completionDate = y.dt_completionDate,
+                                vc_permitNumber = y.vc_permitNumber,
+                                vc_rfidTag = z.vc_rfidTag,
+                                vc_serialNumber = z.vc_serialNumber,
+                                assetClass = d.vc_description,
+                                vc_manufacturer = d.vc_manufacturer,
+                                vc_model = d.vc_model,
+                                f_latitude = a.f_latitude,
+                                f_longitude = a.f_longitude,
+                                vc_designation = a.vc_designation,
+                                subArea = "Selected Assets",
+                                mainArea = "Custom Shift"
+                            }).ToList();
+
+                List<BigExcelDump> returnList = new List<BigExcelDump>();
+
+                foreach (var item in data)
+                {
+                    BigExcelDump newItem = new BigExcelDump();
+                    newItem.assetClass = item.assetClass;
+                    newItem.bt_completed = item.bt_completed;
+                    newItem.dt_captureDate = item.dt_captureDate;
+                    newItem.dt_completionDate = item.dt_completionDate;
+                    newItem.dt_scheduledDate = item.dt_scheduledDate;
+                    newItem.f_capturedValue = item.f_capturedValue;
+                    newItem.f_latitude = item.f_latitude;
+                    newItem.f_longitude = item.f_longitude;
+                    newItem.i_assetCheckId = item.i_assetCheckId;
+                    newItem.mainArea = item.mainArea;
+                    newItem.subArea = item.subArea;
+                    newItem.vc_designation = item.vc_designation;
+                    newItem.vc_manufacturer = item.vc_manufacturer;
+                    newItem.vc_model = item.vc_model;
+                    newItem.vc_permitNumber = item.vc_permitNumber;
+                    newItem.vc_rfidTag = item.vc_rfidTag;
+                    newItem.vc_serialNumber = item.vc_serialNumber;
+
+                    returnList.Add(newItem);
+
+                }
+
+                return returnList;
+            } else
+            {
+                List<BigExcelDump> returnList = new List<BigExcelDump>();
+                return returnList;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ShiftReport(int shiftId, int type)
+        {
+            Logging log = new Logging(); 
+            try
+            {
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference("ShiftReport.rdlc");
+
+                LocalReport localReport = new LocalReport();
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    blockBlob.DownloadToStream(memoryStream);
+                    memoryStream.Position = 0;
+                    localReport.LoadReportDefinition(memoryStream);
+                }
+
+                ReportDataSource reportDataSource = new ReportDataSource("ShiftDS", getShiftReportData(shiftId, type));
+                localReport.DataSources.Add(reportDataSource);
+
+                string reportType = "PDF";
+                string mimeType;
+                string encoding;
+                string fileNameExtension;
+
+                string deviceInfo =
+                "<DeviceInfo>" +
+                "  <OutputFormat>PDF</OutputFormat>" +
+                "  <PageWidth>210mm</PageWidth>" +
+                "  <PageHeight>297mm</PageHeight>" +
+                "  <MarginTop>1cm</MarginTop>" +
+                "  <MarginLeft>1cm</MarginLeft>" +
+                "  <MarginRight>1cm</MarginRight>" +
+                "  <MarginBottom>1cm</MarginBottom>" +
+                "</DeviceInfo>";
+
+                Warning[] warnings;
+                string[] streams;
+                byte[] renderedBytes;
+
+                //Render the report
+                renderedBytes = localReport.Render(
+                    reportType,
+                    deviceInfo,
+                    out mimeType,
+                    out encoding,
+                    out fileNameExtension,
+                    out streams,
+                    out warnings);
+                Response.AddHeader("content-disposition", "attachment; filename=ShiftReport." + fileNameExtension);
+                log.log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", Logging.logTypes.Info, User.Identity.Name);
+                return File(renderedBytes, mimeType);
+            }
+            catch (Exception err)
+            {
+                log.log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", Logging.logTypes.Error, User.Identity.Name);
+                Response.StatusCode = 500;
+                return Json(new { error = err.Message });
+            }
+        }
+
+        private List<ActiveShiftsReport> getShiftReportData(int shiftId, int type)
+        {
+            if (type == 1)
+            {
+                var data = from x in db.as_shifts
+                           join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
+                           join z in db.as_technicianGroups on x.UserId equals z.i_groupId
+                           join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
+                           join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
+                           where x.i_shiftId == shiftId
+                           select new
+                           {
+                               dt_scheduledDate = x.dt_scheduledDate,
+                               vc_groupName = z.vc_groupName,
+                               vc_externalRef = z.vc_externalRef,
+                               vc_permitNumber = x.vc_permitNumber,
+                               bt_completed = x.bt_completed,
+                               area = b.vc_description,
+                               subArea = a.vc_description
+                           };
+
+                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
+
+                foreach (var item in data)
+                {
+                    ActiveShiftsReport newShift = new ActiveShiftsReport();
+                    newShift.area = item.area;
+                    newShift.bt_completed = item.bt_completed;
+                    newShift.dt_scheduledDate = item.dt_scheduledDate;
+                    newShift.subArea = item.subArea;
+                    newShift.vc_externalRef = item.vc_externalRef;
+                    newShift.vc_groupName = item.vc_groupName;
+                    newShift.vc_permitNumber = item.vc_permitNumber;
+
+                    returnList.Add(newShift);
+                }
+                return returnList;
+            }
+            else if (type == 2)
+            {
+                var data = from x in db.as_shiftsCustom
+                           join y in db.as_shiftData on x.i_shiftCustomId equals y.i_shiftId
+                           join z in db.as_technicianGroups on x.i_techGroupId equals z.i_groupId
+                           where x.i_shiftCustomId == shiftId
+                           select new
+                           {
+                               dt_scheduledDate = x.dt_scheduledDate,
+                               vc_groupName = z.vc_groupName,
+                               vc_externalRef = z.vc_externalRef,
+                               vc_permitNumber = x.vc_permitNumber,
+                               bt_completed = x.bt_completed,
+                               area = "Custom Shift",
+                               subArea = "Selected Assets"
+                           };
+
+                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
+
+                foreach (var item in data)
+                {
+                    ActiveShiftsReport newShift = new ActiveShiftsReport();
+                    newShift.area = item.area;
+                    newShift.bt_completed = item.bt_completed;
+                    newShift.dt_scheduledDate = item.dt_scheduledDate;
+                    newShift.subArea = item.subArea;
+                    newShift.vc_externalRef = item.vc_externalRef;
+                    newShift.vc_groupName = item.vc_groupName;
+                    newShift.vc_permitNumber = item.vc_permitNumber;
+
+                    returnList.Add(newShift);
+                }
+                return returnList;
+            } else
+            {
+                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
+                return returnList;
+            }
+        }
+
         #endregion
     }
 }

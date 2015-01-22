@@ -1,0 +1,43 @@
+﻿<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <h1><i class="fa fa-upload"></i> Upload File</h1>
+        <form class="dropzone" id="mydropzone"></form>
+    </div>
+</div>
+
+@section pagespecific{
+<script src="~/scripts/plugin/dropzone/dropzone.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var myDropZone = new Dropzone("#mydropzone", {
+            url: "uploadClientImage?description=New",
+            addRemoveLinks: true,
+            maxFilesize: 3,
+            dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+            dictResponseError: 'Error uploading file!',
+            maxFiles: 1,
+            accept: function (file, done) {
+                $.SmartMessageBox({
+                    title: "File Description",
+                    content: "Please enter a title for the file",
+                    buttons: "[Cancel][Accept]",
+                    input: "text",
+                    inputValue: "",
+                    placeholder: "File Title"
+                }, function (ButtonPress, Value) {
+                    if (ButtonPress === "Accept") {
+                        if (Value != "") {
+                            myDropZone.options.url = 'uploadBlobFile';
+                            done();
+                        } else {
+                            done("No file description was provided.")
+                        }
+                    } else {
+                        done("File upload cancelled.")
+                    }
+                });
+            }
+        });
+    });
+</script>
+}

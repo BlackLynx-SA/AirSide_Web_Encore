@@ -197,7 +197,7 @@
                         html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
                         html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
                         html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
-                        html += '<td><button class="btn btn-xs btn-danger" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-times"></i> Remove Shift</button></td></tr>';
+                        html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> Complete Shift</button></td></tr>';
                         i++;
                         $('#activeBadge').html(i);
                         $('#activeBadge').removeClass('hiddenbadge');
@@ -235,7 +235,8 @@
                     var html = "";
                     var i = 0;
                     $.each(json, function (i, v) {
-                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.completed + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td><td></td></tr>";
+                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.completed + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
+                        html += '<td><a href="../../shifts/ShiftDataDump?shiftId=' + v.shiftId + '&type=' + v.shiftType + '&fileType=Excel" class="btn btn-success btn-xs"><i class="fa fa-file-excel-o"></i> Excel</a> <a href="../../shifts/ShiftDataDump?shiftId=' + v.shiftId + '&type=' + v.shiftType + '&fileType=PDF" class="btn btn-danger btn-xs"><i class="fa fa-file-pdf-o"></i> PDF</a></td></tr>';
                         i++;
                         $('#completeBadge').html(i);
                         $('#completeBadge').removeClass('hiddenbadge');

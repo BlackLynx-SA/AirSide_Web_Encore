@@ -545,4 +545,21 @@ namespace ADB.AirSide.Encore.V1.Models
         public string description { get; set; }
     }
     #endregion
+
+    #region Reporting
+
+    public class Analytic_Cycles
+    {
+        public double noData { get; set; }
+        public double completed { get; set; }
+        public double midCycle { get; set; }
+        public double almostDue { get; set; }
+        public double due { get; set; }
+        public double totalAssets { get; set; }
+        public double totalTasks { get; set; }
+        public double assosiatedTasks { get; set; }
+        public double totalShifts { get; set; }
+    }
+
+    #endregion
 }

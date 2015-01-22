@@ -23,9 +23,23 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             return assetCount;
         }
 
+        public int getAssetCountPerCustomShift(int shiftId)
+        {
+            int assetCount = (from x in db.as_shiftsCustomProfile where x.i_shiftCustomId == shiftId select x).Count();
+            return assetCount;
+        }
+
         public int getCompletedAssetsForShift(int shiftId)
         {
-            int shiftCount = (from x in db.as_shiftData where x.i_shiftId == shiftId select x).GroupBy(q => q.i_assetId).Count();
+            //TODO: This is a short term hack and needs to be fixed to identify the shifts properly
+            int shiftCount = (from x in db.as_shiftData where x.i_shiftId == shiftId && x.i_shiftId > 8999 select x).GroupBy(q => q.i_assetId).Count();
+            return shiftCount;
+        }
+
+        public int getCompletedAssetsForCustomShift(int shiftId)
+        {
+            //TODO: This is a short term hack and needs to be fixed to identify the shifts properly
+            int shiftCount = (from x in db.as_shiftData where x.i_shiftId == shiftId && x.i_shiftId < 9000 select x).GroupBy(q => q.i_assetId).Count();
             return shiftCount;
         }
 
