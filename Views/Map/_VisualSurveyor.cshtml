@@ -20,7 +20,7 @@
                             <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This list only contains dates on which survey were performed.</div>
                         </section>
                     </div>
-                    
+
                     <hr /><br />
                     <div class="row">
                         <section class="col col-11">
@@ -49,7 +49,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary" style="float:right" id="areaFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-primary"  id="areaFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-danger"  id="faultyFilterBtn"><i class="fa fa-exclamation-triangle"></i> Show All Faulty</button>
             </div>
         </div>
     </div>
@@ -129,6 +130,23 @@
         return htmltxt;
     }
 
+    function filterFaulty()
+    {
+        //Clear Map
+        clearAllMarkers();
+        markerClusterer.clearMarkers();
+
+        markers = [];
+
+        $.each(Assets.jsonData, function (i, v) {
+            if (v.status === true) {
+                addMarker(v);
+            }
+        });
+        filterEnum = 106;
+
+        $('#visualSurveyFilterModal').modal('hide');
+    }
 
     function addSurveyorMarker(long, lat, type, url, text) {
         var latLongMarker = new google.maps.LatLng(lat, long);

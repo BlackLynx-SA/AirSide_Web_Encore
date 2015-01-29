@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
@@ -28,15 +28,30 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
     {
         //Mongo Globals
         private static string connectionString = Settings.MongoDBServer;
+        
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private static MongoClient client = new MongoClient(connectionString);
+        
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private static MongoServer server = client.GetServer();
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private static MongoDatabase database = server.GetDatabase(Settings.MongoDBDatabase);
 
-        //Postgres Entity Globals
+        //SQL Entity Globals
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private Entities db = new Entities();
 
         #region Cache Rebuild
 
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public Boolean createAssetClassDownloadCache()
         {
             try
@@ -76,6 +91,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public Boolean createAllAssetDownload()
         {
             try
@@ -139,6 +156,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public Boolean createAssetDownloadCache()
         {
             try
@@ -194,6 +213,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildShiftAgregation()
         {
             try
@@ -246,6 +267,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildUserProfile()
         {
             try
@@ -286,6 +309,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildWrenchProfile()
         {
             try
@@ -325,6 +350,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+                
         public void rebuildTechnicianGroups()
         {
             try
@@ -372,6 +399,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildAssetProfileForAssetClass(int assetClassId)
         {
             try
@@ -396,10 +425,11 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                     assetDoc.Add("serialNumber", item.vc_serialNumber);
                     assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(item.i_assetId));
 
-                    //2014/12/09 Decomissioned
-                    //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
-                    //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
-                    //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
+                    //Get the Light Status
+                    if (db.as_assetStatusProfile.Find(item.i_assetId) != null)
+                        assetDoc.Add("status", db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault());
+                    else
+                        assetDoc.Add("status", false);
 
                     //get data for loaction
                     var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
@@ -464,6 +494,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildAssetProfileForAsset(int assetId)
         {
             try
@@ -486,10 +518,11 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                 assetDoc.Add("serialNumber", asset.vc_serialNumber);
                 assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(assetId));
 
-                //2014/12/09 Decomissioned
-                //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(asset.i_assetId));
-                //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(asset.i_assetId).ToString("yyy/MM/dd"));
-                //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(asset.i_assetId).ToString("yyy/MM/dd"));
+                //Get the Light Status
+                if (db.as_assetStatusProfile.Find(asset.i_assetId) != null)
+                    assetDoc.Add("status", db.as_assetStatusProfile.Where(q => q.i_assetProfileId == asset.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault());
+                else
+                    assetDoc.Add("status", false);
 
                 //get data for loaction
                 var location = db.as_locationProfile.Where(q => q.i_locationId == asset.i_locationId).FirstOrDefault();
@@ -553,6 +586,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void rebuildAssetProfile()
         {
             int assetID = 0;
@@ -579,13 +614,14 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                     assetDoc.Add("rfidTag", item.vc_rfidTag);
                     assetDoc.Add("serialNumber", item.vc_serialNumber);
 
+                    //Get the Light Status
+                    if (db.as_assetStatusProfile.Find(item.i_assetId) != null)
+                        assetDoc.Add("status", db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault());
+                    else
+                        assetDoc.Add("status", false);
+
                     assetDoc.Add("maintenance", dbHelper.getMaintenaceTasks(item.i_assetId));
                     
-                    //2014/12/09 - Decommisioned basic torque maintenance for maintenace tasks
-                    //assetDoc.Add("maintenanceCycle", dbHelper.getFrequencyColourForAsset(item.i_assetId));
-                    //assetDoc.Add("previousDate", dbHelper.getLastMaintanedDate(item.i_assetId).ToString("yyy/MM/dd"));
-                    //assetDoc.Add("nextDate", dbHelper.getNextMaintenanceDate(item.i_assetId).ToString("yyy/MM/dd"));
-
                     //get data for loaction
                     var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
                     locationDoc.Add("locationId", location.i_locationId);
@@ -650,6 +686,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         #region Cache Queries
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public mongoEmailSettings getEmailSettings()
         {
             MongoCollection collection = database.GetCollection<mongoEmailSettings>("md_emailSettings");
@@ -671,6 +709,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             return settings;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public List<mongoAssetDownload> getAssetAssosiations(int areaSubId)
         {
             MongoCollection collection = database.GetCollection<mongoAssetDownload>("md_assetDownload");
@@ -680,6 +720,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             return assets;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public List<mongoAssetClassDownload> getAllAssetClasses()
         {
             MongoCollection collection = database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
@@ -688,6 +730,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             return assets;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public List<mongoFullAsset> getAllAssetDownload()
         {
             MongoCollection collection = database.GetCollection<mongoFullAsset>("md_assetFullDownload");
@@ -696,6 +740,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             return assets;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public List<mongoAssetProfile> getAllAssets()
         {
             try
@@ -716,6 +762,8 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         #region Logging
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public Boolean writeLog(mongoLogging log)
         {
             try
@@ -732,6 +780,35 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
 
         #endregion
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        #region iOS Cache
+
+        public void updateiOSCache(string module)
+        {
+            try
+            {
+                //This will update the cache hash for downloads
+                //Create Date: 2015/01/27
+                //Author: Bernard Willer
+
+                as_cacheProfile cacheModule = db.as_cacheProfile.Where(q => q.vc_module == module).FirstOrDefault();
+                Guid newHash = Guid.NewGuid();
+                cacheModule.ui_currentHash = newHash;
+                db.Entry(cacheModule).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "SYSTEM");
+            }
+        
+        }
+
+        #endregion
+
+        #region Helpers
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -742,10 +819,15 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
             // free native resources
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        #endregion
     }
 }

@@ -588,6 +588,7 @@
     <Content Include="Content\sound\voice_off.mp3" />
     <Content Include="Content\sound\voice_on.mp3" />
     <Content Include="Global.asax" />
+    <Content Include="Images\adbimages\ADB_Logo_100c.png" />
     <Content Include="Images\adbimages\ADB_Logo_100.png" />
     <Content Include="Images\adbimages\ADB_Logo_100_white.png" />
     <Content Include="Images\adbimages\ADB_Symbol.png" />
@@ -636,6 +637,7 @@
     <Content Include="Images\lights\TLP_C_LightType.png" />
     <Content Include="Images\lights\TLP_S_LightType.png" />
     <Content Include="Images\lights\UEL_LightType.png" />
+    <Content Include="Images\map_images\exclamation.png" />
     <Content Include="Images\map_images\GreenMarker.png" />
     <Content Include="Images\map_images\NutralMarker.png" />
     <Content Include="Images\map_images\OrangeMarker.png" />
@@ -1235,6 +1237,8 @@
     <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Custom.pubxml" />
+    <None Include="Properties\PublishProfiles\manchesterairside - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\manchesterairside - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1267,6 +1271,9 @@
     <Content Include="Views\History\AssetHistory.cshtml" />
     <Content Include="Views\Home\_ActivityChart.cshtml" />
     <Content Include="Views\Home\UploadBlob.cshtml" />
+    <Content Include="Views\iOS\iOSImages.cshtml" />
+    <Content Include="Views\iOS\_FileUpload.cshtml" />
+    <Content Include="Views\Asset\_MapView.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1319,6 +1326,15 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_cacheProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_iosImageProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_iosLogProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="_airside_encoreDataSet.Designer.cs">
       <AutoGen>True</AutoGen>

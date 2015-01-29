@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.

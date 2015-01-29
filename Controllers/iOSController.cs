@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
@@ -17,6 +17,8 @@ using ADB.AirSide.Encore.V1.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,6 +31,7 @@ using System.Web.Mvc;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
+
     [Authorize]
     public class iOSController : Controller
     {
@@ -36,20 +39,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Authentication
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public iOSController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public iOSController(UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private ApplicationSignInManager _signInManager;
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ApplicationSignInManager SignInManager
         {
             get
@@ -59,6 +72,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             private set { _signInManager = value; }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Login(string username, string password)
@@ -107,61 +122,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        //2014/11/11 - The following method has been depreciated to make the calls more secure
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public async Task<ActionResult> loginRemote(string username, string password)
-        //{
-        //    var userValidate = await UserManager.FindAsync(username, password);
-        //    if (userValidate != null)
-        //    {
-        //        var loggedInUser = (from data in db.UserProfiles
-        //                            where data.UserName == username
-        //                            select data).First();
-
-        //        iOSLogin user = new iOSLogin();
-        //        Guid newSession = Guid.NewGuid();
-
-        //        var groupId = (from x in db.as_technicianGroupProfile
-        //                       where x.UserId == loggedInUser.UserId
-        //                       select x.i_currentGroup).First();
-
-        //        user.FirstName = loggedInUser.FirstName;
-        //        user.LastName = loggedInUser.LastName;
-        //        user.UserId = loggedInUser.UserId;
-        //        user.i_accessLevel = loggedInUser.i_accessLevelId;
-        //        user.i_airPortId = loggedInUser.i_airPortId;
-        //        user.SessionKey = newSession.ToString();
-        //        user.i_groupId = groupId;
-
-        //        //Write session to DB
-        //        as_userExternalSession session = new as_userExternalSession();
-        //        session.UserId = user.UserId;
-        //        session.vc_sessionKey = newSession.ToString();
-        //        session.dt_dateTime = DateTime.Now;
-        //        db.as_userExternalSession.Add(session);
-        //        db.SaveChanges();
-
-        //        return Json(user);
-        //    }
-        //    else
-        //    {
-        //        iOSLogin user = new iOSLogin();
-        //        user.FirstName = "None";
-        //        user.LastName = "None";
-        //        user.UserId = -1;
-        //        user.i_accessLevel = -1;
-        //        user.i_airPortId = -1;
-        //        user.SessionKey = "None";
-        //        user.i_groupId = -1;
-        //        return Json(user);
-        //    }
-        //}
-
         #endregion
 
         #region Shifts
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getMaintenanceProfile()
         {
@@ -169,6 +135,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(maintenance);
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getGroupsTechnicians(int groupId)
         {
@@ -188,6 +156,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(technicians.ToList());
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [AllowAnonymous]
         public JsonResult checkVersion()
@@ -198,15 +168,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(new { CurrentVersion = iOSVersion });
         }
 
-        [HttpGet]
-        public string testService()
-        {
-            var assets = (from data in db.as_assetProfile
-                          select data).First();
-
-            return assets.vc_rfidTag;
-        }
-
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
 		[HttpPost]
         //TODO: Change date time to come from iPad not server
         public JsonResult insertAssetValidation(List<as_validationTaskProfile> validations)
@@ -235,7 +198,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 return Json(err.Message);
             }
         }
-		
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getTechnicianShifts(int userId, int closeShifts)
         {
@@ -348,6 +313,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult insertShiftData(List<as_shiftData> shiftData)
         {
@@ -382,6 +349,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Assets
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult updateAssetStatusBulk(List<AssetStatusUpload> assetList)
         {
@@ -423,6 +392,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult setAssetStatus(int assetId, string assetStatus, int assetSeverity)
         {
@@ -467,6 +438,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllAssets()
         {
@@ -485,6 +458,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllAssetClasses()
         {
@@ -527,6 +502,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAssetPerTagId(string tagId)
         {
@@ -575,6 +552,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAssetAssosiations(int areaSubId)
         {
@@ -636,6 +615,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAssetWithTagId(string tagId)
         {
@@ -685,6 +666,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult updateAssetTagBulk(List<AssetAssosiationUpload> assetList)
         {
@@ -735,6 +718,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult updateAssetTag(int assetId, int UserId, string tagId, string serialNumber)
         {
@@ -783,6 +768,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult insertAssetAssosiation(List<NewAssetAssosiation> assets)
         {
@@ -836,6 +823,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Areas
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getMapCenter()
         {
@@ -849,6 +838,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(center);
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getMainAreas()
         {
@@ -866,6 +857,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getSubAreas()
         {
@@ -887,6 +880,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Wrench Info
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getWrenches()
         {
@@ -911,6 +906,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(iosWrenchList);
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult updateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
         {
@@ -931,6 +928,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult insertWrenchAssosiation(List<WrenchAssosiation> assosiations)
         {
@@ -958,6 +957,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region FileUpload
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public string UploadFile(HttpPostedFileBase file)
         {
             try
@@ -1005,6 +1006,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private void saveThumbNails(string file)
         {
             // Get a bitmap.
@@ -1025,6 +1028,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             bmp1.Save(file.Replace(".jpg", "_med.jpg"), jgpEncoder, myEncoderParameters);
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private bool IsImage(HttpPostedFileBase file)
         {
             if (file.ContentType.Contains("image"))
@@ -1038,6 +1043,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return formats.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private ImageCodecInfo GetEncoder(ImageFormat format)
         {
 
@@ -1053,6 +1060,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return null;
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public string updateFileInfo(List<fileUpload> info)
         {
@@ -1089,6 +1098,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Cache and Views
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult rebuildCache()
         {
             CacheHelper cache = new CacheHelper();
@@ -1098,13 +1109,180 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult UnitTests()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public string UploadLogFile(HttpPostedFileBase file, int UserId, string uid)
+        {
+            try
+            {
+                //This module persists the log files to Azure Stroage Container and ref to SQL
+                //Create Date: 2015/01/27
+                //Author: Bernard Willer
+
+                Guid uploadGuid = Guid.NewGuid();
+                string fileName = uploadGuid.ToString();
+                fileName = fileName.Replace("-", "");
+
+                //Upload to Storage Container
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("logs");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName + ".log");
+                blockBlob.UploadFromStream(file.InputStream);
+
+                //Persist to Database
+                as_iosLogProfile log = new as_iosLogProfile();
+                log.dt_logCaptureDate = DateTime.Now;
+                log.UserId = UserId;
+                log.vc_deviceUID = uid;
+                log.vc_logContainer = container.Name;
+                log.vc_logName = fileName + ".log";
+
+                db.as_iosLogProfile.Add(log);
+                db.SaveChanges();
+
+                return "Success";
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "iOS");
+                Response.StatusCode = 500;
+                return err.Message;
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public JsonResult getCacheStatus()
+        {
+            
+            try
+            {
+                //Sends the current hashes of the different download sets
+                //Create Date: 2015/01/27   
+                //Author: Bernard Willer
+
+                var cache = db.as_cacheProfile.Where(q => q.bt_active == true).ToList();
+                return Json(cache);
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, "iOS");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
         #endregion
 
+        #region Web Views
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult iOSImages()
+        {
+            //Send List of Images
+            var allFiles = db.as_iosImageProfile.Where(q => q.bt_active == true).OrderByDescending(q => q.dt_dateTimeStamp).ToList();
+            ViewData["iosImages"] = allFiles;
+            return View();
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult uploadiOSFile(HttpPostedFileBase file, string description, string version)
+        {
+
+            try
+            {
+                //Upload iOS files for testing during development
+                //Create Date: 2015/01/27
+                //Author: Bernard Willer
+
+                //Upload to Storage Container
+                Guid guid = Guid.NewGuid();
+                string filename = guid.ToString();
+                filename = filename.Replace("-", "");
+                filename = filename.Substring(0, 5) + "_" + file.FileName;
+
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("iosimages");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+                blockBlob.UploadFromStream(file.InputStream);
+
+                as_iosImageProfile image = new as_iosImageProfile();
+                image.dt_dateTimeStamp = DateTime.Now;
+                image.bt_active = true;
+                image.vc_description = description;
+                image.vc_fileName = filename;
+                image.vc_version = version;
+
+                db.as_iosImageProfile.Add(image);
+                db.SaveChanges();
+
+                Response.StatusCode = 200;
+                return Json(new { message = "success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult downloadFile(int id)
+        {
+            try
+            {
+                //This function allows the user to download a file from Azure Storage
+                //Create Date: 2015/01/27
+                //Author: Bernard Willer
+
+                as_iosImageProfile image = db.as_iosImageProfile.Find(id);
+
+                //Downlaod File
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    
+                    blockBlob.DownloadToStream(memoryStream);
+                    memoryStream.Position = 0;
+                    return File(memoryStream, "application/");
+                }
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        #endregion
 
     }
 

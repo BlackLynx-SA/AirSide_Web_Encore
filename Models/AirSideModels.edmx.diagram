@@ -50,6 +50,9 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_geoSpatialProfile" Width="1.5" PointX="4.75" PointY="18.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadProfile" Width="1.5" PointX="7.375" PointY="18.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_validationTaskProfile" Width="1.5" PointX="18.375" PointY="0.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_cacheProfile" Width="1.5" PointX="9.375" PointY="18.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_iosLogProfile" Width="1.5" PointX="11.375" PointY="18.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_iosImageProfile" Width="1.5" PointX="17.375" PointY="18.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_assetProfile" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>

@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
@@ -31,11 +31,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public UsersController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public UsersController(UserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
@@ -46,18 +50,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
             };
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public UserManager<ApplicationUser> UserManager { get; private set; }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult TechnicianGroups()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult ViewAllUsers()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllUsers()
         {
@@ -85,6 +97,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult ChangePassword(int userId, string password)
@@ -109,6 +123,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult Register()
         {
             if (Request.IsAuthenticated)
@@ -139,6 +155,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             else return HttpNotFound();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertGroupAssosiation(int techId, int groupId, int updateType)
@@ -160,6 +178,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 CacheHelper cache = new CacheHelper();
                 cache.rebuildTechnicianGroups();
 
+                //update iOS Cache Hash
+                cache = new CacheHelper();
+                cache.updateiOSCache("getGroupsTechnicians");
+
                 return Json(user);
             }
             catch (Exception err)
@@ -171,6 +193,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult addNewGroup(string groupName)
@@ -194,6 +218,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllTechnicians()
         {
@@ -220,6 +246,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllTechnicianGroups()
         {
@@ -237,8 +265,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        //
-        // POST: /Users/Register
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterModel model)
@@ -354,5 +382,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 else return HttpNotFound();
             }
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
     }
 }

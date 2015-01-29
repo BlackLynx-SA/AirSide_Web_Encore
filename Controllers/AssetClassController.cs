@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
@@ -27,11 +27,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         private Entities db = new Entities();
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult AssetClasses()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllMaintenanceValidators()
         {
@@ -49,6 +53,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult removeTaskAssosiation(int assetMaintenanceId)
@@ -64,6 +70,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 CacheHelper cache = new CacheHelper();
                 cache.rebuildAssetProfileForAssetClass(assetClassId);
 
+                //update iOS Cache Hash
+                cache.updateiOSCache("getAllAssetClasses");
+
                 return Json(new { message = "Success" });
             }
             catch (Exception err)
@@ -75,6 +84,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAssosiatedMaintenanceTasks(int assetClassId)
         {
@@ -105,6 +116,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertMaintenanceTask(int assetClassId, int maintenanceId, int frequencyId)//, [System.Web.Http.FromUri] int[] validationIds)
@@ -127,6 +140,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 CacheHelper cache = new CacheHelper();
                 cache.rebuildAssetProfileForAssetClass(assetClassId);
 
+                //update iOS Cache Hash
+                cache.updateiOSCache("getAllAssetClasses");
+
                 return Json(new { message = "Success"});
             }
             catch(Exception err)
@@ -138,6 +154,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllMaintenanceTasks()
         {
@@ -163,6 +181,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertMaintenanceCategory(string name, string description, int type)
@@ -188,6 +208,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult editMaintenanceCategory(int id, string categoryName)
@@ -210,6 +232,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult editMaintenanceTask(int id, string taskName, string validationName)
@@ -224,6 +248,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.Entry(task).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
+                //update iOS Cache Hash
+                CacheHelper cache = new CacheHelper();
+                cache.updateiOSCache("getMaintenanceProfile");
+
                 return Json(new { message = "Task successfully edited and saved." });
             }
             catch (Exception err)
@@ -235,6 +263,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult removeMaintenanceCategory(int id)
@@ -261,6 +291,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         db.SaveChanges();
                     }
 
+                    //update iOS Cache Hash
+                    CacheHelper cache = new CacheHelper();
+                    cache.updateiOSCache("getMaintenanceProfile");
+
                     Response.StatusCode = 200;
                     return Json(new { message = category.vc_maintenanceCategory + " category successfully removed" });
 
@@ -279,6 +313,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult removeMaintenanceTask(int id)
@@ -295,6 +331,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     var task = db.as_maintenanceProfile.Find(id);
                     db.as_maintenanceProfile.Remove(task);
                     db.SaveChanges();
+
+                    //update iOS Cache Hash
+                    CacheHelper cache = new CacheHelper();
+                    cache.updateiOSCache("getMaintenanceProfile");
 
                     Response.StatusCode = 200;
                     return Json(new { message = task.vc_description + " task successfully removed" });
@@ -315,6 +355,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertMaintenanceTaskType(string description, int catId, int validationId)
@@ -329,6 +371,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.as_maintenanceProfile.Add(newTask);
                 db.SaveChanges();
 
+                //update iOS Cache Hash
+                CacheHelper cache = new CacheHelper();
+                cache.updateiOSCache("getMaintenanceProfile");
+
                 return Json(new { message = "Success" });
             }
             catch (Exception err)
@@ -340,6 +386,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllMaintenanceCategories()
         {
@@ -357,6 +405,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAllAssetClasses()
         {
@@ -385,11 +435,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult CreateAssetClass()
         {
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult EditAssetClass(int id)
         {
             try
@@ -420,6 +474,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult deleteAssetClass(int id)
@@ -437,6 +493,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     db.as_assetClassProfile.Remove(assetClass);
                     db.SaveChanges();
+
+                    //update iOS Cache Hash
+                    CacheHelper cache = new CacheHelper();
+                    cache.updateiOSCache("getAllAssetClasses");
+
                     return Json(assetClass.vc_description);
                 } else
                 {
@@ -454,6 +515,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, double frequency, int assetClassId)
@@ -481,6 +544,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                         db.as_assetClassProfile.Add(newAssetClass);
                         db.SaveChanges();
+
+                        //update iOS Cache Hash
+                        CacheHelper cache = new CacheHelper();
+                        cache.updateiOSCache("getAllAssetClasses");
 
                         return Json(new { description = description, assetClassId = newAssetClass.i_assetClassId });
                     }
@@ -512,6 +579,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         CacheHelper cache = new CacheHelper();
                         cache.rebuildAssetProfileForAssetClass(assetClass.i_assetClassId);
                     }
+
+                    //update iOS Cache Hash
+                    CacheHelper cacheHelp = new CacheHelper();
+                    cacheHelp.updateiOSCache("getAllAssetClasses");
+
                     return Json(description);
                 }
             }
@@ -524,6 +596,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getFrequencies()
         {
@@ -541,6 +615,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getPictures()
         {
@@ -565,5 +641,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 return Json(err.Message);
             }
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
     }
 }

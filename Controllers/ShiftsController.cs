@@ -1,6 +1,6 @@
 ﻿#region Copyright
 // BlackLynx (Pty) Ltd.
-// Copyright (c) 2011 - 2014 All Right Reserved, http://www.blacklynx.co.za/
+// Copyright (c) 2011 - 2015 All Right Reserved, http://www.blacklynx.co.za/
 //
 // THE CODE IN THIS SOURCE FILE HAS BEEN DEVELOPED BY BLACKLYNX (PTY) LTD. ("BL")
 // THE USE OF ANY EXTRACT, MODULES OR UNITS ARE STICKLY FORBIDDEN.
@@ -68,6 +68,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //  103 - Maintenance Cycle
                 //  104 - Main Area
                 //  105 - Sub Area
+                //  106 - Faulty Lights
 
                 as_shiftsCustom newShift = new as_shiftsCustom();
                 newShift.bt_completed = false;
@@ -91,6 +92,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
 
                 db.SaveChanges();
+
+                //update iOS Cache Hash
+                CacheHelper cacheHelp = new CacheHelper();
+                cacheHelp.updateiOSCache("getTechnicianShifts");
 
                 return Json(new { message = "Success", count = assets.Count() });
             }
@@ -703,6 +708,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
                     db.SaveChanges();
 
+                    //update iOS Cache Hash
+                    CacheHelper cacheHelp = new CacheHelper();
+                    cacheHelp.updateiOSCache("getTechnicianShifts");
+
                     return Json(new { message = "success" });
                 } else if (shiftType == 2)
                 {
@@ -711,6 +720,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.dt_completionDate = DateTime.Now;
                     db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
                     db.SaveChanges();
+
+                    //update iOS Cache Hash
+                    CacheHelper cacheHelp = new CacheHelper();
+                    cacheHelp.updateiOSCache("getTechnicianShifts");
 
                     return Json(new { message = "success" });
                 } else
@@ -799,6 +812,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             db.as_shifts.Add(newShift);
                             db.SaveChanges();
 
+                            //update iOS Cache Hash
+                            cache.updateiOSCache("getTechnicianShifts");
+
                             //Update MongoDB
                             cache.rebuildShiftAgregation();
                         }
@@ -832,6 +848,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Reporting
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         public ActionResult ShiftDataDump(int shiftId, int type, string fileType)
         {
             Logging log = new Logging(); 
@@ -895,6 +913,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private List<BigExcelDump> getReportData(int shiftId, int type)
         {
             if (type == 1)
@@ -1020,6 +1040,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public ActionResult ShiftReport(int shiftId, int type)
         {
@@ -1084,6 +1106,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         private List<ActiveShiftsReport> getShiftReportData(int shiftId, int type)
         {
             if (type == 1)
@@ -1162,6 +1186,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         #endregion
     }
 }

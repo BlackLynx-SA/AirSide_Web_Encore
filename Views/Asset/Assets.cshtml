@@ -1,8 +1,4 @@
-﻿@section PageStyles{
-    <link href="~/js/plugin/fancybox/jquery.fancybox.css" rel="stylesheet" />
-}
-
-<div id="content">
+﻿<div id="content">
     <div class="row ">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
@@ -43,10 +39,10 @@
         </div>
     </div>
 
-    <!--Fancy Box Popups-->
-    <div id="mapBox" style="display:none; width:500px; height:500px;">
-        <div id="map-canvas"></div>
-    </div>
+    @{
+        Html.RenderPartial("_MapView");
+    }
+
 </div>
 @section pagespecific{
     <script src="~/scripts/plugin/datatables/jquery.dataTables.min.js"></script>
@@ -55,15 +51,11 @@
     <script src="~/scripts/plugin/datatables/dataTables.bootstrap.min.js"></script>
     <script src="~/scripts/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 
-    <!-- Fancy Box Scripts-->
-    <script src="~/scripts/plugin/fancybox/jquery.fancybox.js"></script>
-    <script src="~/scripts/plugin/fancybox/jquery.fancybox.pack.js"></script>
-
     <!--Google Maps-->
     <script type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
     </script>
-    <script src="~/scripts/plugin/googlemaps/gmap3.min.js"></script>
+    <script src="~/scripts/plugin/gmap3/gmap3.min.js"></script>
 
     <script type="text/javascript">
         //Global Variables
@@ -126,7 +118,7 @@
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
                         html += '<td><img src="../..' + v.picture.fileLocation + '" style="height:50px; width:auto;"/></td>';
                         html += '<td>' + v.previousDate + '</td><td>' + v.nextDate + '</td><td>' + v.frequency.frequencyValue + '</td>';
-                        html += '<td style="line-height:2;"><a href="#mapBox" class="fancybox" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a><br/><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></td></tr>';
+                        html += '<td style="line-height:2;"><a href="#" class="btn btn-info btn-xs" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a><br/><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></td></tr>';
 
                         //Append to DOM
                         $('#dt_assets tbody').append(html);
@@ -146,11 +138,6 @@
 
         $(document).ready(function () {
             requestAllAssetData();
-            $('.fancybox').fancybox();
-
-
-
-
         });
 
         //Gmap3 Asset Map
@@ -185,6 +172,8 @@
                     }
                 }
             });
+
+            $('#mapModal').modal('show');
         }
 
         function getImage(value) {

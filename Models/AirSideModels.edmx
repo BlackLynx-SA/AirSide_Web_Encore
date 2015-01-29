@@ -72,7 +72,7 @@
           <Key>
             <PropertyRef Name="i_assetId" />
           </Key>
-          <Property Name="i_assetId" Type="int" Nullable="false" />
+          <Property Name="i_assetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_locationId" Type="int" Nullable="false" />
           <Property Name="i_assetClassId" Type="int" Nullable="false" />
           <Property Name="vc_rfidTag" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -86,6 +86,15 @@
           <Property Name="i_assetProfileId" Type="int" Nullable="false" />
           <Property Name="bt_assetStatus" Type="bit" Nullable="false" />
           <Property Name="i_assetSeverity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_cacheProfile">
+          <Key>
+            <PropertyRef Name="i_cacheId" />
+          </Key>
+          <Property Name="i_cacheId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vc_module" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ui_currentHash" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="as_electricalNodeProfile">
           <Key>
@@ -174,6 +183,28 @@
           <Property Name="geo_polygon" Type="geography" Nullable="false" />
           <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="i_geoType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_iosImageProfile">
+          <Key>
+            <PropertyRef Name="i_iosImageId" />
+          </Key>
+          <Property Name="i_iosImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dt_dateTimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="vc_description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_version" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="bt_active" Type="bit" Nullable="false" />
+          <Property Name="vc_fileName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_iosLogProfile">
+          <Key>
+            <PropertyRef Name="i_iosLogId" />
+          </Key>
+          <Property Name="i_iosLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="dt_logCaptureDate" Type="datetime" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="vc_logContainer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="vc_logName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="vc_deviceUID" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="as_locationProfile">
           <Key>
@@ -513,6 +544,7 @@
           <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_assetStatusProfile" EntityType="Self.as_assetStatusProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_cacheProfile" EntityType="Self.as_cacheProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" Schema="dbo" store:Type="Tables" />
@@ -521,6 +553,8 @@
           <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_geoSpatialProfile" EntityType="Self.as_geoSpatialProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_iosImageProfile" EntityType="Self.as_iosImageProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_iosLogProfile" EntityType="Self.as_iosLogProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_locationProfile" EntityType="Self.as_locationProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceCategory" EntityType="Self.as_maintenanceCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="dbo" store:Type="Tables" />
@@ -979,6 +1013,9 @@
           <EntitySet Name="as_geoSpatialProfile" EntityType="airside.encoreModel.as_geoSpatialProfile" />
           <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
           <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
+          <EntitySet Name="as_cacheProfile" EntityType="airside.encoreModel.as_cacheProfile" />
+          <EntitySet Name="as_iosLogProfile" EntityType="airside.encoreModel.as_iosLogProfile" />
+          <EntitySet Name="as_iosImageProfile" EntityType="airside.encoreModel.as_iosImageProfile" />
           <EntitySet Name="as_assetProfile" EntityType="airside.encoreModel.as_assetProfile" />
         </EntityContainer>
         <EntityType Name="as_todoProfile">
@@ -1087,11 +1124,42 @@
           <Property Name="bt_validated" Type="Boolean" Nullable="false" />
           <Property Name="i_shiftId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="as_cacheProfile">
+          <Key>
+            <PropertyRef Name="i_cacheId" />
+          </Key>
+          <Property Name="i_cacheId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="vc_module" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ui_currentHash" Type="Guid" Nullable="false" />
+          <Property Name="bt_active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_iosLogProfile">
+          <Key>
+            <PropertyRef Name="i_iosLogId" />
+          </Key>
+          <Property Name="i_iosLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dt_logCaptureDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="vc_logContainer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vc_logName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vc_deviceUID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="as_iosImageProfile">
+          <Key>
+            <PropertyRef Name="i_iosImageId" />
+          </Key>
+          <Property Name="i_iosImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vc_version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="bt_active" Type="Boolean" Nullable="false" />
+          <Property Name="vc_fileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="as_assetProfile">
           <Key>
             <PropertyRef Name="i_assetId" />
           </Key>
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="i_locationId" Type="Int32" Nullable="false" />
           <Property Name="i_assetClassId" Type="Int32" Nullable="false" />
           <Property Name="vc_rfidTag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -1572,6 +1640,40 @@
                 <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="i_validationProfileId" ColumnName="i_validationProfileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_cacheProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_cacheProfile">
+              <MappingFragment StoreEntitySet="as_cacheProfile">
+                <ScalarProperty Name="bt_active" ColumnName="bt_active" />
+                <ScalarProperty Name="ui_currentHash" ColumnName="ui_currentHash" />
+                <ScalarProperty Name="vc_module" ColumnName="vc_module" />
+                <ScalarProperty Name="i_cacheId" ColumnName="i_cacheId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_iosLogProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_iosLogProfile">
+              <MappingFragment StoreEntitySet="as_iosLogProfile">
+                <ScalarProperty Name="vc_deviceUID" ColumnName="vc_deviceUID" />
+                <ScalarProperty Name="vc_logName" ColumnName="vc_logName" />
+                <ScalarProperty Name="vc_logContainer" ColumnName="vc_logContainer" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="dt_logCaptureDate" ColumnName="dt_logCaptureDate" />
+                <ScalarProperty Name="i_iosLogId" ColumnName="i_iosLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_iosImageProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_iosImageProfile">
+              <MappingFragment StoreEntitySet="as_iosImageProfile">
+                <ScalarProperty Name="vc_fileName" ColumnName="vc_fileName" />
+                <ScalarProperty Name="bt_active" ColumnName="bt_active" />
+                <ScalarProperty Name="vc_version" ColumnName="vc_version" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
+                <ScalarProperty Name="i_iosImageId" ColumnName="i_iosImageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

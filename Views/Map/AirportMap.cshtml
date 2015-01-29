@@ -18,8 +18,12 @@
 </style>
 
 <div id="content">
-    <div id="mapTopMenuBack"></div>
-    <div id="mapMenuItems">
+    <div id="mapTopMenuBack">
+        <br />
+        <img src="~/Content/img/adb_img/adb_loader_tr.GIF" id="mapLoader" style="zoom:0.3;"/>
+    </div>
+
+    <div id="mapMenuItems" style="display:none;">
         @* Asset Filter Buttons *@
         <button type="button" class="btn btn-success assetFilterBtn hidden-md hidden-lg">
             <i class="fa fa-lightbulb-o"></i>
@@ -155,7 +159,7 @@
         </div>
     </div>
 
-    <div id="map-canvas" class="google_maps" data-gmap-lat="23.895883" data-gmap-lng="-80.650635" data-gmap-zoom="5" style="height:500px; width:100%;">
+    <div id="map-canvas" class="google_maps" style="height:500px; width:100%;">
         &nbsp;
     </div>
 </div>
@@ -229,13 +233,18 @@
             //Image of Asset
             content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
             content += "<h5 class='txt-color-blue'>Summary</h4>"
-            content += "<ul class='mapInfoSummary'>";
-            content += "<li>Maintenance Status: " + getMaintenanceStatus(cycle) + "</li>";
-            content += "<li>Previous Date: <strong>" + previousDate + "</strong></li>";
-            content += "<li>Next Date: <strong>" + nextDate + "</strong></li>";
-            content += "<li>Asset Type: <strong>" + json.assetClass.description + "</strong></li>";
+            content += "Maintenance Status: " + getMaintenanceStatus(cycle) + "<br />";
+            content += "Previous Date: <strong>" + previousDate + "</strong><br />";
+            content += "Next Date: <strong>" + nextDate + "</strong><br />";
+            content += "Asset Type: <strong>" + json.assetClass.description + "</strong><br />";
+            content += "<br/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> History</a><br />";
+           
             content += "</ul>";
-
+            content += '<hr/>';
+            if(json.status === true)
+            {
+                content += '<form class="smart-form"><label class="toggle"><input type="checkbox" name="faultyLightToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>Light Faulty</label></form>';
+            }
             //End
             content += '</div>';
 
@@ -262,30 +271,36 @@
             return img
         }
 
-        function getImage(value) {
+        function getImage(value, status) {
             var image, cycle;
-            $.each(value, function (i, v) {
-                if (v.maintenanceId === selectedTask)
-                    cycle = v.maintenanceCycle;
-            });
+            if(status === false)
+            {
+                $.each(value, function (i, v) {
+                    if (v.maintenanceId === selectedTask)
+                        cycle = v.maintenanceCycle;
+                });
 
-            switch (cycle) {
-                case 0: image = '/images/map_images/NutralMarker.png';
-                    break;
-                case 1: image = '/images/map_images/GreenMarker.png';
-                    break;
-                case 2: image = '/images/map_images/YellowMarker.png';
-                    break;
-                case 3: image = '/images/map_images/OrangeMarker.png';
-                    break;
-                case 4: image = '/images/map_images/RedMarker.png';
-                    break;
+                switch (cycle) {
+                    case 0: image = '/images/map_images/NutralMarker.png';
+                        break;
+                    case 1: image = '/images/map_images/GreenMarker.png';
+                        break;
+                    case 2: image = '/images/map_images/YellowMarker.png';
+                        break;
+                    case 3: image = '/images/map_images/OrangeMarker.png';
+                        break;
+                    case 4: image = '/images/map_images/RedMarker.png';
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+
+                return image;
+            } else
+            {
+                return '/images/map_images/exclamation.png';
             }
-
-            return image;
         }
 
         //This needs to be updated to accomodate for multiple AutoCAD Drawings
@@ -316,7 +331,7 @@
             var long = json.location.longitude;
             var lat = json.location.latitude;
             var latLongMarker = new google.maps.LatLng(lat, long);
-            var image = getImage(json.maintenance);
+            var image = getImage(json.maintenance, json.status);
             var marker = new google.maps.Marker({
                 map: map,
                 position: latLongMarker,
@@ -363,6 +378,8 @@
                 dataType: 'json',
                 success: function (json) {
                     Assets.jsonData = json;
+                    $('#mapLoader').hide();
+                    $('#mapMenuItems').fadeIn(300);
                 }
             });
         }
@@ -478,6 +495,10 @@
 
             $(document).on('click', '.autoCadBtn', function () {
                 loadOverlay();
+            });
+
+            $(document).on('click', '#faultyFilterBtn', function() {
+                filterFaulty();
             });
 
             //Select the radio button on drop down select

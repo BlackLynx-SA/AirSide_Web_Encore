@@ -1,0 +1,185 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-apple"></i>
+                Development<span>
+                    >
+                    iOS Files
+                </span>
+            </h1>
+        </div>
+    </div>
+    <!--Row-->
+    <div class="row">
+        <div class="col-md-12">
+            <ul id="filesTabs" class="nav nav-tabs bordered">
+                <li class="active">
+                    <a href="#s1" data-toggle="tab"><i class="fa fa-fw fa-lg fa-files-o"></i> Available Files</a>
+                </li>
+                <li>
+                    <a href="#s2" data-toggle="tab"><i class="fa fa-cloud-upload"></i> Upload File</a>
+                </li>
+            </ul>
+
+            <div id="historyTabContent" class="tab-content padding-10">
+                <div class="tab-pane fade in active" id="s1">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <table id="dt_assets" class="table table-striped table-bordered table-hover" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th data-hide="expand" style="width:20px;"><i class="fa fa-fw fa-apple txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                                        <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Date Uploaded</th>
+                                        <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
+                                        <th data-class="expand"><i class="fa fa-fw fa-pencil txt-color-blue hidden-md hidden-sm hidden-xs"></i> Version</th>
+                                        <th data-class="expand"><i class="fa fa-fw fa-cloud-download txt-color-blue hidden-md hidden-sm hidden-xs"></i> Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var prod in (List<as_iosImageProfile>)ViewData["iosImages"])
+                                    {
+                                        <tr>
+                                            <td><i class="fa fa-apple"></i></td>
+                                            <td>@prod.dt_dateTimeStamp.ToString("yyyy/MM/dd HH:mm")</td>
+                                            <td>@prod.vc_description</td>
+                                            <td>@prod.vc_version</td>
+                                            <td><a href="~/development/downloadFile?id=@prod.i_iosImageId" class="btn btn-xs btn-success"><i class="fa fa-download"></i> Download File</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="s2">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <form class="dropzone" id="mydropzone"></form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!--End Row-->
+    @section pagespecific{
+        <script src="~/scripts/plugin/dropzone/dropzone.min.js"></script>
+
+        <script type="text/javascript">
+            //Global Variables
+            var responsiveHelper_dt_basic = null;
+            var $assetClassTbl = $('#dt_assets');
+            var description = "Nothing";
+            var version = "0";
+
+            var breakpointDefinition = {
+                tablet: 1024,
+                phone: 480
+            };
+
+            //Functions
+            function setDataTable() {
+                $assetClassTbl.dataTable({
+                    "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>" +
+                        "t" +
+                        "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                    "autoWidth": true,
+                    "preDrawCallback": function () {
+                        // Initialize the responsive datatables helper once.
+                        if (responsiveHelper_dt_basic === null) {
+                            responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($assetClassTbl, breakpointDefinition);
+                        }
+                    },
+                    "rowCallback": function (nRow) {
+                        responsiveHelper_dt_basic.createExpandIcon(nRow);
+                    },
+                    "drawCallback": function (oSettings) {
+                        responsiveHelper_dt_basic.respond();
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                $(document).on('click', '#uploadBtn', function () {
+                    myDropZone.removeAllFiles();
+                    $('#fileUploadModal').modal('show');
+                });
+
+                setDataTable();
+
+                //Drop Zone Init
+                var url = "uploadiOSFile?description=" + description + "&version=" + version;
+                var myDropZone = new Dropzone("#mydropzone", {
+                    url: url,
+                    addRemoveLinks: true,
+                    maxFilesize: 3,
+                    dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                    dictResponseError: 'Error uploading file!',
+                    maxFiles: 1,
+                    accept: function (file, done) {
+                        $.SmartMessageBox({
+                            title: "File Description",
+                            content: "Please enter a title for the file",
+                            buttons: "[Cancel][Accept]",
+                            input: "text",
+                            inputValue: "",
+                            placeholder: "File Title"
+                        }, function (ButtonPress, Value) {
+                            if (ButtonPress === "Accept") {
+                                if (Value != "") {
+                                    description = Value;
+                                    $.SmartMessageBox({
+                                        title: "Version",
+                                        content: "Please enter the file version",
+                                        buttons: "[Cancel][Accept]",
+                                        input: "text",
+                                        inputValue: "",
+                                        placeholder: "File Title"
+                                    }, function (bp, v) {
+                                        if (ButtonPress === "Accept") {
+                                            version = v;
+                                            if (v != "") {
+                                                myDropZone.options.url = "uploadiOSFile?description=" + description + "&version=" + version;
+                                                done();
+                                            } else {
+                                                done("No file version was provided.")
+                                            }
+                                        } else {
+                                            done("File upload cancelled.")
+                                        }
+                                    });
+                                } else {
+                                    done("No file description was provided.")
+                                }
+                            } else {
+                                done("File upload cancelled.")
+                            }
+                        });
+                    }
+                });
+
+                //Init DropZone
+                Dropzone.autoDiscover = false;
+
+                myDropZone.on("complete", function (file) {
+                    if (file.accepted) {
+                        $.smallBox({
+                            title: "File Uploaded",
+                            content: "The file was uploaded.",
+                            color: "#5384AF",
+                            timeout: 4000,
+                            icon: "fa fa-cloud-upload"
+                        });
+                        myDropZone.removeAllFiles();
+                        $('#fileUploadModal').modal('hide');
+                    }
+                });
+            });
+        </script>
+    }
