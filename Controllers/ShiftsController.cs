@@ -589,6 +589,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               join y in db.as_technicianGroups on x.UserId equals y.i_groupId
                               join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
                               join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
+                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
                               where x.bt_completed != active
                               select new { 
                                 eventType = "Shift",
@@ -599,7 +601,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 progress = 0,
                                 team = y.vc_groupName,
                                 shiftId = x.i_shiftId,
-                                subAreaId = z.i_areaSubId
+                                subAreaId = z.i_areaSubId,
+                                validation = c.vc_validationName,
+                                task = b.vc_description,
+                                permit = x.vc_permitNumber
                               }).ToList();
 
                 List<ShiftData> shiftList = new List<ShiftData>();
@@ -607,13 +612,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     ShiftData shift = new ShiftData();
                     shift.area = item.area;
-                    shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
+                    shift.completed = item.end.ToString("dd-MM-yyyy HH:mm");
                     shift.eventType = "Shift";
-                    shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
+                    shift.start = item.start.ToString("dd-MM-yyyy HH:mm");
                     shift.subArea = item.subArea;
                     shift.team = item.team;
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 1;
+                    shift.validation = item.validation;
+                    shift.task = item.task;
+                    shift.permit = item.permit;
 
                     //Calculate the shift progress
                     if (active)
@@ -634,6 +642,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Custom Shifts 
                 var customShifts = (from x in db.as_shiftsCustom
                                       join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
+                                      join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                                      join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
                                       where x.bt_completed != active
                                       select new
                                       {
@@ -645,20 +655,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                           progress = 0,
                                           team = y.vc_groupName,
                                           shiftId = x.i_shiftCustomId,
-                                          subAreaId = 0
+                                          subAreaId = 0,
+                                          validation = c.vc_validationName,
+                                          task = b.vc_description,
+                                          permit = x.vc_permitNumber
                                       }).ToList();
 
                 foreach (var item in customShifts)
                 {
                     ShiftData shift = new ShiftData();
                     shift.area = item.area;
-                    shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
+                    shift.completed = item.end.ToString("dd-MM-yyyy HH:mm");
                     shift.eventType = "Custom Shift";
-                    shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
+                    shift.start = item.start.ToString("dd-MM-yyyy HH:mm");
                     shift.subArea = item.subArea;
                     shift.team = item.team;
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 2;
+                    shift.validation = item.validation;
+                    shift.task = item.task;
+                    shift.permit = item.permit;
 
                     //Calculate the shift progress
                     if (active)

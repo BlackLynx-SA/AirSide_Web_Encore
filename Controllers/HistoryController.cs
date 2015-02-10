@@ -50,6 +50,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 allHistory.AddRange(torqueTasks(assetId));
                 allHistory.AddRange(visualSurveys(assetId));
 
+                if (allHistory.Count == 1)
+                    if (allHistory[0].heading == null)
+                        allHistory.Clear();
+
                 return Json(allHistory.OrderByDescending(q=>q.dateStamp));
             }
             catch (Exception err)

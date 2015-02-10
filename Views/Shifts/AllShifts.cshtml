@@ -39,8 +39,8 @@
                                 <th data-hide="phone,tablet" data-class="expand" style="width:100px;"><i class="fa fa-fw fa-list-ol txt-color-blue hidden-md hidden-sm hidden-xs"></i> Event Type</th>
                                 <th data-class="expand"><i class="fa fa-fw fa-users txt-color-blue hidden-md hidden-sm hidden-xs"></i> Team</th>
                                 <th data-hide="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Start Date</th>
+                                <th data-hide="phone,tablet" data-class="expand">Permit</th>
                                 <th data-hide="phone,tablet" data-class="expand">Maint. Area</th>
-                                <th data-hide="phone,tablet" data-class="expand">Sub Area</th>
                                 <th data-hide="phone,tablet"><i class="fa fa-fw fa-line-chart txt-color-blue hidden-md hidden-sm hidden-xs"></i> Progress</th>
 
                                 <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
@@ -192,14 +192,18 @@
                 success: function (json) {
                     
                     var html = "";
-                    var i = 0;
+                    var j = 0;
                     $.each(json, function (i, v) {
-                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
+                        html += '<tr><td>' + v.validation + ' <br/>(' + v.task + ")</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.permit + "</td>";
+                        if (v.subArea != '')
+                            html += "<td>" + v.area + " (" + v.subArea + ")</td>";
+                        else
+                            html += "<td>" + v.area + "</td>";
                         html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
                         html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
                         html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> Complete Shift</button></td></tr>';
-                        i++;
-                        $('#activeBadge').html(i);
+                        j++;
+                        $('#activeBadge').html(j);
                         $('#activeBadge').removeClass('hiddenbadge');
                     });
 
@@ -307,6 +311,8 @@
             $('span.badge').addClass('hiddenbadge');
 
             requestAllActiveShifts();
+            requestAllCompletedShifts();
+            requestAllEvents();
 
             //Set listeners for tab changes
             $('#activeShiftTab').on('click', function () {

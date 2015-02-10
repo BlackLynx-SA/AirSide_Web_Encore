@@ -53,9 +53,8 @@
 
     <!--Google Maps-->
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=true&libraries=visualization&v=3">
     </script>
-    <script src="~/scripts/plugin/gmap3/gmap3.min.js"></script>
 
     <script type="text/javascript">
         //Global Variables
@@ -97,6 +96,15 @@
             this.jsonData = {};
         }
 
+        function clearAllMarkers() {
+            if (markers != null) {
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(null);
+                }
+            }
+            markers = null;
+        }
+
         function requestAllAssetData() {
             $.ajax({
                 url: '../../Map/getAllAssets',
@@ -107,18 +115,18 @@
 
                     $.each(json, function (i, v) {
                         var cycle = "";
-                        if (v.maintenanceCycle === 0) cycle = "btn-primary";
-                        else if (v.maintenanceCycle === 1) cycle = "bg-color-lime";
-                        else if (v.maintenanceCycle === 2) cycle = "bg-color-yellow";
-                        else if (v.maintenanceCycle === 3) cycle = "bg-color-orange"
-                        else if (v.maintenanceCycle === 4) cycle = "bg-color-red"
+                        if (v.maintenance[0].maintenanceCycle === 0) cycle = "btn-primary";
+                        else if (v.maintenance[0].maintenanceCycle === 1) cycle = "bg-color-green";
+                        else if (v.maintenance[0].maintenanceCycle === 2) cycle = "bg-color-yellow";
+                        else if (v.maintenance[0].maintenanceCycle === 3) cycle = "bg-color-orange"
+                        else if (v.maintenance[0].maintenanceCycle === 4) cycle = "bg-color-red"
 
                         var html = "";
                         html += '<tr id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
                         html += '<td><img src="../..' + v.picture.fileLocation + '" style="height:50px; width:auto;"/></td>';
-                        html += '<td>' + v.previousDate + '</td><td>' + v.nextDate + '</td><td>' + v.frequency.frequencyValue + '</td>';
-                        html += '<td style="line-height:2;"><a href="#" class="btn btn-info btn-xs" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a><br/><a href="#"><i class="fa fa-pencil-square-o"></i> Edit</a></td></tr>';
+                        html += '<td>' + v.maintenance[0].previousDate + '</td><td>' + v.maintenance[0].nextDate + '</td><td>' + v.frequency.frequencyValue + '</td>';
+                        html += '<td style="line-height:2;"><a href="#" class="btn btn-info btn-xs" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a></td></tr>';
 
                         //Append to DOM
                         $('#dt_assets tbody').append(html);
@@ -136,42 +144,80 @@
             });
         }
 
+        function initMap() {
+            $.ajax({
+                url: '../../Map/getMapCenter',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    centerLat = json[0];
+                    centerLong = json[1];
+
+                    var zoom = 15;
+                    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        zoom = 14;
+                    }
+                    var mapOptions = {
+                        center: new google.maps.LatLng(json[0], json[1]),
+                        zoom: zoom,
+                        disableDefaultUI: true,
+                        mapTypeId: google.maps.MapTypeId.SATELLITE
+                    };
+
+                    map = new google.maps.Map(document.getElementById("map-canvas"),
+                        mapOptions);
+                }
+            });
+        }
+
         $(document).ready(function () {
             requestAllAssetData();
+            initMap();
+            $('#mapModal').on('shown.bs.modal', function () {
+
+                google.maps.event.trigger(map, "resize");
+            });
         });
 
-        //Gmap3 Asset Map
+        function findAssetJson(id)
+        {
+            var json, flag;
+            flag = false;
+            $.each(Assets.jsonData, function (i, v) {
+                if (v.assetId === id && !flag) {
+                    json = v;
+                    flag = true;
+                }
+            });
+
+            return json;
+        }
+
         function showAssetLocation(id, lat, long, maintain) {
-            //Get the right marker
-            var image = getImage(maintain);
+            map.panTo(new google.maps.LatLng(lat, long));
 
-            //Clear Marker
-            $('#map-canvas').gmap3({
-                clear: {
-                    name: ["marker"],
-                    last: true
-                }
-            });
+            clearAllMarkers();
+            markers = [];
+                var latLongMarker = new google.maps.LatLng(lat, long);
+                var image = getImage(1);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: latLongMarker,
+                    title: id.toString(),
+                    icon: image
+                });
 
-            $('#map-canvas').width("500px").height("500px").gmap3({
-                map: {
-                    options: {
-                        center: [lat, long],
-                        zoom: 14,
-                        mapTypeId: google.maps.MapTypeId.HYBRID,
-                        mapTypeControl: false,
-                        navigationControl: false,
-                        scrollwheel: true,
-                        streetViewControl: false
-                    }
-                },
-                marker: {
-                    latLng: [lat, long],
-                    options: {
-                        icon: new google.maps.MarkerImage(image)
-                    }
-                }
-            });
+            //Generate Info Window Content
+                //var json = findAssetJson(id);
+                //var content = markerInfo(json);
+
+                //google.maps.event.addListener(marker, 'click', function () {
+                //    if (infowindow) infowindow.close();
+                //    infowindow = new google.maps.InfoWindow({ content: content });
+                //    infowindow.open(map, marker);
+            //});
+
+                markers.push(marker);
 
             $('#mapModal').modal('show');
         }
@@ -179,15 +225,15 @@
         function getImage(value) {
             var image;
             switch (value) {
-                case 0: image = '/assets/images/icons/map_icon_grey.png';
+                case 0: image = '/images/icons/map_icon_grey.png';
                     break;
-                case 1: image = '/assets/images/icons/map_icon_green.png';
+                case 1: image = '/images/icons/map_icon_green.png';
                     break;
-                case 2: image = '/assets/images/icons/map_icon_yellow.png';
+                case 2: image = '/images/icons/map_icon_yellow.png';
                     break;
-                case 3: image = '/assets/images/icons/map_icon_orange.png';
+                case 3: image = '/images/icons/map_icon_orange.png';
                     break;
-                case 4: image = '/assets/images/icons/map_icon_red.png';
+                case 4: image = '/images/icons/map_icon_red.png';
                     break;
 
                 default:
@@ -195,6 +241,41 @@
             }
 
             return image;
+        }
+
+        function markerInfo(json) {
+
+            var previousDate, nextDate, cycle;
+            $.each(json.maintenance, function (i, v) {
+                //***TODO Change this
+                if (v.maintenanceId === 1) {
+                    previousDate = v.previousDate;
+                    nextDate = v.nextDate;
+                    cycle = v.maintenanceCycle;
+                }
+            });
+
+            //Header
+            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
+
+            //Image of Asset
+            content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
+            content += "<h5 class='txt-color-blue'>Summary</h4>"
+            content += "Maintenance Status: " + getMaintenanceStatus(cycle) + "<br />";
+            content += "Previous Date: <strong>" + previousDate + "</strong><br />";
+            content += "Next Date: <strong>" + nextDate + "</strong><br />";
+            content += "Asset Type: <strong>" + json.assetClass.description + "</strong><br />";
+            content += "<br/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> History</a><br />";
+
+            content += "</ul>";
+            content += '<hr/>';
+            if (json.status === true) {
+                content += '<form class="smart-form"><label class="toggle"><input type="checkbox" name="faultyLightToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>Light Faulty</label></form>';
+            }
+            //End
+            content += '</div>';
+
+            return content;
         }
     </script>
 }

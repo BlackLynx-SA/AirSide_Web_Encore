@@ -35,8 +35,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewBag.surveyorDates = new SelectList(db.as_fileUploadProfile.OrderByDescending(q => q.dt_datetime).ToList().Select(q => q.dt_datetime.ToString("yyy/MM/dd")).Distinct(), "dt_datetime");
             ViewBag.photmetricDates = new SelectList(db.as_fbTechProfile.OrderByDescending(q => q.dt_dateTimeStamp).ToList().Select(q => q.dt_dateTimeStamp.ToString("yyy/MM/dd")).Distinct(), "dt_dateTimeStamp");
             ViewBag.techgroups = new SelectList(db.as_technicianGroups, "i_groupId", "vc_groupName");
-            var maintenanceTasks = db.as_maintenanceProfile.OrderBy(q => q.vc_description).ToList();
-            ViewData["maintenanceTasks"] = maintenanceTasks;
+            var maintenanceTasks = db.as_maintenanceProfile.ToList();
+            
+            //Add Worst Case Category
+            as_maintenanceProfile worstCase = new as_maintenanceProfile();
+            worstCase.i_maintenanceCategoryId = 0;
+            worstCase.i_maintenanceId = 0;
+            worstCase.i_maintenanceValidationId = 0;
+            worstCase.vc_description = "Worst Case";
+            maintenanceTasks.Add(worstCase);
+            
+            ViewData["maintenanceTasks"] = maintenanceTasks.OrderBy(q=>q.i_maintenanceId).ToList();
             ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
             ViewBag.taskDesc = maintenanceTasks[0].vc_description;
 

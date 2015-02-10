@@ -1,24 +1,11 @@
 ﻿<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-editbutton="false" data-widget-deletebutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-        <h2> All Events </h2>
+        <h2> Active Shifts <sup class="badge bg-color-red bounceIn animated" id="shiftCount">0</sup></h2>
         <div class="widget-toolbar">
             <!-- add: non-hidden - to disable auto hide -->
             <div class="btn-group">
-                <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-                    Showing <i class="fa fa-caret-down"></i>
-                </button>
-                <ul class="dropdown-menu js-status-update pull-right">
-                    <li>
-                        <a href="javascript:void(0);" id="mt">Month</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" id="ag">Agenda</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" id="td">Today</a>
-                    </li>
-                </ul>
+                <a href="~/shifts/allshifts" class="btn btn-xs btn-default">View All Events</a>
             </div>
         </div>
     </header>
@@ -31,16 +18,21 @@
         <!-- end widget edit box -->
         <div class="widget-body no-padding">
             <!-- content goes here -->
-            <div class="widget-body-toolbar">
-                <div id="calendar-buttons">
-                    <div class="btn-group">
-                        <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
-                        <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
-                    </div>
-                </div>
-            </div>
             <img src="~/Content/img/adb_img/startup_loader.GIF" id="calendarLoader" style="zoom:0.5;" />
-            <div id="calendar" style="display:none;"></div>
+            <table class="table no-padding table-striped" id="activeShiftsTbl" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Tech. Team</th>
+                        <th>Date</th>
+                        <th>Permit</th>
+                        <th>Area</th>
+                        <th>Progress</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
             <!-- end content -->
         </div>
     </div>
@@ -48,27 +40,35 @@
 </div>
 
 <script type="text/javascript">
-    function requestAllShifts() {
+    function requestAllActiveShifts() {
         $.ajax({
-            url: "../../shifts/getAllShifts",
+            url: "../../shifts/getShifts?active=true",
             type: "POST",
             dataType: "json",
             success: function (json) {
+
+                var html = "";
+                var j = 0;
                 $.each(json, function (i, v) {
-                    var dateTime = Date.parseExact(v.dateTime, "dd-MM-yyyy h:mm tt");
-
-                    var colour = "bg-color-blue txt-color-white";
-                    if (v.validationId === 1)
-                        colour = "bg-color-pink txt-color-white";
-
-                    var newEvent = { allDay: false, className: colour, icon: 'fa-users', description: v.description, start: dateTime, title: v.groupName };
-                    $('#calendar').fullCalendar('renderEvent', newEvent, true);
+                    html += '<tr><td>' + v.validation + ' <br/>(' + v.task + ")</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.permit + "</td>";
+                    if (v.subArea != '')
+                        html += "<td>" + v.area + " (" + v.subArea + ")</td>";
+                    else
+                        html += "<td>" + v.area + "</td>";
+                    html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
+                    html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
+                    html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> Complete Shift</button></td></tr>';
+                    j++;
                 });
-                requestAllEvents();
+
+                $('#shiftCount').html(j);
+                $('#activeShiftsTbl tbody').html(html);
+                $("#calendarLoader").hide();
+                $('#activeShiftsTbl').fadeIn(500);
             },
             error: function (err) {
                 $.smallBox({
-                    title: "Failed to load shifts",
+                    title: "Failed to active shifts",
                     content: err.responseText,
                     color: "#f51414",
                     timeout: 5000,
@@ -79,29 +79,42 @@
         });
     }
 
-    function requestAllEvents() {
-        $.ajax({
-            url: "../../shifts/getUserActiveEvents",
-            type: "POST",
-            dataType: "json",
-            success: function (json) {
-                $.each(json, function (i, v) {
-                    var dateTime = Date.parseExact(v.start, "dd-MM-yyyy h:mm tt");
-                    var newEvent = { allDay: false, className: v.color, icon: v.icon, description: v.description, start: dateTime, title: v.title };
-                    $('#calendar').fullCalendar('renderEvent', newEvent, true);
+    function RemoveActiveShift(id, type) {
+        $.SmartMessageBox({
+            title: '<i class="fa fa-check fa-lg txt-color-green"></i> Mark as complete?',
+            content: "This will change the status of the shift to close.",
+            buttons: '[No][Yes]'
+        }, function (ButtonPressed) {
+
+            if (ButtonPressed === "Yes") {
+                $.ajax({
+                    url: "../../Shifts/UpdateShiftStatus?shiftId=" + id + '&shiftType=' + type,
+                    type: "POST",
+                    dataType: "json",
+                    data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+                    success: function (json) {
+                        $('#dt_shifts tbody').empty();
+                        $.smallBox({
+                            title: "Shift Status Changed",
+                            content: "The shift has been set to complete. You can create a new shift by clicking 'Create New Event'.",
+                            color: "#5384AF",
+                            timeout: 4000,
+                            icon: "fa fa-calendar"
+                        });
+                        requestAllActiveShifts();
+                    },
+                    error: function (err) {
+                        $.smallBox({
+                            title: "Error changing the shift status",
+                            content: err.responseText,
+                            color: "#f51414",
+                            timeout: 5000,
+                            icon: "fa fa-bell swing animated"
+                        });
+                    }
                 });
-                $("#calendarLoader").fadeOut(500);
-                $('#calendar').fadeIn(500);
-            },
-            error: function (err) {
-                $.smallBox({
-                    title: "Failed to load events",
-                    content: err.responseText,
-                    color: "#f51414",
-                    timeout: 5000,
-                    icon: "fa fa-bell swing animated"
-                });
-                $("#calendarLoader").fadeOut(500);
+            }
+            if (ButtonPressed === "No") {
             }
         });
     }

@@ -20,5 +20,6 @@ namespace ADB.AirSide.Encore.V1.Models
         public string vc_version { get; set; }
         public bool bt_active { get; set; }
         public string vc_fileName { get; set; }
+        public string vc_releaseNotes { get; set; }
     }
 }

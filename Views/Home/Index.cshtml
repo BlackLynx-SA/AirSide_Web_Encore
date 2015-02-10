@@ -179,7 +179,7 @@
         var $chrt_mono = "#000";
 
         var todoCategoriesTxt;
-        var selectedTask = @ViewBag.firstTask;
+        
 
         function getActivities()
         {
@@ -429,7 +429,7 @@
                 requestAllAssetData();
 
                 //Init Calendar 
-                requestAllShifts();
+                requestAllActiveShifts();
 
                 //Init Activities Chart
                 getActivities();

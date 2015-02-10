@@ -63,13 +63,13 @@ namespace ADB.AirSide.Encore.V1.Models
         public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
         public virtual DbSet<as_shiftsCustom> as_shiftsCustom { get; set; }
-        public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
         public virtual DbSet<as_geoSpatialProfile> as_geoSpatialProfile { get; set; }
         public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
         public virtual DbSet<as_validationTaskProfile> as_validationTaskProfile { get; set; }
         public virtual DbSet<as_cacheProfile> as_cacheProfile { get; set; }
         public virtual DbSet<as_iosLogProfile> as_iosLogProfile { get; set; }
-        public virtual DbSet<as_iosImageProfile> as_iosImageProfile { get; set; }
         public virtual DbSet<as_assetProfile> as_assetProfile { get; set; }
+        public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
+        public virtual DbSet<as_iosImageProfile> as_iosImageProfile { get; set; }
     }
 }

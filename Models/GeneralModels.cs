@@ -346,6 +346,7 @@ namespace ADB.AirSide.Encore.V1.Models
         public string datetimeStamp { get; set; }
         public string maintenance { get; set; }
         public string valueCaptured { get; set; }
+        public int type { get; set; }
     }
 
     public class shiftInfo
@@ -378,6 +379,9 @@ namespace ADB.AirSide.Encore.V1.Models
         public int assets { get; set; }
         public int shiftId { get; set; }
         public int shiftType { get; set; }
+        public string validation { get; set; }
+        public string task { get; set; }
+        public string permit { get; set; }
     }
 
     public class ActivityChart
@@ -560,6 +564,18 @@ namespace ADB.AirSide.Encore.V1.Models
         public double totalTasks { get; set; }
         public double assosiatedTasks { get; set; }
         public double totalShifts { get; set; }
+    }
+
+    #endregion
+
+    #region iOSModels
+
+    public class iOSImageUpload
+    {
+        public string description { get; set; }
+        public string image { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
     }
 
     #endregion

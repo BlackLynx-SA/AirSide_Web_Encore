@@ -20,5 +20,7 @@ namespace ADB.AirSide.Encore.V1.Models
         public double f_longitude { get; set; }
         public int i_shiftId { get; set; }
         public int i_userId { get; set; }
+        public bool bt_resolved { get; set; }
+        public int UserId { get; set; }
     }
 }

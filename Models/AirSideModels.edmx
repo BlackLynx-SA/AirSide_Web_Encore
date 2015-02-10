@@ -155,6 +155,8 @@
           <Property Name="f_longitude" Type="float" Nullable="false" />
           <Property Name="i_shiftId" Type="int" Nullable="false" />
           <Property Name="i_userId" Type="int" Nullable="false" />
+          <Property Name="bt_resolved" Type="bit" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="as_fileUploadProfile">
           <Key>
@@ -194,6 +196,7 @@
           <Property Name="vc_version" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="bt_active" Type="bit" Nullable="false" />
           <Property Name="vc_fileName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="vc_releaseNotes" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="as_iosLogProfile">
           <Key>
@@ -1009,14 +1012,14 @@
           <EntitySet Name="as_maintenanceValidation" EntityType="airside.encoreModel.as_maintenanceValidation" />
           <EntitySet Name="as_shifts" EntityType="airside.encoreModel.as_shifts" />
           <EntitySet Name="as_shiftsCustom" EntityType="airside.encoreModel.as_shiftsCustom" />
-          <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
           <EntitySet Name="as_geoSpatialProfile" EntityType="airside.encoreModel.as_geoSpatialProfile" />
           <EntitySet Name="as_fileUploadProfile" EntityType="airside.encoreModel.as_fileUploadProfile" />
           <EntitySet Name="as_validationTaskProfile" EntityType="airside.encoreModel.as_validationTaskProfile" />
           <EntitySet Name="as_cacheProfile" EntityType="airside.encoreModel.as_cacheProfile" />
           <EntitySet Name="as_iosLogProfile" EntityType="airside.encoreModel.as_iosLogProfile" />
-          <EntitySet Name="as_iosImageProfile" EntityType="airside.encoreModel.as_iosImageProfile" />
           <EntitySet Name="as_assetProfile" EntityType="airside.encoreModel.as_assetProfile" />
+          <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
+          <EntitySet Name="as_iosImageProfile" EntityType="airside.encoreModel.as_iosImageProfile" />
         </EntityContainer>
         <EntityType Name="as_todoProfile">
           <Key>
@@ -1083,17 +1086,6 @@
           <Property Name="vc_externalReference" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_fileUploadInfo">
-          <Key>
-            <PropertyRef Name="guid_file" />
-          </Key>
-          <Property Name="guid_file" Type="Guid" Nullable="false" />
-          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="f_latitude" Type="Double" Nullable="false" />
-          <Property Name="f_longitude" Type="Double" Nullable="false" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="i_userId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_geoSpatialProfile">
           <Key>
             <PropertyRef Name="i_geoSpatialId" />
@@ -1144,17 +1136,6 @@
           <Property Name="vc_logName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="vc_deviceUID" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="as_iosImageProfile">
-          <Key>
-            <PropertyRef Name="i_iosImageId" />
-          </Key>
-          <Property Name="i_iosImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="vc_version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="bt_active" Type="Boolean" Nullable="false" />
-          <Property Name="vc_fileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="as_assetProfile">
           <Key>
             <PropertyRef Name="i_assetId" />
@@ -1165,6 +1146,31 @@
           <Property Name="vc_rfidTag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="vc_serialNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="dt_initDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="as_fileUploadInfo">
+          <Key>
+            <PropertyRef Name="guid_file" />
+          </Key>
+          <Property Name="guid_file" Type="Guid" Nullable="false" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="f_latitude" Type="Double" Nullable="false" />
+          <Property Name="f_longitude" Type="Double" Nullable="false" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+          <Property Name="i_userId" Type="Int32" Nullable="false" />
+          <Property Name="bt_resolved" Type="Boolean" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_iosImageProfile">
+          <Key>
+            <PropertyRef Name="i_iosImageId" />
+          </Key>
+          <Property Name="i_iosImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="vc_description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="vc_version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="bt_active" Type="Boolean" Nullable="false" />
+          <Property Name="vc_fileName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="vc_releaseNotes" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1598,18 +1604,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_fileUploadInfo">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
-              <MappingFragment StoreEntitySet="as_fileUploadInfo">
-                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
-                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_geoSpatialProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_geoSpatialProfile">
               <MappingFragment StoreEntitySet="as_geoSpatialProfile">
@@ -1665,18 +1659,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_iosImageProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_iosImageProfile">
-              <MappingFragment StoreEntitySet="as_iosImageProfile">
-                <ScalarProperty Name="vc_fileName" ColumnName="vc_fileName" />
-                <ScalarProperty Name="bt_active" ColumnName="bt_active" />
-                <ScalarProperty Name="vc_version" ColumnName="vc_version" />
-                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="i_iosImageId" ColumnName="i_iosImageId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_assetProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_assetProfile">
               <MappingFragment StoreEntitySet="as_assetProfile">
@@ -1686,6 +1668,33 @@
                 <ScalarProperty Name="i_assetClassId" ColumnName="i_assetClassId" />
                 <ScalarProperty Name="i_locationId" ColumnName="i_locationId" />
                 <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_fileUploadInfo">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
+              <MappingFragment StoreEntitySet="as_fileUploadInfo">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="bt_resolved" ColumnName="bt_resolved" />
+                <ScalarProperty Name="i_userId" ColumnName="i_userId" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="f_longitude" ColumnName="f_longitude" />
+                <ScalarProperty Name="f_latitude" ColumnName="f_latitude" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="guid_file" ColumnName="guid_file" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_iosImageProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_iosImageProfile">
+              <MappingFragment StoreEntitySet="as_iosImageProfile">
+                <ScalarProperty Name="vc_releaseNotes" ColumnName="vc_releaseNotes" />
+                <ScalarProperty Name="vc_fileName" ColumnName="vc_fileName" />
+                <ScalarProperty Name="bt_active" ColumnName="bt_active" />
+                <ScalarProperty Name="vc_version" ColumnName="vc_version" />
+                <ScalarProperty Name="vc_description" ColumnName="vc_description" />
+                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
+                <ScalarProperty Name="i_iosImageId" ColumnName="i_iosImageId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

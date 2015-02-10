@@ -136,6 +136,78 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        public JsonResult getAssetHistory(int assetId)
+        {
+            try
+            {
+                //This will send back a list of actions on asset
+                //Create Date: 2015/02/06
+                //Author: Bernard Willer
+
+                List<assetHistory> allHistory = new List<assetHistory>();
+                allHistory.AddRange(validationTasks(assetId));
+                allHistory.AddRange(torqueTasks(assetId));
+                allHistory.AddRange(visualSurveys(assetId));
+
+                if (allHistory.Count == 1)
+                    if (allHistory[0].maintenance == null)
+                        allHistory.Clear();
+
+                return Json(allHistory);
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        [HttpPost]
+        public JsonResult uploadImage(iOSImageUpload imageUpload)
+        {
+            try
+            {
+                //Uploading of coverted image to storage
+                //Create Date: 2015/02/06   
+                //Author: Bernard Willer
+
+                Guid guid = Guid.NewGuid();
+                string filename = guid.ToString();
+                filename = filename.Replace("-", "");
+                filename = filename.Substring(0, 5) + ".png";
+
+                //Convert received image
+                byte[] bytes = Convert.FromBase64String(imageUpload.image);
+                MemoryStream ms = new MemoryStream(bytes);
+
+                ms.Position = 0;
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer container = blobClient.GetContainerReference("surveyorimages");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+                blockBlob.UploadFromStream(ms);
+
+                //Free Memory
+                ms.Dispose();
+                Response.StatusCode = 200;
+                return Json(new { message = "success" });
+            }
+            catch (Exception err)
+            {
+                Logging log = new Logging();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
         public JsonResult getGroupsTechnicians(int groupId)
@@ -1200,7 +1272,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public ActionResult uploadiOSFile(HttpPostedFileBase file, string description, string version)
+        public ActionResult uploadiOSFile(HttpPostedFileBase file, string description, string version, string releaseNotes)
         {
 
             try
@@ -1227,6 +1299,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 image.vc_description = description;
                 image.vc_fileName = filename;
                 image.vc_version = version;
+                image.vc_releaseNotes = releaseNotes;
 
                 db.as_iosImageProfile.Add(image);
                 db.SaveChanges();
@@ -1257,18 +1330,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 as_iosImageProfile image = db.as_iosImageProfile.Find(id);
 
                 //Downlaod File
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
+                CloudBlobContainer container = blobClient.GetContainerReference("iosimages");
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(image.vc_fileName);
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    
-                    blockBlob.DownloadToStream(memoryStream);
-                    memoryStream.Position = 0;
-                    return File(memoryStream, "application/");
-                }
+                MemoryStream memoryStream = new MemoryStream();
+                blockBlob.DownloadToStream(memoryStream);
+                memoryStream.Position = 0;
+                Response.AddHeader("content-disposition", "attachment; filename=" + image.vc_fileName);
+                return File(memoryStream, "application/");
             }
             catch (Exception err)
             {
@@ -1284,6 +1355,147 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #endregion
 
+        #region Helpers
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<assetHistory> validationTasks(int assetId)
+        {
+            var validation = from x in db.as_validationTaskProfile
+                             join y in db.UserProfiles on x.UserId equals y.UserId
+                             join a in db.as_shifts on x.i_shiftId equals a.i_shiftId
+                             join z in db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+                             where x.i_assetId == assetId
+                             select new
+                             {
+                                 user = y.FirstName + " " + y.LastName,
+                                 date = x.dt_dateTimeStamp,
+                                 maintenanceTask = z.vc_description
+                             };
+
+            List<assetHistory> tasks = new List<assetHistory>();
+
+            foreach (var item in validation.OrderByDescending(q=>q.date).Take(3))
+            {
+                assetHistory task = new assetHistory();
+                task.type = 2;
+                task.maintenance = item.maintenanceTask + "(" + item.user + ")";
+                task.valueCaptured = item.user + " performed a " + item.maintenanceTask + " task";
+                task.datetimeStamp = item.date.ToString("dd MMM, yyyy");
+                tasks.Add(task);
+            }
+
+            return tasks;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<assetHistory> torqueTasks(int assetId)
+        {
+            var torque = (from x in db.as_shiftData
+                          join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                          join z in db.as_technicianGroups on y.UserId equals z.i_groupId
+                          join a in db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
+                          where x.i_assetId == assetId
+                          select new
+                          {
+                              name = z.vc_groupName,
+                              date = x.dt_captureDate,
+                              maintenanceTask = a.vc_description,
+                              value = x.f_capturedValue,
+                              shiftId = x.i_shiftId
+                          }).OrderByDescending(q => q.date).Take(10);
+
+            List<assetHistory> tasks = new List<assetHistory>();
+
+            int shiftId = 0;
+            int pointer = 0;
+
+            assetHistory task = new assetHistory();
+
+            foreach (var item in torque)
+            {
+                if (item.shiftId != shiftId || shiftId == 0)
+                {
+                    if (shiftId != 0)
+                        tasks.Add(task);
+
+                    task = new assetHistory();
+                    task.maintenance = "Fitting was torqued (" + item.name + ")";
+                    task.datetimeStamp = item.date.ToString("dd MMM, yyyy");
+                    task.type = 1;
+                    shiftId = item.shiftId;
+                    pointer = 0;
+                }
+
+                if(pointer != 0)
+                    task.valueCaptured += "," + item.value.ToString();
+                else
+                    task.valueCaptured = item.value.ToString();
+
+                pointer++;
+            }
+
+            tasks.Add(task);
+
+            return tasks;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<assetHistory> visualSurveys(int assetId)
+        {
+            var surveys = (from x in db.as_fileUploadInfo
+                           join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
+                           join z in db.as_locationProfile on new { x.f_latitude, x.f_longitude } equals new { z.f_latitude, z.f_longitude }
+                           join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                           join b in db.UserProfiles on x.i_userId equals b.UserId
+                           where a.i_assetId == assetId
+                           select new
+                           {
+                               user = b.FirstName + " " + b.LastName,
+                               date = y.dt_datetime,
+                               fileLocation = y.vc_filePath,
+                               type = y.i_fileType,
+                               resolved = x.bt_resolved
+                           }).OrderByDescending(q => q.date).Take(10);
+
+            List<assetHistory> items = new List<assetHistory>();
+
+            foreach (var item in surveys.OrderByDescending(q=>q.date).Take(5))
+            {
+                assetHistory asset = new assetHistory();
+                asset.datetimeStamp = item.date.ToString("dd MMM, yyyy");
+                asset.type = 3;
+                string resolved = "Open";
+                if (item.resolved) resolved = "Resolved";
+                asset.valueCaptured = item.user + "(" + resolved + ")";
+
+                string[] filepath = item.fileLocation.Split(char.Parse("."));
+                int place = filepath.Count() - 1;
+
+                if (filepath[place] == "jpg")
+                {
+                    asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
+                }
+                else if (filepath[place] == "m4a")
+                {
+                    asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
+                }
+                else if (filepath[place] == "text")
+                {
+                    asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+                }
+
+                items.Add(asset);
+            }
+
+            return items;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        #endregion
     }
 
 }

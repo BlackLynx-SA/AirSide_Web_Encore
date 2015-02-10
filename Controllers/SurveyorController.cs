@@ -8,10 +8,11 @@
 //
 // AUTHOR: Bernard Willer
 // EMAIL: bernard.willer@blacklynx.co.za
-// CREATE DATE: 2014/11/01
-// SUMMARY: This class contains all controller calls for all Asset Calls
+// CREATE DATE: 2015/02/06
+// SUMMARY: This class contains all controller calls for the Surveyor Module
 #endregion
 
+using ADB.AirSide.Encore.V1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,13 @@ using System.Web.Mvc;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class AssetController : Controller
+    public class SurveyorController : Controller
     {
-        // GET: Asset
-        public ActionResult Assets()
+        private Entities db = new Entities();
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public ActionResult Anomalies()
         {
             return View();
         }

@@ -14,7 +14,7 @@
     <RootNamespace>ADB.AirSide.Encore.V1</RootNamespace>
     <AssemblyName>ADB.AirSide.Encore.V1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -1272,8 +1272,8 @@
     <Content Include="Views\Home\_ActivityChart.cshtml" />
     <Content Include="Views\Home\UploadBlob.cshtml" />
     <Content Include="Views\iOS\iOSImages.cshtml" />
-    <Content Include="Views\iOS\_FileUpload.cshtml" />
     <Content Include="Views\Asset\_MapView.cshtml" />
+    <Content Include="Views\iOS\_ReleaseNotes.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1302,6 +1302,7 @@
     <Compile Include="App_Helpers\Cache.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
     <Compile Include="App_Helpers\Database.cs" />
+    <Compile Include="App_Helpers\JsonDeserializer.cs" />
     <Compile Include="App_Helpers\Logging.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
     <Compile Include="App_Helpers\UserManager.cs" />
@@ -1323,6 +1324,7 @@
     <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
+    <Compile Include="Controllers\SurveyorController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1515,6 +1517,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
+    <Folder Include="Views\Surveyor\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -1541,7 +1544,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56110</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:56110/</IISUrl>
+          <IISUrl>https://localhost</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

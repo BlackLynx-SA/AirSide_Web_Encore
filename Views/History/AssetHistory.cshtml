@@ -6,9 +6,9 @@
                 <li class="active">
                     <a href="#s2" data-toggle="tab"><i class="fa fa-fw fa-lg fa-map-marker"></i> Asset Map</a>
                 </li>
-                <li>
+                @*<li>
                     <a href="#s1" data-toggle="tab"><i class="fa fa-search"></i> Search for Asset</a>
-                </li>
+                </li>*@
             </ul>
 
             <div id="historyTabContent" class="tab-content padding-10">
@@ -16,7 +16,7 @@
                    
                 </div>
                 <div class="tab-pane fade in active" id="s2">
-                    <div id="map-canvas" style="height:300px; width:100%;"></div>
+                    <div id="map-canvas" style="height:400px; width:100%;"></div>
                 </div>
             </div>
         </div>
@@ -103,7 +103,9 @@
         function createAssetTimeLine(json)
         {
             $('#assetTimeLine').empty();
+            var j = 0;
             $.each(json, function (i, v) {
+                j++;
                 var html = '<li><div class="smart-timeline-icon" style="background-color:' + v.colour + ';"><i class="fa ' + v.icon + '"></i></div>';
                 html += '<div class="smart-timeline-time"><small>' + v.dateString + '</small></div>';
                 html += '<div class="smart-timeline-content"><p><strong>' + v.heading + '</strong></p><div class="well well-sm display-inline" style="width:100%;">';
@@ -137,6 +139,17 @@
                 
                 $('#assetTimeLine').append(html);
             });
+
+            if (j === 0)
+            {
+                $.smallBox({
+                    title: "No History",
+                    content: "The asset you selected has no history.",
+                    color: "#5384AF",
+                    timeout: 4000,
+                    icon: "fa fa-history"
+                });
+            }
 
             //Add Load more button
             var html = '<li class="text-center"><a href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-arrow-down text-muted"></i> LOAD MORE</a></li>';

@@ -77,15 +77,32 @@ namespace ADB.AirSide.Encore.V1.App_Helpers
                          });
 
             BsonArray maintenanceArray = new BsonArray();
+            List<maintenance> allTasks = new List<maintenance>();
+
             foreach(var item in asset)
             {
-                BsonDocument maintenanceTask = new BsonDocument();
-                maintenanceTask.Add("maintenanceTask", item.task);
                 DateTime previousDate = getMaintenanceLastDate(item.maintencanceId, assetId);
-                maintenanceTask.Add("previousDate", previousDate.ToString("yyy/MM/dd"));
-                maintenanceTask.Add("nextDate", getMaintenanceNextDate(item.maintencanceId, assetId, item.frequency).ToString("yyy/MM/dd"));
-                maintenanceTask.Add("maintenanceCycle", getMaintenanceColour(previousDate, item.frequency));
-                maintenanceTask.Add("maintenanceId", item.maintencanceId);
+                DateTime nextDate = getMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
+                int color = getMaintenanceColour(previousDate, item.frequency);
+
+                maintenance maintenanceTask = new maintenance();
+                maintenanceTask.maintenanceTask = item.task;
+                maintenanceTask.previousDate = previousDate.ToString("yyyy/MM/dd");
+                maintenanceTask.nextDate = nextDate.ToString("yyyy/MM/dd");
+                maintenanceTask.maintenanceCycle = color;
+                maintenanceTask.maintenanceId = item.maintencanceId;
+
+                allTasks.Add(maintenanceTask);
+            }
+
+            foreach (var item in allTasks.OrderByDescending(q => q.maintenanceCycle))
+            {
+                BsonDocument maintenanceTask = new BsonDocument();
+                maintenanceTask.Add("maintenanceTask", item.maintenanceTask);
+                maintenanceTask.Add("previousDate", item.previousDate);
+                maintenanceTask.Add("nextDate", item.nextDate);
+                maintenanceTask.Add("maintenanceCycle", item.maintenanceCycle);
+                maintenanceTask.Add("maintenanceId", item.maintenanceId);
                 maintenanceArray.Add(maintenanceTask);
             }
 

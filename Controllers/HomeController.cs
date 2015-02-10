@@ -82,10 +82,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
 
             //Section for all Map Events for maintenance tasks
-            var maintenanceTasks = db.as_maintenanceProfile.OrderBy(q => q.vc_description).ToList();
-            ViewData["maintenanceTasks"] = maintenanceTasks;
-            ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
-            ViewBag.taskDesc = maintenanceTasks[0].vc_description;
+            var maintenanceTasks = db.as_maintenanceProfile.ToList();
+           
+            //Add Worst Case Category
+            as_maintenanceProfile worstCase = new as_maintenanceProfile();
+            worstCase.i_maintenanceCategoryId = 0;
+            worstCase.i_maintenanceId = 0;
+            worstCase.i_maintenanceValidationId = 0;
+            worstCase.vc_description = "Worst Case";
+            maintenanceTasks.Add(worstCase);
+
+            ViewData["maintenanceTasks"] = maintenanceTasks.OrderBy(q => q.i_maintenanceId).ToList();
             ViewBag.NumberAssets = db.as_assetProfile.Count();
             ViewBag.AssetInit = getAssetsInit();
             ViewBag.NumberUsers = db.UserProfiles.Count();
