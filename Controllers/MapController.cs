@@ -12,10 +12,12 @@
 // SUMMARY: This class contains all controller calls for all Mapping related calls
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -73,8 +75,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve assets: " + err.Message, "getAllAssets", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve assets: " + err.Message, "getAllAssets", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -100,9 +102,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             string longitude = db.as_settingsProfile.Where(q => q.vc_settingDescription == "Longitude").Select(q => q.vc_settingValue).FirstOrDefault();
             string latitude = db.as_settingsProfile.Where(q => q.vc_settingDescription == "Latitude").Select(q => q.vc_settingValue).FirstOrDefault();
 
-            List<double> coordinates = new List<double>();
-            coordinates.Add(double.Parse(latitude));
-            coordinates.Add(double.Parse(longitude));
+            List<decimal> coordinates = new List<decimal>();
+            coordinates.Add(decimal.Parse(latitude, CultureInfo.InvariantCulture));
+            coordinates.Add(decimal.Parse(longitude, CultureInfo.InvariantCulture));
 
             return Json(coordinates);
         }
@@ -261,8 +263,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //    }
         //    catch (Exception err)
         //    {
-        //        Logging log = new Logging();
-        //        log.log("Failed to get Asset Profiles: " + err.Message, "getAllAssetProfiles", Logging.logTypes.Error, User.Identity.Name);
+        //        LogHelper log = new LogHelper();
+        //        log.log("Failed to get Asset Profiles: " + err.Message, "getAllAssetProfiles", LogHelper.logTypes.Error, User.Identity.Name);
         //        return Json(assetList);
         //    }
         //}

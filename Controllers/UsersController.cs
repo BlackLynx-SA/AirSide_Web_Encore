@@ -12,8 +12,9 @@
 // SUMMARY: This class contains all controller calls for the Users route
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -90,8 +91,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all users: " + err.Message, "getAllUsers", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all users: " + err.Message, "getAllUsers", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -117,8 +118,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to change password: " + err.Message, "ChangePassword", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to change password: " + err.Message, "ChangePassword", LogHelper.logTypes.Error, Request.UserHostAddress);
                 return Json(err.Message);
             }
         }
@@ -186,8 +187,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -211,8 +212,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to add new technician group: " + err.Message, "addNewGroup", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to add new technician group: " + err.Message, "addNewGroup", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -239,8 +240,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -258,8 +259,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

@@ -13,6 +13,7 @@
 #endregion
 
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

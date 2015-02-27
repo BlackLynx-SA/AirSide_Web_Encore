@@ -12,8 +12,9 @@
 // SUMMARY: This class contains all controller calls for any history related queries
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,8 +61,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

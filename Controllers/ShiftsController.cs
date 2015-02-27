@@ -12,8 +12,9 @@
 // SUMMARY: This class contains all controller calls for the Shifts route
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using Microsoft.Reporting.WebForms;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -101,8 +102,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -143,7 +144,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<int> assets = new List<int>();
-                Logging log = new Logging();
+                LogHelper log = new LogHelper();
                 log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return assets;
             }
@@ -316,8 +317,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -386,8 +387,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -405,8 +406,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -437,8 +438,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -479,8 +480,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -697,8 +698,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -750,7 +751,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
+                LogHelper log = new LogHelper();
                 log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 Response.Status = err.Message;
@@ -793,8 +794,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert user event: " + err.Message, "insertUserEvent", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert user event: " + err.Message, "insertUserEvent", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -853,8 +854,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert new shift: " + err.Message, "insertNewShift", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert new shift: " + err.Message, "insertNewShift", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -868,7 +869,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         public ActionResult ShiftDataDump(int shiftId, int type, string fileType)
         {
-            Logging log = new Logging(); 
+            LogHelper log = new LogHelper(); 
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -918,12 +919,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftDataDump." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", Logging.logTypes.Info, User.Identity.Name);
+                log.log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", LogHelper.logTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", Logging.logTypes.Error, User.Identity.Name);
+                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", LogHelper.logTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }
@@ -1061,7 +1062,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public ActionResult ShiftReport(int shiftId, int type)
         {
-            Logging log = new Logging(); 
+            LogHelper log = new LogHelper(); 
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -1111,12 +1112,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftReport." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", Logging.logTypes.Info, User.Identity.Name);
+                log.log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", Logging.logTypes.Error, User.Identity.Name);
+                log.log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", LogHelper.logTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }

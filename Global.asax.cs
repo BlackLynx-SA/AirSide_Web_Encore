@@ -1,6 +1,7 @@
 ﻿#region Using
 
-using ADB.AirSide.Encore.V1.App_Helpers;
+#define DEBUG
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,9 @@ namespace ADB.AirSide.Encore.V1
     {
         protected void Application_Start()
         {
-            //Add own Json Value Provider
-            //ValueProviderFactories.Factories.Remove(ValueProviderFactories.Factories.OfType<System.Web.Mvc.JsonValueProviderFactory>().FirstOrDefault());
-            //ValueProviderFactories.Factories.Add(new AirSideJsonValueProviderFactory());
-
+            #if DEBUG
+                
+            #endif
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

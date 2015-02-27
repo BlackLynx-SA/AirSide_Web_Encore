@@ -49,6 +49,20 @@
                                 <input type="text" name="model" id="model" placeholder="Model" class="invalid">
                             </label>
                         </section>
+
+                        <section class="col col-6">
+                            <label>Web Reference</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-globe"></i>
+                                <input type="url" name="manualUrl" id="manualUrl" placeholder="Manual Reference" class="invalid" value="@ViewBag.manualURL">
+                            </label>
+                            <div class="note">
+                                <strong>Note: </strong> This is a URL that points to a reference for the asset
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="row">
                         <section class="col col-6">
                             <label>Asset Picture</label>
                             <div id="assetPic" class="dd-container" style="display:none;"></div>
@@ -59,6 +73,7 @@
 
                         </section>
                     </div>
+
                 </fieldset>
                 <footer>
                     <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> Go Back</a>
@@ -90,11 +105,6 @@
 
     <script type="text/javascript">
         //Global variables
-        var $freqSlider = $('#frequencySlider');
-        var frequencyVal = 0;
-
-       
-
         $(document).ready(function () {
 
             //Get Available Pictures from Library
@@ -129,57 +139,6 @@
                 }
             });
 
-            //Get available frequencies
-            $.ajax({
-                url: "getFrequencies",
-                type: "POST",
-                dataType: "json",
-                success: function (json) {
-                    var min = 0;
-                    var max = 0;
-                    var last = 0;
-                    $.each(json, function (i, v) {
-                        if (i === 0) {
-                            min = v.frequency;
-                            max = v.frequency;
-                        } else {
-                            if (min > v.frequency) min = v.frequency;
-                            if (max < v.frequency) max = v.frequency;
-                        }
-                        last = v.frequency;
-                    });
-
-                    frequencyVal = last;
-
-                    $freqSlider.slider({
-                        value: last,
-                        min: min,
-                        max: max,
-                        step: 15
-                    })
-
-                    $('#adbloader2').fadeOut(300);
-                    $('#frequencyLbl').html('<i class="fa fa-history"></i> Maintenance Frequency (' + last + ' days)');
-                },
-                error: function (err) {
-                    $.smallBox({
-                        title: "Error Retrieving Frequencies",
-                        content: err.responseText,
-                        color: "#f51414",
-                        timeout: 5000,
-                        icon: "fa fa-bell swing animated"
-                    });
-                    $('#adbloader2').fadeOut(300);
-                    $('#frenquencySlider').fadeIn(500);
-                }
-            });
-
-            //Listen for slide event
-            $freqSlider.on("slide", function (ui) {
-                $('#frequencyLbl').html('<i class="fa fa-history"></i> Maintenance Frequency (' + ui.value + ' days)');
-                frequencyVal = ui.value;
-            });
-
             //Listen for click event
             $('#createBtn').on('click', function () {
                 createAssetClass();
@@ -198,6 +157,7 @@
             var description = $('#description').val();
             var manufacturer = $('#manufacturer').val();
             var model = $('#model').val();
+            var manualURL = $('#manualUrl').val();
 
             if (assetPic === "" && flag) {
                 $.smallBox({
@@ -251,14 +211,25 @@
                 }, function (ButtonPressed) {
 
                     if (ButtonPressed === "Yes") {
+                        var token = $("input[name='__RequestVerificationToken']").val();
+
+                        data = {
+                            description: description,
+                            manufacturer: manufacturer,
+                            model: model,
+                            manualUrl: manualURL,
+                            pictureId: assetPic,
+                            assetClassId: 0,
+                            __RequestVerificationToken: token
+                        };
                         //URL For Call
-                        var url = "insertUpdateAssetClass?description=" + description + "&manufacturer=" + manufacturer + "&model=" + model + "&pictureId=" + assetPic + "&frequency=" + frequencyVal + "&assetClassId=0";
+                        var url = "insertUpdateAssetClass";
 
                         $.ajax({
                             url: url,
+                            data: data,
                             type: "POST",
                             dataType: "json",
-                            data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                             success: function (json) {
                                 $.smallBox({
                                     title: "Asset Class was created.",
@@ -290,6 +261,6 @@
                 $('#adbloader3').fadeOut(300);
             }
         }
-    </script>
+</script>
 }
 

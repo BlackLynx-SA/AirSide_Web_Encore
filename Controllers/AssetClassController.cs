@@ -12,8 +12,9 @@
 // SUMMARY: This class contains all controller calls for Asset Classes
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +47,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve validation types: " + err.Message, "getAllMaintenanceValidators", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve validation types: " + err.Message, "getAllMaintenanceValidators", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -77,8 +78,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to remove task assosiation: " + err.Message, "removeTaskAssosiation", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to remove task assosiation: " + err.Message, "removeTaskAssosiation", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -109,8 +110,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve Assosiated Maintenance Tasks: " + err.Message, "getAllMaintenanceValidators", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve Assosiated Maintenance Tasks: " + err.Message, "getAllMaintenanceValidators", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -147,8 +148,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTask", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTask", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -174,8 +175,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all maintenance tasks: " + err.Message, "getAllMaintenanceTasks", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all maintenance tasks: " + err.Message, "getAllMaintenanceTasks", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -201,8 +202,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert new maintenance category: " + err.Message, "insertMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert new maintenance category: " + err.Message, "insertMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -225,8 +226,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to edit maintenance category: " + err.Message, "editMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to edit maintenance category: " + err.Message, "editMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -256,8 +257,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to edit maintenance task: " + err.Message, "editMaintenanceTask", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to edit maintenance task: " + err.Message, "editMaintenanceTask", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -306,8 +307,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -348,8 +349,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -379,8 +380,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTaskType", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTaskType", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -398,8 +399,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all maintenance categories: " + err.Message, "getAllMaintenanceCategories", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all maintenance categories: " + err.Message, "getAllMaintenanceCategories", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -414,22 +415,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
             {
                 var AssetClassList = (from x in db.as_assetClassProfile
                                       join y in db.as_pictureProfile on x.i_pictureId equals y.i_pictureId
-                                      join z in db.as_frequencyProfile on x.i_frequencyId equals z.i_frequencyId
                                       select new
                                       {
                                           assetClassId = x.i_assetClassId,
                                           assetDescription = x.vc_description,
                                           manufacturer = x.vc_manufacturer,
                                           pictureLocation = "../.." + y.vc_fileLocation,
-                                          frequency = z.f_frequency,
-                                          model = x.vc_model
+                                          model = x.vc_model,
+                                          manualURL = x.vc_webSiteLink
                                       }).ToList();
                 return Json(AssetClassList);
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -449,13 +449,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 var assetClass = db.as_assetClassProfile.Find(id);
-                double frequency = db.as_frequencyProfile.Where(q => q.i_frequencyId == assetClass.i_frequencyId).Select(q => q.f_frequency).First();
 
                 ViewBag.description = assetClass.vc_description;
                 ViewBag.manufacturer = assetClass.vc_manufacturer;
                 ViewBag.model = assetClass.vc_model;
+                ViewBag.manualURL = assetClass.vc_webSiteLink;
                 ViewBag.picture = assetClass.i_pictureId;
-                ViewBag.frequency = Math.Round(frequency);
                 ViewBag.assetClassId = assetClass.i_assetClassId;
                 ViewBag.error = "";
 
@@ -467,7 +466,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ViewBag.manufacturer = "";
                 ViewBag.model = "";
                 ViewBag.picture = "";
-                ViewBag.frequency = "";
                 ViewBag.assetClassId = -1;
                 ViewBag.error = "Failed to retrieve record: " + err.Message;
                 return View();
@@ -508,8 +506,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to delete asset class: " + err.Message, "deleteAssetClass", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to delete asset class: " + err.Message, "deleteAssetClass", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -519,7 +517,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, double frequency, int assetClassId)
+        public JsonResult insertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, int assetClassId, string manualUrl)
         {
             try
             {
@@ -531,16 +529,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                     if (existingAssetClass == null)
                     {
-
-                        //Get the Frequency Id
-                        int frequencyId = db.as_frequencyProfile.Where(q => q.f_frequency == frequency).Select(q => q.i_frequencyId).First();
-
                         as_assetClassProfile newAssetClass = new as_assetClassProfile();
-                        newAssetClass.i_frequencyId = frequencyId;
                         newAssetClass.i_pictureId = pictureId;
                         newAssetClass.vc_description = description;
                         newAssetClass.vc_manufacturer = manufacturer;
                         newAssetClass.vc_model = model;
+                        newAssetClass.vc_webSiteLink = manualUrl;
 
                         db.as_assetClassProfile.Add(newAssetClass);
                         db.SaveChanges();
@@ -559,26 +553,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
                 else
                 {
-                    //Get the Frequency Id
-                    int frequencyId = db.as_frequencyProfile.Where(q => q.f_frequency == frequency).Select(q => q.i_frequencyId).First();
-
                     var assetClass = db.as_assetClassProfile.Find(assetClassId);
-                    int currentFrequency = assetClass.i_frequencyId;
-                    assetClass.i_frequencyId = frequencyId;
                     assetClass.i_pictureId = pictureId;
                     assetClass.vc_description = description;
                     assetClass.vc_manufacturer = manufacturer;
                     assetClass.vc_model = model;
+                    assetClass.vc_webSiteLink = manualUrl;
 
                     db.Entry(assetClass).State = System.Data.Entity.EntityState.Modified;
                     db.SaveChanges();
-
-                    //Update Cache
-                    if(currentFrequency != assetClass.i_frequencyId)
-                    {
-                        CacheHelper cache = new CacheHelper();
-                        cache.rebuildAssetProfileForAssetClass(assetClass.i_assetClassId);
-                    }
 
                     //update iOS Cache Hash
                     CacheHelper cacheHelp = new CacheHelper();
@@ -589,8 +572,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert/update asset class: " + err.Message, "insertUpdateAssetClass", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert/update asset class: " + err.Message, "insertUpdateAssetClass", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -608,8 +591,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Faile to retrieve frequencies: " + err.Message, "getFrequencies", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Faile to retrieve frequencies: " + err.Message, "getFrequencies", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -635,8 +618,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve pictures: " + err.Message, "getPictures", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve pictures: " + err.Message, "getPictures", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

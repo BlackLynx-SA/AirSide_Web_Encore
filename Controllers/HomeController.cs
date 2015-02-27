@@ -18,7 +18,6 @@ using ADB.AirSide.Encore.V1.Models;
 using System.Web.Mvc;
 using System.Linq;
 using System;
-using ADB.AirSide.Encore.V1.App_Helpers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
@@ -30,6 +29,8 @@ using Microsoft.WindowsAzure.Storage;
 using System.Configuration;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
+using AirSide.ServerModules.Models;
+using AirSide.ServerModules.Helpers;
 
 #endregion
 
@@ -117,9 +118,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<mongoAssetProfile> assets = cache.getAllAssets();
             double assetCount = 0;
             double total = 0;
-            foreach(mongoAssetProfile asset in assets)
+            foreach (mongoAssetProfile asset in assets)
             {
-                foreach(maintenance maint in asset.maintenance)
+                foreach (maintenance maint in asset.maintenance)
                 {
                     if (maint.maintenanceCycle == 1) assetCount++;
                     total++;
@@ -316,8 +317,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to get User Details: " + err.Message, "getUserDetails", Logging.logTypes.Error, User.Identity.Name);
+                LogHelper log = new LogHelper();
+                log.log("Failed to get User Details: " + err.Message, "getUserDetails", LogHelper.logTypes.Error, User.Identity.Name);
                 return Json(new { client = "Unknown", email = "unknown@unknown.com" });
             }
         }
@@ -345,7 +346,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
+                LogHelper log = new LogHelper();
                 log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
@@ -392,7 +393,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
+                LogHelper log = new LogHelper();
                 log.logError(err, Request.UserHostAddress);
                 return Json(new { error = err.Message });
             }
@@ -409,7 +410,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
+                LogHelper log = new LogHelper();
                 log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return Json(new { error = err.Message });
             }
@@ -446,8 +447,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", Logging.logTypes.Error, User.Identity.Name);
+                LogHelper log = new LogHelper();
+                log.log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", LogHelper.logTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -467,8 +468,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", Logging.logTypes.Error, User.Identity.Name);
+                LogHelper log = new LogHelper();
+                log.log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", LogHelper.logTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -504,7 +505,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult AnalyticsReport(string fileType)
         {
-            Logging log = new Logging();
+            LogHelper log = new LogHelper();
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -557,12 +558,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=AirSideAnalyticReport." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", Logging.logTypes.Info, User.Identity.Name);
+                log.log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", LogHelper.logTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", Logging.logTypes.Error, User.Identity.Name);
+                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", LogHelper.logTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message }, JsonRequestBehavior.AllowGet);
             }
@@ -655,8 +656,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<ShiftData> shiftList = new List<ShiftData>();
-                Logging log = new Logging();
-                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
                 return shiftList;
             }
         }

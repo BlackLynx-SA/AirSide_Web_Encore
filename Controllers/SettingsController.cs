@@ -12,8 +12,9 @@
 // SUMMARY: This class contains all controller calls for the Settings route
 #endregion
 
-using ADB.AirSide.Encore.V1.App_Helpers;
 using ADB.AirSide.Encore.V1.Models;
+using AirSide.ServerModules.Helpers;
+using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,26 +50,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public JsonResult UpdateEmailSettings(string apiKey, string fromAddress, string domain)
-        //{
-        //    //Gets the next maintenance date for a asset
-        //    //Create Date: 2014/12/09
-        //    //Author: Bernard Willer
-
-        //    try
-        //    {
-
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        Logging log = new Logging();
-        //        log.logError(err, "SYSTEM Cache");
-        //        return new DateTime(1970, 1, 1);
-        //    }
-        //}
-
         [HttpPost]
         public JsonResult GetAllAirSideImages()
         {
@@ -79,8 +60,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to retrieve all AirSide images: " + err.Message, "getAllAirSideImages", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to retrieve all AirSide images: " + err.Message, "getAllAirSideImages", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -104,8 +85,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to edit image: " + err.Message, "EditImage", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to edit image: " + err.Message, "EditImage", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -143,8 +124,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to delete image: " + err.Message, "DeleteImage", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to delete image: " + err.Message, "DeleteImage", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -187,8 +168,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                Logging log = new Logging();
-                log.log("Failed to upload client image: " + err.Message, "uploadClientImage", Logging.logTypes.Error, Request.UserHostAddress);
+                LogHelper log = new LogHelper();
+                log.log("Failed to upload client image: " + err.Message, "uploadClientImage", LogHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

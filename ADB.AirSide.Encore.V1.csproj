@@ -157,12 +157,6 @@
     <Reference Include="Microsoft.WindowsAzure.Storage">
       <HintPath>..\..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Bson">
-      <HintPath>..\..\..\Documents\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Bson.dll</HintPath>
-    </Reference>
-    <Reference Include="MongoDB.Driver">
-      <HintPath>..\..\..\Documents\packages\mongocsharpdriver.1.9.2\lib\net35\MongoDB.Driver.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -1213,33 +1207,13 @@
     <Content Include="Views\Account\Error.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\_ErrorText.cshtml" />
     <Content Include="Views\Account\_LoginText.cshtml" />
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
-    <EntityDeploy Include="Models\AirSideModels.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>AirSideModels.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\AirSideModels.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AirSideModels.edmx</DependentUpon>
-      <LastGenOutput>AirSideModels.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\AirSideModels.edmx.diagram">
-      <DependentUpon>AirSideModels.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\AirSideModels.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>AirSideModels.edmx</DependentUpon>
-      <LastGenOutput>AirSideModels.cs</LastGenOutput>
-    </Content>
-    <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Custom.pubxml" />
-    <None Include="Properties\PublishProfiles\manchesterairside - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\manchesterairside - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -1284,17 +1258,6 @@
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="_airside_encoreDataSet.xsc">
-      <DependentUpon>_airside_encoreDataSet.xsd</DependentUpon>
-    </Content>
-    <None Include="_airside_encoreDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>_airside_encoreDataSet.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="_airside_encoreDataSet.xss">
-      <DependentUpon>_airside_encoreDataSet.xsd</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="TypeScripts\Map\AirPortMap_ts.ts" />
     <TypeScriptCompile Include="typings\google.maps.d.ts" />
@@ -1305,11 +1268,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Helpers\Cache.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
-    <Compile Include="App_Helpers\Database.cs" />
-    <Compile Include="App_Helpers\JsonDeserializer.cs" />
-    <Compile Include="App_Helpers\Logging.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
     <Compile Include="App_Helpers\UserManager.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -1335,168 +1294,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_cacheProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_iosImageProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_iosLogProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="_airside_encoreDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>_airside_encoreDataSet.xsd</DependentUpon>
-    </Compile>
     <Content Include="Logs\empty.txt" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AirSideModels.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModels.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AirSideModels.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AirSideModels.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AirSideModels.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetRole.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUser.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserClaim.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\AspNetUserLogin.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_accessProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_airportProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_areaProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_areaSubProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_assetClassMaintenanceProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_assetClassProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_assetInfoProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_assetProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_assetStatusProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_electricalNodeProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_eventPofile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_eventTypes.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_fbTechProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_fileUploadInfo.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_fileUploadProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_frequencyProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_geoSpatialProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_locationProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_maintenanceCategory.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_maintenanceProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_maintenanceValidation.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_nodeRegionProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_pictureProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_reportParameters.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_reportProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_settingsProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_shiftData.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_shifts.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_shiftsCustom.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_shiftsCustomProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_technicianGroupProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_technicianGroups.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_technicianWrenchProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_todoCategories.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_todoProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_userExternalSession.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_validationTaskProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_wrenchProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GeneralModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\UserProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -1527,6 +1327,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TypeScripts\Map\AirPortMap.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Visual Studio 2013\Projects\AirSide.ServerModules\AirSide.ServerModules.csproj">
+      <Project>{98ff727b-1808-4e66-99e5-732601a3fe9d}</Project>
+      <Name>AirSide.ServerModules</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

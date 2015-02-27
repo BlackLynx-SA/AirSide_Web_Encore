@@ -28,7 +28,6 @@
                         <th data-class="expand"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Asset Type</th>
                         <th data-class="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Previous</th>
                         <th data-hide="phone,tablet"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Next</th>
-                        <th data-hide="expand"><i class="fa fa-fw fa-history txt-color-blue hidden-md hidden-sm hidden-xs"></i> Frequency</th>
                         <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
                     </tr>
                 </thead>
@@ -115,17 +114,20 @@
 
                     $.each(json, function (i, v) {
                         var cycle = "";
+                        var color = "";
                         if (v.maintenance[0].maintenanceCycle === 0) cycle = "btn-primary";
                         else if (v.maintenance[0].maintenanceCycle === 1) cycle = "bg-color-green";
                         else if (v.maintenance[0].maintenanceCycle === 2) cycle = "bg-color-yellow";
                         else if (v.maintenance[0].maintenanceCycle === 3) cycle = "bg-color-orange"
-                        else if (v.maintenance[0].maintenanceCycle === 4) cycle = "bg-color-red"
+                        else if (v.maintenance[0].maintenanceCycle === 4) { cycle = "bg-color-red"; color = "danger"; }
+
+
 
                         var html = "";
-                        html += '<tr id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
+                        html += '<tr class="' + color +'" id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
                         html += '<td><img src="../..' + v.picture.fileLocation + '" style="height:50px; width:auto;"/></td>';
-                        html += '<td>' + v.maintenance[0].previousDate + '</td><td>' + v.maintenance[0].nextDate + '</td><td>' + v.frequency.frequencyValue + '</td>';
+                        html += '<td>' + v.maintenance[0].previousDate + '</td><td>' + v.maintenance[0].nextDate + '</td>';
                         html += '<td style="line-height:2;"><a href="#" class="btn btn-info btn-xs" onclick="showAssetLocation(' + v.assetId + ',' + v.location.latitude + ',' + v.location.longitude + ',' + v.maintenanceCycle + ')"><i class="fa fa-map-marker"></i> Location</a></td></tr>';
 
                         //Append to DOM

@@ -1,4 +1,9 @@
-﻿#technician-events>li>:first-child {
+﻿.margin-left-5
+{
+    margin-left: 5px;
+}
+
+#technician-events>li>:first-child {
     padding: 5px 10px 10px;
     cursor: move;
     display: block;
