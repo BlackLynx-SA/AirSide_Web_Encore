@@ -23,7 +23,6 @@ namespace ADB.AirSide.Encore.V1
             //ValueProviderFactories.Factories.Add(new AirSideJsonValueProviderFactory());
 
             AreaRegistration.RegisterAllAreas();
-            //GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
