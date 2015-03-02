@@ -515,26 +515,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 location = airportName + " - " + a.vc_description + " (" + z.vc_description + ")",
                                 description = y.vc_description
                           }).ToList();
+            //header
+            writer.WriteLine("BEGIN:VCALENDAR");
+            writer.WriteLine("PRODID:-//ADB AirSide//AirSide//EN");
+            writer.WriteLine("VERSION:2.0");
 
             foreach (var shift in shifts)
             {
-                //header
-                writer.WriteLine("BEGIN:VCALENDAR");
-                writer.WriteLine("PRODID:-//ADB Airfield Solutions//AirSide//EN");
+                //Event Start
                 writer.WriteLine("BEGIN:VEVENT");
+                writer.WriteLine("X-WR-CALNAME:ADB AirSide");
+                writer.WriteLine("X-WR-CALDESC:All events for the ADB AirSide Solution");
 
                 //BODY
-                writer.WriteLine("DTSTART:" + shift.beginDate);
-                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2));
+                writer.WriteLine("DTSTART:" + shift.beginDate.ToString("yyyyMMddTHHmmssZ"));
+                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2).ToString("yyyyMMddTHHmmssZ"));
+                writer.WriteLine("ORGANIZER;CN=ADB AirSide:MAILTO:support@adb-airside.com");
                 writer.WriteLine("LOCATION:" + shift.location);
-                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description);
+                writer.WriteLine("CATEGORIES:AirSide Event");
+                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description + "=0D=0A");
                 writer.WriteLine("SUMMARY:AirSide Planned Event");
-                writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:OOF");
 
                 //FOOTER
-                writer.WriteLine("PRIORITY:5");
+                writer.WriteLine("PRIORITY:3");
                 writer.WriteLine("END:VEVENT");
-                writer.WriteLine("END:VCALENDAR");
             }
 
             var customShifts = (from x in db.as_shiftsCustom
@@ -548,33 +552,36 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             foreach (var shift in customShifts)
             {
-                //header
-                writer.WriteLine("BEGIN:VCALENDAR");
-                writer.WriteLine("PRODID:-//ADB Airfield Solutions//AirSide//EN");
+                //Event Start
                 writer.WriteLine("BEGIN:VEVENT");
+                writer.WriteLine("X-WR-CALNAME:ADB AirSide");
+                writer.WriteLine("X-WR-CALDESC:All events for the ADB AirSide Solution");
 
                 //BODY
-                writer.WriteLine("DTSTART:" + shift.beginDate);
-                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2));
+                writer.WriteLine("DTSTART:" + shift.beginDate.ToString("yyyyMMddTHHmmssZ"));
+                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2).ToString("yyyyMMddTHHmmssZ"));
+                writer.WriteLine("ORGANIZER;CN=ADB AirSide:MAILTO:support@adb-airside.com");
                 writer.WriteLine("LOCATION:" + shift.location);
-                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description);
+                writer.WriteLine("CATEGORIES:AirSide Event");
+                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description + "=0D=0A");
                 writer.WriteLine("SUMMARY:AirSide Planned Event");
-                writer.WriteLine("X-MICROSOFT-CDO-BUSYSTATUS:OOF");
 
                 //FOOTER
-                writer.WriteLine("PRIORITY:5");
+                writer.WriteLine("PRIORITY:3");
                 writer.WriteLine("END:VEVENT");
-                writer.WriteLine("END:VCALENDAR");
             }
+
+            //End Calendar
+            writer.WriteLine("END:VCALENDAR");
 
             //MAKE IT DOWNLOADABLE
             Response.Clear(); //clears the current output content from the buffer
-            Response.AppendHeader("Content-Disposition", "attachment; filename=AirSideEvents.vcs");
+            Response.AppendHeader("Content-Disposition", "attachment; filename=AirSideEvents.ics");
             Response.AppendHeader("Content-Length", mStream.Length.ToString());
-            Response.ContentType = "application/download";
+            Response.ContentType = "text/calendar";
             Response.BinaryWrite(mStream.ToArray());
             Response.End();
-            return File(mStream.ToArray(), "application/hbs-vcs, text/calendar, text/x-vcalendar");
+            return File(mStream.ToArray(), "text/calendar");
         }
         
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
