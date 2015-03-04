@@ -130,6 +130,86 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
+        public JsonResult getMaintenanceChecks(int maintenanceId)
+        {
+            try
+            {
+                //This method will return all check items assoisated with a maintenance profile
+                //Create Date: 2015/03/04
+                //Author: Bernard Willer
+
+                var checks = db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId).ToList();
+
+                return Json(checks);
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        public JsonResult addMaintenanceCheckEntity(as_maintenanceCheckListEntity entity)
+        {
+            try
+            {
+                //This code will insert a check entity to the db
+                //Create Date: 2015/03/04
+                //Author: Bernard Willer
+
+                db.as_maintenanceCheckListEntity.Add(entity);
+                db.SaveChanges();
+
+                return Json(new { message = "Added Check" });
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        public JsonResult addMaintenanceCheckEntities(List<as_maintenanceCheckListEntity> entities)
+        {
+            try
+            {
+                //This code will insert a list of check entities to the db
+                //Create Date: 2015/03/04
+                //Author: Bernard Willer
+
+                foreach (as_maintenanceCheckListEntity entity in entities)
+                {
+                    db.as_maintenanceCheckListEntity.Add(entity);
+                    db.SaveChanges();
+                }
+
+                return Json(new { message = "Added Check" });
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+
+        }
+        
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
         public JsonResult getMaintenanceProfile()
         {
             var maintenanceProfiles = (from x in db.as_maintenanceProfile

@@ -1,0 +1,65 @@
+﻿
+<div class="row">
+    <div class="col-md-12">
+        <div class="well well-sm bg-color-darken txt-color-white">
+            <h5>Date Range</h5>
+            <fieldset>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Select a date (range):</label>
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" id="from" type="text" placeholder="From">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" id="to" type="text" placeholder="Select a date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="#" class="btn btn-success" id="dateRangeBtn"><i class="fa fa-check"></i> Get Report</a>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generateShiftPerDateRange()
+    {
+        $('#reportLoader').fadeIn(300);
+
+        $('#reportImage').remove();
+        var dateRange = "";
+
+        var fromDate = $('#from').val();
+        var toDate = $('#to').val();
+
+        dateRange = fromDate + "-" + toDate;
+
+        var html = '<span><img id="reportImage" class="mustLoad" style="display:none; zoom:0.5;" src="getShiftsPerDateRangeReport?dateRange=' + dateRange + '" />';
+        html += '<a class="btn btn-primary" href="#" style="vertical-align: top;"><i class="fa fa-cloud-download"></i> Download Report</a></span>'
+
+        $('#reportImg').html(html);
+
+        $('#reportLoader').hide();
+        $('#reportImg img').fadeIn(300);
+    }
+</script>
+
+

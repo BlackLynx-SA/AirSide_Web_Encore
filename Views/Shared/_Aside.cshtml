@@ -93,6 +93,16 @@
                     </li>
                 </ul>
             </li>
+
+            @* Reports *@
+            <li class="@Html.RouteIf("Reporting", "active")">
+                <a href="#"><i class="fa fa-lg fa-fw fa-file-pdf-o"></i> <span class="menu-item-parent">Reporting System</span></a>
+                <ul>
+                    <li class="@Html.RouteIf("ShiftReport", "active")">
+                        <a href="@Url.Action("ShiftReport", "Reporting")">Shift Reports</a>
+                    </li>
+                </ul>
+            </li>
             
             @* Settings *@
             <li class="@Html.RouteIf("Settings", "active")">
