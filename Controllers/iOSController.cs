@@ -132,8 +132,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getMaintenanceProfile()
         {
-            List<as_maintenanceProfile> maintenance = db.as_maintenanceProfile.ToList();
-            return Json(maintenance);
+            var maintenanceProfiles = (from x in db.as_maintenanceProfile
+                                       join y in db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
+                                       select new
+                                       {
+                                           i_maintenanceId = x.i_maintenanceId,
+                                           vc_description = x.vc_description,
+                                           i_maintenanceCategoryId = x.i_maintenanceCategoryId,
+                                           i_maintenanceValidationId = x.i_maintenanceValidationId,
+                                           vc_validationName = y.vc_validationName,
+                                           vc_validationDescr = y.vc_validationDescription
+                                       }).ToList();
+
+            return Json(maintenanceProfiles);
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -313,7 +324,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.areaName = item.areaName;
 					if (item.validation == 1)
                         shift.validation = "YES";
-                    else if (item.validation == 2)
+                    else 
                         shift.validation = "NO";
                     
                     //2015/01/19
@@ -355,7 +366,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.areaName = item.areaName;
                     if (item.validation == 1)
                         shift.validation = "YES";
-                    else if (item.validation == 2)
+                    else 
                         shift.validation = "NO";
 
                     shift.shiftType = 1;

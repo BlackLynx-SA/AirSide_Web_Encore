@@ -1,0 +1,143 @@
+﻿    <!--Modal for add Validation Checks-->
+<div class="modal fade" id="checksModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="eventModalLabel"><i class="fa fa-check-square-o txt-color-blueDark"></i> Create Check List </h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <input type="hidden" value="0" id="maintenanceId" />
+                    <div class="col-md-12">
+                        <div class="well">
+                            <div class="input-group">
+                                <input class="form-control" type="text" id="checkItemTxt" placeholder="Validation Check Item">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default btn-success" type="button" onclick="addNewCheckBox();">
+                                        <i class="fa fa-plus"></i> Add Item
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="note"><strong>Note:</strong> The items will be added to list below. When you are ready you can save it to the server.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <form class="smart-form">
+                        <fieldset>
+                            <section class="col col-11" id="checkListItems"></section>
+                        </fieldset>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader2" style="height:20px; display:none;" />
+                <button class="btn btn-primary" onclick="saveChecks();"><i class="fa fa-plus"></i> Save List</button>
+                <button class="btn btn-danger" onclick="$('#checksModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addNewCheckBox()
+    {
+        var id = Math.random() * 10000;
+        id = Math.round(id);
+        var description = $('#checkItemTxt').val();
+        var html = '<label id="chk_' + id + '" class="checkbox"><input class="taskChecks" type="checkbox" name="checkbox" value="' + description + '"><i></i>' + description + " | <a href='#' class='txt-color-red' onclick='removeItem(" + id + ")'>Remove</a></label>";
+        $('#checkListItems').append(html);
+    }
+
+    function addCheckBox(newId, description) {
+        if (newId === null) {
+            var id = Math.random() * 10000;
+            id = Math.round(id);
+            newId = id;
+        }
+        if (description === null) {
+            description = $('#checkItemTxt').val();
+        }
+        var html = '<label id="chk_' + newId + '" class="checkbox"><input class="taskChecks" type="checkbox" name="checkbox" value="' + description + '"><i></i>' + description + " | <a href='#' class='txt-color-red' onclick='removeItem(" + newId + ")'>Remove</a></label>";
+        $('#checkListItems').append(html);
+    }
+
+    function removeItem(id)
+    {
+        $('#chk_' + id).remove();
+    }
+
+    function getTaskChecks(id)
+    {
+        $('#checkListItems').html('');
+        $.ajax({
+            url: "../../AssetClass/getTaskCheckList?maintenanceId=" + id,
+            type: "POST",
+            dataType: "json",
+            success: function (json) {
+                $.each(json, function (i, v) {
+                    addCheckBox(v.i_maintenanceCheckId, v.vc_description);
+                });
+
+                $('#checksModal').modal('show');
+                $('#maintenanceId').val(id);
+                $('#checkItemTxt').val('');
+            }
+        });
+    }
+
+    function saveChecks()
+    {
+        var tasks = [];
+        $.each($('.taskChecks'), function () {
+            tasks.push($(this).val());
+        });
+
+        var token = $("input[name='__RequestVerificationToken']").val();
+        var maintenanceId =  $('#maintenanceId').val();
+        var data = {
+            
+                maintenanceId: maintenanceId,
+                taskChecks: tasks,
+                __RequestVerificationToken: token
+            
+        };
+
+        $.ajax({
+            url: "../../AssetClass/addUpdateTaskList",
+            type: "POST",
+            dataType: "json",
+            data: data,
+            traditional: true,
+            success: function (json) {
+                $.smallBox({
+                    title: "Check List Added",
+                    content: "The Check List was added successfully. Please update the cache on the iPad to reflect.",
+                    color: "#5384AF",
+                    timeout: 4000,
+                    icon: "fa fa-check-square-o"
+                });
+
+                //Hide Modal
+                $('#checksModal').modal('hide');
+            },
+            error: function(json)
+            {
+                $.smallBox({
+                    title: "Error creating list",
+                    content: "<br/>",
+                    color: "#f51414",
+                    timeout: 5000,
+                    icon: "fa fa-bell swing animated"
+                });
+            }
+        });
+    }
+</script>
+

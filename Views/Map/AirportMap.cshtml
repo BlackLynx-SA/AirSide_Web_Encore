@@ -217,16 +217,45 @@
             this.jsonData = {};
         }
 
+        function showAllAssets() {
+            markers = [];
+            $.each(Assets.jsonData, function (i,v) {
+                var flag = false;
+                if(selectedTask != 0)
+                {
+                    $.each(v.maintenance, function (index, value) {
+                        if (value.maintenanceId == selectedTask) {
+                            addMarker(v);
+                            return false;
+                        }
+                    });
+                }
+                else{
+                    addMarker(v);
+                }
+            });
+        }
+
         function markerInfo(json) {
 
             var previousDate, nextDate, cycle;
-            $.each(json.maintenance, function (i, v) {
-                if (v.maintenanceId === selectedTask) {
-                    previousDate = v.previousDate;
-                    nextDate = v.nextDate;
-                    cycle = v.maintenanceCycle;
-                }
-            });
+
+            if(selectedTask != 0)
+            {
+                $.each(json.maintenance, function (i, v) {
+                    if (v.maintenanceId === selectedTask) {
+                        previousDate = v.previousDate;
+                        nextDate = v.nextDate;
+                        cycle = v.maintenanceCycle;
+                    }
+                });
+            } else
+            {
+                var v = json.maintenance[0];
+                previousDate = v.previousDate;
+                nextDate = v.nextDate;
+                cycle = v.maintenanceCycle;
+            }
 
             //Header
             var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
@@ -238,7 +267,10 @@
             content += "Previous Date: <strong>" + previousDate + "</strong><br />";
             content += "Next Date: <strong>" + nextDate + "</strong><br />";
             content += "Asset Type: <strong>" + json.assetClass.description + "</strong><br />";
-            content += "<br/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> History</a><br />";
+            if(selectedTask === 0)
+                content += "Maintenance Task: <strong>" + json.maintenance[0].maintenanceTask + "</strong><br />";
+            content += "<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> History</a>";
+            content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "'><i class='fa fa-book'></i> Manual</a><br />";
            
             content += "</ul>";
             content += '<hr/>';
@@ -276,10 +308,16 @@
             var image, cycle;
             if(status === false)
             {
-                $.each(value, function (i, v) {
-                    if (v.maintenanceId === selectedTask)
-                        cycle = v.maintenanceCycle;
-                });
+                if(selectedTask === 0)
+                {
+                    cycle = value[0].maintenanceCycle;
+                }
+                else{
+                    $.each(value, function (i, v) {
+                        if (v.maintenanceId === selectedTask)
+                            cycle = v.maintenanceCycle;
+                    });
+                }
 
                 switch (cycle) {
                     case 0: image = '/images/map_images/NutralMarker.png';
@@ -421,6 +459,8 @@
                     //Download all assets and Sub Areas
                     requestAllAssetData();
                     requestAllSubAreas();
+
+
                 }
             });
         }

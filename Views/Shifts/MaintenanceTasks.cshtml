@@ -123,6 +123,7 @@
     </section>
 </div>
 
+@{Html.RenderPartial("_MaintenanceChecks");}
 
 @section pagespecific{
     <script type="text/javascript">
@@ -546,7 +547,10 @@
                         if (v.i_validationId === 2)
                             color = 'txt-color-blue';
 
-                        html = '<li class="' + color + '"><span><i class="fa fa-cog"></i> ' + v.vc_description + ' ( ' + v.vc_validation + ' )</span> – <a class="txt-color-green" href="#" onclick="modifyTask(' + v.i_maintenanceId + ',\'' + v.vc_description + '\',\'' + v.vc_validation  +'\')"><i class="fa fa-cogs"></i> Modify</a></li>';
+                        html = '<li class="' + color + '"><span><i class="fa fa-cog"></i> ' + v.vc_description + ' ( ' + v.vc_validation + ' )</span> – <a class="txt-color-green" href="#" onclick="modifyTask(' + v.i_maintenanceId + ',\'' + v.vc_description + '\',\'' + v.vc_validation  +'\')"><i class="fa fa-cogs"></i> Modify</a>';
+                        if (v.i_validationId === 1)
+                            html += ' | <a class="txt-color-blue" onclick="addCheckList(' + v.i_maintenanceId + ')"><i class="fa fa-check-square-o"></i> Check List</a>';
+                        html += '</li>';
                         $('#cat_' + v.i_maintenanceCategoryId).append(html);
                     });
                     initTree();
@@ -609,6 +613,11 @@
                     });
                 }
             });
+        }
+
+        function addCheckList(id)
+        {
+            getTaskChecks(id);
         }
     </script>
 }

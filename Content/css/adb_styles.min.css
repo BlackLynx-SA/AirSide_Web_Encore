@@ -3,6 +3,10 @@
     margin-left: 5px;
 }
 
+a:focus, a:hover {
+    cursor:pointer;
+}
+
 #technician-events>li>:first-child {
     padding: 5px 10px 10px;
     cursor: move;

@@ -625,6 +625,78 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
+        public JsonResult getTaskCheckList(int maintenanceId)
+        {
+            try
+            {
+                //Get All Check List items for maintenance task
+                //Create Date: 2015/03/03
+                //Author: Bernard Willer
+
+                var items = db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId);
+
+                return Json(items.ToList());
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult addUpdateTaskList(TaskCheck checks)
+        {
+            
+            try
+            {
+                //This method persists a check list for maintenance tasks
+                //Create Date: 2015/03/03
+                //Author: Bernard Willer
+
+                //Remove Current List
+                var currentList = db.as_maintenanceCheckListDef.Where(x => x.i_maintenanceId == checks.maintenanceId);
+
+                foreach (var item in currentList)
+                {
+                    db.as_maintenanceCheckListDef.Remove(item);
+                }
+
+                db.SaveChanges();
+
+                //Persist New List
+                foreach(string taskCheck in checks.taskChecks)
+                {
+                    as_maintenanceCheckListDef newDef = new as_maintenanceCheckListDef();
+                    newDef.bt_active = true;
+                    newDef.i_inputType = 0;
+                    newDef.i_maintenanceId = checks.maintenanceId;
+                    newDef.vc_description = taskCheck;
+
+                    db.as_maintenanceCheckListDef.Add(newDef);
+                }
+
+                db.SaveChanges();
+
+                return Json(new { message = "success" });
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+            
+        }
+
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
     }

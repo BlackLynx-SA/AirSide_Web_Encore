@@ -1251,6 +1251,7 @@
     <Content Include="Views\Asset\_MapView.cshtml" />
     <Content Include="Views\iOS\_ReleaseNotes.cshtml" />
     <Content Include="Views\History\TSTest.cshtml" />
+    <Content Include="Views\Shifts\_MaintenanceChecks.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
