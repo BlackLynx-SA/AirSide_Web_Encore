@@ -19,7 +19,6 @@ using System.Security.Claims;
 using System.Web;
 using Microsoft.Owin.Security;
 using System;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -31,6 +30,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using ADB.AirSide.Encore.V1.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System.Net;
+using System.Data.Entity.Validation;
 
 #endregion
 
