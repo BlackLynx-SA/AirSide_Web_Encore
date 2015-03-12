@@ -64,7 +64,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 settings.blobContainer = "reportcontent";
                 settings.blobReference = "ShiftReport.rdlc";
-                settings.fileType = ReportFileTypes.image;
+                settings.fileType = ReportFileTypes.pdf;
                 settings.dataSources = new ReportDataSource[1];
 
                 //Prepare Data Sources for Report
@@ -79,11 +79,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportBytes renderedReport = report.generateReport(settings);
 
                 //Convert Type JPG
-                byte[] jpgFile = ConvertTiffToJpeg(renderedReport.renderedBytes);
+                //byte[] jpgFile = ConvertTiffToJpeg(renderedReport.renderedBytes);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
-                log.log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + renderedReport.mimeType, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
-                return File(jpgFile, "image/jpeg");
+                log.log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
+                return File(renderedReport.renderedBytes, "application/pdf ");
             }
             catch (Exception err)
             {
