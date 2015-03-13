@@ -45,7 +45,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public FileContentResult getShiftsPerDateRangeReport(string dateRange)
+        public FileContentResult getShiftsPerDateRangeReport(string dateRange, int type)
         {
             try
             {
@@ -64,7 +64,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 settings.blobContainer = "reportcontent";
                 settings.blobReference = "ShiftReport.rdlc";
-                settings.fileType = ReportFileTypes.pdf;
+
+                settings.fileType = (ReportFileTypes)type;
                 settings.dataSources = new ReportDataSource[1];
 
                 //Prepare Data Sources for Report

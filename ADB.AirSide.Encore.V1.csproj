@@ -52,11 +52,11 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\..\..\Documents\packages\Microsoft.ApplicationInsights.0.11.1-build00694\lib\net40\Microsoft.ApplicationInsights.dll</HintPath>
@@ -70,47 +70,50 @@
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin">
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Owin.2.2.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Data.Edm.5.6.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Data.OData.5.6.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Data.Services.Client.5.6.3\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.0.26.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.0.26\lib\net40\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb">
-      <HintPath>..\..\..\Documents\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -167,15 +170,15 @@
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Spatial, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+      <HintPath>..\..\packages\System.Spatial.5.6.3\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -188,38 +191,38 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Mvc.5.2.2\lib\net45\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.Razor.3.2.2\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -1158,92 +1161,8 @@
     <Content Include="Scripts\plugin\noUiSlider\jquery.nouislider.css" />
     <Content Include="Scripts\plugin\noUiSlider\jquery.nouislider.min.js" />
     <Content Include="Scripts\plugin\pace\pace.min.js" />
-    <Content Include="Scripts\plugin\PDF.js\build\pdf.js" />
-    <Content Include="Scripts\plugin\PDF.js\build\pdf.worker.js" />
-    <Content Include="Scripts\plugin\PDF.js\web\compatibility.js" />
-    <Content Include="Scripts\plugin\PDF.js\web\debugger.js" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-check.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-comment.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-help.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-insert.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-key.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-newparagraph.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-noicon.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-note.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\annotation-paragraph.svg" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-next%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-next-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-next-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-next.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-previous%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-previous-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-previous-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\findbarButton-previous.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\grab.cur" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\grabbing.cur" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\loading-icon.gif" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\loading-small%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\loading-small.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-documentProperties%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-documentProperties.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-firstPage%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-firstPage.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-handTool%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-handTool.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-lastPage%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-lastPage.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-rotateCcw%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-rotateCcw.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-rotateCw%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\secondaryToolbarButton-rotateCw.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\shadow.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\texture.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-bookmark%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-bookmark.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-download%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-download.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-menuArrows%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-menuArrows.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-openFile%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-openFile.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageDown%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageDown-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageDown-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageDown.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageUp%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageUp-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageUp-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-pageUp.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-presentationMode%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-presentationMode.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-print%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-print.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-search%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-search.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-secondaryToolbarToggle%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-secondaryToolbarToggle-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-secondaryToolbarToggle-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-secondaryToolbarToggle.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-sidebarToggle%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-sidebarToggle-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-sidebarToggle-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-sidebarToggle.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewAttachments%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewAttachments.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewOutline%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewOutline-rtl%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewOutline-rtl.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewOutline.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewThumbnail%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-viewThumbnail.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-zoomIn%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-zoomIn.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-zoomOut%402x.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\images\toolbarButton-zoomOut.png" />
-    <Content Include="Scripts\plugin\PDF.js\web\l10n.js" />
-    <Content Include="Scripts\plugin\PDF.js\web\viewer.css" />
-    <Content Include="Scripts\plugin\PDF.js\web\viewer.html" />
-    <Content Include="Scripts\plugin\PDF.js\web\viewer.js" />
+    <Content Include="Scripts\plugin\PDF.js\pdf.js" />
+    <Content Include="Scripts\plugin\PDF.js\pdf.worker.js" />
     <Content Include="Scripts\plugin\select2\readme.txt" />
     <Content Include="Scripts\plugin\select2\select2.min.js" />
     <Content Include="Scripts\plugin\selectToUISlider\selectToUISlider.jQuery.min.js" />
@@ -1340,281 +1259,6 @@
     <Content Include="Views\Shifts\_MaintenanceChecks.cshtml" />
     <Content Include="Views\Reporting\ShiftReport.cshtml" />
     <Content Include="Views\Reporting\_ShiftsDateRange.cshtml" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78ms-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\78ms-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\83pv-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90ms-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90ms-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90msp-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90msp-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90pv-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\90pv-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Add-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Add-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Add-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Add-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-0.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-1.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-3.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-4.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-5.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-6.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-CNS1-UCS2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-0.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-1.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-3.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-4.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-5.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-GB1-UCS2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-0.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-1.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-3.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-4.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-5.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-6.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Japan1-UCS2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Korea1-0.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Korea1-1.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Korea1-2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Adobe-Korea1-UCS2.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\B5pc-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\B5pc-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS1-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS1-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS2-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\CNS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETen-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETen-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETenms-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETenms-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETHK-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\ETHK-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Ext-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Ext-RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Ext-RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Ext-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GB-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GB-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GB-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GB-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBK-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBK-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBK2K-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBK2K-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBKp-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBKp-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBpc-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBpc-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBT-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBT-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBT-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBT-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBTpc-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\GBTpc-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Hankaku.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Hiragana.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKdla-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKdla-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKdlb-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKdlb-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKgccs-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKgccs-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKm314-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKm314-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKm471-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKm471-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKscs-B5-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\HKscs-B5-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Katakana.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-Johab-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-Johab-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCms-UHC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCms-UHC-HW-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCms-UHC-HW-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCms-UHC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCpc-EUC-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\KSCpc-EUC-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\LICENSE" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\NWP-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\NWP-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\RKSJ-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\RKSJ-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\Roman.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UCS2-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UCS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF16-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF16-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF8-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniCNS-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UCS2-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UCS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF16-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF16-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF8-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniGB-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UCS2-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UCS2-HW-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UCS2-HW-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UCS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF16-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF16-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF8-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF16-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF16-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF8-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJIS2004-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISPro-UCS2-HW-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISPro-UCS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISPro-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISX0213-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISX0213-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISX02132004-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniJISX02132004-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UCS2-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UCS2-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF16-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF16-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF32-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF32-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF8-H.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\UniKS-UTF8-V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\V.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\cmaps\WP-Symbol.bcmap" />
-    <Content Include="Scripts\plugin\PDF.js\web\compressed.tracemonkey-pldi-09.pdf" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ach\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\af\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ak\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\an\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ar\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ast\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\as\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\az\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\be\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\bg\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\bn-BD\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\bn-IN\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\br\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\bs\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ca\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\csb\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\cs\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\cy\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\da\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\de\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\el\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\en-GB\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\en-US\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\en-ZA\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\eo\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\es-AR\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\es-CL\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\es-ES\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\es-MX\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\et\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\eu\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\fa\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ff\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\fi\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\fr\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\fy-NL\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ga-IE\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\gd\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\gl\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\gu-IN\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\he\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\hi-IN\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\hr\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\hu\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\hy-AM\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\id\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\is\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\it\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ja\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ka\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\kk\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\km\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\kn\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ko\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ku\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\lg\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\lij\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\locale.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\lt\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\lv\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\mai\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\mk\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ml\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\mn\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\mr\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ms\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\my\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\nb-NO\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\nl\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\nn-NO\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\nso\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\oc\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\or\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\pa-IN\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\pl\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\pt-BR\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\pt-PT\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\rm\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ro\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ru\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\rw\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sah\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\si\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sk\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sl\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\son\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sq\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sr\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sv-SE\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\sw\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ta-LK\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ta\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\te\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\th\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\tl\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\tn\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\tr\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\uk\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\ur\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\vi\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\wo\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\xh\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\zh-CN\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\zh-TW\viewer.properties" />
-    <Content Include="Scripts\plugin\PDF.js\web\locale\zu\viewer.properties" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1622,9 +1266,17 @@
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
     </None>
+    <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
+    <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\googlemaps.infobubble\google.maps.infobubble.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="TypeScripts\Map\AirPortMap_ts.ts" />
-    <TypeScriptCompile Include="typings\google.maps.d.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\AirPortMap_ts.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout.projections\knockout.projections.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\PDFJS\pdfjs.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\typescript-services\typescriptServices.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config">
@@ -1691,7 +1343,7 @@
     <Folder Include="Views\Surveyor\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TypeScripts\Map\AirPortMap.js" />
+    <Content Include="Scripts\TypeScripts\Map\AirPortMap.js" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
