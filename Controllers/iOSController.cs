@@ -632,31 +632,31 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				CacheHelper cache = new CacheHelper();
 				List<mongoAssetClassDownload> assetClassList = cache.getAllAssetClasses();
 
-                return Json(assetClassList);
+				return Json(assetClassList);
 
-                //if (assetClassList.Count == 0)
-                //{
-                //    List<assetClassDownload> assetList = new List<assetClassDownload>();
-                //    DatabaseHelper func = new DatabaseHelper();
+				//if (assetClassList.Count == 0)
+				//{
+				//    List<assetClassDownload> assetList = new List<assetClassDownload>();
+				//    DatabaseHelper func = new DatabaseHelper();
 
-                //    var assets = (from x in db.as_assetClassProfile
-                //                  select x);
+				//    var assets = (from x in db.as_assetClassProfile
+				//                  select x);
 
-                //    foreach (var item in assets)
-                //    {
-                //        assetClassDownload asset = new assetClassDownload();
-                //        asset.i_assetClassId = item.i_assetClassId;
-                //        asset.vc_description = item.vc_description;
-                //        asset.i_assetCheckTypeId = 0;
-                //        asset.assetCheckCount = func.getNumberOfFixingPoints(item.i_assetClassId);
-                //        assetList.Add(asset);
-                //    }
-                //    return Json(assetList);
-                //}
-                //else
-                //{
-                //    return Json(assetClassList);
-                //}
+				//    foreach (var item in assets)
+				//    {
+				//        assetClassDownload asset = new assetClassDownload();
+				//        asset.i_assetClassId = item.i_assetClassId;
+				//        asset.vc_description = item.vc_description;
+				//        asset.i_assetCheckTypeId = 0;
+				//        asset.assetCheckCount = func.getNumberOfFixingPoints(item.i_assetClassId);
+				//        assetList.Add(asset);
+				//    }
+				//    return Json(assetList);
+				//}
+				//else
+				//{
+				//    return Json(assetClassList);
+				//}
 
 			}
 			catch (Exception err)
@@ -862,6 +862,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						{
 							CacheHelper cache = new CacheHelper();
 							cache.rebuildAssetProfileForAsset(item.assetId);
+							cache.createAllAssetDownloadForAsset(asset.i_assetId);
 						}
 						catch (Exception err)
 						{
@@ -911,6 +912,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					{
 						CacheHelper cache = new CacheHelper();
 						cache.rebuildAssetProfileForAsset(asset.i_assetId);
+						cache.createAllAssetDownloadForAsset(asset.i_assetId);
 					}
 					catch (Exception err)
 					{
