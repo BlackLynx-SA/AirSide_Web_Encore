@@ -206,7 +206,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		[HttpPost]
-		public JsonResult addMaintenanceCheckEntities(List<as_maintenanceCheckListEntity> entities)
+		public JsonResult addMaintenanceCheckEntities(List<TaskCheckUpload> entities)
 		{
 			try
 			{
@@ -214,9 +214,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/03/04
 				//Author: Bernard Willer
 
-				foreach (as_maintenanceCheckListEntity entity in entities)
+				foreach (TaskCheckUpload entity in entities)
 				{
-					db.as_maintenanceCheckListEntity.Add(entity);
+					as_maintenanceCheckListEntity check = new as_maintenanceCheckListEntity();
+					check.dt_captureDate = DateTime.Now;
+					check.i_assetId = entity.i_assetId;
+					check.i_maintenanceCheckId = entity.i_maintenanceCheckId;
+					check.i_shiftId = entity.i_shiftId;
+					check.UserId = entity.UserId;
+					check.vc_capturedValue = entity.vc_capturedValue;
+
+					db.as_maintenanceCheckListEntity.Add(check);
 					db.SaveChanges();
 				}
 
@@ -555,6 +563,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					if (asset != null)
 					{
 						asset.bt_assetStatus = status;
+						asset.dt_lastUpdated = DateTime.Now;
 
 						db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
 						db.SaveChanges();
@@ -565,6 +574,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						newStatus.bt_assetStatus = status;
 						newStatus.i_assetProfileId = item.assetId;
 						newStatus.i_assetSeverity = item.assetSeverity;
+						asset.dt_lastUpdated = DateTime.Now;
 
 						db.as_assetStatusProfile.Add(newStatus);
 						db.SaveChanges();
@@ -596,6 +606,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				if (asset != null)
 				{
 					asset.bt_assetStatus = status;
+                    asset.dt_lastUpdated = DateTime.Now;
 
 					db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
 					db.SaveChanges();
@@ -606,6 +617,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					newStatus.bt_assetStatus = status;
 					newStatus.i_assetProfileId = assetId;
 					newStatus.i_assetSeverity = assetSeverity;
+                    newStatus.dt_lastUpdated = DateTime.Now;
 
 					db.as_assetStatusProfile.Add(newStatus);
 					db.SaveChanges();

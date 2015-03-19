@@ -1274,8 +1274,11 @@
     <TypeScriptCompile Include="Scripts\typings\flot\jquery.flot.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps.infobubble\google.maps.infobubble.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps\google.maps.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Map\AirPortMap_ts.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.bridge.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.projections\knockout.projections.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\PDFJS\pdfjs.d.ts" />

@@ -405,7 +405,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               where x.dt_scheduledDate >= monthDate
                               select new { 
                                 completed = x.bt_completed,
-                                completionDate = x.dt_completionDate
                               });
 
                 List<DashboardActivityMetrics> metrics = new List<DashboardActivityMetrics>();
@@ -422,6 +421,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 conversion.value = totalOpen;
                 metrics.Add(conversion);
 
+                //Get Reported Faulty Lights
+                var faultyLights = from x in db.as_assetStatusProfile
+                                   where x.dt_lastUpdated >= monthDate
+                                   select new { 
+                                        completed = x.bt_assetStatus
+                                   };
+
+                totalComplete = faultyLights.Where(q => q.completed == false).Count();
+                totalOpen = faultyLights.Where(q => q.completed == true).Count();
+
+                conversion = new DashboardActivityMetrics();
+                conversion.indicatorEnum = DashboardMetrics.FaultyLights;
+                conversion.value = totalOpen;
+                metrics.Add(conversion);
+
+                conversion = new DashboardActivityMetrics();
+                conversion.indicatorEnum = DashboardMetrics.FaultyLightsResolved;
+                conversion.value = totalComplete;
+                metrics.Add(conversion);
+              
                 return Json(metrics.ToList());
             }
             catch (Exception err)

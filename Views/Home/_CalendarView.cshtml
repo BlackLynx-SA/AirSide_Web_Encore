@@ -46,7 +46,8 @@
             type: "POST",
             dataType: "json",
             success: function (json) {
-
+                var total = 0;
+                var complete = 0;
                 var html = "";
                 var j = 0;
                 $.each(json, function (i, v) {
@@ -59,12 +60,18 @@
                     html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
                     html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> Complete Shift</button></td></tr>';
                     j++;
+
+                    total += v.assets;
+                    complete += v.shiftData;
                 });
 
                 $('#shiftCount').html(j);
                 $('#activeShiftsTbl tbody').html(html);
                 $("#calendarLoader").hide();
                 $('#activeShiftsTbl').fadeIn(500);
+
+                //Set the Activity statusbar 
+                activityStats.setTotalShiftCompletion(complete, total);
             },
             error: function (err) {
                 $.smallBox({
@@ -102,6 +109,7 @@
                             icon: "fa fa-calendar"
                         });
                         requestAllActiveShifts();
+                        activityStats.init();
                     },
                     error: function (err) {
                         $.smallBox({
