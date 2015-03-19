@@ -1266,9 +1266,12 @@
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
     </None>
+    <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\chartjs\chart.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\flot\jquery.flot.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps.infobubble\google.maps.infobubble.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />

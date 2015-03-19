@@ -118,18 +118,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<mongoAssetProfile> assets = cache.getAllAssets();
             double assetCount = 0;
             double total = 0;
-            foreach (mongoAssetProfile asset in assets)
+
+            if (assets != null)
             {
-                foreach (maintenance maint in asset.maintenance)
+                foreach (mongoAssetProfile asset in assets)
                 {
-                    if (maint.maintenanceCycle == 1) assetCount++;
-                    total++;
+                    foreach (maintenance maint in asset.maintenance)
+                    {
+                        if (maint.maintenanceCycle == 1) assetCount++;
+                        total++;
+                    }
                 }
+
+                double persentage = ((assetCount / total) * 100);
+                return Math.Round(persentage, 2).ToString();
             }
+            else
+            {
 
-            double persentage = ((assetCount / total) * 100);
-
-            return Math.Round(persentage, 2).ToString();
+                return "0";
+            }
         }
 
         private string getMidAssets()
@@ -138,18 +146,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<mongoAssetProfile> assets = cache.getAllAssets();
             double assetCount = 0;
             double total = 0;
-            foreach (mongoAssetProfile asset in assets)
+            if (assets != null)
             {
-                foreach (maintenance maint in asset.maintenance)
+                foreach (mongoAssetProfile asset in assets)
                 {
-                    if (maint.maintenanceCycle == 2) assetCount++;
-                    total++;
+                    foreach (maintenance maint in asset.maintenance)
+                    {
+                        if (maint.maintenanceCycle == 2) assetCount++;
+                        total++;
+                    }
                 }
+
+                double persentage = ((assetCount / total) * 100);
+
+                return Math.Round(persentage, 2).ToString();
             }
-
-            double persentage = ((assetCount / total) * 100);
-
-            return Math.Round(persentage,2).ToString();
+            else {
+                return "0";
+            }
         }
 
         private string getAlmostAssets()
@@ -158,18 +172,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<mongoAssetProfile> assets = cache.getAllAssets();
             int assetCount = 0;
             int total = 0;
-            foreach (mongoAssetProfile asset in assets)
+            if (assets != null)
             {
-                foreach (maintenance maint in asset.maintenance)
+                foreach (mongoAssetProfile asset in assets)
                 {
-                    if (maint.maintenanceCycle == 3) assetCount++;
-                    total++;
+                    foreach (maintenance maint in asset.maintenance)
+                    {
+                        if (maint.maintenanceCycle == 3) assetCount++;
+                        total++;
+                    }
                 }
+
+                double persentage = ((assetCount / total) * 100);
+
+                return Math.Round(persentage, 2).ToString();
             }
-
-            double persentage = ((assetCount / total) * 100);
-
-            return Math.Round(persentage, 2).ToString();
+            else {
+                return "0";
+            }
         }
 
         private string getDueAssets()
@@ -178,18 +198,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<mongoAssetProfile> assets = cache.getAllAssets();
             double assetCount = 0;
             double total = 0;
-            foreach (mongoAssetProfile asset in assets)
+            if (assets != null)
             {
-                foreach (maintenance maint in asset.maintenance)
+                foreach (mongoAssetProfile asset in assets)
                 {
-                    if (maint.maintenanceCycle == 4) assetCount++;
-                    total++;
+                    foreach (maintenance maint in asset.maintenance)
+                    {
+                        if (maint.maintenanceCycle == 4) assetCount++;
+                        total++;
+                    }
                 }
+
+                double persentage = ((assetCount / total) * 100);
+
+                return Math.Round(persentage, 2).ToString();
             }
-
-            double persentage = ((assetCount / total) * 100);
-
-            return Math.Round(persentage, 2).ToString();
+            else {
+                return "0";
+            }
         }
 
         private string getNoDataAssets()
@@ -264,6 +290,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
             DatabaseHelper database = new DatabaseHelper();
 
             List<ActivityChart> activities = database.getActivitiesForMonth();
+
+            return Json(activities);
+        }
+
+        [HttpPost]
+        public JsonResult getAnomalies()
+        {
+            DatabaseHelper database = new DatabaseHelper();
+
+            List<ActivityChart> activities = database.getAnomaliesForMonth();
 
             return Json(activities);
         }

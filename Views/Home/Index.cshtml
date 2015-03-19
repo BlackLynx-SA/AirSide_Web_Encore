@@ -31,19 +31,6 @@
             <article class="col-sm-12">
                 <!-- new widget -->
                 <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-                    <!-- widget options:
-                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-                    data-widget-colorbutton="false"
-                    data-widget-editbutton="false"
-                    data-widget-togglebutton="false"
-                    data-widget-deletebutton="false"
-                    data-widget-fullscreenbutton="false"
-                    data-widget-custombutton="false"
-                    data-widget-collapsed="true"
-                    data-widget-sortable="false"
-
-                    -->
                     <header>
                         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
                         <h2>AirSide&trade; Activity (Last 30 days)</h2>
@@ -57,7 +44,7 @@
                     <div class="no-padding">
                         <!-- widget edit box -->
                         <div class="jarviswidget-editbox">
-                            test
+                           
                         </div>
                         <!-- end widget edit box -->
                         <div class="widget-body">
@@ -162,113 +149,9 @@
 <!-- END MAIN CONTENT -->
 @section pagespecific {
 <script src="~/scripts/plugin/date/date.js"></script>
+<script src="~/Scripts/TypeScripts/Home/HomeHelper.js"></script>
     <script>
-        /* chart colors default */
-        var $chrt_border_color = "#efefef";
-        var $chrt_grid_color = "#DDD"
-        var $chrt_main = "#E24913";
-        /* red       */
-        var $chrt_second = "#6595b4";
-        /* blue      */
-        var $chrt_third = "#FF9F01";
-        /* orange    */
-        var $chrt_fourth = "#7e9d3a";
-        /* green     */
-        var $chrt_fifth = "#BD362F";
-        /* dark red  */
-        var $chrt_mono = "#000";
-
-        var todoCategoriesTxt;
-        
-
-        function getActivities()
-        {
-            $.ajax({
-                type: "POST",
-                url: "../../Home/getActivities",
-                success: function (json) {
-                    if ($("#saleschart").length) {
-                        var d = [];
-                        $.each(json, function(i,v){
-                            var plot = [];
-                            plot.push(v.dateOfActivity);
-                            plot.push(v.numberOfActivities);
-                            d.push(plot);
-                        });
-
-                        for (var i = 0; i < d.length; ++i)
-                            d[i][0] += 60 * 60 * 1000;
-
-                        function weekendAreas(axes) {
-                            var markings = [];
-                            var d = new Date(axes.xaxis.min);
-                            // go to the first Saturday
-                            d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7))
-                            d.setUTCSeconds(0);
-                            d.setUTCMinutes(0);
-                            d.setUTCHours(0);
-                            var i = d.getTime();
-                            do {
-                                // when we don't set yaxis, the rectangle automatically
-                                // extends to infinity upwards and downwards
-                                markings.push({
-                                    xaxis : {
-                                        from : i,
-                                        to : i + 2 * 24 * 60 * 60 * 1000
-                                    }
-                                });
-                                i += 7 * 24 * 60 * 60 * 1000;
-                            } while (i < axes.xaxis.max);
-
-                            return markings;
-                        }
-
-                        var options = {
-                            xaxis : {
-                                mode : "time",
-                            },
-                            series : {
-                                lines : {
-                                    show : true,
-                                    lineWidth : 1,
-                                    fill : true,
-                                    fillColor : {
-                                        colors : [{
-                                            opacity : 0.1
-                                        }, {
-                                            opacity : 0.15
-                                        }]
-                                    }
-                                },
-                                points: { show: true },
-                                shadowSize : 0
-                            },
-                            selection : {
-                                mode : "x"
-                            },
-                            grid : {
-                                hoverable : true,
-                                clickable : true,
-                                tickColor : $chrt_border_color,
-                                borderWidth : 0,
-                                borderColor : $chrt_border_color,
-                            },
-                            tooltip : true,
-                            tooltipOpts : {
-                                content : "Activities were <span>%y</span>",
-                                dateFormat : "%y-%0m-%0d",
-                                defaultTheme : false
-                            },
-                            colors : [$chrt_second],
-
-                        };
-
-                        var plot = $.plot($("#saleschart"), [d], options);
-                        $('#activityChartLoader').fadeOut(300);
-                    };
-                }
-            });
-        }
+        var todoCategoriesTxt = "";
 
         function getTodoCategories() {
             $.ajax({
@@ -430,9 +313,6 @@
 
                 //Init Calendar 
                 requestAllActiveShifts();
-
-                //Init Activities Chart
-                getActivities();
 
                 //init button clicks
                 $(document).on('click', '#todoAddBtn', function () {
