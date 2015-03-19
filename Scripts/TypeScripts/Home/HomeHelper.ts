@@ -2,9 +2,64 @@
 /// <reference path="../../typings/flot/jquery.flot.d.ts" />
 
 module AirSide.HomeHelper {
+    //Enum
+    enum DashboardMetrics {
+        ShiftsOpen = 100,
+        ShiftsCompleted = 101,
+        ActiveShiftCompletion = 102,
+        AnomaliesReported = 103,
+        AnomaliesResolved = 104,
+        Movements = 105
+    }
+
+    //Interfaces
     interface IActivityChart {
         dateOfActivity: number;
         numberOfActivities: number;
+    }
+
+    interface IActivityMetrics {
+        indicatorEnum: DashboardMetrics;
+        value: number;
+    }
+
+    export class ActivityStats {
+        private $assignedBarCart = $('#assignedBar');
+        private $convertedBarChart = $('#convertedBar');
+        private $convesionSpan = $('#conversionSpan');
+
+        constructor(){
+            this.getConvertionRatio();
+        }
+
+        private getConvertionRatio() {
+            $.ajax({
+                type: "POST",
+                url: "../../Home/getMetricsforActivity",
+                success: (json: Array<IActivityMetrics>) => {
+                    var conversion: string = "";
+                    var open: number = 0;
+                    var closed: number = 0;
+
+                    json.forEach(c=> {
+                        switch (c.indicatorEnum) {
+                            case DashboardMetrics.ShiftsCompleted:
+                                closed = c.value;
+                                break;
+                            case DashboardMetrics.ShiftsOpen:
+                                open = c.value;
+                                break;
+                            default: break;
+                        }
+                    });
+
+                    //Set Values
+                    this.$convesionSpan.html(closed.toString() + "/" + open.toString());
+                    var persentage = Math.round((closed / (open + closed)) * 100);
+                    this.$convertedBarChart.css('width', persentage.toString() + "%");
+                }
+            });
+        }
     }
 
     export class ActivityChart {
@@ -167,3 +222,5 @@ module AirSide.HomeHelper {
 } 
 
 var activityChart = new AirSide.HomeHelper.ActivityChart();
+
+var activityStats = new AirSide.HomeHelper.ActivityStats();

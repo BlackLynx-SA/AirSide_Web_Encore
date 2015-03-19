@@ -4,6 +4,53 @@ var AirSide;
 (function (AirSide) {
     var HomeHelper;
     (function (HomeHelper) {
+        //Enum
+        var DashboardMetrics;
+        (function (DashboardMetrics) {
+            DashboardMetrics[DashboardMetrics["ShiftsOpen"] = 100] = "ShiftsOpen";
+            DashboardMetrics[DashboardMetrics["ShiftsCompleted"] = 101] = "ShiftsCompleted";
+            DashboardMetrics[DashboardMetrics["ActiveShiftCompletion"] = 102] = "ActiveShiftCompletion";
+            DashboardMetrics[DashboardMetrics["AnomaliesReported"] = 103] = "AnomaliesReported";
+            DashboardMetrics[DashboardMetrics["AnomaliesResolved"] = 104] = "AnomaliesResolved";
+            DashboardMetrics[DashboardMetrics["Movements"] = 105] = "Movements";
+        })(DashboardMetrics || (DashboardMetrics = {}));
+        var ActivityStats = (function () {
+            function ActivityStats() {
+                this.$assignedBarCart = $('#assignedBar');
+                this.$convertedBarChart = $('#convertedBar');
+                this.$convesionSpan = $('#conversionSpan');
+                this.getConvertionRatio();
+            }
+            ActivityStats.prototype.getConvertionRatio = function () {
+                var _this = this;
+                $.ajax({
+                    type: "POST",
+                    url: "../../Home/getMetricsforActivity",
+                    success: function (json) {
+                        var conversion = "";
+                        var open = 0;
+                        var closed = 0;
+                        json.forEach(function (c) {
+                            switch (c.indicatorEnum) {
+                                case 101 /* ShiftsCompleted */:
+                                    closed = c.value;
+                                    break;
+                                case 100 /* ShiftsOpen */:
+                                    open = c.value;
+                                    break;
+                                default: break;
+                            }
+                        });
+                        //Set Values
+                        _this.$convesionSpan.html(closed.toString() + "/" + open.toString());
+                        var persentage = Math.round((closed / (open + closed)) * 100);
+                        _this.$convertedBarChart.css('width', persentage.toString() + "%");
+                    }
+                });
+            };
+            return ActivityStats;
+        })();
+        HomeHelper.ActivityStats = ActivityStats;
         var ActivityChart = (function () {
             function ActivityChart() {
                 /* chart colors default */
@@ -145,4 +192,5 @@ var AirSide;
     })(HomeHelper = AirSide.HomeHelper || (AirSide.HomeHelper = {}));
 })(AirSide || (AirSide = {}));
 var activityChart = new AirSide.HomeHelper.ActivityChart();
+var activityStats = new AirSide.HomeHelper.ActivityStats();
 //# sourceMappingURL=HomeHelper.js.map

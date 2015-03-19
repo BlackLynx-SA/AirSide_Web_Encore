@@ -391,6 +391,50 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         [HttpPost]
+        public JsonResult getMetricsforActivity()
+        {
+            try
+            {
+                //Get All Metrics for Activity Dashboard
+                //Create Date: 2015/03/19
+                //Author: Bernard Willer
+                DateTime monthDate = DateTime.Now.AddDays(-30);
+
+                //create conversion set
+                var shifts = (from x in db.as_shifts
+                              where x.dt_scheduledDate >= monthDate
+                              select new { 
+                                completed = x.bt_completed,
+                                completionDate = x.dt_completionDate
+                              });
+
+                List<DashboardActivityMetrics> metrics = new List<DashboardActivityMetrics>();
+                int totalComplete = shifts.Where(q => q.completed == true).Count();
+                int totalOpen = shifts.Where(q => q.completed == false).Count();
+
+                DashboardActivityMetrics conversion = new DashboardActivityMetrics();
+                conversion.indicatorEnum = DashboardMetrics.ShiftsCompleted;
+                conversion.value = totalComplete;
+                metrics.Add(conversion);
+
+                conversion = new DashboardActivityMetrics();
+                conversion.indicatorEnum = DashboardMetrics.ShiftsOpen;
+                conversion.value = totalOpen;
+                metrics.Add(conversion);
+
+                return Json(metrics.ToList());
+            }
+            catch (Exception err)
+            {
+                LogHelper log = new LogHelper();
+                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                Response.StatusCode = 500;
+                return Json(new { message = err.Message });
+            }
+        
+        }
+
+        [HttpPost]
         public JsonResult getAllTodos()
         {
             try
