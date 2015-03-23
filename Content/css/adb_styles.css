@@ -60,3 +60,11 @@ a:focus, a:hover {
 .dateselect{
     margin-right: 5px;
 }
+
+#ui-datepicker-div {
+    z-index:9999;
+}
+
+.surveyBtn{
+    margin-left:10px;
+}

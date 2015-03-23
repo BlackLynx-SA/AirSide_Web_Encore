@@ -4,7 +4,7 @@
         <div class="well well-sm bg-color-darken txt-color-white">
             <h5>Date Range</h5>
             <fieldset>
-                
+
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -34,14 +34,41 @@
                         <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
                     </div>
                 </div>
-                <hr />
-                <div class="row">
-                    <div class="col-sm-12">
-                        <a href="#" class="btn btn-success" id="dateRangeBtn"><i class="fa fa-check"></i> Get Report</a>
+            </fieldset>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div style="  display: inline-flex; margin-top:10px;">
+                        <a href="#" class="btn btn-success" id="picturesBtn"><i class="fa fa-check"></i> Get Report</a>
+                        <form class="smart-form">
+                            <label class="checkbox allAnomalies" style="margin-top:5px; margin-left:10px;">
+                                <input id="picturesAll" type="checkbox" name="checkbox">
+                                <i></i>Get All Anomalies
+                            </label>
+                        </form>
                     </div>
                 </div>
-            </fieldset>
+            </div>
         </div>
+    </div>
+    <hr />
+    <div class="col-md-12">
+        <img src="../../Content/img/adb_img/adb_loader_tr.GIF" alt="" style="display:none; zoom:0.3;" id="imageLoader"/>
+        <img src="" id="surveyPicture" style="width:100%; display:none;" />
+    </div>
+    <br />
+    <hr />
+    <div class="col-md-12">
+        <table class="table table-bordered table-hover table-responsive" id="pictureTbl">
+            <thead>
+                <tr>
+                    <th>Date Reported</th>
+                    <th>Reported By</th>
+                    <th>Severity</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 </div>
 

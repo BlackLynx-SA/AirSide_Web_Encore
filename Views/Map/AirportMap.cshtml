@@ -504,6 +504,11 @@
                     $('input.to').datepicker({
                         minDate: selectedDate
                     });
+                },
+                beforeShow: function() {
+                    setTimeout(function(){
+                        $('.ui-datepicker').css('z-index', 9999);
+                    }, 0);
                 }
             });
 
@@ -518,9 +523,13 @@
                     $('input.from').datepicker({
                         maxDate: selectedDate
                     });
+                },
+                beforeShow: function() {
+                    setTimeout(function(){
+                        $('.ui-datepicker').css('z-index', 9999);
+                    }, 0);
                 }
             });
-
 
             $(document).on('change', '#mainAreas', function () {
                 var area = $(this).val();

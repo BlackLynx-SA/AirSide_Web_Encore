@@ -117,7 +117,7 @@
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.Common\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.Common.dll</HintPath>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.Common\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -132,7 +132,7 @@
     </Reference>
     <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.WebForms\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.WebForms\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.WebForms.DLL</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
@@ -317,7 +317,7 @@
     <Content Include="Areas\Landing\Content\js\plugins\jquery.themepunch.revolution.min.js" />
     <Content Include="Areas\Landing\Content\js\plugins\nivo-lightbox.min.js" />
     <Content Include="Areas\Landing\Content\js\plugins\smoothscroll.js" />
-    <Content Include="Content\css\adb_styles.min.css" />
+    <Content Include="Content\css\adb_styles.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\demo.min.css" />
     <Content Include="Content\css\font-awesome.min.css" />
@@ -390,6 +390,7 @@
     <Content Include="Content\img\adb_img\adb_color_white.png" />
     <Content Include="Content\img\adb_img\adb_loader.GIF" />
     <Content Include="Content\img\adb_img\adb_loader_tr.GIF" />
+    <Content Include="Content\img\adb_img\page_loader.GIF" />
     <Content Include="Content\img\adb_img\startup_loader.GIF" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\alpha.png" />
@@ -1252,6 +1253,9 @@
     <Content Include="Views\Reporting\_ShiftsDateRange.cshtml" />
     <Content Include="Views\Surveyor\AlertBox.cshtml" />
     <Content Include="Views\Shared\_DatePickerFromTo.cshtml" />
+    <Content Include="Views\Reporting\Surveyor.cshtml" />
+    <Content Include="Views\Reporting\_SurveyorPictures.cshtml" />
+    <Content Include="Views\Reporting\_SurveyorVoice.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1263,6 +1267,7 @@
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\SurveyorReport.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\chartjs\chart.d.ts" />

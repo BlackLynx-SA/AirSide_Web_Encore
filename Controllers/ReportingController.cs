@@ -44,6 +44,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        public ActionResult Surveyor()
+        {
+            return View();
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         public FileContentResult getShiftsPerDateRangeReport(string dateRange, int type)
         {
@@ -79,9 +86,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Render the report
                 ReportBytes renderedReport = report.generateReport(settings);
 
-                //Convert Type JPG
-                //byte[] jpgFile = ConvertTiffToJpeg(renderedReport.renderedBytes);
-
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
                 log.log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
                 return File(renderedReport.renderedBytes, "application/pdf ");
@@ -89,7 +93,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                log.logError(err.InnerException, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return null;
             }
@@ -102,7 +106,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<ActiveShiftsReport> getShiftReportDataForRange(DateTime startDate, DateTime endDate)
         {
             var data = from x in db.as_shifts
-                        join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
                         join z in db.as_technicianGroups on x.UserId equals z.i_groupId
                         join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
                         join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
@@ -135,7 +138,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
 
             var customShift = from x in db.as_shiftsCustom
-                                join y in db.as_shiftData on x.i_shiftCustomId equals y.i_shiftId
                                 join z in db.as_technicianGroups on x.i_techGroupId equals z.i_groupId
                                 where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate
                                 select new
@@ -163,6 +165,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 returnList.Add(newShift);
             }
+
             return returnList;
 
         }

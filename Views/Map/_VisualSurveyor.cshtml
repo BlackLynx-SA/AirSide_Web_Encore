@@ -8,67 +8,52 @@
                 <h4 class="modal-title"><i class="fa fa-eye txt-color-yellow fa-2x"></i> Visual Surveyor&trade;</h4>
             </div>
             <div class="modal-body">
-                <form class="smart-form">
-                    <div class="row">
-                        <section class="col col-10">
-                            <div class="well well-sm bg-color-darken txt-color-white">
-                                <h5>Date Range</h5>
-                                <fieldset>
-                                    <div class="row">
-                                        <div class="col-md-12 hidden-sm">
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
-                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
-                                        </div>
-                                    </div>
-                                    <br />
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <label>Select a date (range):</label>
-                                        </div>
-                                        <div class="col-sm-6">
 
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input class="form-control from" type="text" placeholder="From">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-sm-6">
-
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <input class="form-control to" type="text" placeholder="Select a date">
-                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <a href="#" class="btn btn-success" id="dateRangeBtn"><i class="fa fa-check"></i> Get Report</a>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </div>
-                        </section>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Select a date (range):</label>
                     </div>
+                    <div class="col-md-6">
 
-                    <hr /><br />
-                    <div class="row">
-                        <section class="col col-11">
+                        <div class="form-group">
+                            <div class="input-group" style="margin-right:10px;">
+                                <input class="form-control from" type="text" placeholder="From">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control to" type="text" placeholder="Select a date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 hidden-sm" style=" text-align: center;">
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="smart-form">
                             <label class="label">
                                 Filter according to:
                             </label>
                             <label class="checkbox">
                                 <input id="voiceChk" type="checkbox" name="checkbox">
-                                <i></i>Voice Reports
+                                <i></i>Voice Memos
                             </label>
                             <label class="checkbox">
                                 <input id="imageChk" type="checkbox" name="checkbox">
@@ -76,16 +61,16 @@
                             </label>
                             <label class="checkbox">
                                 <input id="textChk" type="checkbox" name="checkbox">
-                                <i></i>Text Memos
+                                <i></i>Text Notes
                             </label>
-                        </section>
+                        </form>
                     </div>
-                    <div class="row">
-                        <section class="col col-11">
-                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="surveyorLoader" style="height:15px; display:none;" />
-                        </section>
-                    </div>
-                </form>
+                </div>
+                <div class="row">
+                    <section class="col col-11">
+                        <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="surveyorLoader" style="height:15px; display:none;" />
+                    </section>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-primary" id="surveyorFilterBtn">Apply Filter</button>

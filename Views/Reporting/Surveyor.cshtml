@@ -15,17 +15,17 @@
 
                             <li class="active">
 
-                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-cogs"></i> <span class="hidden-mobile hidden-tablet"> Shifts Date Range </span> </a>
+                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-camera"></i> <span class="hidden-mobile hidden-tablet"> Pictures Taken </span> </a>
 
                             </li>
 
                             <li>
-                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-cog"></i> <span class="hidden-mobile hidden-tablet"> Specific Shifts </span> </a>
+                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-microphone"></i> <span class="hidden-mobile hidden-tablet"> Voice Memos </span> </a>
                             </li>
 
-                            <li>
-                                <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-exclamation"></i> <span class="hidden-mobile hidden-tablet"> Reported Faulty Lights </span> </a>
-                            </li>
+                            @*<li>
+                                <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-file-text-o"></i> <span class="hidden-mobile hidden-tablet"> Text Captured </span> </a>
+                            </li>*@
 
                         </ul>
                     </header>
@@ -44,18 +44,15 @@
 
                             <div class="tab-content">
                                 <div class="tab-pane active" id="hr1">
-                                    @{Html.RenderPartial("_ShiftsDateRange");}
-
-
+                                    @{Html.RenderPartial("_SurveyorPictures");}
                                 </div>
                                 <div class="tab-pane" id="hr2">
-
-
+                                    @{Html.RenderPartial("_SurveyorVoice");}
                                 </div>
-                                <div class="tab-pane" id="hr3">
+                                @*<div class="tab-pane" id="hr3">
 
 
-                                </div>
+                                </div>*@
                             </div>
 
                         </div>
@@ -73,7 +70,7 @@
                 <!-- Widget ID (each widget will need unique ID)-->
                 <div class="jarviswidget" id="reporting-id-2" data-widget-editbutton="false" data-widget-fullscreenbutton="true" data-widget-custombutton="false" data-widget-sortable="false">
                     <header role="heading">
-                        <h2><i class="fa fa-search"></i> Report View</h2>
+                        <h2><i class="fa fa-map-marker"></i> Map View</h2>
                         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
                     </header>
 
@@ -88,20 +85,7 @@
                         <!-- end widget edit box -->
                         <!-- widget content -->
                         <div class="widget-body">
-                            <div class="tab-content">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a href="#" class="btn btn-danger disabled" id="pdfDownload"><i class="fa fa-file-pdf-o"></i> PDF</a>
-                                        <a href="#" class="btn btn-success disabled" id="excelDownload"><i class="fa fa-file-excel-o"></i> Excel</a>
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-12">
-                                        <canvas id="reportImg" style="width:100%;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="map-canvas" class="google_maps" style="height:500px;"></div>
                         </div>
                         <!-- end widget content -->
 
@@ -115,10 +99,16 @@
     </section>
 </div>
 
+
 @section pagespecific
 {
+    <!--Google Maps-->
+    <script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=true&libraries=visualization&v=3">
+    </script>
+
     <script src="~/Scripts/plugin/PDF.js/pdf.js"></script>
     <script src="~/Scripts/plugin/PDF.js/pdf.worker.js"></script>
-    <script src="~/Scripts/TypeScripts/Reporting/ShiftReport.js"></script>
+    <script src="~/Scripts/TypeScripts/Reporting/SurveyorReport.js"></script>
     <script src="~/Scripts/TypeScripts/Components/ComponentsHelper.js"></script>
 }
