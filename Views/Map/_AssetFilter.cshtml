@@ -81,7 +81,7 @@
 
 <script type="text/javascript">
 
-    function filterAssets() {
+    function filterAssets(all) {
         $('#assetLoader').fadeIn(500);
 
         //Clear Map
@@ -89,6 +89,10 @@
         markerClusterer.clearMarkers();
 
         var clustered = $('#clusteredChk').prop("checked");
+        filterType = "allassets";
+        if (!all)
+            var filterType = $('input[name=assetFilterRadio]:checked').val();
+
         var filterType = $('input[name=assetFilterRadio]:checked').val();
         if (filterType === 'allassets') {
             showAllAssets(clustered);

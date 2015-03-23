@@ -3,7 +3,7 @@
 <div class="jarviswidget" id="wid-id-2" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
-        <h2>Birds Eye</h2>
+        <h2>Birds Eye <sup class="badge bg-color-red bounceIn animated" id="overDueCount">@{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0)</sup></h2>
         <div class="widget-toolbar" role="menu">
             <div class="btn-group">
                 <button id="taskBtn" class="btn dropdown-toggle btn-xs btn-primary" data-toggle="dropdown"><i class="fa fa-wrench"></i> <span id="taskLabel">Worst Case</span> <i class="fa fa-caret-down"></i></button>

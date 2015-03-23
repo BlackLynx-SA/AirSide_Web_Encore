@@ -1,0 +1,47 @@
+﻿@using AirSide.ServerModules.Models;
+@{
+    Layout = null;
+}
+
+<ul class="notification-body">
+    @{
+        string badge = "<em/>";
+        string linkText = "";
+    }
+    @foreach (var item in (ViewData["Alerts"] as IEnumerable<AnomalyAlert>))
+    {
+        switch (item.AlertType)
+        {
+            case AnomalyType.Picture:
+                badge = "<em class='badge padding-5 no-border-radius bg-color-green pull-left margin-right-5'><i class='fa fa-camera fa-fw fa-2x'></i></em>";
+                linkText = "Picture Taken";
+                break;
+            case AnomalyType.Voice:
+                badge = "<em class='badge padding-5 no-border-radius bg-color-purple txt-color-white pull-left margin-right-5'><i class='fa fa-microphone fa-fw fa-2x'></i></em>";
+                linkText = "Voice Recording";
+                break;
+            case AnomalyType.Text:
+                badge = "<em class='badge padding-5 no-border-radius bg-color-pink pull-left margin-right-5'><i class='fa fa-file-text-o fa-fw fa-2x'></i></em>";
+                linkText = "Text captured";
+                break;
+            default:
+                break;
+        }
+
+
+        <li>
+            <span class="padding-10 unread">
+
+                @Html.Raw(badge)
+
+                <span>
+                    <a href="@item.ItemUrl" class="display-normal"><strong>@linkText</strong></a> by <i>@item.ReportedUser</i>
+                    <br>
+                    <strong>@item.DateReported</strong><br>
+                    <span class="pull-right font-xs text-muted"><i>@item.TimeCalculation hrs ago...</i></span>
+                </span>
+
+            </span>
+        </li>
+    }
+</ul>

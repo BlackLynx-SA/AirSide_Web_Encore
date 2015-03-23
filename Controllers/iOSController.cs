@@ -606,7 +606,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				if (asset != null)
 				{
 					asset.bt_assetStatus = status;
-                    asset.dt_lastUpdated = DateTime.Now;
+					asset.dt_lastUpdated = DateTime.Now;
 
 					db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
 					db.SaveChanges();
@@ -617,7 +617,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					newStatus.bt_assetStatus = status;
 					newStatus.i_assetProfileId = assetId;
 					newStatus.i_assetSeverity = assetSeverity;
-                    newStatus.dt_lastUpdated = DateTime.Now;
+					newStatus.dt_lastUpdated = DateTime.Now;
 
 					db.as_assetStatusProfile.Add(newStatus);
 					db.SaveChanges();
@@ -1282,8 +1282,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					file.f_latitude = item.latitude;
 					file.f_longitude = item.longitude;
 					file.i_shiftId = item.shiftId;
-					file.i_userId = item.userId;
+					file.i_userId_logged = item.userId;
 					file.i_severityId = item.severity;
+					file.i_userId_resolved = 0;
+					file.dt_dateTimeResolved = DateTime.Parse("2300/01/01");
 
 					db.as_fileUploadInfo.Add(file);
 					db.SaveChanges();
@@ -1584,7 +1586,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						   join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
 						   join z in db.as_locationProfile on new { x.f_latitude, x.f_longitude } equals new { z.f_latitude, z.f_longitude }
 						   join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
-						   join b in db.UserProfiles on x.i_userId equals b.UserId
+						   join b in db.UserProfiles on x.i_userId_logged equals b.UserId
 						   where a.i_assetId == assetId
 						   select new
 						   {

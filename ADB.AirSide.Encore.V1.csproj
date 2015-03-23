@@ -15,7 +15,7 @@
     <RootNamespace>ADB.AirSide.Encore.V1</RootNamespace>
     <AssemblyName>ADB.AirSide.Encore.V1</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -148,8 +148,9 @@
       <Private>True</Private>
       <HintPath>..\..\..\Documents\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration">
-      <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
@@ -316,16 +317,6 @@
     <Content Include="Areas\Landing\Content\js\plugins\jquery.themepunch.revolution.min.js" />
     <Content Include="Areas\Landing\Content\js\plugins\nivo-lightbox.min.js" />
     <Content Include="Areas\Landing\Content\js\plugins\smoothscroll.js" />
-    <Content Include="Content\ajax\email-compose.html" />
-    <Content Include="Content\ajax\email-opened.html" />
-    <Content Include="Content\ajax\email-reply.html" />
-    <Content Include="Content\ajax\email-template.html" />
-    <Content Include="Content\ajax\email\email-list.html" />
-    <Content Include="Content\ajax\modal-content\modal-voicecommand.html" />
-    <Content Include="Content\ajax\notify\mail.html" />
-    <Content Include="Content\ajax\notify\notifications.html" />
-    <Content Include="Content\ajax\notify\tasks.html" />
-    <Content Include="Content\ajax\website-template.html" />
     <Content Include="Content\css\adb_styles.min.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\demo.min.css" />
@@ -388,7 +379,6 @@
     <Content Include="Areas\Landing\Content\js\libs\jquery.min.map" />
     <Content Include="Areas\Landing\Views\Landing\Index.cshtml" />
     <Content Include="ApplicationInsights.config" />
-    <Content Include="BlackLynxCode.pfx" />
     <None Include="Content\css\your_style.less" />
     <Content Include="Content\css\your_style.css" />
     <Content Include="Content\css\your_style.min.css">
@@ -643,6 +633,9 @@
     <Content Include="Images\map_images\RedMarker.png" />
     <Content Include="Images\map_images\WholeMap.gif" />
     <Content Include="Images\map_images\YellowMarker.png" />
+    <Content Include="Images\releases\2.0.0.1\ActivityChart.PNG" />
+    <Content Include="Images\releases\2.0.0.1\Stats.PNG" />
+    <Content Include="Images\releases\2.0.0.1\Surveyor_Alerts.PNG" />
     <Content Include="Images\uploads\1_3502_memo.m4a" />
     <Content Include="Images\uploads\empty.txt" />
     <Content Include="Images\uploads\IREL_LightType.jpg" />
@@ -1218,6 +1211,7 @@
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
     <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\airsideencore.pubxml" />
     <None Include="Properties\PublishProfiles\Custom.pubxml" />
     <None Include="Properties\PublishProfiles\manchesterairside - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
@@ -1259,6 +1253,7 @@
     <Content Include="Views\Shifts\_MaintenanceChecks.cshtml" />
     <Content Include="Views\Reporting\ShiftReport.cshtml" />
     <Content Include="Views\Reporting\_ShiftsDateRange.cshtml" />
+    <Content Include="Views\Surveyor\AlertBox.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1267,6 +1262,7 @@
       <SubType>Designer</SubType>
     </None>
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
@@ -1346,7 +1342,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
-    <Folder Include="Views\Surveyor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\TypeScripts\Map\AirPortMap.js" />
@@ -1390,7 +1385,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>56110</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost</IISUrl>
+          <IISUrl>http://localhost:56110/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

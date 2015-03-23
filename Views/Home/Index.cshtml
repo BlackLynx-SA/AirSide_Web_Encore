@@ -44,7 +44,7 @@
                     <div class="no-padding">
                         <!-- widget edit box -->
                         <div class="jarviswidget-editbox">
-                           
+
                         </div>
                         <!-- end widget edit box -->
                         <div class="widget-body">
@@ -57,10 +57,12 @@
                                             <div class="easy-pie-chart txt-color-green" data-percent="@ViewBag.completedMaint" data-pie-size="50">
                                                 <span class="percent percent-sign">@ViewBag.completedMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Updated </span>
+                                            <span class="easy-pie-title">
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Up to 33% of the maintenance cycle specified for the asset class.">Updated</a>
+                                            </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-green"> @{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100); } @Math.Round(numberAssets,0) </span>
+                                                    <span class="label bg-color-green"> @{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
                                                     <span class="label bg-color-green"> @ViewBag.totalTasks</span>
@@ -71,7 +73,9 @@
                                             <div class="easy-pie-chart text-warning" data-percent="@ViewBag.midMaint" data-pie-size="50">
                                                 <span class="percent percent-sign">@ViewBag.midMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Mid Cycle </span>
+                                            <span class="easy-pie-title">
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 33% and less than 66% of the maintenance cycle specified for the asset class">Mid Cycle</a>
+                                            </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
                                                     <span class="label bg-color-yellow"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.midMaint) / 100); } @Math.Round(numberAssets, 0) </span>
@@ -85,7 +89,9 @@
                                             <div class="easy-pie-chart txt-color-pink" data-percent="@ViewBag.almostMaint" data-pie-size="50">
                                                 <span class="percent percent-sign">@ViewBag.almostMaint</span>
                                             </div>
-                                            <span class="easy-pie-title"> Almost Due </span>
+                                            <span class="easy-pie-title">
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 66% and less than 100% of the maintenance cycle specified for the asset class">Almost Due</a>
+                                            </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
                                                     <span class="label bg-color-pink"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.almostMaint) / 100); } @Math.Round(numberAssets, 0) </span>
@@ -99,7 +105,9 @@
                                             <div class="easy-pie-chart txt-color-red" data-percent="@ViewBag.dueAssets" data-pie-size="50">
                                                 <span class="percent percent-sign">@ViewBag.dueAssets</span>
                                             </div>
-                                            <span class="easy-pie-title"> Over Due </span>
+                                            <span class="easy-pie-title">
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 100% of the maintenance cycle specified for the asset class">Over Due</a>
+                                            </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
                                                     <span class="label bg-color-red"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0) </span>
@@ -108,6 +116,7 @@
                                                     <span class="label bg-color-red"> @ViewBag.totalTasks</span>
                                                 </li>
                                             </ul>
+
                                         </div>
                                     </div>
                                 </div>

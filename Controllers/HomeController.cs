@@ -407,9 +407,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 completed = x.bt_completed,
                               });
 
+                var custom = (from x in db.as_shiftsCustom
+                              where x.dt_scheduledDate >= monthDate
+                              select new
+                              {
+                                  completed = x.bt_completed,
+                              });
+
                 List<DashboardActivityMetrics> metrics = new List<DashboardActivityMetrics>();
                 int totalComplete = shifts.Where(q => q.completed == true).Count();
                 int totalOpen = shifts.Where(q => q.completed == false).Count();
+
+                totalComplete += custom.Where(q => q.completed == true).Count();
+                totalOpen += custom.Where(q => q.completed == false).Count();
 
                 DashboardActivityMetrics conversion = new DashboardActivityMetrics();
                 conversion.indicatorEnum = DashboardMetrics.ShiftsCompleted;

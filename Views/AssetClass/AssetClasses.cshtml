@@ -88,7 +88,7 @@
                         html += '<tr class="tr_' + value.assetClassId + '">';
                         html += '<td>' + value.assetDescription + '</td><td>' + value.manufacturer + '</td><td>' + value.model + '</td>';
                         html += '<td><img src="' + value.pictureLocation + '" style="height:50px; width:auto;"/></td>';
-                        html += '<td>' + value.frequency + '</td><td><a href="' + value.manualURL + '" class="btn btn-xs btn-info"><i class="fa fa-book"></i> Manual</a></td><td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> Delete</a></td></tr>';
+                        html += '<td>' + value.frequency + '</td><td><a href="' + value.manualURL + '" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-book"></i> Manual</a></td><td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> Delete</a></td></tr>';
                     });
 
                     $('#dt_assets tbody').html(html);

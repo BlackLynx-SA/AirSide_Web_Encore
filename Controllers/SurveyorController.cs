@@ -29,9 +29,54 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        public ActionResult Anomalies()
+        public ActionResult AlertBox(int severityId)
         {
+
+            var surveyor = (from x in db.as_fileUploadInfo
+                            join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
+                            join z in db.UserProfiles on x.i_userId_logged equals z.UserId
+                            where x.bt_resolved == false && x.i_severityId == severityId
+                            select new { 
+                                Person = z.FirstName + " " + z.LastName,
+                                Date = y.dt_datetime,
+                                TypeAnomaly = y.i_fileType,
+                                Url = y.vc_filePath
+                            }).OrderByDescending(q=>q.Date);
+
+            List<AnomalyAlert> Alerts = new List<AnomalyAlert>();
+            foreach(var item in surveyor)
+            {
+                double difference = Math.Round((DateTime.Now - item.Date).TotalHours);
+
+                AnomalyAlert alert = new AnomalyAlert();
+                alert.AlertType = (AnomalyType)item.TypeAnomaly;
+                alert.DateReported = item.Date.ToString("yyyy/MM/dd HH:mm:ss");
+                alert.ItemUrl = item.Url;
+                alert.ReportedUser = item.Person;
+                alert.TimeCalculation = difference.ToString();
+
+                Alerts.Add(alert);
+            }
+
+            ViewData["Alerts"] = Alerts;
+
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult getAlertSummary()
+        {
+            var alerts = from x in db.as_fileUploadInfo
+                         where x.bt_resolved == false
+                         group x by new { severity = x.i_severityId } into alert
+                         select new {
+                             AlertType = alert.Key,
+                             AlertCount = alert.Count()
+                         };
+
+
+            return Json(alerts.ToList());
+                         
         }
     }
 }

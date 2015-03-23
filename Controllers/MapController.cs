@@ -46,10 +46,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
             worstCase.i_maintenanceValidationId = 0;
             worstCase.vc_description = "Worst Case";
             maintenanceTasks.Add(worstCase);
-            
+
             ViewData["maintenanceTasks"] = maintenanceTasks.OrderBy(q=>q.i_maintenanceId).ToList();
-            ViewBag.firstTask = maintenanceTasks[0].i_maintenanceId;
-            ViewBag.taskDesc = maintenanceTasks[0].vc_description;
+            ViewBag.firstTask = 0;
+            ViewBag.taskDesc = "Worst Case";
 
             return View();
         }
@@ -114,7 +114,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             var surveyed = (from x in db.as_fileUploadProfile
                             join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
-                            join z in db.UserProfiles on y.i_userId equals z.UserId
+                            join z in db.UserProfiles on y.i_userId_logged equals z.UserId
                             select new
                             {
                                 guid = x.guid_file,

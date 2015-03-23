@@ -270,7 +270,7 @@
             if(selectedTask === 0)
                 content += "Maintenance Task: <strong>" + json.maintenance[0].maintenanceTask + "</strong><br />";
             content += "<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> History</a>";
-            content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "'><i class='fa fa-book'></i> Manual</a><br />";
+            content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "' target='_blank'><i class='fa fa-book'></i> Manual</a><br />";
            
             content += "</ul>";
             content += '<hr/>';
@@ -419,6 +419,7 @@
                     Assets.jsonData = json;
                     $('#mapLoader').hide();
                     $('#mapMenuItems').fadeIn(300);
+                    filterAssets(true);
                 }
             });
         }

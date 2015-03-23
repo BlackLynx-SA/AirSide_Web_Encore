@@ -167,7 +167,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                           join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
                           join z in db.as_locationProfile on new { x.f_latitude, x.f_longitude } equals new { z.f_latitude, z.f_longitude }
                           join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
-                          join b in db.UserProfiles on x.i_userId equals b.UserId
+                          join b in db.UserProfiles on x.i_userId_logged equals b.UserId
                           where a.i_assetId == assetId
                           select new { 
                             user = b.FirstName + " " + b.LastName,
