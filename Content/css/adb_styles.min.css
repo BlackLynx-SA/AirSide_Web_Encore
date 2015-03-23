@@ -44,3 +44,15 @@ a:focus, a:hover {
     margin-top:5px;
     margin-right:5px;
 }
+
+.svCriticalBtn{
+    border: 1px solid #ff0000;
+}
+
+.svMajorBtn{
+    border: 1px solid #ff6a00;
+}
+
+.svMinorBtn{
+    border: 1px solid #ffd800;
+}

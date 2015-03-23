@@ -633,9 +633,6 @@
     <Content Include="Images\map_images\RedMarker.png" />
     <Content Include="Images\map_images\WholeMap.gif" />
     <Content Include="Images\map_images\YellowMarker.png" />
-    <Content Include="Images\releases\2.0.0.1\ActivityChart.PNG" />
-    <Content Include="Images\releases\2.0.0.1\Stats.PNG" />
-    <Content Include="Images\releases\2.0.0.1\Surveyor_Alerts.PNG" />
     <Content Include="Images\uploads\1_3502_memo.m4a" />
     <Content Include="Images\uploads\empty.txt" />
     <Content Include="Images\uploads\IREL_LightType.jpg" />
@@ -1254,6 +1251,7 @@
     <Content Include="Views\Reporting\ShiftReport.cshtml" />
     <Content Include="Views\Reporting\_ShiftsDateRange.cshtml" />
     <Content Include="Views\Surveyor\AlertBox.cshtml" />
+    <Content Include="Views\Shared\_DatePickerFromTo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1261,6 +1259,7 @@
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
     </None>
+    <TypeScriptCompile Include="Scripts\TypeScripts\Components\ComponentsHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
@@ -1342,6 +1341,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
+    <Folder Include="Images\releases\2.0.0.1\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\TypeScripts\Map\AirPortMap.js" />

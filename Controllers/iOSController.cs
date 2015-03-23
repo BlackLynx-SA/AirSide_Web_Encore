@@ -1190,11 +1190,28 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						}
 					}
 
+					string[] fileSplit = file.FileName.Split(char.Parse("."));
+					string extension = fileSplit[1];
+					int fileType = 0;
+
+					switch(extension)
+					{
+						case "jpg": fileType = 1;
+							break;
+						case "m4a": fileType = 2;
+							break;
+						case "text": fileType = 3;
+							break;
+						default:
+							break;
+					}
+
+
 					as_fileUploadProfile dbFile = new as_fileUploadProfile();
 					dbFile.guid_file = guid;
 					dbFile.vc_filePath = "../../images/uploads/" + fileName;
 					dbFile.vc_fileDescription = fileName;
-					dbFile.i_fileType = 1;
+					dbFile.i_fileType = fileType;
 					dbFile.dt_datetime = DateTime.Now;
 
 					db.as_fileUploadProfile.Add(dbFile);
