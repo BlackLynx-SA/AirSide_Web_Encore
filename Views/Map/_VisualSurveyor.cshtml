@@ -11,13 +11,52 @@
                 <form class="smart-form">
                     <div class="row">
                         <section class="col col-10">
-                            <label class="label">
-                                Available Dates
-                            </label>
-                            <label class="select">
-                                @Html.DropDownList("surveyorDates", null, String.Empty)<i></i>
-                            </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This list only contains dates on which survey were performed.</div>
+                            <div class="well well-sm bg-color-darken txt-color-white">
+                                <h5>Date Range</h5>
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="col-md-12 hidden-sm">
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
+                                            <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label>Select a date (range):</label>
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control from" type="text" placeholder="From">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-sm-6">
+
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <input class="form-control to" type="text" placeholder="Select a date">
+                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <a href="#" class="btn btn-success" id="dateRangeBtn"><i class="fa fa-check"></i> Get Report</a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
                         </section>
                     </div>
 
@@ -49,8 +88,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary"  id="surveyorFilterBtn">Apply Filter</button>
-                <button class="btn btn-sm btn-danger"  id="faultyFilterBtn"><i class="fa fa-exclamation-triangle"></i> Show All Faulty</button>
+                <button class="btn btn-sm btn-primary" id="surveyorFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-danger" id="faultyFilterBtn"><i class="fa fa-exclamation-triangle"></i> Show All Faulty</button>
             </div>
         </div>
     </div>
@@ -62,9 +101,11 @@
         //Clear Map
         clearAllMarkers();
         markerClusterer.clearMarkers();
+        var fromDate = $('.from').val();
+        var toDate = $('.to').val();
 
+        var surveyDate = fromDate + "-" + toDate;
         $('#surveyorLoader').fadeIn(500);
-        var surveyDate = $('#surveyorDates').val();
         var voiceChk = $('#voiceChk').prop('checked');
         var textChk = $('#textChk').prop('checked');
         var imageChk = $('#imageChk').prop('checked');
@@ -130,8 +171,7 @@
         return htmltxt;
     }
 
-    function filterFaulty()
-    {
+    function filterFaulty() {
         //Clear Map
         clearAllMarkers();
         markerClusterer.clearMarkers();

@@ -112,9 +112,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getSurveydData(string dateOfSurvey)
         {
+            //Disseminate the date range
+            string[] dates = dateOfSurvey.Split(char.Parse("-"));
+            DateTime startDate = DateTime.ParseExact(dates[0], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(dates[1], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+
             var surveyed = (from x in db.as_fileUploadProfile
                             join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
                             join z in db.UserProfiles on y.i_userId_logged equals z.UserId
+                            where x.dt_datetime >= startDate && x.dt_datetime <= endDate
                             select new
                             {
                                 guid = x.guid_file,
@@ -124,7 +130,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 date = x.dt_datetime,
                                 longitude = y.f_longitude,
                                 latitude = y.f_latitude
-                            }).ToList().Where(q => q.date.ToString("yyy/MM/dd") == dateOfSurvey);
+                            }).ToList();
 
             List<surveyedData> normalise = new List<surveyedData>();
 

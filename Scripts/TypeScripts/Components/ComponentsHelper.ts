@@ -84,18 +84,15 @@ module AirSide.Components {
             if (dayFrmStr.length === 1) dayFrmStr = "0" + dayFrmStr;
             if (dayToStr.length === 1) dayToStr = "0" + dayToStr;
 
-            console.log(yearFrmStr + "/" + monthFrmStr + "/" + dayFrmStr);
-            console.log(yearToStr + "/" + monthToStr + "/" + dayToStr);
+            //Set the inputs
+            $('.from').val(yearFrmStr + "/" + monthFrmStr + "/" + dayFrmStr);
+            $('.to').val(yearToStr + "/" + monthToStr + "/" + dayToStr);
         }
     }
 }
 
-$(document).on('ready', c=> {
-    var dateRange: AirSide.Components.CustomDateRangePicker = new AirSide.Components.CustomDateRangePicker();
-    dateRange.PredefinedClicked(1);
-    dateRange.PredefinedClicked(2);
-    dateRange.PredefinedClicked(3);
-    dateRange.PredefinedClicked(4);
-    dateRange.PredefinedClicked(5);
-    dateRange.PredefinedClicked(6);
-});
+var dateRange: AirSide.Components.CustomDateRangePicker = new AirSide.Components.CustomDateRangePicker();
+
+function setDateRange(typeRange: number) {
+    dateRange.PredefinedClicked(typeRange);
+}

@@ -181,6 +181,7 @@
 
     <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
     <script src="~/scripts/plugin/date/date.js"></script>
+    <script src="~/Scripts/TypeScripts/Components/ComponentsHelper.js"></script>
 
     @Scripts.Render("~/scripts/googlemaps")
 
@@ -491,6 +492,34 @@
             $('#mapTopMenuBack').css('width', $('#map-canvas').width());
             $('#mapMenuItems').css('width', $('#map-canvas').width());
             $('#timepicker').timepicker();
+
+            //Init Date Range
+            $("input.from").datepicker({
+                changeMonth: true,
+                numberOfMonths: 3,
+                dateFormat: 'yy/mm/dd',
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                onClose: function (selectedDate) {
+                    $('input.to').datepicker({
+                        minDate: selectedDate
+                    });
+                }
+            });
+
+            $("input.to").datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 3,
+                dateFormat: 'yy/mm/dd',
+                prevText: '<i class="fa fa-chevron-left"></i>',
+                nextText: '<i class="fa fa-chevron-right"></i>',
+                onClose: function (selectedDate) {
+                    $('input.from').datepicker({
+                        maxDate: selectedDate
+                    });
+                }
+            });
 
 
             $(document).on('change', '#mainAreas', function () {

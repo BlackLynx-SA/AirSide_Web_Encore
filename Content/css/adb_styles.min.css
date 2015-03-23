@@ -56,3 +56,7 @@ a:focus, a:hover {
 .svMinorBtn{
     border: 1px solid #ffd800;
 }
+
+.dateselect{
+    margin-right: 5px;
+}
