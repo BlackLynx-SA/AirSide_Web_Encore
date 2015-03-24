@@ -318,14 +318,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     //Create User Default Technician Group
                     as_technicianGroupProfile newTech = new as_technicianGroupProfile();
                     newTech.UserId = newUser.UserId;
-                    newTech.i_currentGroup = 1;
-                    newTech.i_defaultGroup = 1;
+                    newTech.i_currentGroup = 10000;
+                    newTech.i_defaultGroup = 10000;
                     db.as_technicianGroupProfile.Add(newTech);
                     db.SaveChanges();
 
                     ViewBag.message = model.UserName;
                     ViewBag.messageHead = "User Created";
-                    return RedirectToAction("AllUsers", "Users");
+                    return RedirectToAction("ViewAllUsers", "Users");
                 }
                 else
                 {

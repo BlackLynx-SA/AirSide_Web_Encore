@@ -150,11 +150,20 @@
                                     <hr /><br />
 
                                     <div class="form-group">
-                                        <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (---)</label>
-                                        <img src="~/Content/img/adb_img/adb_loader.GIF" id="adbloader2" style="zoom:0.5;" />
-                                        <div id="frequencySlider"></div>
+                                        <label id="frequencyLbl"><i class="fa fa-history"></i> Maintenance Frequency (90)</label>
+                                        <img src="~/Content/img/adb_img/adb_loader.GIF" id="adbloader2" style="zoom:0.5; display:none;" />
+                                        <input type="text" class="slider slider-primary" id="frequencySlider"
+                                               data-slider-orientation="horizontal"
+                                               data-slider-step="15"
+                                               data-slider-min="15"
+                                               data-slider-max="360"
+                                               data-slider-value="90"
+                                               data-slider-selection="before"
+                                               data-slider-handle="round"
+                                               data-slider-tooltip="show" />
+
                                         <div class="note">
-                                            <strong>Hint: </strong> This is the maintenance frequency in days. Add more <a href="~/AssetClass/AddFrequency">here.</a>
+                                            <strong>Hint: </strong> This is the maintenance frequency in days.
                                         </div>
                                     </div>
                                 </div>
@@ -178,8 +187,13 @@
     <script type="text/javascript">
     //Global variables
     var $freqSlider = $('#frequencySlider');
-    var frequencyVal = 0;
+    var frequencyVal = 90;
     var pictureId = @ViewBag.picture;
+
+        $(document).on('slide', '#frequencySlider', function(){
+            frequencyVal = $('#frequencySlider').val();
+            $('#frequencyLbl').html('<i class="fa fa-history"></i> Maintenance Frequency (' + frequencyVal + ')')
+        });
 
     function addNewTask()
     {
