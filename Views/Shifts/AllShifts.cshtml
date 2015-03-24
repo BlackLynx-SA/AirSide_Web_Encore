@@ -95,16 +95,6 @@
     <script src="~/scripts/plugin/datatables/dataTables.bootstrap.min.js"></script>
     <script src="~/scripts/plugin/datatable-responsive/datatables.responsive.min.js"></script>
 
-    <!-- Fancy Box Scripts-->
-    <script src="~/scripts/plugin/fancybox/jquery.fancybox.js"></script>
-    <script src="~/scripts/plugin/fancybox/jquery.fancybox.pack.js"></script>
-
-    <!--Google Maps-->
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
-    </script>
-    <script src="~/scripts/plugin/googlemaps/gmap3.min.js"></script>
-
     <script type="text/javascript">
         //Global Variables
         var responsiveHelper_dt_basic = null;
@@ -207,12 +197,16 @@
                         $('#activeBadge').removeClass('hiddenbadge');
                     });
 
-                    $('#dt_shifts tbody').html(html);
+                    
                     if ($.fn.dataTable.isDataTable($shiftsTbl)) {
                         var table = $shiftsTbl.DataTable();
                         table.destroy();
+                        $('#dt_shifts tbody').html(html);
+                        setDataTable($shiftsTbl);
+                    } else {
+                        $('#dt_shifts tbody').html(html);
+                        setDataTable($shiftsTbl);
                     }
-                    setDataTable($shiftsTbl);
                     $("#adbloader").hide();
                     $shiftsTbl.fadeIn(500);
                 },

@@ -9,3 +9,9 @@ interface JQueryStatic {
     smallBox(options: any): JQueryStatic;
     SmartMessageBox(options: any, callback: (buttonPress: string, value: string) => any): JQueryStatic;
 }
+
+//interface HTMLElement {
+//    src: string;
+//    pause(options?: any): HTMLElement;
+//    play(options?: any): HTMLElement;
+//}

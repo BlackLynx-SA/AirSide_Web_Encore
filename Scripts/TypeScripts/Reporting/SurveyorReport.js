@@ -1,6 +1,7 @@
 /// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/pdfjs/pdfjs.d.ts" />
 /// <reference path="../../typings/bootstrap.datepicker/bootstrap.datepicker.d.ts" />
+/// <reference path="../../typings/jquery/jquery.bridge.d.ts" />
 var AirSide;
 (function (AirSide) {
     var Reporting;
@@ -145,8 +146,14 @@ function showPicture(url, long, lat) {
     showAssetLocation(lat, long);
 }
 function showVoice(url, long, lat) {
-    var $source = $('audio source');
-    $source.attr('src', url).appendTo($source.parent()).load();
+    $('#audio').hide();
+    $('#voiceLoader').fadeIn(300);
+    var voice = document.getElementById('audio');
+    voice.src = url;
+    voice.pause();
+    voice.play();
+    $('#voiceLoader').hide();
+    $('#audio').fadeIn(300);
     showAssetLocation(lat, long);
 }
 function closeAnomaly(guid) {

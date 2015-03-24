@@ -1,6 +1,7 @@
 ﻿/// <reference path="../../typings/jquery/jquery.d.ts" />
 /// <reference path="../../typings/pdfjs/pdfjs.d.ts" />
 /// <reference path="../../typings/bootstrap.datepicker/bootstrap.datepicker.d.ts" />
+/// <reference path="../../typings/jquery/jquery.bridge.d.ts" />
 
 module AirSide.Reporting {
     interface ISurveyorData {
@@ -166,8 +167,14 @@ function showPicture(url: string, long: number, lat: number) {
 }
 
 function showVoice(url: string, long: number, lat: number) {
-    var $source = $('audio source');
-    $source.attr('src', url).appendTo($source.parent()).load();
+    $('#audio').hide();
+    $('#voiceLoader').fadeIn(300);
+    var voice = <HTMLAudioElement>document.getElementById('audio');
+    voice.src = url;
+    voice.pause();
+    voice.play();
+    $('#voiceLoader').hide();
+    $('#audio').fadeIn(300);
     showAssetLocation(lat, long);
 }
 

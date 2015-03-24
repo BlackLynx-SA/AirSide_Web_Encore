@@ -107,6 +107,7 @@ var AirSide;
                     type: "POST",
                     url: "../../Home/getActivities",
                     success: function (json) {
+                        console.log(json);
                         json.forEach(function (c) {
                             var plotData = [];
                             plotData.push(c.dateOfActivity);
