@@ -1360,6 +1360,244 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        
+        #endregion
+
+        #region Event Report
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult EventReport(int shiftId, int type)
+        {
+            LogHelper log = new LogHelper();
+            try
+            {
+                //Create Report Settings
+                ReportSettings settings = new ReportSettings();
+
+                settings.blobContainer = "reportcontent";
+                settings.blobReference = "EventReport.rdlc";
+
+                settings.fileType = ReportFileTypes.pdf;
+
+                //Set the data sources
+                settings.dataSources = new ReportDataSource[4];
+                
+                //Prepare Data Sources for Report
+                ReportDataSource reportDataSource = new ReportDataSource("SheduleTasks", getEventSheduleData(shiftId, type));
+                settings.dataSources[0] = reportDataSource;
+
+                reportDataSource = new ReportDataSource("AssetInfo", getEventAssetInfo(shiftId, type));
+                settings.dataSources[1] = reportDataSource;
+
+                reportDataSource = new ReportDataSource("ReportInfo", getEventReportInfo(shiftId, type));
+                settings.dataSources[2] = reportDataSource;
+
+                reportDataSource = new ReportDataSource("CheckList", getEventCheckList(shiftId, type));
+                settings.dataSources[3] = reportDataSource;
+
+
+                //Set the host reference for the logo
+                string[] host = Request.Headers["Host"].Split('.');
+                settings.logoReference = host[0];
+
+                //Create Report Object 
+                ReportingHelper report = new ReportingHelper();
+
+                //Render the report
+                ReportBytes renderedReport = report.generateReport(settings);
+
+                Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
+                log.log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", LogHelper.logTypes.Info, User.Identity.Name);
+                return File(renderedReport.renderedBytes, "application/pdf ");
+            }
+            catch (Exception ex)
+            {
+                log.logError(ex, User.Identity.Name);
+                Response.StatusCode = 500;
+                return null;
+            }
+
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private List<EventScheduleData> getEventSheduleData(int shiftId, int type)
+        {
+            List<EventScheduleData> returnList = new List<EventScheduleData>();
+
+            return returnList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private List<EventAssetInfo> getEventAssetInfo(int shiftId, int type)
+        {
+            List<EventAssetInfo> returnList = new List<EventAssetInfo>();
+
+            return returnList;
+        }
+        
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<EventCheckList> getEventCheckList(int shiftId, int type)
+        {
+            List<EventCheckList> returnList = new List<EventCheckList>();
+
+            if(type == 1)
+            {
+                int maintenanceId = (from x in db.as_shifts
+                                     where x.i_shiftId == shiftId
+                                     select x.i_maintenanceId).FirstOrDefault();
+
+                var checkList = from x in db.as_maintenanceCheckListDef
+                                where x.i_maintenanceId == maintenanceId
+                                select x.vc_description;
+
+                foreach(var item in checkList)
+                {
+                    EventCheckList listItem = new EventCheckList();
+                    listItem.ListItem = item;
+
+                    returnList.Add(listItem);
+                }
+
+            } else if (type == 2)
+            {
+                int maintenanceId = (from x in db.as_shiftsCustom
+                                     where x.i_shiftCustomId == shiftId
+                                     select x.i_maintenanceId).FirstOrDefault();
+
+                var checkList = from x in db.as_maintenanceCheckListDef
+                                where x.i_maintenanceId == maintenanceId
+                                select x.vc_description;
+
+                foreach (var item in checkList)
+                {
+                    EventCheckList listItem = new EventCheckList();
+                    listItem.ListItem = item;
+
+                    returnList.Add(listItem);
+                }
+            }
+            return returnList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<EventReportInfo> getEventReportInfo(int shiftId, int type)
+        {
+            List<EventReportInfo> returnList = new List<EventReportInfo>();
+            if (type == 1)
+            {
+                var shiftData = from x in db.as_shiftData
+                                join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                                where y.i_shiftId == shiftId
+                                select new
+                                {
+                                    MaintenanceId = y.i_maintenanceId,
+                                    SheduledDate = y.dt_scheduledDate,
+                                    AssetId = x.i_assetId,
+                                    AreaId = y.i_areaSubId,
+                                    TechGroupId = y.UserId
+                                };
+
+                int areaId = shiftData.FirstOrDefault().AreaId;
+
+                int totalAssets = (from x in db.as_assetProfile
+                                   join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                                   where y.i_areaSubId == areaId
+                                   select x).Count();
+
+                int completedAssets = (from x in shiftData
+                                       group x by x.AssetId into assetGroup
+                                       select new
+                                       {
+                                           numberAssets = assetGroup.Count()
+                                       }).Count();
+
+                int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+
+                string technicianGroup = (from x in db.as_technicianGroups
+                                          where x.i_groupId == techGroupId
+                                          select x.vc_groupName).FirstOrDefault();
+
+                decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100,0);
+
+                string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+
+                int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+
+                string maintenanceTask = (from x in db.as_maintenanceProfile
+                                         where x.i_maintenanceId == maintenanceId
+                                         select x.vc_description).FirstOrDefault();
+
+                EventReportInfo info = new EventReportInfo();
+                info.EventDate = EventDate;
+                info.MaintenanceTask = maintenanceTask;
+                info.NumberOfAssets = totalAssets;
+                info.PercentageComplete = percentage;
+                info.PercentageNotComplete = 100 - percentage;
+                info.TechGroup = technicianGroup;
+
+                returnList.Add(info);
+            } else if(type == 2)
+            {
+                var shiftData = from x in db.as_shiftData
+                                join y in db.as_shiftsCustom on x.i_shiftId equals y.i_shiftCustomId
+                                where y.i_shiftCustomId == shiftId
+                                select new
+                                {
+                                    MaintenanceId = y.i_maintenanceId,
+                                    SheduledDate = y.dt_scheduledDate,
+                                    AssetId = x.i_assetId,
+                                    TechGroupId = y.i_techGroupId
+                                };
+
+                int totalAssets = (from x in db.as_shiftsCustomProfile
+                                       where x.i_shiftCustomId == shiftId
+                                       select x).Count();
+
+                var completedAssets = (from x in shiftData
+                                       group x by x.AssetId into assetGroup
+                                       select new
+                                       {
+                                           numberAssets = assetGroup.Count()
+                                       }).Count();
+
+                int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+
+                string technicianGroup = (from x in db.as_technicianGroups
+                                          where x.i_groupId == techGroupId
+                                          select x.vc_groupName).FirstOrDefault();
+
+                decimal percentage = completedAssets / totalAssets * 100;
+
+                string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+
+                int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+
+                string maintenanceTask = (from x in db.as_maintenanceProfile
+                                          where x.i_maintenanceId == maintenanceId
+                                          select x.vc_description).FirstOrDefault();
+
+                EventReportInfo info = new EventReportInfo();
+                info.EventDate = EventDate;
+                info.MaintenanceTask = maintenanceTask;
+                info.NumberOfAssets = totalAssets;
+                info.PercentageComplete = percentage;
+                info.PercentageNotComplete = 100 - percentage;
+                info.TechGroup = technicianGroup;
+
+                returnList.Add(info);
+            }
+
+            return returnList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         #endregion
     }
