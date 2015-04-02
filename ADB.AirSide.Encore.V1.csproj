@@ -1256,6 +1256,9 @@
     <Content Include="Views\Reporting\Surveyor.cshtml" />
     <Content Include="Views\Reporting\_SurveyorPictures.cshtml" />
     <Content Include="Views\Reporting\_SurveyorVoice.cshtml" />
+    <Content Include="Views\Surveyor\AnomalySingleView.cshtml" />
+    <Content Include="Views\Reporting\Setup.cshtml" />
+    <Content Include="Views\Reporting\_SetupAirportInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1268,6 +1271,7 @@
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\SurveyorReport.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Surveyor\SurveyorHelper.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\chartjs\chart.d.ts" />

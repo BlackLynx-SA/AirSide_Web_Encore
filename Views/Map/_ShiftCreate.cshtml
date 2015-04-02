@@ -181,12 +181,70 @@
         var externalRef = $('#externalRefTxt').val();
         var permitNumber = $('#workpermitTxt').val();
         var maintenanceFilter = selectedTask;
+        var _antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
+
+        var data = {
+            shift: {
+                scheduledDate: sheduledDate,
+                techGroupId: techGroup,
+                maintenanceId: maintenance,
+                permitNumber: permitNumber,
+                externalRef: externalRef,
+                NELat: NELat,
+                NELong: NELong,
+                SWLat: SWLat,
+                SWLong: SWLong,
+                filterType: filterEnum,
+                filterValue: filterValue,
+                maintenanceFilter: maintenanceFilter,
+
+                dateRange: "",
+                voiceChk: false,
+                textChk: false,
+                imageChk: false
+            },
+            __RequestVerificationToken: _antiforgeryToken
+        }
+
+        //FilterEnum = 107 Visual Surveyor
+        if (filterEnum === 107)
+        {
+            var fromDate = $('.from').val();
+            var toDate = $('.to').val();
+
+            var surveyDate = fromDate + "-" + toDate;
+            var voiceChk = $('#voiceChk').prop('checked');
+            var textChk = $('#textChk').prop('checked');
+            var imageChk = $('#imageChk').prop('checked');
+
+            data = {
+                shift: {
+                    scheduledDate: sheduledDate,
+                    techGroupId: techGroup,
+                    maintenanceId: maintenance,
+                    permitNumber: permitNumber,
+                    externalRef: externalRef,
+                    NELat: NELat,
+                    NELong: NELong,
+                    SWLat: SWLat,
+                    SWLong: SWLong,
+                    filterType: filterEnum,
+                    filterValue: filterValue,
+                    maintenanceFilter: maintenanceFilter,
+
+                    dateRange: surveyDate,
+                    voiceChk: voiceChk,
+                    textChk: textChk,
+                    imageChk: imageChk
+                },
+                __RequestVerificationToken: _antiforgeryToken
+            }
+        }
 
         //Ajax Call
         $.ajax({
-            url: '../../Shifts/addCustomShift?scheduledDate=' + sheduledDate + '&techGroupId=' + techGroup + '&maintenanceId=' + maintenance + '&permitNumber=' + permitNumber + '&externalRef=' 
-                + externalRef + '&NELat=' + NELat + '&NELong=' + NELong + '&SWLat=' + SWLat + '&SWLong=' + SWLong + '&filterType=' + filterEnum + '&filterValue=' + filterValue + '&maintenanceFilter=' + maintenanceFilter,
-            data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
+            url: '../../Shifts/addCustomShift',
+            data: data,
             type: 'post',
             dataType: 'json',
             success: function (json) {

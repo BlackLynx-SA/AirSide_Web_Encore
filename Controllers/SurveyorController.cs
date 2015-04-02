@@ -41,7 +41,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 Person = z.FirstName + " " + z.LastName,
                                 Date = y.dt_datetime,
                                 TypeAnomaly = y.i_fileType,
-                                Url = y.vc_filePath
+                                Url = y.vc_filePath,
+                                Guid = y.guid_file
                             }).OrderByDescending(q=>q.Date);
 
             List<AnomalyAlert> Alerts = new List<AnomalyAlert>();
@@ -55,6 +56,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 alert.ItemUrl = item.Url;
                 alert.ReportedUser = item.Person;
                 alert.TimeCalculation = difference.ToString();
+                alert.guid = item.Guid.ToString();
 
                 Alerts.Add(alert);
             }
@@ -64,6 +66,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return View();
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getAlertSummary()
         {
@@ -80,6 +84,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                          
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult closeAnomaly(string guid)
         {
@@ -96,6 +102,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(new { message = "success" });
         }
 
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
         [HttpPost]
         public JsonResult getSurveyorData(int anomalyType, string dateRange, Boolean all)
         {
@@ -177,5 +185,59 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             return Json(SurveyItems);
         }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        public JsonResult getSingleViewData(string guid)
+        {
+            List<surveyedData> SurveyItems = new List<surveyedData>();
+
+            Guid surveyGuid = new Guid(guid);
+
+            var survey = (from x in db.as_fileUploadProfile
+                          join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                          join z in db.UserProfiles on y.i_userId_logged equals z.UserId
+                          where x.guid_file == surveyGuid
+                          select new
+                          {
+                              Uuid = x.guid_file,
+                              Technician = z.FirstName + " " + z.LastName,
+                              Date = x.dt_datetime,
+                              Url = x.vc_filePath,
+                              FileType = x.i_fileType,
+                              Longitude = y.f_longitude,
+                              Latitude = y.f_latitude,
+                              Severity = y.i_severityId,
+                              Resolved = y.bt_resolved,
+                              Desc = y.vc_description
+                          }).OrderByDescending(q => q.Date);
+
+            foreach (var item in survey)
+            {
+                surveyedData newSurvey = new surveyedData();
+                newSurvey.date = item.Date.ToString("yyyy/MM/dd HH:mm");
+                newSurvey.technician = item.Technician;
+                newSurvey.latitude = item.Latitude;
+                newSurvey.longitude = item.Longitude;
+                newSurvey.guid = item.Uuid.ToString();
+                newSurvey.type = item.FileType.ToString();
+                newSurvey.url = item.Url;
+                newSurvey.description = item.Desc;
+
+                SurveyItems.Add(newSurvey);
+            }
+
+            return Json(SurveyItems);
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        public ActionResult AnomalySingleView()
+        {
+            return View();
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
     }
 }

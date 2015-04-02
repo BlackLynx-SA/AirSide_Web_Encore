@@ -35,7 +35,7 @@
                 @Html.Raw(badge)
 
                 <span>
-                    <a href="~/Reporting/Surveyor" class="display-normal"><strong>@linkText</strong></a> by <i>@item.ReportedUser</i>
+                    <a href="~/Surveyor/AnomalySingleView?guid=@item.guid" class="display-normal"><strong>@linkText</strong></a> by <i>@item.ReportedUser</i>
                     <br>
                     <strong>@item.DateReported</strong><br>
                     <span class="pull-right font-xs text-muted"><i>@item.TimeCalculation hrs ago...</i></span>

@@ -1,0 +1,48 @@
+﻿<form class="smart-form">
+    <header>
+        Airport Information
+    </header>
+
+    <fieldset>
+
+        <section>
+            <label class="label">Airport Name</label>
+            <label class="input">
+                <input type="text">
+            </label>
+            <div class="note">
+                <strong>Note:</strong> This will be the name used on the reports.
+            </div>
+        </section>
+
+        <section>
+            <label class="label">Airport Name</label>
+            <label class="input">
+                <input type="text">
+            </label>
+            <div class="note">
+                <strong>Note:</strong> This will be the name used on the reports.
+            </div>
+        </section>
+
+        <section>
+            <label class="label">Airport Logo</label>
+            <div class="input input-file">
+                <span class="button"><input type="file" id="file" name="file" onchange="this.parentNode.nextSibling.value = this.value">Browse</span><input type="text" placeholder="Include some files" readonly="">
+            </div>
+            <div class="note">
+                <strong>Note:</strong> This is the main logo of the airport. The suggested size for the logo is 230 x 100 pixels.
+            </div>
+        </section>
+
+    </fieldset>
+
+    <footer>
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+        <button type="button" class="btn btn-default" onclick="window.history.back();">
+            Back
+        </button>
+    </footer>
+</form>

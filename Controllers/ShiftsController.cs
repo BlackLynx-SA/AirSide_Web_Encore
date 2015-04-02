@@ -31,6 +31,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class ShiftsController : Controller
     {
+        private readonly LogHelper logger = new LogHelper();
         private Entities db = new Entities();
 
         public ActionResult Calendar()
@@ -136,6 +137,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     case 105: //Sub Area
                         assets = processSubArea(shift);
                         break;
+                    case 106: //Faulty Lights
+                        assets = processFaultyLights(shift);
+                        break;
+                    case 107: //Visual Surveyor => TODO: Need to build it out for reported other than just assets
+                        assets = processVisualSurveyor(shift);
+                        break;
                     default:
                         break;
                 }
@@ -149,6 +156,148 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 return assets;
             }
         
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private class assetObject
+        {
+            public int assetId { get; set; }
+            public double latitude { get; set; }
+            public double longitude { get; set; }
+        }
+
+        private List<int> processVisualSurveyor(CustomShiftClass shift)
+        {
+            //Disseminate the date range
+            string[] dates = shift.dateRange.Split(char.Parse("-"));
+            DateTime startDate = DateTime.ParseExact(dates[0], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(dates[1], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+
+            List<int> assetList = new List<int>();
+            List<assetObject> assets = new List<assetObject>();
+
+            //Get Images Elements
+            if(shift.imageChk)
+            {
+                var assetSelect = from x in db.as_fileUploadProfile
+                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                                  where x.i_fileType == 1 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
+                                  select new
+                                  {
+                                    assetId = a.i_assetId,
+                                    latitude = z.f_latitude,
+                                    longitude = z.f_longitude
+                                  };
+
+                foreach(var item in assetSelect)
+                {
+                    assetObject obj = new assetObject();
+                    obj.assetId = item.assetId;
+                    obj.latitude = item.latitude;
+                    obj.longitude = item.longitude;
+
+                    assets.Add(obj);
+                }
+            }
+
+            //Get Voice Elements
+            if (shift.voiceChk)
+            {
+                var assetSelect = from x in db.as_fileUploadProfile
+                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                                  where x.i_fileType == 2 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
+                                  select new
+                                  {
+                                      assetId = a.i_assetId,
+                                      latitude = z.f_latitude,
+                                      longitude = z.f_longitude
+                                  };
+
+                foreach (var item in assetSelect)
+                {
+                    assetObject obj = new assetObject();
+                    obj.assetId = item.assetId;
+                    obj.latitude = item.latitude;
+                    obj.longitude = item.longitude;
+
+                    assets.Add(obj);
+                }
+            }
+
+            //Get Images Elements
+            if (shift.textChk)
+            {
+                var assetSelect = from x in db.as_fileUploadProfile
+                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                                  where x.i_fileType == 3 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
+                                  select new
+                                  {
+                                      assetId = a.i_assetId,
+                                      latitude = z.f_latitude,
+                                      longitude = z.f_longitude
+                                  };
+
+                foreach (var item in assetSelect)
+                {
+                    assetObject obj = new assetObject();
+                    obj.assetId = item.assetId;
+                    obj.latitude = item.latitude;
+                    obj.longitude = item.longitude;
+
+                    assets.Add(obj);
+                }
+            }
+
+
+            logger.quickDebugLog(assets.Count.ToString());
+
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+                
+                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
+                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag)
+                {
+                    assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        private List<int> processFaultyLights(CustomShiftClass shift)
+        {
+            CacheHelper cache = new CacheHelper();
+            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<int> assetList = new List<int>();
+            foreach (var asset in assets)
+            {
+                Boolean latFlag = false;
+                Boolean longFlag = false;
+
+                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
+                if (asset.location.longitude >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+
+                if (latFlag && longFlag)
+                {
+                    if(asset.status)
+                        assetList.Add(asset.assetId);
+                }
+            }
+
+            return assetList;
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
