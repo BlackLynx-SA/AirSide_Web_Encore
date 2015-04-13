@@ -132,7 +132,7 @@
     function showAssetClass(asset, clustered) {
         markers = [];
         $.each(Assets.jsonData, function (i,v) {
-            if (asset == v.assetClassId) {
+            if (asset === v.assetClass.assetClassId.toString()) {
                 $.each(v.maintenance, function (index, value) {
                     if (value.maintenanceId == selectedTask) {
                         addMarker(v);

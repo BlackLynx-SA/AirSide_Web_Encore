@@ -90,11 +90,11 @@
             <hr />
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                    <h2 class="page-title"><i class="fa fa-wrench"></i> Assosiated Maintenance Tasks</h2>
+                    <h2 class="page-title"><i class="fa fa-wrench"></i> Maintenance Tasks</h2>
                 </div>
 
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
-                    <button id="addTaskBtn" class="btn btn-default page-title"><i class="fa fa-plus"></i> Add Maintenance Task</button>
+                    <button id="addTaskBtn" class="btn btn-default page-title"><i class="fa fa-plus"></i> Add Task</button>
                 </div>
             </div>
 
@@ -197,6 +197,7 @@
 
     function addNewTask()
     {
+        $('#modalLoader').fadeIn(300);
         var allTasks = $('#taskSelect').val();
         var assetClassId = window.location.pathname.toString().split("/",5)[3];
         $.each(allTasks, function(i,v){
@@ -212,6 +213,7 @@
                 success: function (json) {
                     $('#taskModal').modal('hide');
                     getAssosiatedTasks();
+                    $('#modalLoader').hide();
                 },
                 error: function (err) {
                     $.smallBox({
@@ -221,6 +223,7 @@
                         timeout: 5000,
                         icon: "fa fa-bell swing animated"
                     });
+                    $('#modalLoader').hide();
                 }
             });
         });

@@ -27,7 +27,6 @@
                         <th data-class="expand"><i class="fa fa-fw fa-wrench txt-color-blue hidden-md hidden-sm hidden-xs"></i> Manufacturer</th>
                         <th data-class="expand"><i class="fa fa-fw fa-cube txt-color-blue hidden-md hidden-sm hidden-xs"></i> Model</th>
                         <th data-hide="phone,tablet"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Picture</th>
-                        <th data-hide="expand"><i class="fa fa-fw fa-history txt-color-blue hidden-md hidden-sm hidden-xs"></i> Frequency</th>
                         <th data-hide="expand"><i class="fa fa-fw fa-book txt-color-blue hidden-md hidden-sm hidden-xs"></i> Reference</th>
                         <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
                     </tr>
@@ -88,7 +87,7 @@
                         html += '<tr class="tr_' + value.assetClassId + '">';
                         html += '<td>' + value.assetDescription + '</td><td>' + value.manufacturer + '</td><td>' + value.model + '</td>';
                         html += '<td><img src="' + value.pictureLocation + '" style="height:50px; width:auto;"/></td>';
-                        html += '<td>' + value.frequency + '</td><td><a href="' + value.manualURL + '" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-book"></i> Manual</a></td><td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> Delete</a></td></tr>';
+                        html += '<td><a href="' + value.manualURL + '" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-book"></i> Manual</a></td><td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> Delete</a></td></tr>';
                     });
 
                     $('#dt_assets tbody').html(html);

@@ -24,6 +24,8 @@
                 <thead>
                     <tr>
                         <th data-hide="expand" style="width:20px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                        <th data-class="expand"><i class="fa fa-fw fa-barcode txt-color-blue"></i> Reference</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-wifi txt-color-blue hidden-md hidden-sm hidden-xs"></i> RFID</th>
                         <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
                         <th data-class="expand"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Asset Type</th>
                         <th data-class="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Previous</th>
@@ -125,6 +127,8 @@
 
                         var html = "";
                         html += '<tr class="' + color +'" id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
+                        html += '<td>' + v.serialNumber + '</td>';
+                        html += '<td>' + v.rfidTag + '</td>';
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
                         html += '<td><img src="../..' + v.picture.fileLocation + '" style="height:50px; width:auto;"/></td>';
                         html += '<td>' + v.maintenance[0].previousDate + '</td><td>' + v.maintenance[0].nextDate + '</td>';

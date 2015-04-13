@@ -142,52 +142,67 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private string getMidAssets()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
-            double assetCount = 0;
-            double total = 0;
-            if (assets != null)
+            try
             {
-                foreach (mongoAssetProfile asset in assets)
+                CacheHelper cache = new CacheHelper();
+                List<mongoAssetProfile> assets = cache.getAllAssets();
+                double assetCount = 0;
+                double total = 0;
+                if (assets != null)
                 {
-                    foreach (maintenance maint in asset.maintenance)
+                    foreach (mongoAssetProfile asset in assets)
                     {
-                        if (maint.maintenanceCycle == 2) assetCount++;
-                        total++;
+                        foreach (maintenance maint in asset.maintenance)
+                        {
+                            if (maint.maintenanceCycle == 2) assetCount++;
+                            total++;
+                        }
                     }
+
+                    double persentage = ((assetCount / total) * 100);
+
+                    return Math.Round(persentage, 2).ToString();
                 }
-
-                double persentage = ((assetCount / total) * 100);
-
-                return Math.Round(persentage, 2).ToString();
+                else
+                {
+                    return "0";
+                }
             }
-            else {
+            catch
+            {
                 return "0";
             }
         }
 
         private string getAlmostAssets()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
-            int assetCount = 0;
-            int total = 0;
-            if (assets != null)
+            try
             {
-                foreach (mongoAssetProfile asset in assets)
+                CacheHelper cache = new CacheHelper();
+                List<mongoAssetProfile> assets = cache.getAllAssets();
+                int assetCount = 0;
+                int total = 0;
+                if (assets != null)
                 {
-                    foreach (maintenance maint in asset.maintenance)
+                    foreach (mongoAssetProfile asset in assets)
                     {
-                        if (maint.maintenanceCycle == 3) assetCount++;
-                        total++;
+                        foreach (maintenance maint in asset.maintenance)
+                        {
+                            if (maint.maintenanceCycle == 3) assetCount++;
+                            total++;
+                        }
                     }
+
+                    double persentage = ((assetCount / total) * 100);
+
+                    return Math.Round(persentage, 2).ToString();
                 }
-
-                double persentage = ((assetCount / total) * 100);
-
-                return Math.Round(persentage, 2).ToString();
-            }
-            else {
+                else
+                {
+                    return "0";
+                }
+            } catch
+            {
                 return "0";
             }
         }

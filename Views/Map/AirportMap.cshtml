@@ -259,7 +259,7 @@
             }
 
             //Header
-            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.rfidTag + '<small> - (' + json.serialNumber + ')</small></h3>';
+            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.serialNumber + '<small> - (' + json.rfidTag + ')</small></h3>';
 
             //Image of Asset
             content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
@@ -375,7 +375,7 @@
             var marker = new google.maps.Marker({
                 map: map,
                 position: latLongMarker,
-                title: json.assetId.toString(),
+                title: json.serialNumber,
                 icon: image
             });
 

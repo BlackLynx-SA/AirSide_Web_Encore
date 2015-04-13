@@ -54,7 +54,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult addCustomShift(CustomShiftClass shift)
+        public JsonResult addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.as_shiftsCustom.Add(newShift);
                 db.SaveChanges();
 
-                List<int> assets = findAssets(shift);
+                List<int> assets = findAssets(shift, bounds);
                 foreach(int asset in assets)
                 {
                     as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile();
@@ -111,7 +111,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //2015/01/19 Custom Shift Helpers----------------------------------------------------------------------------------------------------------------------------
-        private List<int> findAssets(CustomShiftClass shift)
+        private List<int> findAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -123,25 +123,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 switch (shift.filterType)
                 {   case 101:   //Process All
-                        assets = processAllAssets(shift);
+                        assets = processAllAssets(shift, bounds);
                         break;
                     case 102: //Process Asset Type
-                        assets = processAssetType(shift);
+                        assets = processAssetType(shift, bounds);
                         break;
                     case 103: //Process Maintneace Cycle
-                        assets = processAssetCycle(shift);
+                        assets = processAssetCycle(shift, bounds);
                         break;
                     case 104: //Main Area
-                        assets = processMainArea(shift);
+                        assets = processMainArea(shift, bounds);
                         break;
                     case 105: //Sub Area
-                        assets = processSubArea(shift);
+                        assets = processSubArea(shift, bounds);
                         break;
                     case 106: //Faulty Lights
-                        assets = processFaultyLights(shift);
+                        assets = processFaultyLights(shift, bounds);
                         break;
                     case 107: //Visual Surveyor => TODO: Need to build it out for reported other than just assets
-                        assets = processVisualSurveyor(shift);
+                        assets = processVisualSurveyor(shift, bounds);
                         break;
                     default:
                         break;
@@ -167,7 +167,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             public double longitude { get; set; }
         }
 
-        private List<int> processVisualSurveyor(CustomShiftClass shift)
+        private List<int> processVisualSurveyor(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             //Disseminate the date range
             string[] dates = shift.dateRange.Split(char.Parse("-"));
@@ -263,8 +263,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
                 
-                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
-                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+                if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
+                if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag)
                 {
@@ -276,8 +276,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
-        private List<int> processFaultyLights(CustomShiftClass shift)
+
+        private List<int> processFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoAssetProfile> assets = cache.getAllAssets();
@@ -287,8 +287,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
-                if (asset.location.longitude >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+                if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
+                if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag)
                 {
@@ -302,7 +302,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAssetCycle(CustomShiftClass shift)
+        private List<int> processAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoAssetProfile> assets = cache.getAllAssets();
@@ -312,8 +312,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
-                if (asset.location.longitude  >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+                if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
+                if (asset.location.longitude  >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag)
                 {
@@ -330,7 +330,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processSubArea(CustomShiftClass shift)
+        private List<int> processSubArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoFullAsset> assets = cache.getAllAssetDownload();
@@ -340,8 +340,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
-                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+                if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
+                if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.subAreaId == shift.filterValue)
                 {
@@ -360,7 +360,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processMainArea(CustomShiftClass shift)
+        private List<int> processMainArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoAssetProfile> assets = cache.getAllAssets();
@@ -370,8 +370,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.location.latitude >= shift.SWLat && asset.location.latitude <= shift.NELat) latFlag = true;
-                if (asset.location.longitude >= shift.SWLong && asset.location.longitude <= shift.NELong) longFlag = true;
+                if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
+                if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.location.areaId == shift.filterValue)
                 {
@@ -390,7 +390,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAssetType(CustomShiftClass shift)
+        private List<int> processAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoFullAsset> assets = cache.getAllAssetDownload();
@@ -400,8 +400,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
-                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+                if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
+                if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.assetClassId == shift.filterValue)
                 {
@@ -420,7 +420,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAllAssets(CustomShiftClass shift)
+        private List<int> processAllAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             CacheHelper cache = new CacheHelper();
             List<mongoFullAsset> assets = cache.getAllAssetDownload();
@@ -430,8 +430,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 Boolean latFlag = false;
                 Boolean longFlag = false;
 
-                if (asset.latitude >= shift.SWLat && asset.latitude <= shift.NELat) latFlag = true;
-                if (asset.longitude >= shift.SWLong && asset.longitude <= shift.NELong) longFlag = true;
+                if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
+                if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if(latFlag && longFlag)
                 {

@@ -588,6 +588,7 @@
     <Content Include="Images\lights\DTC_LP_LightType.png" />
     <Content Include="Images\lights\DTS_LightType.png" />
     <Content Include="Images\lights\DTS_LP_LightType.png" />
+    <Content Include="Images\lights\DTZ_LightType.png" />
     <Content Include="Images\lights\ETEL_LightType.png" />
     <Content Include="Images\lights\FAP_LightType.png" />
     <Content Include="Images\lights\FED_L_LightType.png" />
@@ -608,6 +609,7 @@
     <Content Include="Images\lights\Generic_2_LightType.png" />
     <Content Include="Images\lights\Generic_4_LightType.png" />
     <Content Include="Images\lights\Generic_Blank_LightType.png" />
+    <Content Include="Images\lights\IREL_LightType.png" />
     <Content Include="Images\lights\LTC2_LightType.png" />
     <Content Include="Images\lights\LTC_LightType.png" />
     <Content Include="Images\lights\LTO_LightType.png" />
@@ -1198,6 +1200,8 @@
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
+    <None Include="Properties\PublishProfiles\airsidebirmingham - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\airsidebirmingham - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\airsideencore.pubxml" />
     <None Include="Properties\PublishProfiles\Custom.pubxml" />
