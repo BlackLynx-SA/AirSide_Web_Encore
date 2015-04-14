@@ -113,7 +113,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<ActiveShiftsReport> getShiftReportDataForRange(DateTime startDate, DateTime endDate)
         {
             var data = from x in db.as_shifts
-                        join z in db.as_technicianGroups on x.UserId equals z.i_groupId
+                        join z in db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
                         join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
                         join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
                         where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate
@@ -131,35 +131,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
             List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
 
             foreach (var item in data)
-            {
-                ActiveShiftsReport newShift = new ActiveShiftsReport();
-                newShift.area = item.area;
-                newShift.bt_completed = item.bt_completed;
-                newShift.dt_scheduledDate = item.dt_scheduledDate;
-                newShift.subArea = item.subArea;
-                newShift.vc_externalRef = item.vc_externalRef;
-                newShift.vc_groupName = item.vc_groupName;
-                newShift.vc_permitNumber = item.vc_permitNumber;
-
-                returnList.Add(newShift);
-            }
-
-            var customShift = from x in db.as_shiftsCustom
-                                join z in db.as_technicianGroups on x.i_techGroupId equals z.i_groupId
-                                where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate
-                                select new
-                                {
-                                    dt_scheduledDate = x.dt_scheduledDate,
-                                    vc_groupName = z.vc_groupName,
-                                    vc_externalRef = z.vc_externalRef,
-                                    vc_permitNumber = x.vc_permitNumber,
-                                    bt_completed = x.bt_completed,
-                                    area = "Custom Shift",
-                                    subArea = "Selected Assets"
-                                };
-
-
-            foreach (var item in customShift)
             {
                 ActiveShiftsReport newShift = new ActiveShiftsReport();
                 newShift.area = item.area;

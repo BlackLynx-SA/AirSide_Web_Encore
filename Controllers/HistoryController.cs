@@ -113,7 +113,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             var torque = (from x in db.as_shiftData
                          join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                         join z in db.as_technicianGroups on y.UserId equals z.i_groupId
+                         join z in db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
                          join a in db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
                          where x.i_assetId == assetId
                           select new { 

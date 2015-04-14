@@ -72,16 +72,33 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //  105 - Sub Area
                 //  106 - Faulty Lights
 
-                as_shiftsCustom newShift = new as_shiftsCustom();
+                //Get User 
+                var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
+                var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+
+                as_shifts newShift = new as_shifts();
                 newShift.bt_completed = false;
                 newShift.dt_completionDate = new DateTime(1970, 1, 1);
                 newShift.dt_scheduledDate = DateTime.ParseExact(shift.scheduledDate, "dd/MM/yyyy h:mm tt", provider);
                 newShift.i_maintenanceId = shift.maintenanceId;
-                newShift.i_techGroupId = shift.techGroupId;
-                newShift.vc_externalReference = shift.externalRef;
-                newShift.vc_permitNumber = shift.permitNumber;
+                newShift.i_technicianGroup = shift.techGroupId;
+                
+                if (shift.externalRef != null)
+                    newShift.vc_externalRef = shift.externalRef;
+                else
+                    newShift.vc_externalRef = "---";
 
-                db.as_shiftsCustom.Add(newShift);
+                if (shift.permitNumber != null)
+                    newShift.vc_permitNumber = shift.permitNumber;
+                else
+                    newShift.vc_permitNumber = "---";
+
+                newShift.bt_custom = true;
+                newShift.dt_dateCreated = DateTime.Now;
+                newShift.i_createdBy = user.UserId;
+                newShift.i_closedBy = 0;
+
+                db.as_shifts.Add(newShift);
                 db.SaveChanges();
 
                 List<int> assets = findAssets(shift, bounds);
@@ -89,7 +106,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile();
                     shiftProfile.i_assetId = asset;
-                    shiftProfile.i_shiftCustomId = newShift.i_shiftCustomId;
+                    shiftProfile.i_shiftId = newShift.i_shiftId;
                     db.as_shiftsCustomProfile.Add(shiftProfile);
                 }
 
@@ -480,13 +497,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
+                //Area Based Shifts
                 var shifts = (from x in db.as_shifts
                               join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
                               join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
-                              join a in db.as_technicianGroups on x.UserId equals a.i_groupId
+                              join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
                               join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
                               join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                              where x.bt_completed == false
+                              where x.bt_completed == false && x.bt_custom == false
                               select new { 
                                 description = z.vc_description + "(" + y.vc_description + ")",
                                 dateTime = x.dt_scheduledDate,
@@ -508,19 +526,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
 
                 //Custom Shifts
-                var customShifts = (from x in db.as_shiftsCustom
-                                    join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
-                                    join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                                    join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                                    where x.bt_completed == false
-                                    select new {
-                                        description = "Custom Defined",
-                                        dateTime = x.dt_scheduledDate,
-                                        groupName = y.vc_groupName,
-                                        validation = c.i_maintenanceValidationId
-                                    }).ToList();
+                shifts = (from x in db.as_shifts
+                          join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
+                          join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                          join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                          where x.bt_completed == false && x.bt_custom == true
+                          select new
+                          {
+                              description = "Selected Assets",
+                              dateTime = x.dt_scheduledDate,
+                              groupName = a.vc_groupName,
+                              validation = c.i_maintenanceValidationId
+                          }).ToList();
 
-                foreach (var item in customShifts)
+                foreach (var item in shifts)
                 {
                     shiftInfo newItem = new shiftInfo();
                     newItem.description = item.description;
@@ -690,36 +709,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 writer.WriteLine("END:VEVENT");
             }
 
-            var customShifts = (from x in db.as_shiftsCustom
-                                join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
-                                where x.bt_completed == false
-                                select new {
-                                    beginDate = x.dt_scheduledDate,
-                                    location = airportName + " - Custom Shift",
-                                    description = y.vc_description
-                                }).ToList();
-
-            foreach (var shift in customShifts)
-            {
-                //Event Start
-                writer.WriteLine("BEGIN:VEVENT");
-                writer.WriteLine("X-WR-CALNAME:ADB AirSide");
-                writer.WriteLine("X-WR-CALDESC:All events for the ADB AirSide Solution");
-
-                //BODY
-                writer.WriteLine("DTSTART:" + shift.beginDate.ToString("yyyyMMddTHHmmssZ"));
-                writer.WriteLine("DTEND:" + shift.beginDate.AddHours(2).ToString("yyyyMMddTHHmmssZ"));
-                writer.WriteLine("ORGANIZER;CN=ADB AirSide:MAILTO:support@adb-airside.com");
-                writer.WriteLine("LOCATION:" + shift.location);
-                writer.WriteLine("CATEGORIES:AirSide Event");
-                writer.WriteLine("DESCRIPTION;ENCODING=QUOTED-PRINTABLE: Maintenance task to be performed: " + shift.description + "=0D=0A");
-                writer.WriteLine("SUMMARY:AirSide Planned Event");
-
-                //FOOTER
-                writer.WriteLine("PRIORITY:3");
-                writer.WriteLine("END:VEVENT");
-            }
-
             //End Calendar
             writer.WriteLine("END:VCALENDAR");
 
@@ -742,13 +731,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
             {
                 DatabaseHelper dbHelper = new DatabaseHelper();
 
+                //Planned Area Shifts
                 var shifts = (from x in db.as_shifts
-                              join y in db.as_technicianGroups on x.UserId equals y.i_groupId
+                              join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
                               join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
                               join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
                               join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
                               join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                              where x.bt_completed != active
+                              where x.bt_completed != active && x.bt_custom == false
                               select new { 
                                 eventType = "Shift",
                                 start = x.dt_scheduledDate,
@@ -796,29 +786,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shiftList.Add(shift);
                 }
 
-                //Custom Shifts 
-                var customShifts = (from x in db.as_shiftsCustom
-                                      join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
-                                      join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                                      join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                                      where x.bt_completed != active
-                                      select new
-                                      {
-                                          eventType = "Custom Shift",
-                                          start = x.dt_scheduledDate,
-                                          end = x.dt_completionDate,
-                                          area = "Selected Assets",
-                                          subArea = "",
-                                          progress = 0,
-                                          team = y.vc_groupName,
-                                          shiftId = x.i_shiftCustomId,
-                                          subAreaId = 0,
-                                          validation = c.vc_validationName,
-                                          task = b.vc_description,
-                                          permit = x.vc_permitNumber
-                                      }).ToList();
+                //Custom Shifts
+                shifts = (from x in db.as_shifts
+                          join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+                          join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                          join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                          where x.bt_completed != active && x.bt_custom == true
+                          select new
+                          {
+                              eventType = "Shift",
+                              start = x.dt_scheduledDate,
+                              end = x.dt_completionDate,
+                              area = "Selected Assets",
+                              subArea = "---",
+                              progress = 0,
+                              team = y.vc_groupName,
+                              shiftId = x.i_shiftId,
+                              subAreaId = 0,
+                              validation = c.vc_validationName,
+                              task = b.vc_description,
+                              permit = x.vc_permitNumber
+                          }).ToList();
 
-                foreach (var item in customShifts)
+                foreach (var item in shifts)
                 {
                     ShiftData shift = new ShiftData();
                     shift.area = item.area;
@@ -836,8 +826,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     //Calculate the shift progress
                     if (active)
                     {
-                        shift.shiftData = dbHelper.getCompletedAssetsForCustomShift(item.shiftId);
-                        shift.assets = dbHelper.getAssetCountPerCustomShift(item.shiftId);
+                        shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                        shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
                         if (shift.assets == 0) shift.progress = 0;
                         else
                             shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -850,6 +840,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shiftList.Add(shift);
                 }
 
+                
                 return Json(shiftList);
             }
             catch (Exception err)
@@ -873,37 +864,23 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Create Date: 2015/01/19
                 //Author: Bernard Willer
 
-                if(shiftType == 1)
-                {
-                    var shift = db.as_shifts.Find(shiftId);
-                    shift.bt_completed = true;
-                    shift.dt_completionDate = DateTime.Now;
-                    db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
+                //Get User
+                var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
+                var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+                               
+                var shift = db.as_shifts.Find(shiftId);
+                shift.bt_completed = true;
+                shift.dt_completionDate = DateTime.Now;
+                shift.i_closedBy = user.UserId;
+                db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
 
-                    //update iOS Cache Hash
-                    CacheHelper cacheHelp = new CacheHelper();
-                    cacheHelp.updateiOSCache("getTechnicianShifts");
+                //update iOS Cache Hash
+                CacheHelper cacheHelp = new CacheHelper();
+                cacheHelp.updateiOSCache("getTechnicianShifts");
 
-                    return Json(new { message = "success" });
-                } else if (shiftType == 2)
-                {
-                    var shift = db.as_shiftsCustom.Find(shiftId);
-                    shift.bt_completed = true;
-                    shift.dt_completionDate = DateTime.Now;
-                    db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
-
-                    //update iOS Cache Hash
-                    CacheHelper cacheHelp = new CacheHelper();
-                    cacheHelp.updateiOSCache("getTechnicianShifts");
-
-                    return Json(new { message = "success" });
-                } else
-                {
-                    Response.StatusCode = 500;
-                    return Json(new { message = "No valid shift type was specified."});
-                }
+                return Json(new { message = "success" });
+               
             }
             catch (Exception err)
             {
@@ -972,15 +949,28 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     case 0:
                         {
+                            //Get User
+                            var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
+                            var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+
                             as_shifts newShift = new as_shifts();
                             DateTime shiftTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
                             newShift.bt_completed = false;
                             newShift.dt_completionDate = new DateTime(1970, 1, 1);
                             newShift.dt_scheduledDate = shiftTime;
-                            newShift.UserId = groupId;
+                            newShift.i_technicianGroup = groupId;
                             newShift.i_areaSubId = subAreaId;
-                            newShift.vc_permitNumber = workPermit;
+                            if (workPermit != null)
+                                newShift.vc_permitNumber = workPermit;
+                            else
+                                newShift.vc_permitNumber = "---";
+
                             newShift.i_maintenanceId = maintenanceId;
+                            newShift.vc_externalRef = "---";
+                            newShift.bt_custom = false;
+                            newShift.dt_dateCreated = DateTime.Now;
+                            newShift.i_createdBy = user.UserId;
+                            newShift.i_closedBy = 0;
 
                             db.as_shifts.Add(newShift);
                             db.SaveChanges();
@@ -1090,8 +1080,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<BigExcelDump> getReportData(int shiftId, int type)
         {
-            if (type == 1)
-            {
+            bool customShift = false;
+            if (type == 2) customShift = true;
+            
                 var data = (from x in db.as_shiftData
                             join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
                             join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
@@ -1099,7 +1090,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             join b in db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
                             join c in db.as_areaProfile on b.i_areaId equals c.i_areaId
                             join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
-                            where x.i_shiftId == shiftId
+                            where x.i_shiftId == shiftId && y.bt_custom == customShift
                             select new
                             {
                                 dt_captureDate = x.dt_captureDate,
@@ -1149,68 +1140,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
 
                 return returnList;
-            } else if(type == 2)
-            {
-                var data = (from x in db.as_shiftData
-                            join y in db.as_shiftsCustom on x.i_shiftId equals y.i_shiftCustomId
-                            join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
-                            join a in db.as_locationProfile on z.i_locationId equals a.i_locationId
-                            join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
-                            where x.i_shiftId == shiftId
-                            select new
-                            {
-                                dt_captureDate = x.dt_captureDate,
-                                f_capturedValue = x.f_capturedValue,
-                                i_assetCheckId = x.i_assetCheckId,
-                                bt_completed = y.bt_completed,
-                                dt_scheduledDate = y.dt_scheduledDate,
-                                dt_completionDate = y.dt_completionDate,
-                                vc_permitNumber = y.vc_permitNumber,
-                                vc_rfidTag = z.vc_rfidTag,
-                                vc_serialNumber = z.vc_serialNumber,
-                                assetClass = d.vc_description,
-                                vc_manufacturer = d.vc_manufacturer,
-                                vc_model = d.vc_model,
-                                f_latitude = a.f_latitude,
-                                f_longitude = a.f_longitude,
-                                vc_designation = a.vc_designation,
-                                subArea = "Selected Assets",
-                                mainArea = "Custom Shift"
-                            }).ToList();
-
-                List<BigExcelDump> returnList = new List<BigExcelDump>();
-
-                foreach (var item in data)
-                {
-                    BigExcelDump newItem = new BigExcelDump();
-                    newItem.assetClass = item.assetClass;
-                    newItem.bt_completed = item.bt_completed;
-                    newItem.dt_captureDate = item.dt_captureDate;
-                    newItem.dt_completionDate = item.dt_completionDate;
-                    newItem.dt_scheduledDate = item.dt_scheduledDate;
-                    newItem.f_capturedValue = item.f_capturedValue;
-                    newItem.f_latitude = item.f_latitude;
-                    newItem.f_longitude = item.f_longitude;
-                    newItem.i_assetCheckId = item.i_assetCheckId;
-                    newItem.mainArea = item.mainArea;
-                    newItem.subArea = item.subArea;
-                    newItem.vc_designation = item.vc_designation;
-                    newItem.vc_manufacturer = item.vc_manufacturer;
-                    newItem.vc_model = item.vc_model;
-                    newItem.vc_permitNumber = item.vc_permitNumber;
-                    newItem.vc_rfidTag = item.vc_rfidTag;
-                    newItem.vc_serialNumber = item.vc_serialNumber;
-
-                    returnList.Add(newItem);
-
-                }
-
-                return returnList;
-            } else
-            {
-                List<BigExcelDump> returnList = new List<BigExcelDump>();
-                return returnList;
-            }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1283,80 +1212,42 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<ActiveShiftsReport> getShiftReportData(int shiftId, int type)
         {
-            if (type == 1)
+            bool customShift = false;
+            if (type == 2) customShift = true;
+
+            var data = from x in db.as_shifts
+                        join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
+                        join z in db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
+                        join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
+                        join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
+                        where x.i_shiftId == shiftId && x.bt_custom == customShift
+                        select new
+                        {
+                            dt_scheduledDate = x.dt_scheduledDate,
+                            vc_groupName = z.vc_groupName,
+                            vc_externalRef = z.vc_externalRef,
+                            vc_permitNumber = x.vc_permitNumber,
+                            bt_completed = x.bt_completed,
+                            area = b.vc_description,
+                            subArea = a.vc_description
+                        };
+
+            List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
+
+            foreach (var item in data)
             {
-                var data = from x in db.as_shifts
-                           join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
-                           join z in db.as_technicianGroups on x.UserId equals z.i_groupId
-                           join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
-                           join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
-                           where x.i_shiftId == shiftId
-                           select new
-                           {
-                               dt_scheduledDate = x.dt_scheduledDate,
-                               vc_groupName = z.vc_groupName,
-                               vc_externalRef = z.vc_externalRef,
-                               vc_permitNumber = x.vc_permitNumber,
-                               bt_completed = x.bt_completed,
-                               area = b.vc_description,
-                               subArea = a.vc_description
-                           };
+                ActiveShiftsReport newShift = new ActiveShiftsReport();
+                newShift.area = item.area;
+                newShift.bt_completed = item.bt_completed;
+                newShift.dt_scheduledDate = item.dt_scheduledDate;
+                newShift.subArea = item.subArea;
+                newShift.vc_externalRef = item.vc_externalRef;
+                newShift.vc_groupName = item.vc_groupName;
+                newShift.vc_permitNumber = item.vc_permitNumber;
 
-                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
-
-                foreach (var item in data)
-                {
-                    ActiveShiftsReport newShift = new ActiveShiftsReport();
-                    newShift.area = item.area;
-                    newShift.bt_completed = item.bt_completed;
-                    newShift.dt_scheduledDate = item.dt_scheduledDate;
-                    newShift.subArea = item.subArea;
-                    newShift.vc_externalRef = item.vc_externalRef;
-                    newShift.vc_groupName = item.vc_groupName;
-                    newShift.vc_permitNumber = item.vc_permitNumber;
-
-                    returnList.Add(newShift);
-                }
-                return returnList;
+                returnList.Add(newShift);
             }
-            else if (type == 2)
-            {
-                var data = from x in db.as_shiftsCustom
-                           join y in db.as_shiftData on x.i_shiftCustomId equals y.i_shiftId
-                           join z in db.as_technicianGroups on x.i_techGroupId equals z.i_groupId
-                           where x.i_shiftCustomId == shiftId
-                           select new
-                           {
-                               dt_scheduledDate = x.dt_scheduledDate,
-                               vc_groupName = z.vc_groupName,
-                               vc_externalRef = z.vc_externalRef,
-                               vc_permitNumber = x.vc_permitNumber,
-                               bt_completed = x.bt_completed,
-                               area = "Custom Shift",
-                               subArea = "Selected Assets"
-                           };
-
-                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
-
-                foreach (var item in data)
-                {
-                    ActiveShiftsReport newShift = new ActiveShiftsReport();
-                    newShift.area = item.area;
-                    newShift.bt_completed = item.bt_completed;
-                    newShift.dt_scheduledDate = item.dt_scheduledDate;
-                    newShift.subArea = item.subArea;
-                    newShift.vc_externalRef = item.vc_externalRef;
-                    newShift.vc_groupName = item.vc_groupName;
-                    newShift.vc_permitNumber = item.vc_permitNumber;
-
-                    returnList.Add(newShift);
-                }
-                return returnList;
-            } else
-            {
-                List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
-                return returnList;
-            }
+            return returnList;
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1445,43 +1336,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<EventCheckList> getEventCheckList(int shiftId, int type)
         {
             List<EventCheckList> returnList = new List<EventCheckList>();
+            bool customShift = false;
+            if (type == 2) customShift = true;
+           
+            int maintenanceId = (from x in db.as_shifts
+                                    where x.i_shiftId == shiftId && x.bt_custom == customShift
+                                    select x.i_maintenanceId).FirstOrDefault();
 
-            if(type == 1)
+            var checkList = from x in db.as_maintenanceCheckListDef
+                            where x.i_maintenanceId == maintenanceId
+                            select x.vc_description;
+
+            foreach(var item in checkList)
             {
-                int maintenanceId = (from x in db.as_shifts
-                                     where x.i_shiftId == shiftId
-                                     select x.i_maintenanceId).FirstOrDefault();
+                EventCheckList listItem = new EventCheckList();
+                listItem.ListItem = item;
 
-                var checkList = from x in db.as_maintenanceCheckListDef
-                                where x.i_maintenanceId == maintenanceId
-                                select x.vc_description;
-
-                foreach(var item in checkList)
-                {
-                    EventCheckList listItem = new EventCheckList();
-                    listItem.ListItem = item;
-
-                    returnList.Add(listItem);
-                }
-
-            } else if (type == 2)
-            {
-                int maintenanceId = (from x in db.as_shiftsCustom
-                                     where x.i_shiftCustomId == shiftId
-                                     select x.i_maintenanceId).FirstOrDefault();
-
-                var checkList = from x in db.as_maintenanceCheckListDef
-                                where x.i_maintenanceId == maintenanceId
-                                select x.vc_description;
-
-                foreach (var item in checkList)
-                {
-                    EventCheckList listItem = new EventCheckList();
-                    listItem.ListItem = item;
-
-                    returnList.Add(listItem);
-                }
+                returnList.Add(listItem);
             }
+
             return returnList;
         }
 
@@ -1490,26 +1363,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<EventReportInfo> getEventReportInfo(int shiftId, int type)
         {
             List<EventReportInfo> returnList = new List<EventReportInfo>();
-            if (type == 1)
-            {
+            bool customShift = false;
+            if (type == 2) customShift = true;
+
+         
                 var shiftData = from x in db.as_shiftData
                                 join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                                where y.i_shiftId == shiftId
+                                where y.i_shiftId == shiftId && y.bt_custom == customShift
                                 select new
                                 {
                                     MaintenanceId = y.i_maintenanceId,
                                     SheduledDate = y.dt_scheduledDate,
                                     AssetId = x.i_assetId,
                                     AreaId = y.i_areaSubId,
-                                    TechGroupId = y.UserId
+                                    TechGroupId = y.i_technicianGroup
                                 };
 
                 int areaId = shiftData.FirstOrDefault().AreaId;
+                int totalAssets = 0;
 
-                int totalAssets = (from x in db.as_assetProfile
+                if (areaId != 0)
+                    totalAssets = (from x in db.as_assetProfile
                                    join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
                                    where y.i_areaSubId == areaId
                                    select x).Count();
+                else
+                    totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
 
                 int completedAssets = (from x in shiftData
                                        group x by x.AssetId into assetGroup
@@ -1543,57 +1422,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 info.TechGroup = technicianGroup;
 
                 returnList.Add(info);
-            } else if(type == 2)
-            {
-                var shiftData = from x in db.as_shiftData
-                                join y in db.as_shiftsCustom on x.i_shiftId equals y.i_shiftCustomId
-                                where y.i_shiftCustomId == shiftId
-                                select new
-                                {
-                                    MaintenanceId = y.i_maintenanceId,
-                                    SheduledDate = y.dt_scheduledDate,
-                                    AssetId = x.i_assetId,
-                                    TechGroupId = y.i_techGroupId
-                                };
-
-                int totalAssets = (from x in db.as_shiftsCustomProfile
-                                       where x.i_shiftCustomId == shiftId
-                                       select x).Count();
-
-                var completedAssets = (from x in shiftData
-                                       group x by x.AssetId into assetGroup
-                                       select new
-                                       {
-                                           numberAssets = assetGroup.Count()
-                                       }).Count();
-
-                int techGroupId = shiftData.FirstOrDefault().TechGroupId;
-
-                string technicianGroup = (from x in db.as_technicianGroups
-                                          where x.i_groupId == techGroupId
-                                          select x.vc_groupName).FirstOrDefault();
-
-                decimal percentage = completedAssets / totalAssets * 100;
-
-                string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
-
-                int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
-
-                string maintenanceTask = (from x in db.as_maintenanceProfile
-                                          where x.i_maintenanceId == maintenanceId
-                                          select x.vc_description).FirstOrDefault();
-
-                EventReportInfo info = new EventReportInfo();
-                info.EventDate = EventDate;
-                info.MaintenanceTask = maintenanceTask;
-                info.NumberOfAssets = totalAssets;
-                info.PercentageComplete = percentage;
-                info.PercentageNotComplete = 100 - percentage;
-                info.TechGroup = technicianGroup;
-
-                returnList.Add(info);
-            }
-
+          
             return returnList;
         }
 

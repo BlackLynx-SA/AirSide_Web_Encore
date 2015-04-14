@@ -422,19 +422,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 completed = x.bt_completed,
                               });
 
-                var custom = (from x in db.as_shiftsCustom
-                              where x.dt_scheduledDate >= monthDate
-                              select new
-                              {
-                                  completed = x.bt_completed,
-                              });
-
                 List<DashboardActivityMetrics> metrics = new List<DashboardActivityMetrics>();
                 int totalComplete = shifts.Where(q => q.completed == true).Count();
                 int totalOpen = shifts.Where(q => q.completed == false).Count();
-
-                totalComplete += custom.Where(q => q.completed == true).Count();
-                totalOpen += custom.Where(q => q.completed == false).Count();
 
                 DashboardActivityMetrics conversion = new DashboardActivityMetrics();
                 conversion.indicatorEnum = DashboardMetrics.ShiftsCompleted;
@@ -721,7 +711,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             cycles.noData = double.Parse(getNoDataAssets());
             cycles.totalAssets = db.as_assetProfile.Count();
             cycles.totalTasks = double.Parse(getTotalTasks());
-            cycles.totalShifts = db.as_shifts.Where(q => q.bt_completed == false).Count() + db.as_shiftsCustom.Where(q => q.bt_completed == false).Count();
+            cycles.totalShifts = db.as_shifts.Where(q => q.bt_completed == false).Count();
 
             List<Analytic_Cycles> allCycles = new List<Analytic_Cycles>();
             allCycles.Add(cycles);
@@ -736,7 +726,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 DatabaseHelper dbHelper = new DatabaseHelper();
 
                 var shifts = (from x in db.as_shifts
-                              join y in db.as_technicianGroups on x.UserId equals y.i_groupId
+                              join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
                               join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
                               join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
                               where x.bt_completed == false

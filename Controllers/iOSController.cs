@@ -408,9 +408,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				var shifts = (from x in db.as_shifts
 							  join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
 							  join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
-							  join a in db.as_technicianGroups on x.UserId equals a.i_groupId
+							  join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
 							  join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-							  where x.UserId == userId && x.bt_completed == closeShiftsFlag
+							  where x.i_technicianGroup == userId && x.bt_completed == closeShiftsFlag && x.bt_custom == false
 							  select new
 							  {
 								  i_shiftId = x.i_shiftId,
@@ -421,7 +421,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								  techGroup = a.vc_groupName,
 								  areaName = z.vc_description,
 								  validation = b.i_maintenanceValidationId,
-								  maintenanceId = x.i_maintenanceId
+								  maintenanceId = x.i_maintenanceId,
 							  }
 							  ).ToList();
 				List<technicianShift> shiftList = new List<technicianShift>();
@@ -450,13 +450,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				}
 
 				//Add custom shifts to array
-				var customShifts = (from x in db.as_shiftsCustom
-								   join y in db.as_technicianGroups on x.i_techGroupId equals y.i_groupId
+				var customShifts = (from x in db.as_shifts
+								   join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
 								   join z in db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
-								   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag
+								   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag && x.bt_custom == true
 								   select new
 								   {
-									   i_shiftId = x.i_shiftCustomId,
+									   i_shiftId = x.i_shiftId,
 									   sheduledDate = x.dt_scheduledDate,
 									   i_areaSubId = 0,
 									   sheduleTime = x.dt_scheduledDate,
@@ -485,7 +485,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					shift.shiftType = 1;
 					shift.maintenanceId = item.maintenanceId;
 					var assets = (from x in db.as_shiftsCustomProfile
-								  where x.i_shiftCustomId == item.i_shiftId
+								  where x.i_shiftId == item.i_shiftId
 								  select x.i_assetId).ToList();
 
 					shift.assets = new int[assets.Count];
@@ -622,6 +622,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					db.as_assetStatusProfile.Add(newStatus);
 					db.SaveChanges();
 				}
+
+                CacheHelper cache = new CacheHelper();
+                cache.rebuildAssetProfileForAsset(assetId);
 
 				AssetStatus returnType = new AssetStatus();
 				returnType.i_assetProfileId = assetId;
@@ -1548,7 +1551,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			var torque = (from x in db.as_shiftData
 						  join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-						  join z in db.as_technicianGroups on y.UserId equals z.i_groupId
+						  join z in db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
 						  join a in db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
 						  where x.i_assetId == assetId
 						  select new
