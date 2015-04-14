@@ -623,8 +623,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					db.SaveChanges();
 				}
 
-                CacheHelper cache = new CacheHelper();
-                cache.rebuildAssetProfileForAsset(assetId);
+				CacheHelper cache = new CacheHelper();
+				cache.rebuildAssetProfileForAsset(assetId);
 
 				AssetStatus returnType = new AssetStatus();
 				returnType.i_assetProfileId = assetId;

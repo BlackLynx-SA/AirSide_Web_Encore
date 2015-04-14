@@ -750,6 +750,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 shiftId = x.i_shiftId,
                                 subAreaId = z.i_areaSubId,
                                 validation = c.vc_validationName,
+                                validationId = c.i_maintenanceValidationId,
                                 task = b.vc_description,
                                 permit = x.vc_permitNumber
                               }).ToList();
@@ -771,16 +772,34 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.permit = item.permit;
 
                     //Calculate the shift progress
-                    if (active)
+                    if (item.validationId == 2)
                     {
-                        shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
-                        shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
-                        if (shift.assets == 0) shift.progress = 0; 
+                        if (active)
+                        {
+                            shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                            shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                            if (shift.assets == 0) shift.progress = 0;
+                            else
+                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                        }
                         else
-                            shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
-                    } else
+                        {
+                            shift.progress = 0;
+                        }
+                    } else if(item.validationId == 1)
                     {
-                        shift.progress = 0;
+                        if (active)
+                        {
+                            shift.shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == item.shiftId && q.bt_validated == true).Count();
+                            shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                            if (shift.assets == 0) shift.progress = 0;
+                            else
+                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                        }
+                        else
+                        {
+                            shift.progress = 0;
+                        }
                     }
 
                     shiftList.Add(shift);
@@ -804,6 +823,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               shiftId = x.i_shiftId,
                               subAreaId = 0,
                               validation = c.vc_validationName,
+                              validationId = c.i_maintenanceValidationId,
                               task = b.vc_description,
                               permit = x.vc_permitNumber
                           }).ToList();
@@ -824,17 +844,34 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.permit = item.permit;
 
                     //Calculate the shift progress
-                    if (active)
+                    if (item.validationId == 2)
                     {
-                        shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
-                        shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
-                        if (shift.assets == 0) shift.progress = 0;
+                        if (active)
+                        {
+                            shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                            shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
+                            if (shift.assets == 0) shift.progress = 0;
+                            else
+                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                        }
                         else
-                            shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
-                    }
-                    else
+                        {
+                            shift.progress = 0;
+                        }
+                    } else if(item.validationId == 1)
                     {
-                        shift.progress = 0;
+                        if (active)
+                        {
+                            shift.shiftData = db.as_validationTaskProfile.Where(q=>q.i_shiftId == item.shiftId && q.bt_validated == true).Count();
+                            shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
+                            if (shift.assets == 0) shift.progress = 0;
+                            else
+                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                        }
+                        else
+                        {
+                            shift.progress = 0;
+                        }
                     }
 
                     shiftList.Add(shift);
