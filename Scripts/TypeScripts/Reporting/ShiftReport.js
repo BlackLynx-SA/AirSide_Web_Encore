@@ -5,7 +5,7 @@ var Reporting;
 (function (Reporting) {
     var ShiftReport = (function () {
         function ShiftReport() {
-            this.$reportLoader = $('#page_loader');
+            this.$reportLoader = $('#reportLoader');
             this.$reportImage = $('#reportImage');
             this.$pdfDownload = $('#pdfDownload');
             this.$excelDownload = $('#excelDownload');

@@ -82,6 +82,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 settings.fileType = (ReportFileTypes)type;
                 settings.dataSources = new ReportDataSource[1];
 
+                //Set the host reference for the logo
+                string[] host = Request.Headers["Host"].Split('.');
+                settings.logoReference = host[0];
+
+                settings.reportName = "ShiftReport";
+
                 //Prepare Data Sources for Report
                 ReportDataSource reportDataSource = new ReportDataSource("ShiftDS", getShiftReportDataForRange(startDate, endDate));
 
@@ -112,11 +118,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<ActiveShiftsReport> getShiftReportDataForRange(DateTime startDate, DateTime endDate)
         {
+            //Planned Shifts
             var data = from x in db.as_shifts
                         join z in db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
                         join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
                         join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
-                        where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate
+                        where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate && x.bt_custom == false
                         select new
                         {
                             dt_scheduledDate = x.dt_scheduledDate,
@@ -143,6 +150,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 returnList.Add(newShift);
             }
+
+            //Custom Shifts
+            data = from x in db.as_shifts
+                       join z in db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
+                       where x.dt_scheduledDate >= startDate && x.dt_scheduledDate <= endDate && x.bt_custom == true
+                       select new
+                       {
+                           dt_scheduledDate = x.dt_scheduledDate,
+                           vc_groupName = z.vc_groupName,
+                           vc_externalRef = z.vc_externalRef,
+                           vc_permitNumber = x.vc_permitNumber,
+                           bt_completed = x.bt_completed,
+                           area = "Custom Selected",
+                           subArea = "---"
+                       };
 
             return returnList;
 

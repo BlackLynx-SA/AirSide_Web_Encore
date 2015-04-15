@@ -111,18 +111,18 @@
             <li class="@Html.RouteIf("Settings", "active")">
                 <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">System Settings</span></a>
                 <ul>
-                    <li class="@Html.RouteIf("AirSidetools", "active")">
+                    @*<li class="@Html.RouteIf("AirSidetools", "active")">
                         <a href="@Url.Action("viewallusers", "Settings")">AirSide&trade; Tools</a>
                     </li>
                     <li class="@Html.RouteIf("EmailSettings", "active")">
                         <a href="@Url.Action("EmailSettings", "Settings")">Email and SMS</a>
-                    </li>
+                    </li>*@
                     <li class="@Html.RouteIf("ImageLibrary", "active")">
                         <a href="@Url.Action("ImageLibrary", "Settings")">Image Library</a>
                     </li>
-                    <li class="@Html.RouteIf("iOsImages", "active")">
+                    @*<li class="@Html.RouteIf("iOsImages", "active")">
                         <a href="@Url.Action("iOsImages", "iOS")">iOS Files</a>
-                    </li>
+                    </li>*@
                 </ul>
             </li>
         </ul>

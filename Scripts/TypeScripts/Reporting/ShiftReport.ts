@@ -5,7 +5,7 @@
 module Reporting {
     
     export class ShiftReport {
-        private $reportLoader = $('#page_loader');
+        private $reportLoader = $('#reportLoader');
         private $reportImage = $('#reportImage');
         private $pdfDownload = $('#pdfDownload');
         private $excelDownload = $('#excelDownload');

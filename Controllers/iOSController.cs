@@ -1602,52 +1602,70 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		private List<assetHistory> visualSurveys(int assetId)
 		{
-			var surveys = (from x in db.as_fileUploadInfo
-						   join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
-						   join z in db.as_locationProfile on new { x.f_latitude, x.f_longitude } equals new { z.f_latitude, z.f_longitude }
-						   join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
-						   join b in db.UserProfiles on x.i_userId_logged equals b.UserId
-						   where a.i_assetId == assetId
-						   select new
-						   {
-							   user = b.FirstName + " " + b.LastName,
-							   date = y.dt_datetime,
-							   fileLocation = y.vc_filePath,
-							   type = y.i_fileType,
-							   resolved = x.bt_resolved
-						   }).OrderByDescending(q => q.date).Take(10);
-
 			List<assetHistory> items = new List<assetHistory>();
 
-			foreach (var item in surveys.OrderByDescending(q=>q.date).Take(5))
+			try
 			{
-				assetHistory asset = new assetHistory();
-				asset.datetimeStamp = item.date.ToString("dd MMM, yyyy");
-				asset.type = 3;
-				string resolved = "Open";
-				if (item.resolved) resolved = "Resolved";
-				asset.valueCaptured = item.user + "(" + resolved + ")";
+				var location = (from x in db.as_assetProfile
+								join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+								where x.i_assetId == assetId
+								select new
+								{
+									longitude = y.f_longitude,
+									latitude = y.f_latitude
+								}).FirstOrDefault();
 
-				string[] filepath = item.fileLocation.Split(char.Parse("."));
-				int place = filepath.Count() - 1;
+				as_get_closest_point_to_gps_coordinate1_Result closest = db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
 
-				if (filepath[place] == "jpg")
+				var surveys = (from x in db.as_fileUploadInfo
+							   join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
+							   join b in db.UserProfiles on x.i_userId_logged equals b.UserId
+							   where x.f_longitude == closest.longitude && x.f_latitude == closest.latitude
+							   select new
+							   {
+								   user = b.FirstName + " " + b.LastName,
+								   date = y.dt_datetime,
+								   fileLocation = y.vc_filePath,
+								   type = y.i_fileType,
+								   resolved = x.bt_resolved
+							   }).OrderByDescending(q => q.date).Take(10);
+
+				
+				foreach (var item in surveys.OrderByDescending(q => q.date).Take(5))
 				{
-					asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
-				}
-				else if (filepath[place] == "m4a")
-				{
-					asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
-				}
-				else if (filepath[place] == "text")
-				{
-					asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+					assetHistory asset = new assetHistory();
+					asset.datetimeStamp = item.date.ToString("dd MMM, yyyy");
+					asset.type = 3;
+					string resolved = "Open";
+					if (item.resolved) resolved = "Resolved";
+					asset.valueCaptured = item.user + "(" + resolved + ")";
+
+					string[] filepath = item.fileLocation.Split(char.Parse("."));
+					int place = filepath.Count() - 1;
+
+					if (filepath[place] == "jpg")
+					{
+						asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
+					}
+					else if (filepath[place] == "m4a")
+					{
+						asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
+					}
+					else if (filepath[place] == "text")
+					{
+						asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+					}
+
+					items.Add(asset);
 				}
 
-				items.Add(asset);
+				return items;
+			} catch(Exception ex)
+			{
+				LogHelper log = new LogHelper();
+				log.logError(ex, User.Identity.Name);
+				return items;
 			}
-
-			return items;
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------

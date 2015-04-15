@@ -628,6 +628,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
 
                 LocalReport localReport = new LocalReport();
+                localReport.EnableExternalImages = true;
 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -641,6 +642,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 reportDataSource = new ReportDataSource("ShiftsDS", getShifts().OrderBy(q=>q.start));
                 localReport.DataSources.Add(reportDataSource);
+
+                //Set the host reference for the logo
+                string[] host = Request.Headers["Host"].Split('.');
+                ReportParameter paramLogo = new ReportParameter();
+                paramLogo.Name = "AirportLogo";
+                paramLogo.Values.Add(@"http://airsidecdn.azurewebsites.net/images/" + host[0].ToLower() + ".png");
+                localReport.SetParameters(paramLogo);
 
                 string reportType = fileType;
                 string mimeType;
@@ -729,10 +737,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
                               join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
                               join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
-                              where x.bt_completed == false
+                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              where x.bt_completed == false && x.bt_custom == false
                               select new
                               {
-                                  eventType = "Shift",
+                                  eventType = b.vc_description,
                                   start = x.dt_scheduledDate,
                                   end = x.dt_completionDate,
                                   area = a.vc_description,
@@ -749,7 +758,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     ShiftData shift = new ShiftData();
                     shift.area = item.area;
                     shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
-                    shift.eventType = "Shift";
+                    shift.eventType = item.eventType;
                     shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
                     shift.subArea = item.subArea;
                     shift.team = item.team;
@@ -758,6 +767,44 @@ namespace ADB.AirSide.Encore.V1.Controllers
                    
                     shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
                     shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                    if (shift.assets == 0) shift.progress = 0;
+                    else
+                        shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+
+                    shiftList.Add(shift);
+                }
+
+                shifts = (from x in db.as_shifts
+                              join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              where x.bt_completed == false && x.bt_custom == true
+                              select new
+                              {
+                                  eventType = b.vc_description,
+                                  start = x.dt_scheduledDate,
+                                  end = x.dt_completionDate,
+                                  area = "Selected Assets",
+                                  subArea = "",
+                                  progress = 0,
+                                  team = y.vc_groupName,
+                                  shiftId = x.i_shiftId,
+                                  subAreaId = x.i_areaSubId
+                              }).ToList();
+
+                foreach (var item in shifts)
+                {
+                    ShiftData shift = new ShiftData();
+                    shift.area = item.area;
+                    shift.completed = item.end.ToString("dd-MM-yyyy h:mm tt");
+                    shift.eventType = item.eventType;
+                    shift.start = item.start.ToString("dd-MM-yyyy h:mm tt");
+                    shift.subArea = item.subArea;
+                    shift.team = item.team;
+                    shift.shiftId = item.shiftId;
+                    shift.shiftType = 2;
+
+                    shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                    shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
                     if (shift.assets == 0) shift.progress = 0;
                     else
                         shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);

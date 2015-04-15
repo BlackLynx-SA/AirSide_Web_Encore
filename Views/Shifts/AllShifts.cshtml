@@ -233,7 +233,7 @@
                     var html = "";
                     var i = 0;
                     $.each(json, function (i, v) {
-                        html += '<tr><td>' + v.eventType + "</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.completed + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
+                        html += '<tr><td>' + v.validation + ' <br/>(' + v.task + ")</td><td>" + v.team + "</td><td>" + v.start + "</td><td>" + v.completed + "</td><td>" + v.area + "</td><td>" + v.subArea + "</td>";
                         html += '<td><a href="../../shifts/EventReport?shiftId=' + v.shiftId + '&type=' + v.shiftType + '" class="btn btn-info btn-xs"><i class="fa fa-list"></i> Event<a/>';
                         html += ' <a href="../../shifts/ShiftDataDump?shiftId=' + v.shiftId + '&type=' + v.shiftType + '&fileType=Excel" class="btn btn-success btn-xs"><i class="fa fa-file-excel-o"></i> Excel</a> <a href="../../shifts/ShiftDataDump?shiftId=' + v.shiftId + '&type=' + v.shiftType + '&fileType=PDF" class="btn btn-danger btn-xs"><i class="fa fa-file-pdf-o"></i> PDF</a></td></tr>';
                         i++;
