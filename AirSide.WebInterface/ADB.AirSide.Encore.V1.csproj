@@ -1344,16 +1344,6 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AirSideServerModules\AirSide.Reports\AirSide.Reports.csproj">
-      <Project>{dec5fa7b-46b3-4b51-9d78-a06e38507409}</Project>
-      <Name>AirSide.Reports</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AirSideServerModules\AirSide.ServerModules\AirSide.ServerModules.csproj">
-      <Project>{98ff727b-1808-4e66-99e5-732601a3fe9d}</Project>
-      <Name>AirSide.ServerModules</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

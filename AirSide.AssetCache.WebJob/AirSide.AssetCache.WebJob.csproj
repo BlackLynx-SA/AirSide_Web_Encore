@@ -93,12 +93,6 @@
     <None Include="Properties\PublishProfiles\airsidebirmingham - Web Deploy.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AirSide.ServerModules\AirSide.ServerModules.csproj">
-      <Project>{98ff727b-1808-4e66-99e5-732601a3fe9d}</Project>
-      <Name>AirSide.ServerModules</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
