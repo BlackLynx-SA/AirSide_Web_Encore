@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ShiftDataDump" targetNamespace="http://tempuri.org/ShiftDataDump.xsd" xmlns:mstns="http://tempuri.org/ShiftDataDump.xsd" xmlns="http://tempuri.org/ShiftDataDump.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ShiftDataDump" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ShiftDataDump" msprop:Generator_UserDSName="ShiftDataDump">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="AirSide_Reporting" msprop:Generator_TableClassName="AirSide_ReportingDataTable" msprop:Generator_TableVarName="tableAirSide_Reporting" msprop:Generator_RowChangedName="AirSide_ReportingRowChanged" msprop:Generator_TablePropName="AirSide_Reporting" msprop:Generator_RowDeletingName="AirSide_ReportingRowDeleting" msprop:Generator_RowChangingName="AirSide_ReportingRowChanging" msprop:Generator_RowEvHandlerName="AirSide_ReportingRowChangeEventHandler" msprop:Generator_RowDeletedName="AirSide_ReportingRowDeleted" msprop:Generator_RowClassName="AirSide_ReportingRow" msprop:Generator_UserTableName="AirSide_Reporting" msprop:Generator_RowEvArgName="AirSide_ReportingRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="dt_captureDate" msprop:Generator_ColumnVarNameInTable="columndt_captureDate" msprop:Generator_ColumnPropNameInRow="dt_captureDate" msprop:Generator_ColumnPropNameInTable="dt_captureDateColumn" msprop:Generator_UserColumnName="dt_captureDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="f_capturedValue" msprop:Generator_ColumnVarNameInTable="columnf_capturedValue" msprop:Generator_ColumnPropNameInRow="f_capturedValue" msprop:Generator_ColumnPropNameInTable="f_capturedValueColumn" msprop:Generator_UserColumnName="f_capturedValue" type="xs:string" minOccurs="0" />
+              <xs:element name="i_assetCheckId" msprop:Generator_ColumnVarNameInTable="columni_assetCheckId" msprop:Generator_ColumnPropNameInRow="i_assetCheckId" msprop:Generator_ColumnPropNameInTable="i_assetCheckIdColumn" msprop:Generator_UserColumnName="i_assetCheckId" type="xs:int" minOccurs="0" />
+              <xs:element name="bt_completed" msprop:Generator_ColumnVarNameInTable="columnbt_completed" msprop:Generator_ColumnPropNameInRow="bt_completed" msprop:Generator_ColumnPropNameInTable="bt_completedColumn" msprop:Generator_UserColumnName="bt_completed" type="xs:boolean" minOccurs="0" />
+              <xs:element name="dt_scheduledDate" msprop:Generator_ColumnVarNameInTable="columndt_scheduledDate" msprop:Generator_ColumnPropNameInRow="dt_scheduledDate" msprop:Generator_ColumnPropNameInTable="dt_scheduledDateColumn" msprop:Generator_UserColumnName="dt_scheduledDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="dt_completionDate" msprop:Generator_ColumnVarNameInTable="columndt_completionDate" msprop:Generator_ColumnPropNameInRow="dt_completionDate" msprop:Generator_ColumnPropNameInTable="dt_completionDateColumn" msprop:Generator_UserColumnName="dt_completionDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="vc_permitNumber" msprop:Generator_ColumnVarNameInTable="columnvc_permitNumber" msprop:Generator_ColumnPropNameInRow="vc_permitNumber" msprop:Generator_ColumnPropNameInTable="vc_permitNumberColumn" msprop:Generator_UserColumnName="vc_permitNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="vc_rfidTag" msprop:Generator_ColumnVarNameInTable="columnvc_rfidTag" msprop:Generator_ColumnPropNameInRow="vc_rfidTag" msprop:Generator_ColumnPropNameInTable="vc_rfidTagColumn" msprop:Generator_UserColumnName="vc_rfidTag" type="xs:string" minOccurs="0" />
+              <xs:element name="vc_serialNumber" msprop:Generator_ColumnVarNameInTable="columnvc_serialNumber" msprop:Generator_ColumnPropNameInRow="vc_serialNumber" msprop:Generator_ColumnPropNameInTable="vc_serialNumberColumn" msprop:Generator_UserColumnName="vc_serialNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="assetClass" msprop:Generator_ColumnVarNameInTable="columnassetClass" msprop:Generator_ColumnPropNameInRow="assetClass" msprop:Generator_ColumnPropNameInTable="assetClassColumn" msprop:Generator_UserColumnName="assetClass" type="xs:string" minOccurs="0" />
+              <xs:element name="vc_manufacturer" msprop:Generator_ColumnVarNameInTable="columnvc_manufacturer" msprop:Generator_ColumnPropNameInRow="vc_manufacturer" msprop:Generator_ColumnPropNameInTable="vc_manufacturerColumn" msprop:Generator_UserColumnName="vc_manufacturer" type="xs:string" minOccurs="0" />
+              <xs:element name="vc_model" msprop:Generator_ColumnVarNameInTable="columnvc_model" msprop:Generator_ColumnPropNameInRow="vc_model" msprop:Generator_ColumnPropNameInTable="vc_modelColumn" msprop:Generator_UserColumnName="vc_model" type="xs:string" minOccurs="0" />
+              <xs:element name="f_latitude" msprop:Generator_ColumnVarNameInTable="columnf_latitude" msprop:Generator_ColumnPropNameInRow="f_latitude" msprop:Generator_ColumnPropNameInTable="f_latitudeColumn" msprop:Generator_UserColumnName="f_latitude" type="xs:double" minOccurs="0" />
+              <xs:element name="f_longitude" msprop:Generator_ColumnVarNameInTable="columnf_longitude" msprop:Generator_ColumnPropNameInRow="f_longitude" msprop:Generator_ColumnPropNameInTable="f_longitudeColumn" msprop:Generator_UserColumnName="f_longitude" type="xs:double" minOccurs="0" />
+              <xs:element name="vc_designation" msprop:Generator_ColumnVarNameInTable="columnvc_designation" msprop:Generator_ColumnPropNameInRow="vc_designation" msprop:Generator_ColumnPropNameInTable="vc_designationColumn" msprop:Generator_UserColumnName="vc_designation" type="xs:string" minOccurs="0" />
+              <xs:element name="subArea" msprop:Generator_ColumnVarNameInTable="columnsubArea" msprop:Generator_ColumnPropNameInRow="subArea" msprop:Generator_ColumnPropNameInTable="subAreaColumn" msprop:Generator_UserColumnName="subArea" type="xs:string" minOccurs="0" />
+              <xs:element name="mainArea" msprop:Generator_ColumnVarNameInTable="columnmainArea" msprop:Generator_ColumnPropNameInRow="mainArea" msprop:Generator_ColumnPropNameInTable="mainAreaColumn" msprop:Generator_UserColumnName="mainArea" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,322 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{98FF727B-1808-4E66-99E5-732601A3FE9D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AirSide.ServerModules</RootNamespace>
+    <AssemblyName>AirSide.ServerModules</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Documents.Client">
+      <HintPath>..\..\..\packages\Microsoft.Azure.DocumentDB.1.1.0\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.3\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.Data.OData.5.6.3\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.6.3\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.Common\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.DataVisualization\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.DataVisualization.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.ProcessingObjectModel\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.ProcessingObjectModel.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Windows\assembly\GAC_MSIL\Microsoft.ReportViewer.WebForms\12.0.0.0__89845dcd8080cc91\Microsoft.ReportViewer.WebForms.DLL</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\..\..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson, Version=1.10.0.62, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver, Version=1.10.0.62, Culture=neutral, PublicKeyToken=f686731cfb9cc103, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\mongocsharpdriver.1.10.0\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Spatial, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\System.Spatial.5.6.3\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helpers\AzureDocumentDBHelper.cs" />
+    <Compile Include="Helpers\CacheHelper.cs" />
+    <Compile Include="Helpers\DatabaseHelper.cs" />
+    <Compile Include="Helpers\DocumentDBRepository.cs" />
+    <Compile Include="Helpers\LogHelper.cs" />
+    <Compile Include="Helpers\ReportingHelper.cs" />
+    <Compile Include="Models\AirSideModels.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AirSideModels.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AirSideModels.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AirSideModels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetRole.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserClaim.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogin.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_accessProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_airportProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_areaProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_areaSubProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_assetClassMaintenanceProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_assetClassProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_assetInfoProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_assetProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_assetStatusProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_cacheProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_electricalNodeProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_eventPofile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_eventTypes.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_fbTechProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_fileUploadInfo.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_fileUploadProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_frequencyProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_geoSpatialProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_get_closest_point_to_gps_coordinate1_Result.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_iosImageProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_iosLogProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_locationProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceCategory.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceCheckListDef.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceCheckListEntity.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_maintenanceValidation.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_nodeRegionProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_pictureProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_reportParameters.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_reportProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_settingsProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_shiftData.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_shifts.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_shiftsCustomProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_technicianGroupProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_technicianGroups.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_technicianWrenchProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_todoCategories.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_todoProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_userExternalSession.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_validationTaskProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\as_wrenchProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GeneralDataShapes.cs" />
+    <Compile Include="Models\UserProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Models\AirSideModels.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AirSideModels.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\AirSideModels.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+      <LastGenOutput>AirSideModels.Context.cs</LastGenOutput>
+    </None>
+    <None Include="Models\AirSideModels.edmx.diagram">
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+    </None>
+    <None Include="Models\AirSideModels.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AirSideModels.edmx</DependentUpon>
+      <LastGenOutput>AirSideModels.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
