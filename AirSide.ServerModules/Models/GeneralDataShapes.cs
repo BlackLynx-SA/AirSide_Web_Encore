@@ -581,7 +581,7 @@ namespace AirSide.ServerModules.Models
 
     public class mongoAssetProfile
     {
-        //public ObjectId Id { get; set; }
+        public ObjectId Id { get; set; }
         public int assetId { get; set; }
         public int locationId { get; set; }
         public int assetClassId { get; set; }
