@@ -28,13 +28,13 @@ var AirSide;
                         var total = 0;
                         json.forEach(function (c) {
                             switch (c.AlertType.severity) {
-                                case 1 /* Critical */:
+                                case SeverityLevels.Critical:
                                     _this.$criticalCount.html(c.AlertCount.toString());
                                     break;
-                                case 2 /* Major */:
+                                case SeverityLevels.Major:
                                     _this.$majorCount.html(c.AlertCount.toString());
                                     break;
-                                case 3 /* Minor */:
+                                case SeverityLevels.Minor:
                                     _this.$minorCount.html(c.AlertCount.toString());
                                     break;
                                 default:

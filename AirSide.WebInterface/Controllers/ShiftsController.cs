@@ -1441,15 +1441,23 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             if(maintenance.i_maintenanceValidationId == 1)
             {
-                var shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
-                firstDate = shiftData.OrderBy(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
-                lastDate = shiftData.OrderByDescending(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
+                int count = db.as_shiftData.Where(q => q.i_shiftId == shiftId).Count();
+                if (count > 0)
+                {
+                    var shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
+                    firstDate = shiftData.OrderBy(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
+                    lastDate = shiftData.OrderByDescending(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
+                }
             }
             else if (maintenance.i_maintenanceValidationId == 2)
             {
-                var shiftData = db.as_shiftData.Where(q => q.i_shiftId == shiftId).OrderBy(q => q.dt_captureDate);
-                firstDate = shiftData.OrderBy(q => q.dt_captureDate).First().dt_captureDate;
-                lastDate = shiftData.OrderByDescending(q => q.dt_captureDate).First().dt_captureDate;
+                int count = db.as_shiftData.Where(q => q.i_shiftId == shiftId).Count();
+                if (count > 0)
+                {
+                    var shiftData = db.as_shiftData.Where(q => q.i_shiftId == shiftId).OrderBy(q => q.dt_captureDate);
+                    firstDate = shiftData.OrderBy(q => q.dt_captureDate).First().dt_captureDate;
+                    lastDate = shiftData.OrderByDescending(q => q.dt_captureDate).First().dt_captureDate;
+                }
             }
 
             //First Event
@@ -1505,24 +1513,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     var assetClass = db.as_assetClassProfile.Find(asset.i_assetClassId);
                     var dateOfCapture = db.as_shiftData.Where(q => q.i_shiftId == shiftId && q.i_assetId == item.asset).FirstOrDefault();
 
-                    var status = assetStatus.Where(q => q.lastValid.Date == dateOfCapture.dt_captureDate.Date && q.assetId == item.asset).FirstOrDefault();
+                    var status = assetStatus.Where(q => q.lastValid.Date <= dateOfCapture.dt_captureDate.Date && q.assetId == item.asset).FirstOrDefault();
 
                     info.AssetName = asset.vc_serialNumber;
                     info.CurrentState = "---";
-                    switch (status.previousCycle)
+                    if (status != null)
                     {
-                        case 0: info.PriorState = "No Data (Blue)";
-                            break;
-                        case 1: info.PriorState = "Recently Updated (Green)";
-                            break;
-                        case 2: info.PriorState = "Mid Cycle (Yellow)";
-                            break;
-                        case 3: info.PriorState = "Almost Due (Orange)";
-                            break;
-                        case 4: info.PriorState = "Over Due (Red)";
-                            break;
-                        default:
-                            break;
+                        switch (status.previousCycle)
+                        {
+                            case 0: info.PriorState = "No Data (Blue)";
+                                break;
+                            case 1: info.PriorState = "Recently Updated (Green)";
+                                break;
+                            case 2: info.PriorState = "Mid Cycle (Yellow)";
+                                break;
+                            case 3: info.PriorState = "Almost Due (Orange)";
+                                break;
+                            case 4: info.PriorState = "Over Due (Red)";
+                                break;
+                            default:
+                                break;
+                        }
+                    } else
+                    {
+                        info.PriorState = "No Data (Blue)";
                     }
                     info.DateOfEvent = dateOfCapture.dt_captureDate.ToString("yyy/MM/dd HH:mm");
                     info.TypeOfAsset = assetClass.vc_description;
@@ -1550,21 +1564,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                     info.AssetName = asset.vc_serialNumber;
                     info.CurrentState = "---";
-                    switch (status.previousCycle)
+                    if (status != null)
                     {
-                        case 0: info.PriorState = "No Data (Blue)";
-                            break;
-                        case 1: info.PriorState = "Recently Updated (Green)";
-                            break;
-                        case 2: info.PriorState = "Mid Cycle (Yellow)";
-                            break;
-                        case 3: info.PriorState = "Almost Due (Orange)";
-                            break;
-                        case 4: info.PriorState = "Over Due (Red)";
-                            break;
-                        default:
-                            break;
-                    }
+                        switch (status.previousCycle)
+                        {
+                            case 0: info.PriorState = "No Data (Blue)";
+                                break;
+                            case 1: info.PriorState = "Recently Updated (Green)";
+                                break;
+                            case 2: info.PriorState = "Mid Cycle (Yellow)";
+                                break;
+                            case 3: info.PriorState = "Almost Due (Orange)";
+                                break;
+                            case 4: info.PriorState = "Over Due (Red)";
+                                break;
+                            default:
+                                break;
+                        }
+                    } else
+                        info.PriorState = "No Data (Blue)";
+
                     info.DateOfEvent = item.maintenanceDate.ToString("yyy/MM/dd HH:mm");
                     info.TypeOfAsset = assetClass.vc_description;
                     info.ValidationType = "Scan Asset";
@@ -1616,118 +1635,134 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             if (maintenance.i_maintenanceValidationId == 2)
             {
-                var shiftData = from x in db.as_shiftData
-                                join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                                where y.i_shiftId == shiftId && y.bt_custom == customShift
-                                select new
-                                {
-                                    MaintenanceId = y.i_maintenanceId,
-                                    SheduledDate = y.dt_scheduledDate,
-                                    AssetId = x.i_assetId,
-                                    AreaId = y.i_areaSubId,
-                                    TechGroupId = y.i_technicianGroup
-                                };
+                int count = (from x in db.as_shiftData
+                             join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                             where y.i_shiftId == shiftId && y.bt_custom == customShift
+                             select x).Count();
 
-                int areaId = shiftData.FirstOrDefault().AreaId;
-                int totalAssets = 0;
+                if (count > 0)
+                {
+                    var shiftData = from x in db.as_shiftData
+                                    join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                                    where y.i_shiftId == shiftId && y.bt_custom == customShift
+                                    select new
+                                    {
+                                        MaintenanceId = y.i_maintenanceId,
+                                        SheduledDate = y.dt_scheduledDate,
+                                        AssetId = x.i_assetId,
+                                        AreaId = y.i_areaSubId,
+                                        TechGroupId = y.i_technicianGroup
+                                    };
 
-                if (areaId != 0)
-                    totalAssets = (from x in db.as_assetProfile
-                                   join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
-                                   where y.i_areaSubId == areaId
-                                   select x).Count();
-                else
-                    totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
+                    int areaId = shiftData.FirstOrDefault().AreaId;
+                    int totalAssets = 0;
 
-                int completedAssets = (from x in shiftData
-                                       group x by x.AssetId into assetGroup
-                                       select new
-                                       {
-                                           numberAssets = assetGroup.Count()
-                                       }).Count();
+                    if (areaId != 0)
+                        totalAssets = (from x in db.as_assetProfile
+                                       join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                                       where y.i_areaSubId == areaId
+                                       select x).Count();
+                    else
+                        totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
 
-                int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+                    int completedAssets = (from x in shiftData
+                                           group x by x.AssetId into assetGroup
+                                           select new
+                                           {
+                                               numberAssets = assetGroup.Count()
+                                           }).Count();
 
-                string technicianGroup = (from x in db.as_technicianGroups
-                                          where x.i_groupId == techGroupId
-                                          select x.vc_groupName).FirstOrDefault();
+                    int techGroupId = shiftData.FirstOrDefault().TechGroupId;
 
-                decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
+                    string technicianGroup = (from x in db.as_technicianGroups
+                                              where x.i_groupId == techGroupId
+                                              select x.vc_groupName).FirstOrDefault();
 
-                string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+                    decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
 
-                int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+                    string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
 
-                string maintenanceTask = (from x in db.as_maintenanceProfile
-                                          where x.i_maintenanceId == maintenanceId
-                                          select x.vc_description).FirstOrDefault();
+                    int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
 
-                EventReportInfo info = new EventReportInfo();
-                info.EventDate = EventDate;
-                info.MaintenanceTask = maintenanceTask;
-                info.NumberOfAssets = totalAssets;
-                info.PercentageComplete = percentage;
-                info.PercentageNotComplete = 100 - percentage;
-                info.TechGroup = technicianGroup;
+                    string maintenanceTask = (from x in db.as_maintenanceProfile
+                                              where x.i_maintenanceId == maintenanceId
+                                              select x.vc_description).FirstOrDefault();
 
-                returnList.Add(info);
+                    EventReportInfo info = new EventReportInfo();
+                    info.EventDate = EventDate;
+                    info.MaintenanceTask = maintenanceTask;
+                    info.NumberOfAssets = totalAssets;
+                    info.PercentageComplete = percentage;
+                    info.PercentageNotComplete = 100 - percentage;
+                    info.TechGroup = technicianGroup;
+
+                    returnList.Add(info);
+                }
             } else if(maintenance.i_maintenanceValidationId == 1)
             {
-                var shiftData = from x in db.as_validationTaskProfile
-                                join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                                where y.i_shiftId == shiftId && y.bt_custom == customShift
-                                select new
-                                {
-                                    MaintenanceId = y.i_maintenanceId,
-                                    SheduledDate = y.dt_scheduledDate,
-                                    AssetId = x.i_assetId,
-                                    AreaId = y.i_areaSubId,
-                                    TechGroupId = y.i_technicianGroup
-                                };
+                int count = (from x in db.as_validationTaskProfile
+                             join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                             where y.i_shiftId == shiftId && y.bt_custom == customShift
+                             select x).Count();
 
-                int areaId = shiftData.FirstOrDefault().AreaId;
-                int totalAssets = 0;
+                if (count > 0)
+                {
+                    var shiftData = from x in db.as_validationTaskProfile
+                                    join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                                    where y.i_shiftId == shiftId && y.bt_custom == customShift
+                                    select new
+                                    {
+                                        MaintenanceId = y.i_maintenanceId,
+                                        SheduledDate = y.dt_scheduledDate,
+                                        AssetId = x.i_assetId,
+                                        AreaId = y.i_areaSubId,
+                                        TechGroupId = y.i_technicianGroup
+                                    };
 
-                if (areaId != 0)
-                    totalAssets = (from x in db.as_assetProfile
-                                   join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
-                                   where y.i_areaSubId == areaId
-                                   select x).Count();
-                else
-                    totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
+                    int areaId = shiftData.FirstOrDefault().AreaId;
+                    int totalAssets = 0;
 
-                int completedAssets = (from x in shiftData
-                                       group x by x.AssetId into assetGroup
-                                       select new
-                                       {
-                                           numberAssets = assetGroup.Count()
-                                       }).Count();
+                    if (areaId != 0)
+                        totalAssets = (from x in db.as_assetProfile
+                                       join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                                       where y.i_areaSubId == areaId
+                                       select x).Count();
+                    else
+                        totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
 
-                int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+                    int completedAssets = (from x in shiftData
+                                           group x by x.AssetId into assetGroup
+                                           select new
+                                           {
+                                               numberAssets = assetGroup.Count()
+                                           }).Count();
 
-                string technicianGroup = (from x in db.as_technicianGroups
-                                          where x.i_groupId == techGroupId
-                                          select x.vc_groupName).FirstOrDefault();
+                    int techGroupId = shiftData.FirstOrDefault().TechGroupId;
 
-                decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
+                    string technicianGroup = (from x in db.as_technicianGroups
+                                              where x.i_groupId == techGroupId
+                                              select x.vc_groupName).FirstOrDefault();
 
-                string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+                    decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
 
-                int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+                    string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
 
-                string maintenanceTask = (from x in db.as_maintenanceProfile
-                                          where x.i_maintenanceId == maintenanceId
-                                          select x.vc_description).FirstOrDefault();
+                    int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
 
-                EventReportInfo info = new EventReportInfo();
-                info.EventDate = EventDate;
-                info.MaintenanceTask = maintenanceTask;
-                info.NumberOfAssets = totalAssets;
-                info.PercentageComplete = percentage;
-                info.PercentageNotComplete = 100 - percentage;
-                info.TechGroup = technicianGroup;
+                    string maintenanceTask = (from x in db.as_maintenanceProfile
+                                              where x.i_maintenanceId == maintenanceId
+                                              select x.vc_description).FirstOrDefault();
 
-                returnList.Add(info);
+                    EventReportInfo info = new EventReportInfo();
+                    info.EventDate = EventDate;
+                    info.MaintenanceTask = maintenanceTask;
+                    info.NumberOfAssets = totalAssets;
+                    info.PercentageComplete = percentage;
+                    info.PercentageNotComplete = 100 - percentage;
+                    info.TechGroup = technicianGroup;
+
+                    returnList.Add(info);
+                }
             }
           
             return returnList;

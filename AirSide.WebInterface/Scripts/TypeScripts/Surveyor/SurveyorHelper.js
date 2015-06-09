@@ -33,6 +33,11 @@ var AirSide;
                                 detailHtml = '<p>This voice memo was taken on <strong>' + json[0].date + '</strong> by <i>' + json[0].technician + '</i></p>';
                                 mediaHtml = '<audio id="audio" controls src="' + json[0].url + '" type="audio/mpeg" style="width:100%;">< p > Your browser does not support the audio element < /p></audio>';
                                 break;
+                            case "3":
+                                $('h3.mediaHeader i').addClass("fa fa-pencil");
+                                detailHtml = '<p>This text was taken on <strong>' + json[0].date + '</strong> by <i>' + json[0].technician + '</i></p>';
+                                _this.GetText(json[0].url);
+                                break;
                             default:
                                 break;
                         }
@@ -41,6 +46,13 @@ var AirSide;
                         _this.showAssetLocation(json[0].latitude, json[0].longitude);
                         _this.$pageLoader.hide();
                     }
+                });
+            };
+            SingleView.prototype.GetText = function (url) {
+                var _this = this;
+                $.get(url, function (c) {
+                    var mediaHtml = '<p><quote>' + c + '</quote></p>';
+                    _this.$mediaDiv.html(mediaHtml);
                 });
             };
             SingleView.prototype.getUrlParameter = function (sParam) {

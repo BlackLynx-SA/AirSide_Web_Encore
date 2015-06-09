@@ -281,8 +281,6 @@ interface KnockoutUtils {
 
     extend(target: Object, source: Object): Object;
 
-    emptyDomNode(domNode: HTMLElement): void;
-
     moveCleanedNodesToContainerElement(nodes: any[]): HTMLElement;
 
     cloneNodes(nodesArray: any[], shouldCleanNodes: boolean): any[];
@@ -576,6 +574,7 @@ declare module KnockoutComponentTypes {
     interface Config {
         viewModel?: ViewModelFunction | ViewModelSharedInstance | ViewModelFactoryFunction | AMDModule;
         template: string | Node[]| DocumentFragment | TemplateElement | AMDModule;
+        synchronous?: boolean;
     }
 
     interface ComponentConfig {

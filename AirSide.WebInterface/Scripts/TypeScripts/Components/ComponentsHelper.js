@@ -21,14 +21,14 @@ var AirSide;
                 var fromDate = new Date();
                 var toDate = new Date();
                 switch (typeDate) {
-                    case 1 /* ThisWeek */:
+                    case PredefinedTypes.ThisWeek:
                         var dt = new Date();
                         var day = dt.getDay();
                         var dayDiff = 6 - day;
                         fromDate.setDate(dt.getDate() - day);
                         toDate.setDate(dt.getDate() + dayDiff);
                         break;
-                    case 2 /* LastWeek */:
+                    case PredefinedTypes.LastWeek:
                         var dt = new Date();
                         dt.setDate(dt.getDate() - 7);
                         var day = dt.getDay();
@@ -36,27 +36,27 @@ var AirSide;
                         fromDate.setDate(dt.getDate() - day);
                         toDate.setDate(dt.getDate() + dayDiff);
                         break;
-                    case 3 /* ThisMonth */:
+                    case PredefinedTypes.ThisMonth:
                         var dt = new Date();
                         var year = dt.getFullYear();
                         var month = dt.getMonth();
                         fromDate.setFullYear(year, month, 1);
                         toDate.setFullYear(year, month + 1, 0);
                         break;
-                    case 4 /* LastMonth */:
+                    case PredefinedTypes.LastMonth:
                         var dt = new Date();
                         var year = dt.getFullYear();
                         var month = dt.getMonth() - 1;
                         fromDate.setFullYear(year, month, 1);
                         toDate.setFullYear(year, month + 1, 0);
                         break;
-                    case 5 /* ThisYear */:
+                    case PredefinedTypes.ThisYear:
                         var dt = new Date();
                         var year = dt.getFullYear();
                         fromDate.setFullYear(year, 0, 1);
                         toDate.setFullYear(year, 11, 31);
                         break;
-                    case 6 /* LastYear */:
+                    case PredefinedTypes.LastYear:
                         var dt = new Date();
                         var year = dt.getFullYear() - 1;
                         fromDate.setFullYear(year, 0, 1);

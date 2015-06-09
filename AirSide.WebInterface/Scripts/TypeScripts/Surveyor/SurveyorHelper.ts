@@ -48,6 +48,11 @@ module AirSide.Surveyor {
                             detailHtml = '<p>This voice memo was taken on <strong>' + json[0].date + '</strong> by <i>' + json[0].technician + '</i></p>';
                             mediaHtml = '<audio id="audio" controls src="' + json[0].url + '" type="audio/mpeg" style="width:100%;">< p > Your browser does not support the audio element < /p></audio>';
                             break;
+                        case "3":
+                            $('h3.mediaHeader i').addClass("fa fa-pencil");
+                            detailHtml = '<p>This text was taken on <strong>' + json[0].date + '</strong> by <i>' + json[0].technician + '</i></p>';
+                            this.GetText(json[0].url);
+                            break;
                         default:
                             break;
                     }
@@ -58,6 +63,13 @@ module AirSide.Surveyor {
                     this.showAssetLocation(json[0].latitude, json[0].longitude);
                     this.$pageLoader.hide();
                 }
+            });
+        }
+
+        private GetText(url: string) {
+            $.get(url, c=> {
+                var mediaHtml: string = '<p><quote>' + c + '</quote></p>';
+                this.$mediaDiv.html(mediaHtml);
             });
         }
 

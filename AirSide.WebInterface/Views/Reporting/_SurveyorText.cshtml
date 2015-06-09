@@ -1,0 +1,77 @@
+﻿
+<div class="row">
+    <div class="col-md-12">
+        <div class="well well-sm bg-color-darken txt-color-white">
+            <h5>Date Range</h5>
+            <fieldset>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control from" type="text" placeholder="From">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control to" type="text" placeholder="Select a date">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 hidden-sm">
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div style="  display: inline-flex; margin-top:10px;">
+                        <a href="#" class="btn btn-success" id="textBtn"><i class="fa fa-check"></i> Get Report</a>
+                        <form class="smart-form">
+                            <label class="checkbox allAnomalies" style="margin-top:5px; margin-left:10px;">
+                                <input id="textAll" type="checkbox" name="checkbox">
+                                <i></i>Get All Anomalies
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="col-md-12">
+        <img src="../../Content/img/adb_img/adb_loader_tr.GIF" alt="" style="display:none; zoom:0.3;" id="textLoader" />
+        <hr />
+        <div id="textQuote"></div>
+        <hr />
+    </div>
+    <br />
+    <hr />
+    <div class="col-md-12">
+        <table class="table table-bordered table-hover table-responsive" id="textTbl">
+            <thead>
+                <tr>
+                    <th>Date Reported</th>
+                    <th>Reported By</th>
+                    <th>Severity</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+

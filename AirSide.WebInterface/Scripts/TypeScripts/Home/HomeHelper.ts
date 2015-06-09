@@ -147,7 +147,6 @@ module AirSide.HomeHelper {
                 type: "POST",
                 url: "../../Home/getActivities",
                 success: (json: Array<IActivityChart>) => {
-                    console.log(json);
                     json.forEach(c => {
                         var plotData: Array<number> = [];
                         plotData.push(c.dateOfActivity);

@@ -40,16 +40,16 @@ var AirSide;
                         var resolved = 0;
                         json.forEach(function (c) {
                             switch (c.indicatorEnum) {
-                                case 101 /* ShiftsCompleted */:
+                                case DashboardMetrics.ShiftsCompleted:
                                     closed = c.value;
                                     break;
-                                case 100 /* ShiftsOpen */:
+                                case DashboardMetrics.ShiftsOpen:
                                     open = c.value;
                                     break;
-                                case 105 /* FaultyLights */:
+                                case DashboardMetrics.FaultyLights:
                                     faulty = c.value;
                                     break;
-                                case 106 /* FaultyLightsResolved */:
+                                case DashboardMetrics.FaultyLightsResolved:
                                     resolved = c.value;
                                     break;
                                 default: break;
@@ -107,7 +107,6 @@ var AirSide;
                     type: "POST",
                     url: "../../Home/getActivities",
                     success: function (json) {
-                        console.log(json);
                         json.forEach(function (c) {
                             var plotData = [];
                             plotData.push(c.dateOfActivity);
@@ -185,10 +184,10 @@ var AirSide;
                                 fill: true,
                                 fillColor: {
                                     colors: [{
-                                        opacity: 0.1
-                                    }, {
-                                        opacity: 0.15
-                                    }]
+                                            opacity: 0.1
+                                        }, {
+                                            opacity: 0.15
+                                        }]
                                 }
                             },
                             points: { show: true },

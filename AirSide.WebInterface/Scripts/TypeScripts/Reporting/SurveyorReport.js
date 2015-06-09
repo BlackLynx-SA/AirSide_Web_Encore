@@ -10,6 +10,7 @@ var AirSide;
             function SurveyorData() {
                 this.$pictureTable = $('#pictureTbl tbody');
                 this.$voiceTable = $('#voiceTbl tbody');
+                this.$textTable = $('#textTbl tbody');
                 this.$pageLoader = $('#page_loader');
                 this.dateRange = "";
                 this.all = false;
@@ -23,7 +24,6 @@ var AirSide;
                     type: "POST",
                     url: "../../Surveyor/getSurveyorData?anomalyType=" + this.surveyType + "&dateRange=" + this.dateRange + "&All=" + this.all,
                     success: function (json) {
-                        console.log(json);
                         _this.$pageLoader.hide();
                         var html = "";
                         json.forEach(function (c) {
@@ -49,12 +49,19 @@ var AirSide;
                                 html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showPicture(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-camera"></i> View</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>';
                             else if (_this.surveyType === 2)
                                 html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showVoice(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-microphone"></i> Listen</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>';
+                            else if (_this.surveyType === 3)
+                                html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showText(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-file-text-o"></i> View</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>';
                         });
                         switch (_this.surveyType) {
                             case 1:
                                 _this.$pictureTable.html(html);
                                 break;
-                            case 2: _this.$voiceTable.html(html);
+                            case 2:
+                                _this.$voiceTable.html(html);
+                                break;
+                            case 3:
+                                _this.$textTable.html(html);
+                                break;
                             default:
                                 break;
                         }
@@ -131,6 +138,16 @@ $(document).on('click', '#voiceBtn', function (c) {
     SurveyData.surveyType = 2;
     SurveyData.getData();
 });
+$(document).on('click', '#textBtn', function (c) {
+    var fromDate = $('input.from').val();
+    var toDate = $('input.to').val();
+    var dateRange = fromDate + "-" + toDate;
+    var all = $('#textAll').prop('checked');
+    SurveyData.dateRange = dateRange;
+    SurveyData.all = all;
+    SurveyData.surveyType = 3;
+    SurveyData.getData();
+});
 function showPicture(url, long, lat) {
     //Set the source
     $('#surveyPicture').hide();
@@ -154,6 +171,15 @@ function showVoice(url, long, lat) {
     voice.play();
     $('#voiceLoader').hide();
     $('#audio').fadeIn(300);
+    showAssetLocation(lat, long);
+}
+function showText(url, long, lat) {
+    $('#textLoader').show();
+    $.get(url, function (c) {
+        var mediaHtml = '<h3>' + c + '</h3>';
+        $('#textLoader').hide();
+        $('#textQuote').html(mediaHtml);
+    });
     showAssetLocation(lat, long);
 }
 function closeAnomaly(guid) {

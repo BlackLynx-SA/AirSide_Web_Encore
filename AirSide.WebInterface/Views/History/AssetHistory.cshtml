@@ -29,6 +29,8 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
             <div class="well well-sm">
+                <h3 id="AssetIdHeader">---</h3>
+                <hr />
                 <!-- Timeline Content -->
                 <div class="smart-timeline">
                     <ul class="smart-timeline-list" id="assetTimeLine">
@@ -96,7 +98,16 @@
                 dataType: 'json',
                 success: function (json) {
                     createAssetTimeLine(json);
+                    setAssetHeader(id);
                 }
+            });
+        }
+
+        function setAssetHeader(id)
+        {
+            $.each(Assets.jsonData, function (i, v) {
+                if (v.assetId === id)
+                    $('#AssetIdHeader').html('Asset Id: ' + v.serialNumber + ' (RFID: ' + v.rfidTag + ')');
             });
         }
 

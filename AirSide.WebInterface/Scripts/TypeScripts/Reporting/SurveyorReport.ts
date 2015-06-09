@@ -19,6 +19,7 @@ module AirSide.Reporting {
 
         $pictureTable = $('#pictureTbl tbody');
         $voiceTable = $('#voiceTbl tbody');
+        $textTable = $('#textTbl tbody');
         $pageLoader = $('#page_loader');
         dateRange: string;
         surveyType: number;
@@ -37,7 +38,6 @@ module AirSide.Reporting {
                 type: "POST",
                 url: "../../Surveyor/getSurveyorData?anomalyType=" + this.surveyType + "&dateRange=" + this.dateRange + "&All=" + this.all,
                 success: (json: Array<ISurveyorData>) => {
-                    console.log(json);
                     this.$pageLoader.hide();
                     var html: string = "";
                     json.forEach(c=> {
@@ -60,12 +60,17 @@ module AirSide.Reporting {
                             html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showPicture(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-camera"></i> View</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>'
                         else if(this.surveyType === 2)
                             html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showVoice(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-microphone"></i> Listen</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>'
+                        else if (this.surveyType === 3)
+                            html += '<td>' + c.date + '</td><td>' + c.technician + '</td><td>' + severity + '</td><td><a class="btn btn-success btn-sm surveyBtn" onclick="showText(\'' + url + '\', ' + c.longitude + ',' + c.latitude + ')"><i class="fa fa-file-text-o"></i> View</a><a class="btn btn-danger btn-sm surveyBtn" onclick="closeAnomaly(\'' + c.guid + '\')"><i class="fa fa-times"></i> Close</a></td></tr>'
                     });
 
                     switch (this.surveyType) {
                         case 1: this.$pictureTable.html(html);
                             break;
                         case 2: this.$voiceTable.html(html);
+                            break;
+                        case 3: this.$textTable.html(html);
+                            break;
                         default:
                             break;
                     }
@@ -148,6 +153,18 @@ $(document).on('click', '#voiceBtn', c=> {
     SurveyData.getData();
 });
 
+$(document).on('click', '#textBtn', c=> {
+    var fromDate: string = $('input.from').val();
+    var toDate: string = $('input.to').val();
+    var dateRange: string = fromDate + "-" + toDate;
+    var all: boolean = $('#textAll').prop('checked');
+
+    SurveyData.dateRange = dateRange;
+    SurveyData.all = all;
+    SurveyData.surveyType = 3;
+    SurveyData.getData();
+});
+
 
 function showPicture(url: string, long: number, lat: number) {
     //Set the source
@@ -175,6 +192,16 @@ function showVoice(url: string, long: number, lat: number) {
     voice.play();
     $('#voiceLoader').hide();
     $('#audio').fadeIn(300);
+    showAssetLocation(lat, long);
+}
+
+function showText(url: string, long: number, lat: number) {
+    $('#textLoader').show();
+    $.get(url, c=> {
+        var mediaHtml: string = '<h3>' + c + '</h3>';
+        $('#textLoader').hide();
+        $('#textQuote').html(mediaHtml);
+    });
     showAssetLocation(lat, long);
 }
 

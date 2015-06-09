@@ -113,14 +113,35 @@
             type: "GET",
             url: url,
             success: function (text) {
-                htmltxt += '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote><button class="btn btn-sm btn-pink"><i class="icon-map-marker"></i>Location</button><hr /></div>';
-                $('#textContent').html(htmltxt);
-                addMarker(long, lat, "Text", text, technician + " (" + date + ")");
+                var htmltxt = '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote></div>';
+                var latLongMarker = new google.maps.LatLng(lat, long);
+                var contentString = "";
+                var image = '/Images/icons/map_icon_red.png';
+
+                //Generate content for info window
+                contentString = htmltxt;
+
+                var marker = new google.maps.Marker({
+                    position: latLongMarker,
+                    map: map,
+                    title: "Text",
+                    icon: image
+                });
+
+                //Add click event handler for info window
+                google.maps.event.addListener(marker, 'click', function () {
+                    if (infowindow) infowindow.close();
+                    infowindow = new google.maps.InfoWindow({ content: contentString });
+                    infowindow.open(map, marker);
+                });
+
+                markers.push(marker);
             }
         });
     }
 
     function processJson(voice, text, image, json) {
+
         markers = [];
         //Images First
         for (var i = 0; i < json.length; i++) {
@@ -131,7 +152,6 @@
             } else if (json[i].type === 'text' && text) {
                 var textURL = json[i].url;
                 getTextContent(textURL, json[i].date, json[i].technician, json[i].longitude, json[i].latitude);
-                //addSurveyorMarker(json[i].longitude, json[i].latitude, "Text", json[i].url, json[i].technician + " (" + json[i].date + ")");
             } else if (json[i].type === 'm4a' && voice) {
                 var voiceURL = json[i].url;
                 addSurveyorMarker(json[i].longitude, json[i].latitude, "Voice", json[i].url, json[i].technician + " (" + json[i].date + ")");
@@ -150,10 +170,7 @@
             htmltxt += '<audio width="100%" height="32" style="width:100%;" controls="controls" preload="none">';
             htmltxt += '<source src="' + content + '" type="audio/mp4"></audio><hr />';
             htmltxt += '<div class="col-md-12"><span> - ' + text + '</span></div>';
-        } else if (type === "Text") {
-            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter pink"><i class="pink icon-file-text-alt"></i> Text Memo Taken</h4><blockquote>' + content + '<small>' + text + '</small></blockquote><hr /></div>';
-        }
-
+        } 
         return htmltxt;
     }
 
@@ -180,8 +197,6 @@
 
         if (type === "Image")
             image = '/Images/icons/map_icon_green.png';
-        else if (type === "Text")
-            image = '/Images/icons/map_icon_red.png';
         else if (type === "Voice")
             image = '/Images/icons/map_icon_blue.png';
 

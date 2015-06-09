@@ -220,7 +220,7 @@
                     removeCategory(id, name);
                 }
                 else if (ButtonPressed === "Edit") {
-
+                    editCategory(id, value);
                 }
                 else if (ButtonPressed === "Cancel") {
 
@@ -237,7 +237,7 @@
                 success: function (json) {
                     $.smallBox({
                         title: "Category Updated",
-                        content: json.responseJSON.message,
+                        content: json.message,
                         color: "#5384AF",
                         timeout: 4000,
                         icon: "fa fa-thumbs-up"

@@ -219,6 +219,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             {
                 var category = db.as_maintenanceCategory.Find(id);
                 category.vc_maintenanceCategory = categoryName;
+                category.vc_categoryDescription = categoryName;
                 db.Entry(category).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
