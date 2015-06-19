@@ -219,9 +219,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private void EnsureLoggedOut()
         {
-            // If the request is (still) marked as authenticated we send the user to the logout action
-            if (Request.IsAuthenticated)
-                Logout();
+            Logout();
         }
 
         // GET: /account/lock

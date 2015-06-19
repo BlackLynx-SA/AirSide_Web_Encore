@@ -16,7 +16,7 @@ namespace ADB.AirSide.Encore.V1
                 "~/scripts/app.config.js",
                 "~/scripts/plugin/jquery-touch/jquery.ui.touch-punch.min.js",
                 "~/scripts/bootstrap/bootstrap.min.js",
-                "~/scripts/notification/SmartNotification.min.js",
+                "~/scripts/notification/SmartNotification.js",
                 "~/scripts/smartwidgets/jarvis.widget.min.js",
                 "~/scripts/plugin/jquery-validate/jquery.validate.min.js",
                 "~/scripts/plugin/masked-input/jquery.maskedinput.min.js",

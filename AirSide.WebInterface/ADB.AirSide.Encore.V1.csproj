@@ -664,6 +664,7 @@
     <Content Include="Scripts\login\preview\jquery.malihu.PageScroll2id.js" />
     <Content Include="Scripts\login\preview\scrollTo.min.js" />
     <Content Include="Scripts\login\waypoints.min.js" />
+    <Content Include="Scripts\notification\SmartNotification.js" />
     <Content Include="Scripts\notification\SmartNotification.min.js" />
     <Content Include="Scripts\plugin\bootstrap-duallistbox\jquery.bootstrap-duallistbox.min.js" />
     <Content Include="Scripts\plugin\bootstrap-progressbar\bootstrap-progressbar.min.js" />
@@ -1292,6 +1293,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Helpers\HandleAntiforgeryTokenErrorAttribute.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
     <Compile Include="App_Helpers\UserManager.cs" />

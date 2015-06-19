@@ -10,11 +10,13 @@
             </h1>
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
-            <div class="page-title">
-                <a href="~/Asset/CreateAsset" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> New Asset</a>
-            </div>
-        </div>
+        @*2015/06/18 Github Issue #60 - Will add this functionality later
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
+                <div class="page-title">
+                    <a href="~/Asset/CreateAsset" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> New Asset</a>
+                </div>
+            </div>*@
     </div>
 
     <div class="row">
@@ -126,7 +128,7 @@
 
 
                         var html = "";
-                        html += '<tr class="' + color +'" id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
+                        html += '<tr class="' + color + '" id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
                         html += '<td>' + v.serialNumber + '</td>';
                         html += '<td>' + v.rfidTag + '</td>';
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
@@ -185,8 +187,7 @@
             });
         });
 
-        function findAssetJson(id)
-        {
+        function findAssetJson(id) {
             var json, flag;
             flag = false;
             $.each(Assets.jsonData, function (i, v) {
@@ -204,16 +205,16 @@
 
             clearAllMarkers();
             markers = [];
-                var latLongMarker = new google.maps.LatLng(lat, long);
-                var image = getImage(1);
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: latLongMarker,
-                    title: id.toString(),
-                    icon: image
-                });
+            var latLongMarker = new google.maps.LatLng(lat, long);
+            var image = getImage(1);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latLongMarker,
+                title: id.toString(),
+                icon: image
+            });
 
-                markers.push(marker);
+            markers.push(marker);
 
             $('#mapModal').modal('show');
         }

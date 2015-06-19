@@ -60,17 +60,23 @@
                                         <img src="~/images/adbimages/ADB_Logo_100.png" class="adb_logo" />
                                     </div>
                                     <div class="form-main">
-
-                                        @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "form_1" }))
+                                        @if (!Request.IsAuthenticated)
                                         {
-                                            @Html.AntiForgeryToken()
-                                            <div class="form-group">
-                                                <input type="text" id="Email" name="Email" class="form-control" placeholder="Email Address" required="required">
-                                                <input type="password" id="Password" name="Password" class="form-control" placeholder="Password" required="required">
-                                                <input type="hidden" id="RememberMe" name="RememberMe" value="false"/>
-                                                <span style="color:#999999;"><input type="checkbox" id="RememberMeChk" /> Remember Me?</span>
-                                            </div>
-                                            <input id="signIn_1" type="submit" class="btn btn-block" style="background-color:#22a1e4; color:#fff;" value="Sign In" />
+                                            using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "form_1" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <div class="form-group">
+                                                    <input type="text" id="Email" name="Email" class="form-control" placeholder="Email Address" required="required">
+                                                    <input type="password" id="Password" name="Password" class="form-control" placeholder="Password" required="required">
+                                                    <input type="hidden" id="RememberMe" name="RememberMe" value="false" />
+                                                    <span style="color:#999999;"><input type="checkbox" id="RememberMeChk" /> Remember Me?</span>
+                                                </div>
+                                                <input id="signIn_1" type="submit" class="btn btn-block" style="background-color:#22a1e4; color:#fff;" value="Sign In" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <h4 style="color:#fff;">Your session has expired. Please <a href="~/account/login">login</a> again.</h4>
                                         }
                                     </div>
                                     <div class="form-footer">
@@ -82,6 +88,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 @if (!Html.ViewData.ModelState.IsValid)
                                 {
                                     <div class="alert alert-danger" role="alert" data-animation="bounceIn">
@@ -97,6 +104,8 @@
 
 
     </section>
+
+
 
     <div id="loginFooter">
         &copy; @DateTime.Now.Year - ADB Airfield Solutions
