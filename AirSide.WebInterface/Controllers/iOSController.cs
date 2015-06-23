@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -519,7 +520,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			{
 				foreach (as_shiftData shift in shiftData)
 				{
-					shift.dt_captureDate = DateTime.Now;
+					if (shift.vc_dateStamp != null)
+						shift.dt_captureDate = DateTime.ParseExact(shift.vc_dateStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
+					else
+						shift.dt_captureDate = DateTime.Now;
+
 					db.as_shiftData.Add(shift);
 					db.SaveChanges();
 

@@ -22,9 +22,10 @@ namespace AirSide.ServerModules.Helpers
             private static string connectionString = "mongodb://172.16.0.5";
             private static MongoClient client = new MongoClient(connectionString);
             private static MongoServer server = client.GetServer();
-            private static MongoDatabase database = server.GetDatabase("AirSideEncore");
+            //private static MongoDatabase database = server.GetDatabase("AirSideEncore");
             //private static MongoDatabase database = server.GetDatabase("AirSideBirmingham");
             //private static MongoDatabase database = server.GetDatabase("AirSideBaneasa");
+            private static MongoDatabase database = server.GetDatabase("AirSideManchester");
             //private static MongoDatabase database = server.GetDatabase("AirSideDev");
         #else
             private static string connectionString = "mongodb://127.0.0.1";

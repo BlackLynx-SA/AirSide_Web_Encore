@@ -18,6 +18,7 @@ namespace AirSide.ServerModules.Models
         public int i_shiftId { get; set; }
         public int i_assetId { get; set; }
         public int i_maintenanceId { get; set; }
+        public string vc_dateStamp { get; set; }
         public System.DateTime dt_captureDate { get; set; }
         public double f_capturedValue { get; set; }
         public int i_assetCheckId { get; set; }
