@@ -370,15 +370,28 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		
 		[HttpPost]
 		//TODO: Change date time to come from iPad not server
-		public JsonResult insertAssetValidation(List<as_validationTaskProfile> validations)
+        public JsonResult insertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			try
 			{
 				DateTime now = DateTime.Now;
-				foreach (as_validationTaskProfile item in validations)
+                List<as_validationTaskProfile> newValues = new List<as_validationTaskProfile>();
+
+                foreach (ios_validationTaskProfile item in validations)
 				{
-					item.dt_dateTimeStamp = now;
-					db.as_validationTaskProfile.Add(item);
+                    as_validationTaskProfile validation = new as_validationTaskProfile();
+                    validation.bt_validated = item.bt_validated;
+                    validation.i_assetId = item.i_assetId;
+                    validation.i_shiftId = item.i_shiftId;
+                    validation.i_validationProfileId = item.i_validationProfileId;
+                    validation.UserId = item.UserId;
+
+                    if (item.dt_dateTimeStamp != null)
+                        validation.dt_dateTimeStamp = DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
+                    else
+                        validation.dt_dateTimeStamp = now;
+
+					db.as_validationTaskProfile.Add(validation);
 					db.SaveChanges();
 
 					//rebuild cache for asset

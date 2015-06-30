@@ -64,6 +64,16 @@ namespace AirSide.ServerModules.Models
 
     #region General Models
 
+    public class ios_validationTaskProfile
+    {
+        public int i_validationProfileId { get; set; }
+        public int UserId { get; set; }
+        public int i_assetId { get; set; }
+        public string dt_dateTimeStamp { get; set; }
+        public bool bt_validated { get; set; }
+        public int i_shiftId { get; set; }
+    }
+
     public class AnomalyAlert
     {
         public string guid { get; set; }
