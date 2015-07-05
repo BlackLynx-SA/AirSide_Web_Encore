@@ -1207,6 +1207,7 @@
     <None Include="Properties\PublishProfiles\AirSide Baneasa.pubxml" />
     <None Include="Properties\PublishProfiles\AirSide Birmingham.pubxml" />
     <None Include="Properties\PublishProfiles\AirSide Encore.pubxml" />
+    <None Include="Properties\PublishProfiles\AirSide Manchester.pubxml" />
     <None Include="Properties\PublishProfiles\AirSide Test.pubxml" />
     <None Include="Properties\PublishProfiles\Encore.pubxml" />
     <None Include="Properties\PublishProfiles\Manchester.pubxml" />

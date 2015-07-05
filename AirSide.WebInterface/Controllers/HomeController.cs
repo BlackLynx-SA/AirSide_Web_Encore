@@ -81,7 +81,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         // GET: home/index
         public ActionResult Index()
         {
-
             //Section for all Map Events for maintenance tasks
             var maintenanceTasks = db.as_maintenanceProfile.ToList();
            

@@ -370,26 +370,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		
 		[HttpPost]
 		//TODO: Change date time to come from iPad not server
-        public JsonResult insertAssetValidation(List<ios_validationTaskProfile> validations)
+		public JsonResult insertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			try
 			{
 				DateTime now = DateTime.Now;
-                List<as_validationTaskProfile> newValues = new List<as_validationTaskProfile>();
+				List<as_validationTaskProfile> newValues = new List<as_validationTaskProfile>();
 
-                foreach (ios_validationTaskProfile item in validations)
+				foreach (ios_validationTaskProfile item in validations)
 				{
-                    as_validationTaskProfile validation = new as_validationTaskProfile();
-                    validation.bt_validated = item.bt_validated;
-                    validation.i_assetId = item.i_assetId;
-                    validation.i_shiftId = item.i_shiftId;
-                    validation.i_validationProfileId = item.i_validationProfileId;
-                    validation.UserId = item.UserId;
+					as_validationTaskProfile validation = new as_validationTaskProfile();
+					validation.bt_validated = item.bt_validated;
+					validation.i_assetId = item.i_assetId;
+					validation.i_shiftId = item.i_shiftId;
+					validation.i_validationProfileId = item.i_validationProfileId;
+					validation.UserId = item.UserId;
 
-                    if (item.dt_dateTimeStamp != null)
-                        validation.dt_dateTimeStamp = DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
-                    else
-                        validation.dt_dateTimeStamp = now;
+					if (item.dt_dateTimeStamp != null)
+						validation.dt_dateTimeStamp = DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
+					else
+						validation.dt_dateTimeStamp = now;
 
 					db.as_validationTaskProfile.Add(validation);
 					db.SaveChanges();
@@ -1018,6 +1018,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					newAsset.i_locationId = location.i_locationId;
 					newAsset.vc_rfidTag = asset.vc_rfidTag;
 					newAsset.vc_serialNumber = asset.vc_serialNumber;
+					newAsset.dt_initDate = DateTime.Now;
 
 					db.as_assetProfile.Add(newAsset);
 					db.SaveChanges();
@@ -1040,7 +1041,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			catch (Exception err)
 			{
 				LogHelper log = new LogHelper();
-				log.log("Failed to insert asset assosiation: " + err.Message, "insertAssetAssosiation(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				log.log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", LogHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("[{error:" + err.Message + "}]");
 			}
