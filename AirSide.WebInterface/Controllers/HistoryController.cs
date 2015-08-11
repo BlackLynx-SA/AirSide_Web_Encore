@@ -30,7 +30,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult TSTest() { return View(); }
 
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper log = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
+
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -61,8 +63,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", LogHelper.logTypes.Error, Request.UserHostAddress);
+                log.log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", CacheHelper.logTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

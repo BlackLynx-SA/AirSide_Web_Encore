@@ -29,9 +29,9 @@ namespace AirSide.ServerModules.Helpers
     {
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
         public ReportBytes generateReport(ReportSettings settings)
         {
-            LogHelper log = new LogHelper();
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -108,7 +108,7 @@ namespace AirSide.ServerModules.Helpers
                     out streams,
                     out warnings);
 
-                log.log("Report Rendered", "Report", LogHelper.logTypes.Debug, "SYSTEM");
+                //log.log("Report Rendered", "Report", LogHelper.logTypes.Debug, "SYSTEM");
 
                 newReport.header = new ReportHeader();
                 newReport.header.name = "content-disposition";
@@ -119,7 +119,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                log.log("Failed to generate report: " + err.Message + "|" + err.InnerException.Message, settings.reportName, LogHelper.logTypes.Error, "REPORTING");
+                //log.log("Failed to generate report: " + err.Message + "|" + err.InnerException.Message, settings.reportName, LogHelper.logTypes.Error, "REPORTING");
                 ReportBytes newReport = new ReportBytes();
                 return newReport;
             }

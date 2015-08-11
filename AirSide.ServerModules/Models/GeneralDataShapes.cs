@@ -603,7 +603,7 @@ namespace AirSide.ServerModules.Models
         public location location { get; set; }
         public assetClass assetClass { get; set; }
         public picture picture { get; set; }
-        public List<maintenance> maintenance { get; set; }
+        public maintenance[] maintenance { get; set; }
     }
 
     public class maintenance

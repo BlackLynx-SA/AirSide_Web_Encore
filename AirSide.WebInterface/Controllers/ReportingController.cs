@@ -30,7 +30,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class ReportingController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -63,7 +64,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                LogHelper log = new LogHelper();
                 //This method will generate a shift report per date range
                 //Create Date: 2015/03/04
                 //Author: Bernard Willer
@@ -100,13 +100,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportBytes renderedReport = report.generateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
-                log.log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
+                cache.log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", CacheHelper.logTypes.Info, User.Identity.Name);
                 return File(renderedReport.renderedBytes, "application/pdf ");
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err.InnerException, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.logError(err.InnerException, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return null;
             }

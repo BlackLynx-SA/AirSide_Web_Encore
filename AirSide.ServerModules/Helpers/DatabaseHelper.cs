@@ -10,7 +10,7 @@ namespace AirSide.ServerModules.Helpers
 {
     public class DatabaseHelper : IDisposable
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
 
         #region Functions
 
@@ -64,7 +64,7 @@ namespace AirSide.ServerModules.Helpers
             return firstDate;
         }
 
-        public BsonArray getMaintenaceTasks(int assetId)
+        public maintenance[] getMaintenaceTasks(int assetId)
         {
             var asset = (from x in db.as_assetProfile
                          join y in db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
@@ -79,37 +79,44 @@ namespace AirSide.ServerModules.Helpers
                              maintencanceId = b.i_maintenanceId,
                          });
 
-            BsonArray maintenanceArray = new BsonArray();
-            List<maintenance> allTasks = new List<maintenance>();
-
-            foreach (var item in asset)
+            if (asset != null)
             {
-                DateTime previousDate = getMaintenanceLastDate(item.maintencanceId, assetId);
-                DateTime nextDate = getMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
-                int color = getMaintenanceColour(previousDate, item.frequency);
+                maintenance[] maintenanceArray = new maintenance[asset.Count()];
+                List<maintenance> allTasks = new List<maintenance>();
+                int i = 0;
 
-                maintenance maintenanceTask = new maintenance();
-                maintenanceTask.maintenanceTask = item.task;
-                maintenanceTask.previousDate = previousDate.ToString("yyyy/MM/dd");
-                maintenanceTask.nextDate = nextDate.ToString("yyyy/MM/dd");
-                maintenanceTask.maintenanceCycle = color;
-                maintenanceTask.maintenanceId = item.maintencanceId;
+                foreach (var item in asset)
+                {
+                    DateTime previousDate = getMaintenanceLastDate(item.maintencanceId, assetId);
+                    DateTime nextDate = getMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
+                    int color = getMaintenanceColour(previousDate, item.frequency);
 
-                allTasks.Add(maintenanceTask);
+                    maintenance maintenanceTask = new maintenance();
+                    maintenanceTask.maintenanceTask = item.task;
+                    maintenanceTask.previousDate = previousDate.ToString("yyyy/MM/dd");
+                    maintenanceTask.nextDate = nextDate.ToString("yyyy/MM/dd");
+                    maintenanceTask.maintenanceCycle = color;
+                    maintenanceTask.maintenanceId = item.maintencanceId;
+
+                    allTasks.Add(maintenanceTask);
+                }
+
+                foreach (var item in allTasks.OrderByDescending(q => q.maintenanceCycle))
+                {
+                    maintenance maintenanceTask = new maintenance();
+                    maintenanceTask.maintenanceTask = item.maintenanceTask;
+                    maintenanceTask.previousDate = item.previousDate;
+                    maintenanceTask.nextDate = item.nextDate;
+                    maintenanceTask.maintenanceCycle = item.maintenanceCycle;
+                    maintenanceTask.maintenanceId = item.maintenanceId;
+                    maintenanceArray[i] = maintenanceTask;
+                    i++;
+                }
+
+                return maintenanceArray;
             }
-
-            foreach (var item in allTasks.OrderByDescending(q => q.maintenanceCycle))
-            {
-                BsonDocument maintenanceTask = new BsonDocument();
-                maintenanceTask.Add("maintenanceTask", item.maintenanceTask);
-                maintenanceTask.Add("previousDate", item.previousDate);
-                maintenanceTask.Add("nextDate", item.nextDate);
-                maintenanceTask.Add("maintenanceCycle", item.maintenanceCycle);
-                maintenanceTask.Add("maintenanceId", item.maintenanceId);
-                maintenanceArray.Add(maintenanceTask);
-            }
-
-            return maintenanceArray;
+            else
+                return null;
         }
 
         public List<maintenance> getMaintenanceTasksDocDB(int assetId)
@@ -208,8 +215,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, "SYSTEM Cache");
+                //log.logError(err, "SYSTEM Cache");
                 return new DateTime(1970, 1, 1);
             }
 
@@ -274,8 +280,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, "SYSTEM Cache");
+                //log.logError(err, "SYSTEM Cache");
                 return new DateTime(1970, 1, 1);
             }
 
@@ -310,8 +315,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, "SYSTEM Cache");
+                //log.logError(err, "SYSTEM Cache");
                 return (int)MaintenanceColours.grey;
             }
 
@@ -435,8 +439,7 @@ namespace AirSide.ServerModules.Helpers
             catch (Exception err)
             {
                 List<ActivityChart> activities = new List<ActivityChart>();
-                LogHelper log = new LogHelper();
-                log.logError(err, "SYSTEM");
+                //log.logError(err, "SYSTEM");
                 return activities;
             }
         }
@@ -486,8 +489,7 @@ namespace AirSide.ServerModules.Helpers
             catch (Exception err)
             {
                 List<ActivityChart> activities = new List<ActivityChart>();
-                LogHelper log = new LogHelper();
-                log.logError(err, "SYSTEM");
+                //log.logError(err, "SYSTEM");
                 return activities;
             }
 

@@ -37,7 +37,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 	[Authorize]
 	public class iOSController : Controller
 	{
-		private Entities db = new Entities();
+		private readonly Entities db = new Entities();
+		private readonly CacheHelper cache = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
+		private readonly DatabaseHelper func = new DatabaseHelper();
+
 
 		#region Authentication
 
@@ -145,8 +148,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -170,8 +172,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -196,8 +197,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -233,8 +233,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -285,8 +284,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -325,8 +323,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -370,7 +367,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		
 		[HttpPost]
 		//TODO: Change date time to come from iPad not server
-		public JsonResult insertAssetValidation(List<ios_validationTaskProfile> validations)
+		public async Task<JsonResult> insertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			try
 			{
@@ -395,16 +392,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					db.SaveChanges();
 
 					//rebuild cache for asset
-					CacheHelper cache = new CacheHelper();
-					cache.rebuildAssetProfileForAsset(item.i_assetId);
+					await cache.rebuildAssetProfileForAsset(item.i_assetId);
 				}
 
 				return Json(new { status = "success", count = validations.Count});
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to insert validation values: " + err.Message, "insertAssetValidation(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to insert validation values: " + err.Message, "insertAssetValidation(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -517,8 +512,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve technician shifts: " + err.Message, "getTechnicianShifts(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve technician shifts: " + err.Message, "getTechnicianShifts(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -527,7 +521,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult insertShiftData(List<as_shiftData> shiftData)
+		public async Task<JsonResult> insertShiftData(List<as_shiftData> shiftData)
 		{
 			try
 			{
@@ -543,13 +537,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 					try
 					{
-						CacheHelper cache = new CacheHelper();
-						cache.rebuildAssetProfileForAsset(shift.i_assetId);
+						await cache.rebuildAssetProfileForAsset(shift.i_assetId);
 					}
 					catch (Exception err)
 					{
-						LogHelper log = new LogHelper();
-						log.log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", LogHelper.logTypes.Error, "SYSTEM");
+						cache.log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.logTypes.Error, "SYSTEM");
 					}
 				}
 				return Json("[{success:1}]");
@@ -569,7 +561,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		[HttpPost]
 		public JsonResult updateAssetStatusBulk(List<AssetStatusUpload> assetList)
 		{
-			LogHelper log = new LogHelper();
 			try
 			{
 				foreach (AssetStatusUpload item in assetList)
@@ -604,7 +595,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			catch (Exception err)
 			{
 				Response.StatusCode = 500;
-				log.log("Failed to set asset status: " + err.Message, "updateAssetStatusBulk", LogHelper.logTypes.Error, "iOS");
+				cache.log("Failed to set asset status: " + err.Message, "updateAssetStatusBulk", CacheHelper.logTypes.Error, "iOS");
 				return Json("Failed");
 			}
 		}
@@ -612,9 +603,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult setAssetStatus(int assetId, string assetStatus, int assetSeverity)
+		public async Task<JsonResult> setAssetStatus(int assetId, string assetStatus, int assetSeverity)
 		{
-			LogHelper log = new LogHelper();
 			try
 			{
 				Boolean status = true;
@@ -641,8 +631,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					db.SaveChanges();
 				}
 
-				CacheHelper cache = new CacheHelper();
-				cache.rebuildAssetProfileForAsset(assetId);
+				await cache.rebuildAssetProfileForAsset(assetId);
 
 				AssetStatus returnType = new AssetStatus();
 				returnType.i_assetProfileId = assetId;
@@ -654,7 +643,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			catch (Exception err)
 			{
 
-				log.log("Failed to set asset status: " + err.Message, "setAssetStatus", LogHelper.logTypes.Error, "iOS");
+				cache.log("Failed to set asset status: " + err.Message, "setAssetStatus", CacheHelper.logTypes.Error, "iOS");
 				return Json("Failed");
 			}
 
@@ -663,18 +652,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getAllAssets()
+		public async Task<JsonResult> getAllAssets()
 		{
 			try
 			{
-				CacheHelper cache = new CacheHelper();
-				List<mongoFullAsset> assetClassList = cache.getAllAssetDownload();
+				List<mongoFullAsset> assetClassList = await cache.getAllAssetDownload();
 				return Json(assetClassList);
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve all asset download: " + err.Message, "getAllAssets(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve all asset download: " + err.Message, "getAllAssets(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -683,44 +670,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getAllAssetClasses()
+		public async Task<JsonResult> getAllAssetClasses()
 		{
 			try
 			{
-				CacheHelper cache = new CacheHelper();
-				List<mongoAssetClassDownload> assetClassList = cache.getAllAssetClasses();
-
+				List<mongoAssetClassDownload> assetClassList = await cache.getAllAssetClasses();
 				return Json(assetClassList);
-
-				//if (assetClassList.Count == 0)
-				//{
-				//    List<assetClassDownload> assetList = new List<assetClassDownload>();
-				//    DatabaseHelper func = new DatabaseHelper();
-
-				//    var assets = (from x in db.as_assetClassProfile
-				//                  select x);
-
-				//    foreach (var item in assets)
-				//    {
-				//        assetClassDownload asset = new assetClassDownload();
-				//        asset.i_assetClassId = item.i_assetClassId;
-				//        asset.vc_description = item.vc_description;
-				//        asset.i_assetCheckTypeId = 0;
-				//        asset.assetCheckCount = func.getNumberOfFixingPoints(item.i_assetClassId);
-				//        assetList.Add(asset);
-				//    }
-				//    return Json(assetList);
-				//}
-				//else
-				//{
-				//    return Json(assetClassList);
-				//}
-
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -729,13 +688,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getAssetPerTagId(string tagId)
+		public async Task<JsonResult> getAssetPerTagId(string tagId)
 		{
 			try
 			{
 				List<AssetTagReply> assetList = new List<AssetTagReply>();
-				DatabaseHelper func = new DatabaseHelper();
-				CacheHelper cache = new CacheHelper();
 
 				var assetInfo = from x in db.as_assetProfile
 								join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -758,8 +715,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					asset.assetId = item.i_assetId;
 					asset.serialNumber = item.vc_serialNumber;
 					asset.firstMaintainedDate = func.getFirstMaintanedDate(item.i_assetId).ToString("yyyMMdd");
-					asset.lastMaintainedDate = cache.getAssetPreviousDateForFirstTask(item.i_assetId);
-					asset.nextMaintenanceDate =  cache.getAssetNextDateForFirstTask(item.i_assetId);
+					asset.lastMaintainedDate = await cache.getAssetPreviousDateForFirstTask(item.i_assetId);
+					asset.nextMaintenanceDate =  await cache.getAssetNextDateForFirstTask(item.i_assetId);
 					asset.latitude = item.f_latitude;
 					asset.longitude = item.f_longitude;
 					asset.subAreaId = item.i_areaSubId;
@@ -770,8 +727,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve asset per tagId: " + err.Message, "getAssetPerTagId(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve asset per tagId: " + err.Message, "getAssetPerTagId(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -780,17 +736,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getAssetAssosiations(int areaSubId)
+		public async Task<JsonResult> getAssetAssosiations(int areaSubId)
 		{
 			try
 			{
-				CacheHelper cache = new CacheHelper();
-				List<mongoAssetDownload> assetListMongo = cache.getAssetAssosiations(areaSubId);
+				List<mongoAssetDownload> assetListMongo = await cache.getAssetAssosiations(areaSubId);
 
 				if (assetListMongo.Count == 0)
 				{
 					List<AssetDownload> assetList = new List<AssetDownload>();
-					DatabaseHelper func = new DatabaseHelper();
 
 					var assets = from x in db.as_assetProfile
 								 join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -833,8 +787,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve asset assosiations: " + err.Message, "getAssetAssosiations(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve asset assosiations: " + err.Message, "getAssetAssosiations(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -848,7 +801,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			try
 			{
 				List<AssetDownload> assetList = new List<AssetDownload>();
-				DatabaseHelper func = new DatabaseHelper();
 
 				var assets = from x in db.as_assetProfile
 							 join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -884,8 +836,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to retrieve asset with tagid: " + err.Message, "getAssetWithTagId(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to retrieve asset with tagid: " + err.Message, "getAssetWithTagId(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -894,11 +845,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult updateAssetTagBulk(List<AssetAssosiationUpload> assetList)
+		public async Task<JsonResult> updateAssetTagBulk(List<AssetAssosiationUpload> assetList)
 		{
 			try
 			{
-				LogHelper log = new LogHelper();
 				int i = 0;
 				foreach (AssetAssosiationUpload item in assetList)
 				{
@@ -913,23 +863,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						db.SaveChanges();
 
 						//Log the change
-						log.log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", LogHelper.logTypes.Info, "iOS Device");
+						cache.log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", CacheHelper.logTypes.Info, "iOS Device");
 						i++;
 
 						try
 						{
-							CacheHelper cache = new CacheHelper();
-							cache.rebuildAssetProfileForAsset(item.assetId);
-							cache.createAllAssetDownloadForAsset(asset.i_assetId);
+							await cache.rebuildAssetProfileForAsset(item.assetId);
+							await cache.createAllAssetDownloadForAsset(asset.i_assetId);
 						}
 						catch (Exception err)
 						{
-							log.log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", LogHelper.logTypes.Error, "SYSTEM");
+							cache.log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.logTypes.Error, "SYSTEM");
 						}
 					}
 					else
 					{
-						log.log("Reference tag for assetid " + item.assetId.ToString() + " wasn't found.", "updateAssetTag(iOS)", LogHelper.logTypes.Info, "iOS Device");
+						cache.log("Reference tag for assetid " + item.assetId.ToString() + " wasn't found.", "updateAssetTag(iOS)", CacheHelper.logTypes.Info, "iOS Device");
 					}
 				}
 
@@ -937,8 +886,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to update asset tag: " + err.Message, "updateAssetTagBulk(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to update asset tag: " + err.Message, "updateAssetTagBulk(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -947,11 +895,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult updateAssetTag(int assetId, int UserId, string tagId, string serialNumber)
+		public async Task<JsonResult> updateAssetTag(int assetId, int UserId, string tagId, string serialNumber)
 		{
 			try
 			{
-				LogHelper log = new LogHelper();
 
 				as_assetProfile asset = db.as_assetProfile.Find(assetId);
 
@@ -964,17 +911,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					db.SaveChanges();
 
 					//Log the change
-					log.log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", LogHelper.logTypes.Info, UserId.ToString());
+					cache.log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", CacheHelper.logTypes.Info, UserId.ToString());
 
 					try
 					{
-						CacheHelper cache = new CacheHelper();
-						cache.rebuildAssetProfileForAsset(asset.i_assetId);
-						cache.createAllAssetDownloadForAsset(asset.i_assetId);
+						await cache.rebuildAssetProfileForAsset(asset.i_assetId);
+						await cache.createAllAssetDownloadForAsset(asset.i_assetId);
 					}
 					catch (Exception err)
 					{
-						log.log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", LogHelper.logTypes.Error, "SYSTEM");
+						cache.log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.logTypes.Error, "SYSTEM");
 					}
 
 					return Json("[{success:1}]");
@@ -988,8 +934,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to update asset tag: " + err.Message, "updateAssetTag(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to update asset tag: " + err.Message, "updateAssetTag(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -998,7 +943,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult insertAssetAssosiation(List<NewAssetAssosiation> assets)
+		public async Task<JsonResult> insertAssetAssosiation(List<NewAssetAssosiation> assets)
 		{
 			try
 			{
@@ -1025,13 +970,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 					try
 					{
-						CacheHelper cache = new CacheHelper();
-						cache.rebuildAssetProfileForAsset(newAsset.i_assetId);
+						await cache.rebuildAssetProfileForAsset(newAsset.i_assetId);
 					}
 					catch (Exception err)
 					{
-						LogHelper log = new LogHelper();
-						log.log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", LogHelper.logTypes.Error, "SYSTEM");
+						cache.log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.logTypes.Error, "SYSTEM");
 					}
 				}
 
@@ -1040,8 +983,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("[{error:" + err.Message + "}]");
 			}
@@ -1078,8 +1020,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to get main areas: " + err.Message, "getMainAreas(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to get main areas: " + err.Message, "getMainAreas(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("error: " + err.Message);
 			}
@@ -1097,8 +1038,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to get sub areas: " + err.Message, "getSubAreas(iOS)", LogHelper.logTypes.Error, "iOS Device");
+				cache.log("Failed to get sub areas: " + err.Message, "getSubAreas(iOS)", CacheHelper.logTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("error: " + err.Message);
 			}
@@ -1207,8 +1147,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						catch (Exception err)
 						{
 
-							LogHelper log = new LogHelper();
-							log.log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", LogHelper.logTypes.Error, "iOS");
+							cache.log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.logTypes.Error, "iOS");
 						}
 					}
 
@@ -1244,8 +1183,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", LogHelper.logTypes.Error, "iOS");
+				cache.log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.logTypes.Error, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1335,8 +1273,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", LogHelper.logTypes.Error, "iOS");
+				cache.log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", CacheHelper.logTypes.Error, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1350,7 +1287,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		
 		public ActionResult rebuildCache()
 		{
-			CacheHelper cache = new CacheHelper();
 			@ViewBag.AssetFullDownload = cache.createAllAssetDownload();
 			@ViewBag.AssetRebuild = cache.createAssetDownloadCache();
 			@ViewBag.AssetClassRebuild = cache.createAssetClassDownloadCache();
@@ -1400,8 +1336,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, "iOS");
+				cache.logError(err, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1424,8 +1359,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, "iOS");
+				cache.logError(err, "iOS");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1485,8 +1419,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1519,8 +1452,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1681,8 +1613,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				return items;
 			} catch(Exception ex)
 			{
-				LogHelper log = new LogHelper();
-				log.logError(ex, User.Identity.Name);
+				cache.logError(ex, User.Identity.Name);
 				return items;
 			}
 		}
