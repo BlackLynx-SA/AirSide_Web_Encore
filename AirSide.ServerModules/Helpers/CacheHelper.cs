@@ -1,17 +1,15 @@
 ﻿
 #define DEBUG
 
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using AirSide.ServerModules.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Builders;
-using MongoDB.Driver.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AirSide.ServerModules.Helpers
 {
@@ -20,10 +18,10 @@ namespace AirSide.ServerModules.Helpers
         //Mongo Globals
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        protected static IMongoClient _client;
-        protected static IMongoDatabase _database;
+        protected static IMongoClient Client;
+        protected static IMongoDatabase Database;
 
-        private readonly DatabaseHelper func;
+        private readonly DatabaseHelper _func;
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -34,72 +32,72 @@ namespace AirSide.ServerModules.Helpers
         /// <param name="connectionString">The MongoDB Connection String</param>
         public CacheHelper(string database, string connectionString)
         {
-            _client = new MongoClient(connectionString);
-            _database = _client.GetDatabase(database);
-            func = new DatabaseHelper();
+            Client = new MongoClient(connectionString);
+            Database = Client.GetDatabase(database);
+            _func = new DatabaseHelper();
         }
        
 
         //SQL Entity Globals
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private Entities db = new Entities();
+        private readonly Entities _db = new Entities();
 
         #region Cache Rebuild
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> createAssetClassDownloadCache()
+        public async Task<Boolean> CreateAssetClassDownloadCache()
         {
             try
             {
-                List<assetClassDownload> assetList = new List<assetClassDownload>();
+                //List<assetClassDownload> assetList = new List<assetClassDownload>();
 
-                var assets = (from x in db.as_assetClassProfile
+                var assets = (from x in _db.as_assetClassProfile
                               select x);
 
-                if (assets != null)
                 {
                     mongoAssetClassDownload[] assetArray = new mongoAssetClassDownload[assets.Count()];
                     int i = 0;
 
                     foreach (var item in assets)
                     {
-                        mongoAssetClassDownload asset = new mongoAssetClassDownload();
-                        asset.i_assetClassId = item.i_assetClassId;
-                        asset.vc_description = item.vc_description;
-                        asset.i_assetCheckTypeId = 0;
-                        asset.assetCheckCount = func.getNumberOfFixingPoints(item.i_assetClassId);
+                        mongoAssetClassDownload asset = new mongoAssetClassDownload
+                        {
+                            i_assetClassId = item.i_assetClassId,
+                            vc_description = item.vc_description,
+                            i_assetCheckTypeId = 0,
+                            assetCheckCount = _func.GetNumberOfFixingPoints(item.i_assetClassId)
+                        };
                         assetArray[i] = asset;
                         i++;
                     }
 
                     //Drop Existing
-                    await _database.DropCollectionAsync("md_assetClassDownload");
+                    await Database.DropCollectionAsync("md_assetClassDownload");
 
                     //Recreate New
-                    IMongoCollection<mongoAssetClassDownload> collection = _database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
+                    IMongoCollection<mongoAssetClassDownload> collection = Database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
                     await collection.InsertManyAsync(assetArray);
 
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to create Asset Class Download Cache: " + err.Message, "createAssetClassDownloadCache(iOS)", logTypes.Error, "SYSTEM");
+                Log("Failed to create Asset Class Download Cache: " + err.Message, "createAssetClassDownloadCache(iOS)", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> createAllAssetDownload()
+        public async Task<Boolean> CreateAllAssetDownload()
         {
             try
             {
-                var assets = (from x in db.as_assetProfile
-                              join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                var assets = (from x in _db.as_assetProfile
+                              join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
                               select new
                               {
                                   assetId = x.i_assetId,
@@ -111,7 +109,6 @@ namespace AirSide.ServerModules.Helpers
                                   rfidTag = x.vc_rfidTag
                               });
 
-                if (assets != null)
                 {
 
                     mongoFullAsset[] assetArray = new mongoFullAsset[assets.Count()];
@@ -120,52 +117,53 @@ namespace AirSide.ServerModules.Helpers
                     foreach (var item in assets)
                     {
                         Boolean lightStatus = false;
-                        var status = db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.assetId).FirstOrDefault();
+                        var status = _db.as_assetStatusProfile.FirstOrDefault(q => q.i_assetProfileId == item.assetId);
                         if (status != null)
                             lightStatus = status.bt_assetStatus;
 
-                        mongoFullAsset asset = new mongoFullAsset();
-                        asset.assetId = item.assetId;
-                        asset.serialNumber = item.serialNumber;
-                        asset.firstMaintainedDate = func.getFirstMaintanedDate(item.assetId).ToString("yyyMMdd");
-                        asset.lastMaintainedDate = await getAssetPreviousDateForFirstTask(item.assetId);
-                        asset.nextMaintenanceDate = await getAssetNextDateForFirstTask(item.assetId);
-                        asset.latitude = item.latitude;
-                        asset.longitude = item.longitude;
-                        asset.subAreaId = item.subAreaId;
-                        asset.assetClassId = item.assetClassId;
-                        asset.rfidTag = item.rfidTag;
-                        asset.status = lightStatus;
+                        mongoFullAsset asset = new mongoFullAsset
+                        {
+                            assetId = item.assetId,
+                            serialNumber = item.serialNumber,
+                            firstMaintainedDate = _func.GetFirstMaintanedDate(item.assetId).ToString("yyyMMdd"),
+                            lastMaintainedDate = await GetAssetPreviousDateForFirstTask(item.assetId),
+                            nextMaintenanceDate = await GetAssetNextDateForFirstTask(item.assetId),
+                            latitude = item.latitude,
+                            longitude = item.longitude,
+                            subAreaId = item.subAreaId,
+                            assetClassId = item.assetClassId,
+                            rfidTag = item.rfidTag,
+                            status = lightStatus
+                        };
                         assetArray[i] = asset;
                         i++;
                     }
 
                     //Drop Existing
-                    await _database.DropCollectionAsync("md_assetFullDownload");
+                    await Database.DropCollectionAsync("md_assetFullDownload");
 
                     //Recreate New
-                    IMongoCollection<mongoFullAsset> collection = _database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+                    IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
                     await collection.InsertManyAsync(assetArray);
 
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to create Asset Full Download Cache: " + err.Message, "createAllAssetDownload(iOS)", logTypes.Error, "SYSTEM");
+                Log("Failed to create Asset Full Download Cache: " + err.Message, "createAllAssetDownload(iOS)", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> createAllAssetDownloadForAsset(int assetId)
+        public async Task<Boolean> CreateAllAssetDownloadForAsset(int assetId)
         {
             try
             {
-                var assets = (from x in db.as_assetProfile
-                              join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                var assets = (from x in _db.as_assetProfile
+                              join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
                               where x.i_assetId == assetId
                               select new
                               {
@@ -178,7 +176,6 @@ namespace AirSide.ServerModules.Helpers
                                   rfidTag = x.vc_rfidTag
                               });
 
-                if (assets != null)
                 {
 
                     mongoFullAsset[] assetArray = new mongoFullAsset[assets.Count()];
@@ -187,29 +184,31 @@ namespace AirSide.ServerModules.Helpers
                     foreach (var item in assets)
                     {
                         Boolean lightStatus = false;
-                        var status = db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.assetId).FirstOrDefault();
+                        var status = _db.as_assetStatusProfile.FirstOrDefault(q => q.i_assetProfileId == item.assetId);
                         if (status != null)
                             lightStatus = status.bt_assetStatus;
 
-                        mongoFullAsset asset = new mongoFullAsset();
-                        asset.assetId = item.assetId;
-                        asset.serialNumber = item.serialNumber;
-                        asset.firstMaintainedDate = func.getFirstMaintanedDate(item.assetId).ToString("yyyMMdd");
-                        asset.lastMaintainedDate = await getAssetPreviousDateForFirstTask(item.assetId);
-                        asset.nextMaintenanceDate = await getAssetNextDateForFirstTask(item.assetId);
-                        asset.latitude = item.latitude;
-                        asset.longitude = item.longitude;
-                        asset.subAreaId = item.subAreaId;
-                        asset.assetClassId = item.assetClassId;
-                        asset.rfidTag = item.rfidTag;
-                        asset.status = lightStatus;
+                        mongoFullAsset asset = new mongoFullAsset
+                        {
+                            assetId = item.assetId,
+                            serialNumber = item.serialNumber,
+                            firstMaintainedDate = _func.GetFirstMaintanedDate(item.assetId).ToString("yyyMMdd"),
+                            lastMaintainedDate = await GetAssetPreviousDateForFirstTask(item.assetId),
+                            nextMaintenanceDate = await GetAssetNextDateForFirstTask(item.assetId),
+                            latitude = item.latitude,
+                            longitude = item.longitude,
+                            subAreaId = item.subAreaId,
+                            assetClassId = item.assetClassId,
+                            rfidTag = item.rfidTag,
+                            status = lightStatus
+                        };
                         assetArray[i] = asset;
                         i++;
                     }
 
                     //Drop Current Profile
                     var filter = Builders<mongoFullAsset>.Filter.Eq(q => q.assetId, assetId);
-                    IMongoCollection<mongoFullAsset> collection = _database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+                    IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
                     await collection.DeleteOneAsync(filter);
 
                     //Insert Updated Asset
@@ -217,73 +216,63 @@ namespace AirSide.ServerModules.Helpers
 
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to create Asset Full Download Cache: " + err.Message, "createAllAssetDownload(iOS)", logTypes.Error, "SYSTEM");
+                Log("Failed to create Asset Full Download Cache: " + err.Message, "createAllAssetDownload(iOS)", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> createAssetDownloadCache()
+        public async Task<Boolean> CreateAssetDownloadCache()
         {
             try
             {
-                
-
-                var assets = from x in db.as_assetProfile
-                             join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+                var assets = from x in _db.as_assetProfile
+                             join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
                              select new
                              {
-                                 i_assetId = x.i_assetId,
-                                 i_assetClassId = x.i_assetClassId,
-                                 vc_rfidTag = x.vc_rfidTag,
-                                 vc_serialNumber = x.vc_serialNumber,
-                                 i_locationId = x.i_locationId,
-                                 i_areaSubId = y.i_areaSubId,
-                                 f_longitude = y.f_longitude,
-                                 f_latitude = y.f_latitude
+                                 x.i_assetId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber, x.i_locationId, y.i_areaSubId, y.f_longitude, y.f_latitude
                              };
 
-                if(assets != null)
                 {
                     mongoAssetDownload[] assetList = new mongoAssetDownload[assets.Count()];
                     int i = 0;
 
                     foreach (var item in assets)
                     {
-                        mongoAssetDownload asset = new mongoAssetDownload();
-                        asset.i_assetId = item.i_assetId;
-                        asset.i_assetClassId = item.i_assetClassId;
-                        asset.vc_tagId = item.vc_rfidTag;
-                        asset.vc_serialNumber = item.vc_serialNumber;
-                        asset.i_locationId = item.i_locationId;
-                        asset.longitude = item.f_longitude;
-                        asset.latitude = item.f_latitude;
-                        asset.lastDate = func.getLastShiftDateForAsset(item.i_assetId);
-                        asset.maintenance = "0";
-                        asset.submitted = func.getSubmittedShiftData(item.i_assetId);
+                        mongoAssetDownload asset = new mongoAssetDownload
+                        {
+                            i_assetId = item.i_assetId,
+                            i_assetClassId = item.i_assetClassId,
+                            vc_tagId = item.vc_rfidTag,
+                            vc_serialNumber = item.vc_serialNumber,
+                            i_locationId = item.i_locationId,
+                            longitude = item.f_longitude,
+                            latitude = item.f_latitude,
+                            lastDate = _func.GetLastShiftDateForAsset(item.i_assetId),
+                            maintenance = "0",
+                            submitted = _func.GetSubmittedShiftData(item.i_assetId)
+                        };
                         assetList[i] = asset;
                         i++;
                     }
 
                     //Drop Existing
-                    await _database.DropCollectionAsync("md_assetDownload");
+                    await Database.DropCollectionAsync("md_assetDownload");
 
                     //Recreate New
-                    IMongoCollection<mongoAssetDownload> collection = _database.GetCollection<mongoAssetDownload>("md_assetDownload");
+                    IMongoCollection<mongoAssetDownload> collection = Database.GetCollection<mongoAssetDownload>("md_assetDownload");
                     await collection.InsertManyAsync(assetList);
 
                     return true;
-                } else 
-                    return false;
+                }
             }
             catch (Exception err)
             {
-                log("Failed to create Asset Download Cache: " + err.Message, "createAssetDownloadCache(iOS)", logTypes.Error, "SYSTEM");
+                Log("Failed to create Asset Download Cache: " + err.Message, "createAssetDownloadCache(iOS)", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
@@ -484,23 +473,18 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<bool> rebuildAssetProfileForAssetClass(int assetClassId)
+        public async Task<bool> RebuildAssetProfileForAssetClass(int assetClassId)
         {
             try
             {
-                var assets = from x in db.as_assetProfile
-                             join y in db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
+                var assets = from x in _db.as_assetProfile
+                             join y in _db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
                              where y.i_assetClassId == assetClassId
                              select new {
-                                 i_assetId = x.i_assetId,
-                                 i_locationId = x.i_locationId,
-                                 i_assetClassId = x.i_assetClassId,
-                                 vc_rfidTag = x.vc_rfidTag,
-                                 vc_serialNumber = x.vc_serialNumber,
+                                 x.i_assetId, x.i_locationId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber,
                                  productUrl = y.vc_webSiteLink
                              };
 
-                if (assets != null)
                 {
 
                     mongoAssetProfile[] assetArray = new mongoAssetProfile[assets.Count()];
@@ -521,46 +505,52 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        if (db.as_assetStatusProfile.Find(item.i_assetId) != null)
-                            assetDoc.status = db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
-                        else
-                            assetDoc.status = false;
+                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
 
                         assetDoc.productUrl = item.productUrl;
-                        assetDoc.maintenance = func.getMaintenaceTasks(item.i_assetId);
+                        assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);
 
                         //get data for loaction
-                        var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
-                        locationDoc.locationId = location.i_locationId;
-                        locationDoc.longitude = location.f_longitude;
-                        locationDoc.latitude = location.f_latitude;
-                        locationDoc.designation = location.vc_designation;
-                        locationDoc.areaSubId = location.i_areaSubId;
+                        var location = _db.as_locationProfile.FirstOrDefault(q => q.i_locationId == item.i_locationId);
+                        if (location != null)
+                        {
+                            locationDoc.locationId = location.i_locationId;
+                            locationDoc.longitude = location.f_longitude;
+                            locationDoc.latitude = location.f_latitude;
+                            locationDoc.designation = location.vc_designation;
+                            locationDoc.areaSubId = location.i_areaSubId;
 
-                        //Add Main Area
-                        int mainArea = db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
-                        locationDoc.areaId = mainArea;
+                            //Add Main Area
+                            int mainArea = _db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
+                            locationDoc.areaId = mainArea;
+                        }
 
                         //Add doc to main doc
                         assetDoc.location = locationDoc;
 
                         //get asset class data
-                        var assetclass = db.as_assetClassProfile.Where(q => q.i_assetClassId == item.i_assetClassId).FirstOrDefault();
-                        assetClassDoc.assetClassId = assetclass.i_assetClassId;
-                        assetClassDoc.description = assetclass.vc_description;
-                        assetClassDoc.pictureId = assetclass.i_pictureId;
-                        assetClassDoc.manufacturer = assetclass.vc_manufacturer;
-                        assetClassDoc.model = assetclass.vc_model;
+                        var assetclass = _db.as_assetClassProfile.FirstOrDefault(q => q.i_assetClassId == item.i_assetClassId);
+                        if (assetclass != null)
+                        {
+                            assetClassDoc.assetClassId = assetclass.i_assetClassId;
+                            assetClassDoc.description = assetclass.vc_description;
+                            assetClassDoc.pictureId = assetclass.i_pictureId;
+                            assetClassDoc.manufacturer = assetclass.vc_manufacturer;
+                            assetClassDoc.model = assetclass.vc_model;
 
-                        //add to main doc
-                        assetDoc.assetClass = assetClassDoc;
+                            //add to main doc
+                            assetDoc.assetClass = assetClassDoc;
 
-                        //get picture data
-                        var picture = db.as_pictureProfile.Where(q => q.i_pictureId == assetclass.i_pictureId).FirstOrDefault();
-                        pictureDoc.pictureId = picture.i_pictureId;
-                        pictureDoc.fileLocation = picture.vc_fileLocation;
-                        pictureDoc.description = picture.vc_description;
-                        
+                            //get picture data
+                            var picture = _db.as_pictureProfile.FirstOrDefault(q => q.i_pictureId == assetclass.i_pictureId);
+                            if (picture != null)
+                            {
+                                pictureDoc.pictureId = picture.i_pictureId;
+                                pictureDoc.fileLocation = picture.vc_fileLocation;
+                                pictureDoc.description = picture.vc_description;
+                            }
+                        }
+
                         //add to main doc
                         assetDoc.picture = pictureDoc;
 
@@ -570,45 +560,39 @@ namespace AirSide.ServerModules.Helpers
 
                     //Drop Current Profile
                     var filter = Builders<mongoAssetProfile>.Filter.Eq(q => q.assetClass.assetClassId, assetClassId);
-                    IMongoCollection<mongoAssetProfile> collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                    IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
                     await collection.DeleteOneAsync(filter);
 
                     //Insert Updated records
                     await collection.InsertManyAsync(assetArray);
 
                     //Check the maintenance Cycles
-                    await recreateCurrentPreviousStatus(false, assetClassId);
+                    await RecreateCurrentPreviousStatus(false, assetClassId);
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to rebuild asset profile for asset class: " + err.Message, "rebuildAssetProfileForAssetClass", logTypes.Error, "SYSTEM");
+                Log("Failed to rebuild asset profile for asset class: " + err.Message, "rebuildAssetProfileForAssetClass", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<bool> rebuildAssetProfileForAsset(int assetId)
+        public async Task<bool> RebuildAssetProfileForAsset(int assetId)
         {
             try
             {
-                var assets = (from x in db.as_assetProfile
-                             join y in db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
+                var assets = (from x in _db.as_assetProfile
+                             join y in _db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
                              where x.i_assetId == assetId
                              select new
                              {
-                                 i_assetId = x.i_assetId,
-                                 i_locationId = x.i_locationId,
-                                 i_assetClassId = x.i_assetClassId,
-                                 vc_rfidTag = x.vc_rfidTag,
-                                 vc_serialNumber = x.vc_serialNumber,
+                                 x.i_assetId, x.i_locationId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber,
                                  productUrl = y.vc_webSiteLink
                              });
 
-                if (assets != null)
                 {
 
                     mongoAssetProfile[] assetArray = new mongoAssetProfile[assets.Count()];
@@ -629,45 +613,51 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        if (db.as_assetStatusProfile.Find(item.i_assetId) != null)
-                            assetDoc.status = db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
-                        else
-                            assetDoc.status = false;
+                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
 
                         assetDoc.productUrl = item.productUrl;
-                        assetDoc.maintenance = func.getMaintenaceTasks(item.i_assetId);
+                        assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);
 
                         //get data for loaction
-                        var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
-                        locationDoc.locationId = location.i_locationId;
-                        locationDoc.longitude = location.f_longitude;
-                        locationDoc.latitude = location.f_latitude;
-                        locationDoc.designation = location.vc_designation;
-                        locationDoc.areaSubId = location.i_areaSubId;
+                        var location = _db.as_locationProfile.FirstOrDefault(q => q.i_locationId == item.i_locationId);
+                        if (location != null)
+                        {
+                            locationDoc.locationId = location.i_locationId;
+                            locationDoc.longitude = location.f_longitude;
+                            locationDoc.latitude = location.f_latitude;
+                            locationDoc.designation = location.vc_designation;
+                            locationDoc.areaSubId = location.i_areaSubId;
 
-                        //Add Main Area
-                        int mainArea = db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
-                        locationDoc.areaId = mainArea;
+                            //Add Main Area
+                            int mainArea = _db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
+                            locationDoc.areaId = mainArea;
+                        }
 
                         //Add doc to main doc
                         assetDoc.location = locationDoc;
 
                         //get asset class data
-                        var assetclass = db.as_assetClassProfile.Where(q => q.i_assetClassId == item.i_assetClassId).FirstOrDefault();
-                        assetClassDoc.assetClassId = assetclass.i_assetClassId;
-                        assetClassDoc.description = assetclass.vc_description;
-                        assetClassDoc.pictureId = assetclass.i_pictureId;
-                        assetClassDoc.manufacturer = assetclass.vc_manufacturer;
-                        assetClassDoc.model = assetclass.vc_model;
+                        var assetclass = _db.as_assetClassProfile.FirstOrDefault(q => q.i_assetClassId == item.i_assetClassId);
+                        if (assetclass != null)
+                        {
+                            assetClassDoc.assetClassId = assetclass.i_assetClassId;
+                            assetClassDoc.description = assetclass.vc_description;
+                            assetClassDoc.pictureId = assetclass.i_pictureId;
+                            assetClassDoc.manufacturer = assetclass.vc_manufacturer;
+                            assetClassDoc.model = assetclass.vc_model;
 
-                        //add to main doc
-                        assetDoc.assetClass = assetClassDoc;
+                            //add to main doc
+                            assetDoc.assetClass = assetClassDoc;
 
-                        //get picture data
-                        var picture = db.as_pictureProfile.Where(q => q.i_pictureId == assetclass.i_pictureId).FirstOrDefault();
-                        pictureDoc.pictureId = picture.i_pictureId;
-                        pictureDoc.fileLocation = picture.vc_fileLocation;
-                        pictureDoc.description = picture.vc_description;
+                            //get picture data
+                            var picture = _db.as_pictureProfile.FirstOrDefault(q => q.i_pictureId == assetclass.i_pictureId);
+                            if (picture != null)
+                            {
+                                pictureDoc.pictureId = picture.i_pictureId;
+                                pictureDoc.fileLocation = picture.vc_fileLocation;
+                                pictureDoc.description = picture.vc_description;
+                            }
+                        }
 
                         //add to main doc
                         assetDoc.picture = pictureDoc;
@@ -678,45 +668,39 @@ namespace AirSide.ServerModules.Helpers
 
                     //Drop Current Profile
                     var filter = Builders<mongoAssetProfile>.Filter.Eq(q => q.assetId, assetId);
-                    IMongoCollection<mongoAssetProfile> collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                    IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
                     await collection.DeleteOneAsync(filter);
 
                     //Insert Updated records
                     await collection.InsertManyAsync(assetArray);
 
                     //Check the maintenance Cycles
-                    await recreateCurrentPreviousStatus(true, assetId);
+                    await RecreateCurrentPreviousStatus(true, assetId);
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to rebuild Asset Profile for asset: " + err.Message, "rebuildAssetProfileForAsset", logTypes.Error, "SYSTEM");
+                Log("Failed to rebuild Asset Profile for asset: " + err.Message, "rebuildAssetProfileForAsset", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<bool> rebuildAssetProfile()
+        public async Task<bool> RebuildAssetProfile()
         {
-            int assetID = 0;
+            int assetId = 0;
             try
             {
-                var assets = from x in db.as_assetProfile
-                             join y in db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
+                var assets = from x in _db.as_assetProfile
+                             join y in _db.as_assetClassProfile on x.i_assetClassId equals y.i_assetClassId
                              select new
                              {
-                                 i_assetId = x.i_assetId,
-                                 i_locationId = x.i_locationId,
-                                 i_assetClassId = x.i_assetClassId,
-                                 vc_rfidTag = x.vc_rfidTag,
-                                 vc_serialNumber = x.vc_serialNumber,
+                                 x.i_assetId, x.i_locationId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber,
                                  productUrl = y.vc_webSiteLink
                              };
 
-                if (assets != null)
                 {
 
                     mongoAssetProfile[] assetArray = new mongoAssetProfile[assets.Count()];
@@ -737,45 +721,51 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        if (db.as_assetStatusProfile.Find(item.i_assetId) != null)
-                            assetDoc.status = db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
-                        else
-                            assetDoc.status = false;
+                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
 
                         assetDoc.productUrl = item.productUrl;
-                        assetDoc.maintenance = func.getMaintenaceTasks(item.i_assetId);
+                        assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);
 
                         //get data for loaction
-                        var location = db.as_locationProfile.Where(q => q.i_locationId == item.i_locationId).FirstOrDefault();
-                        locationDoc.locationId = location.i_locationId;
-                        locationDoc.longitude = location.f_longitude;
-                        locationDoc.latitude = location.f_latitude;
-                        locationDoc.designation = location.vc_designation;
-                        locationDoc.areaSubId = location.i_areaSubId;
+                        var location = _db.as_locationProfile.FirstOrDefault(q => q.i_locationId == item.i_locationId);
+                        if (location != null)
+                        {
+                            locationDoc.locationId = location.i_locationId;
+                            locationDoc.longitude = location.f_longitude;
+                            locationDoc.latitude = location.f_latitude;
+                            locationDoc.designation = location.vc_designation;
+                            locationDoc.areaSubId = location.i_areaSubId;
 
-                        //Add Main Area
-                        int mainArea = db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
-                        locationDoc.areaId = mainArea;
+                            //Add Main Area
+                            int mainArea = _db.as_areaSubProfile.Where(q => q.i_areaSubId == location.i_areaSubId).Select(q => q.i_areaId).FirstOrDefault();
+                            locationDoc.areaId = mainArea;
+                        }
 
                         //Add doc to main doc
                         assetDoc.location = locationDoc;
 
                         //get asset class data
-                        var assetclass = db.as_assetClassProfile.Where(q => q.i_assetClassId == item.i_assetClassId).FirstOrDefault();
-                        assetClassDoc.assetClassId = assetclass.i_assetClassId;
-                        assetClassDoc.description = assetclass.vc_description;
-                        assetClassDoc.pictureId = assetclass.i_pictureId;
-                        assetClassDoc.manufacturer = assetclass.vc_manufacturer;
-                        assetClassDoc.model = assetclass.vc_model;
+                        var assetclass = _db.as_assetClassProfile.FirstOrDefault(q => q.i_assetClassId == item.i_assetClassId);
+                        if (assetclass != null)
+                        {
+                            assetClassDoc.assetClassId = assetclass.i_assetClassId;
+                            assetClassDoc.description = assetclass.vc_description;
+                            assetClassDoc.pictureId = assetclass.i_pictureId;
+                            assetClassDoc.manufacturer = assetclass.vc_manufacturer;
+                            assetClassDoc.model = assetclass.vc_model;
 
-                        //add to main doc
-                        assetDoc.assetClass = assetClassDoc;
+                            //add to main doc
+                            assetDoc.assetClass = assetClassDoc;
 
-                        //get picture data
-                        var picture = db.as_pictureProfile.Where(q => q.i_pictureId == assetclass.i_pictureId).FirstOrDefault();
-                        pictureDoc.pictureId = picture.i_pictureId;
-                        pictureDoc.fileLocation = picture.vc_fileLocation;
-                        pictureDoc.description = picture.vc_description;
+                            //get picture data
+                            var picture = _db.as_pictureProfile.FirstOrDefault(q => q.i_pictureId == assetclass.i_pictureId);
+                            if (picture != null)
+                            {
+                                pictureDoc.pictureId = picture.i_pictureId;
+                                pictureDoc.fileLocation = picture.vc_fileLocation;
+                                pictureDoc.description = picture.vc_description;
+                            }
+                        }
 
                         //add to main doc
                         assetDoc.picture = pictureDoc;
@@ -785,45 +775,43 @@ namespace AirSide.ServerModules.Helpers
                     }
 
                     //Drop Current Profile
-                    await _database.DropCollectionAsync("md_assetProfile");
+                    await Database.DropCollectionAsync("md_assetProfile");
 
-                    IMongoCollection<mongoAssetProfile> collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                    IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
                     await collection.InsertManyAsync(assetArray);
 
                     //Check the maintenance Cycles
-                    await recreateCurrentPreviousStatus(null, null);
+                    await RecreateCurrentPreviousStatus(null, null);
                     return true;
                 }
-                else return false;
             }
             catch (Exception err)
             {
-                log("Failed to rebuild asset profile:(" + assetID.ToString() + ") " + err.InnerException.Message, "rebuildAssetProfile", logTypes.Error, "SYSTEM");
+                Log("Failed to rebuild asset profile:(" + assetId.ToString() + ") " + err.InnerException.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        private async Task<bool> recreateCurrentPreviousStatus(bool? assetFlag, int? Id)
+        private async Task<bool> RecreateCurrentPreviousStatus(bool? assetFlag, int? id)
         {
             DateTime lastValid = DateTime.Parse("2300/01/01");
             lastValid = DateTime.SpecifyKind(lastValid, DateTimeKind.Utc);
-            BsonArray assetArray = new BsonArray();
-            IMongoCollection<mongoAssetProfile> coll1 = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
-            IMongoCollection<MongoCurrentPreviousStatus> coll2 = _database.GetCollection<MongoCurrentPreviousStatus>("md_maintenanceTracking");
-            List<mongoAssetProfile> assets = new List<mongoAssetProfile>();
+            IMongoCollection<mongoAssetProfile> coll1 = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
+            IMongoCollection<MongoCurrentPreviousStatus> coll2 = Database.GetCollection<MongoCurrentPreviousStatus>("md_maintenanceTracking");
+            List<mongoAssetProfile> assets;
 
             //Get the correct collection
             if (assetFlag != null)
             {
                 if (assetFlag.Value)
-                    assets = await coll1.Find(q => q.assetId == Id).ToListAsync();
+                    assets = await coll1.Find(q => q.assetId == id).ToListAsync();
                 else
-                    assets = await coll1.Find(q => q.assetClassId == Id).ToListAsync();
+                    assets = await coll1.Find(q => q.assetClassId == id).ToListAsync();
             }
             else
-                assets = await coll1.Find(q => q.assetId != Id).ToListAsync();
+                assets = await coll1.Find(q => q.assetId != id).ToListAsync();
 
             foreach(var item in assets)
             {
@@ -843,24 +831,28 @@ namespace AirSide.ServerModules.Helpers
                             await coll2.FindOneAndUpdateAsync(filter, update);
 
                             //Create new record
-                            MongoCurrentPreviousStatus assetDoc = new MongoCurrentPreviousStatus();
-                            assetDoc.assetId = item.assetId;
-                            assetDoc.maintenanceId = task.maintenanceId;
-                            assetDoc.previousCycle = task.maintenanceCycle;
-                            assetDoc.firstValid = DateTime.UtcNow;
-                            assetDoc.lastValid = lastValid;
-                            
+                            MongoCurrentPreviousStatus assetDoc = new MongoCurrentPreviousStatus
+                            {
+                                assetId = item.assetId,
+                                maintenanceId = task.maintenanceId,
+                                previousCycle = task.maintenanceCycle,
+                                firstValid = DateTime.UtcNow,
+                                lastValid = lastValid
+                            };
+
                             await coll2.InsertOneAsync(assetDoc);
                         }
                     }
                     else
                     {
-                        MongoCurrentPreviousStatus assetDoc = new MongoCurrentPreviousStatus();
-                        assetDoc.assetId = item.assetId;
-                        assetDoc.maintenanceId = task.maintenanceId;
-                        assetDoc.previousCycle = task.maintenanceCycle;
-                        assetDoc.firstValid = DateTime.UtcNow;
-                        assetDoc.lastValid = lastValid;
+                        MongoCurrentPreviousStatus assetDoc = new MongoCurrentPreviousStatus
+                        {
+                            assetId = item.assetId,
+                            maintenanceId = task.maintenanceId,
+                            previousCycle = task.maintenanceCycle,
+                            firstValid = DateTime.UtcNow,
+                            lastValid = lastValid
+                        };
 
                         await coll2.InsertOneAsync(assetDoc);
                     }
@@ -879,9 +871,9 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<List<MongoCurrentPreviousStatus>> getAssetStatusHistory()
+        public async Task<List<MongoCurrentPreviousStatus>> GetAssetStatusHistory()
         {
-            IMongoCollection<MongoCurrentPreviousStatus> collection = _database.GetCollection<MongoCurrentPreviousStatus>("md_maintenanceTracking");
+            IMongoCollection<MongoCurrentPreviousStatus> collection = Database.GetCollection<MongoCurrentPreviousStatus>("md_maintenanceTracking");
             var filter = new BsonDocument();
             List<MongoCurrentPreviousStatus> settings = new List<MongoCurrentPreviousStatus>();
             
@@ -890,10 +882,7 @@ namespace AirSide.ServerModules.Helpers
                 while (await cursor.MoveNextAsync())
                 {
                     var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        settings.Add(document);
-                    }
+                    settings.AddRange(batch);
                 }
             }
 
@@ -902,9 +891,9 @@ namespace AirSide.ServerModules.Helpers
         
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<mongoEmailSettings> getEmailSettings()
+        public async Task<mongoEmailSettings> GetEmailSettings()
         {
-            IMongoCollection<mongoEmailSettings> collection = _database.GetCollection<mongoEmailSettings>("md_emailSettings");
+            IMongoCollection<mongoEmailSettings> collection = Database.GetCollection<mongoEmailSettings>("md_emailSettings");
             var filter = new BsonDocument();
             mongoEmailSettings settings = new mongoEmailSettings();
             using (var cursor = await collection.FindAsync(filter))
@@ -922,10 +911,12 @@ namespace AirSide.ServerModules.Helpers
             if (settings == null)
             {
                 //create default settings if it doesn't exist
-                mongoEmailSettings mdSettings = new mongoEmailSettings();
-                mdSettings.apiKey = "key-82e66599b538527a71b035abfcd0a0ae";
-                mdSettings.domain = "adb-airside.com";
-                mdSettings.fromAddress = "info@adb-airside.com";
+                mongoEmailSettings mdSettings = new mongoEmailSettings
+                {
+                    apiKey = "key-82e66599b538527a71b035abfcd0a0ae",
+                    domain = "adb-airside.com",
+                    fromAddress = "info@adb-airside.com"
+                };
 
                 await collection.InsertOneAsync(mdSettings);
 
@@ -937,44 +928,55 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<string> getAssetNextDateForFirstTask(int assetId)
+        public async Task<string> GetAssetNextDateForFirstTask(int assetId)
         {
-            IMongoCollection<mongoAssetProfile> collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+            IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
 
             List<mongoAssetProfile> assets = await collection.Find(q => q.assetId == assetId).ToListAsync();
 
             mongoAssetProfile asset = assets.FirstOrDefault();
-            maintenance task = asset.maintenance.FirstOrDefault();
+            if (asset != null)
+            {
+                maintenance task = asset.maintenance.FirstOrDefault();
 
-            return task.nextDate;
+                if (task != null) return task.nextDate;
+                else return "1970/01/01";
+            }
+            else return "1970/01/01";
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<string> getAssetPreviousDateForFirstTask(int assetId)
+        public async Task<string> GetAssetPreviousDateForFirstTask(int assetId)
         {
             try
             {
-                IMongoCollection<mongoAssetProfile> collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
 
                 List<mongoAssetProfile> assets = await collection.Find(q => q.assetId == assetId).ToListAsync();
 
                 mongoAssetProfile asset = assets.FirstOrDefault();
-                maintenance task = asset.maintenance.FirstOrDefault();
+                if (asset != null)
+                {
+                    maintenance task = asset.maintenance.FirstOrDefault();
 
-                return task.previousDate;
+                    if (task != null) return task.previousDate;
+                    else
+                        return "1970/01/01";
+                }
+                else
+                    return "1970/01/01";
             } catch
             {
-                DateTime returnDate = new DateTime(1970, 1, 1);
-                return returnDate.ToString("yyy/MM/dd");
+                return "1970/01/01";
             }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<List<mongoAssetDownload>> getAssetAssosiations(int areaSubId)
+        public async Task<List<mongoAssetDownload>> GetAssetAssosiations(int areaSubId)
         {
-            IMongoCollection<mongoAssetDownload> collection = _database.GetCollection<mongoAssetDownload>("md_assetDownload");
+            IMongoCollection<mongoAssetDownload> collection = Database.GetCollection<mongoAssetDownload>("md_assetDownload");
             var filter = new BsonDocument();
             List<mongoAssetDownload> assets = new List<mongoAssetDownload>();
             using (var cursor = await collection.FindAsync(filter))
@@ -982,10 +984,7 @@ namespace AirSide.ServerModules.Helpers
                 while (await cursor.MoveNextAsync())
                 {
                     var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        assets.Add(document);
-                    }
+                    assets.AddRange(batch);
                 }
             }
             return assets;
@@ -993,9 +992,9 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<List<mongoAssetClassDownload>> getAllAssetClasses()
+        public async Task<List<mongoAssetClassDownload>> GetAllAssetClasses()
         {
-            IMongoCollection<mongoAssetClassDownload> collection = _database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
+            IMongoCollection<mongoAssetClassDownload> collection = Database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
             var filter = new BsonDocument();
             List<mongoAssetClassDownload> assets = new List<mongoAssetClassDownload>();
             using (var cursor = await collection.FindAsync(filter))
@@ -1003,10 +1002,7 @@ namespace AirSide.ServerModules.Helpers
                 while (await cursor.MoveNextAsync())
                 {
                     var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        assets.Add(document);
-                    }
+                    assets.AddRange(batch);
                 }
             }
             return assets;
@@ -1014,9 +1010,9 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<List<mongoFullAsset>> getAllAssetDownload()
+        public async Task<List<mongoFullAsset>> GetAllAssetDownload()
         {
-            IMongoCollection<mongoFullAsset> collection = _database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+            IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
             var filter = new BsonDocument();
             List<mongoFullAsset> assets = new List<mongoFullAsset>();
             using (var cursor = await collection.FindAsync(filter))
@@ -1024,10 +1020,7 @@ namespace AirSide.ServerModules.Helpers
                 while (await cursor.MoveNextAsync())
                 {
                     var batch = cursor.Current;
-                    foreach (var document in batch)
-                    {
-                        assets.Add(document);
-                    }
+                    assets.AddRange(batch);
                 }
             }
             return assets;
@@ -1035,11 +1028,11 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<List<mongoAssetProfile>> getAllAssets()
+        public async Task<List<mongoAssetProfile>> GetAllAssets()
         {
             try
             {
-                var collection = _database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                var collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
                 var filter = new BsonDocument();
                 List<mongoAssetProfile> assets = new List<mongoAssetProfile>();
                 using (var cursor = await collection.FindAsync(filter))
@@ -1047,17 +1040,14 @@ namespace AirSide.ServerModules.Helpers
                     while (await cursor.MoveNextAsync())
                     {
                         var batch = cursor.Current;
-                        foreach (var document in batch)
-                        {
-                            assets.Add(document);
-                        }
+                        assets.AddRange(batch);
                     }
                 }
                 return assets;
             }
             catch (Exception err)
             {
-                log("Failed to retrive all asset profiles from Mongo: " + err.Message, "getAllAssets", logTypes.Error, "SYSTEM");
+                Log("Failed to retrive all asset profiles from Mongo: " + err.Message, "getAllAssets", LogTypes.Error, "SYSTEM");
                 return null;
             }
         }
@@ -1068,11 +1058,11 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public Boolean writeLog(mongoLogHelper log)
+        public Boolean WriteLog(mongoLogHelper log)
         {
             try
             {
-                IMongoCollection<mongoLogHelper> collection = _database.GetCollection<mongoLogHelper>("md_logProfile");
+                IMongoCollection<mongoLogHelper> collection = Database.GetCollection<mongoLogHelper>("md_logProfile");
                 collection.InsertOneAsync(log);
                 return true;
             }
@@ -1088,7 +1078,7 @@ namespace AirSide.ServerModules.Helpers
 
         #region iOS Cache
 
-        public void updateiOSCache(string module)
+        public void UpdateiOsCache(string module)
         {
             try
             {
@@ -1096,15 +1086,18 @@ namespace AirSide.ServerModules.Helpers
                 //Create Date: 2015/01/27
                 //Author: Bernard Willer
 
-                as_cacheProfile cacheModule = db.as_cacheProfile.Where(q => q.vc_module == module).FirstOrDefault();
+                as_cacheProfile cacheModule = _db.as_cacheProfile.FirstOrDefault(q => q.vc_module == module);
                 Guid newHash = Guid.NewGuid();
-                cacheModule.ui_currentHash = newHash;
-                db.Entry(cacheModule).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
+                if (cacheModule != null)
+                {
+                    cacheModule.ui_currentHash = newHash;
+                    _db.Entry(cacheModule).State = EntityState.Modified;
+                }
+                _db.SaveChanges();
             }
             catch (Exception err)
             {
-                logError(err, "SYSTEM");
+                LogError(err, "SYSTEM");
             }
 
         }
@@ -1113,30 +1106,29 @@ namespace AirSide.ServerModules.Helpers
 
         #region Logging
         
-        public enum logTypes
+        public enum LogTypes
         {
             Error = 101,
             Debug = 102,
             Info = 103
         }
 
-        public Boolean logError(Exception err, string user, [CallerMemberName]string memberName = "")
+        public Boolean LogError(Exception err, string user, [CallerMemberName]string memberName = "")
         {
             try
             {
-                mongoLogHelper log = new mongoLogHelper();
-                if (err.InnerException != null)
-                    log.logdescription = err.InnerException.Message;
-                else
-                    log.logdescription = err.Message;
+                mongoLogHelper log = new mongoLogHelper
+                {
+                    logdescription = err.InnerException?.Message ?? err.Message,
+                    logTimeStamp = DateTime.Now,
+                    logTypeId = (int) LogTypes.Error,
+                    logModule = memberName,
+                    aspUserId = user
+                };
 
-                log.logTimeStamp = DateTime.Now;
-                log.logTypeId = (int)logTypes.Error;
-                log.logModule = memberName;
-                log.aspUserId = user;
 
                 //Commit to Mongo
-                Boolean flag = writeLog(log);
+                WriteLog(log);
 
 
                 return true;
@@ -1147,40 +1139,42 @@ namespace AirSide.ServerModules.Helpers
             }
         }
 
-        public void quickDebugLog(string logString)
+        public void QuickDebugLog(string logString)
         {
             try
             {
-                mongoLogHelper log = new mongoLogHelper();
-                log.logdescription = logString;
-                log.logTimeStamp = DateTime.Now;
-                log.logTypeId = (int)logTypes.Debug;
-                log.logModule = "DEBUG";
-                log.aspUserId = "DEV";
+                mongoLogHelper log = new mongoLogHelper
+                {
+                    logdescription = logString,
+                    logTimeStamp = DateTime.Now,
+                    logTypeId = (int) LogTypes.Debug,
+                    logModule = "DEBUG",
+                    aspUserId = "DEV"
+                };
 
                 //Commit to Mongo
-                Boolean flag = writeLog(log);
-
+                WriteLog(log);
             }
-            catch (Exception err)
+            catch (Exception)
             {
-
+                // ignored
             }
         }
 
-        public void log(string logString, string module, logTypes logType, string aspUser)
+        public void Log(string logString, string module, LogTypes logType, string aspUser)
         {
-            mongoLogHelper log = new mongoLogHelper();
-            log.logdescription = logString;
-            log.logTimeStamp = DateTime.Now;
-            log.logTypeId = (int)logType;
-            log.logModule = module;
-            log.aspUserId = aspUser;
+            mongoLogHelper log = new mongoLogHelper
+            {
+                logdescription = logString,
+                logTimeStamp = DateTime.Now,
+                logTypeId = (int) logType,
+                logModule = module,
+                aspUserId = aspUser
+            };
 
             //Commit to Mongo
-            Boolean flag = writeLog(log);
+            WriteLog(log);
         }
-
 
         #endregion
 
@@ -1190,7 +1184,7 @@ namespace AirSide.ServerModules.Helpers
             if (disposing)
             {
                 // dispose managed resources
-                db.Dispose();
+                _db.Dispose();
             }
             // free native resources
         }

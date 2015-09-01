@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +71,8 @@
   <ItemGroup>
     <Content Include="Images\birmingham.png" />
     <Content Include="Images\encore.png" />
+    <Content Include="Images\hamad.png" />
+    <Content Include="Images\manchester.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

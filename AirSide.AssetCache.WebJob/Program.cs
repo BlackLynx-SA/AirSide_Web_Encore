@@ -20,16 +20,16 @@ namespace AirSide.AssetCache.WebJob
                 //Create Date: 2015/01/22
                 //Author: Bernard Willer
                 var host = new JobHost();
-                cache.log("WebJob Starting", "Main", CacheHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Starting", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
                 host.Call(typeof(Program).GetMethod("reCreateWebCache"));
-                cache.log("WebJob Completed Web Cache Rebuild", "Main", CacheHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Completed Web Cache Rebuild", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
                 host.Call(typeof(Program).GetMethod("ReCreateiOSCache"));
-                cache.log("WebJob Completed iOS Cache Rebuild", "Main", CacheHelper.logTypes.Info, "WEBJOB");
-                cache.log("WebJob Finished", "Main", CacheHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Completed iOS Cache Rebuild", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
+                cache.Log("WebJob Finished", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
             }
             catch (Exception err)
             {
-                cache.logError(err, "WEBJOB");
+                cache.LogError(err, "WEBJOB");
             }
         }
 
@@ -38,20 +38,20 @@ namespace AirSide.AssetCache.WebJob
         {
             try
             {
-                await cache.createAllAssetDownload();
-                await cache.createAssetDownloadCache();
-                await cache.createAssetClassDownloadCache();
+                await cache.CreateAllAssetDownload();
+                await cache.CreateAssetDownloadCache();
+                await cache.CreateAssetClassDownloadCache();
             }
             catch (Exception err)
             {
-                cache.logError(err, "WEBJOB");
+                cache.LogError(err, "WEBJOB");
             }
         }
 
         [NoAutomaticTriggerAttribute]
         public async static void reCreateWebCache()
         {
-            await cache.rebuildAssetProfile();
+            await cache.RebuildAssetProfile();
         }
     }
 }

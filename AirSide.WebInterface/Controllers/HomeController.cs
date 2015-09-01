@@ -41,13 +41,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
     public class HomeController : Controller
     {
         private readonly Entities db = new Entities();
-        private readonly CacheHelper cache = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
         private readonly DatabaseHelper database = new DatabaseHelper();
 
         [AllowAnonymous]
         public async Task<ActionResult> rebuildCache()
         {
-            await cache.rebuildAssetProfile();
+            await cache.RebuildAssetProfile();
             return View();
         }
 
@@ -115,7 +115,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> getCompletedAssets()
         {
-            List<mongoAssetProfile> assets = await cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
 
@@ -144,7 +144,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                List<mongoAssetProfile> assets = await cache.getAllAssets();
+                List<mongoAssetProfile> assets = await cache.GetAllAssets();
                 double assetCount = 0;
                 double total = 0;
                 if (assets != null)
@@ -177,7 +177,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                List<mongoAssetProfile> assets = await cache.getAllAssets();
+                List<mongoAssetProfile> assets = await cache.GetAllAssets();
                 int assetCount = 0;
                 int total = 0;
                 if (assets != null)
@@ -207,7 +207,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> getDueAssets()
         {
-            List<mongoAssetProfile> assets = await cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
             if (assets != null)
@@ -232,7 +232,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> getNoDataAssets()
         {
-            List<mongoAssetProfile> assets = await cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
             foreach (mongoAssetProfile asset in assets)
@@ -251,7 +251,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> getTotalTasks()
         {
-            List<mongoAssetProfile> assets = await cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double total = 0;
             foreach (mongoAssetProfile asset in assets)
             {
@@ -297,7 +297,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getActivities()
         {
-            List<ActivityChart> activities = database.getActivitiesForMonth();
+            List<ActivityChart> activities = database.GetActivitiesForMonth();
 
             return Json(activities);
         }
@@ -305,42 +305,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getAnomalies()
         {
-            List<ActivityChart> activities = database.getAnomaliesForMonth();
+            List<ActivityChart> activities = database.GetAnomaliesForMonth();
 
             return Json(activities);
         }
 
         #endregion
-
-        // GET: home/inbox
-        public ActionResult Inbox()
-        {
-            return View();
-        }
-
-        // GET: home/calendar
-        public ActionResult Calendar()
-        {
-            return View();
-        }
-
-        // GET: home/google-map
-        public ActionResult GoogleMap()
-        {
-            return View();
-        }
-
-        // GET: home/widgets
-        public ActionResult Widgets()
-        {
-            return View();
-        }
-
-        // GET: home/chat
-        public ActionResult Chat()
-        {
-            return View();
-        }
 
         //POST: home/getUserDetails
         [HttpPost]
@@ -359,7 +329,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                cache.log("Failed to get User Details: " + err.Message, "getUserDetails", CacheHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to get User Details: " + err.Message, "getUserDetails", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { client = "Unknown", email = "unknown@unknown.com" });
             }
         }
@@ -387,7 +357,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -449,7 +419,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -495,7 +465,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.logError(err, Request.UserHostAddress);
+                cache.LogError(err, Request.UserHostAddress);
                 return Json(new { error = err.Message });
             }
         }
@@ -511,7 +481,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return Json(new { error = err.Message });
             }
         }
@@ -547,7 +517,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", CacheHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -567,7 +537,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", CacheHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -663,12 +633,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=AirSideAnalyticReport." + fileNameExtension);
-                cache.log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", CacheHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                cache.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", CacheHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message }, JsonRequestBehavior.AllowGet);
             }
@@ -746,8 +716,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 1;
                    
-                    shift.shiftData = database.getCompletedAssetsForShift(item.shiftId);
-                    shift.assets = database.getAssetCountPerSubArea(item.subAreaId);
+                    shift.shiftData = database.GetCompletedAssetsForShift(item.shiftId);
+                    shift.assets = database.GetAssetCountPerSubArea(item.subAreaId);
                     if (shift.assets == 0) shift.progress = 0;
                     else
                         shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -784,7 +754,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 2;
 
-                    shift.shiftData = database.getCompletedAssetsForShift(item.shiftId);
+                    shift.shiftData = database.GetCompletedAssetsForShift(item.shiftId);
                     shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
                     if (shift.assets == 0) shift.progress = 0;
                     else
@@ -798,7 +768,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<ShiftData> shiftList = new List<ShiftData>();
-                cache.log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 return shiftList;
             }
         }

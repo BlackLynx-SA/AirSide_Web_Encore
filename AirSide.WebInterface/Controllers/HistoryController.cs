@@ -17,6 +17,7 @@ using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -31,7 +32,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         public ActionResult TSTest() { return View(); }
 
         private readonly Entities db = new Entities();
-        private readonly CacheHelper log = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
+        private readonly CacheHelper log = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -63,7 +64,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                log.log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", CacheHelper.logTypes.Error, Request.UserHostAddress);
+                log.Log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

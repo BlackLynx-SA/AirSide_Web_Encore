@@ -17,6 +17,7 @@ using AirSide.ServerModules.Models;
 using Microsoft.Reporting.WebForms;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -31,7 +32,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
     public class ReportingController : Controller
     {
         private readonly Entities db = new Entities();
-        private readonly CacheHelper cache = new CacheHelper(Settings.MongoDBDatabase, Settings.MongoDBServer);
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -100,12 +101,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportBytes renderedReport = report.generateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
-                cache.log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", CacheHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested Shift Date Range Report -> Mime: " + renderedReport.mimeType, "ShiftReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedReport.renderedBytes, "application/pdf ");
             }
             catch (Exception err)
             {
-                cache.logError(err.InnerException, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err.InnerException, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return null;
             }
