@@ -12,21 +12,22 @@
 // SUMMARY: This class contains all controller calls for Asset Classes
 #endregion
 
-using ADB.AirSide.Encore.V1.Models;
+using System;
+using System.Configuration;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
     public class AssetClassController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities _db = new Entities();
+        private readonly CacheHelper _cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -38,17 +39,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllMaintenanceValidators()
+        public JsonResult GetAllMaintenanceValidators()
         {
             try
             {
-                var validators = db.as_maintenanceValidation.ToList();
+                var validators = _db.as_maintenanceValidation.ToList();
                 return Json(validators);
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve validation types: " + err.Message, "getAllMaintenanceValidators", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve validation types: " + err.Message, "getAllMaintenanceValidators", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -58,28 +58,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult removeTaskAssosiation(int assetMaintenanceId)
+        public async Task<JsonResult> RemoveTaskAssosiation(int assetMaintenanceId)
         {
             try
             {
-                var assosiation = db.as_assetClassMaintenanceProfile.Find(assetMaintenanceId);
+                var assosiation = _db.as_assetClassMaintenanceProfile.Find(assetMaintenanceId);
                 int assetClassId = assosiation.i_assetClassId;
-                db.as_assetClassMaintenanceProfile.Remove(assosiation);
-                db.SaveChanges();
+                _db.as_assetClassMaintenanceProfile.Remove(assosiation);
+                _db.SaveChanges();
 
                 //Rebuild cache
-                CacheHelper cache = new CacheHelper();
-                cache.rebuildAssetProfileForAssetClass(assetClassId);
+                await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                 //update iOS Cache Hash
-                cache.updateiOSCache("getAllAssetClasses");
+                _cache.UpdateiOsCache("getAllAssetClasses");
 
                 return Json(new { message = "Success" });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to remove task assosiation: " + err.Message, "removeTaskAssosiation", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to remove task assosiation: " + err.Message, "removeTaskAssosiation", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -88,14 +86,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAssosiatedMaintenanceTasks(int assetClassId)
+        public JsonResult GetAssosiatedMaintenanceTasks(int assetClassId)
         {
             try
             {
-                var assetMaintenance = (from x in db.as_assetClassMaintenanceProfile
-                                        join y in db.as_frequencyProfile on x.i_frequencyId equals y.i_frequencyId
-                                        join z in db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
-                                        join a in db.as_maintenanceValidation on z.i_maintenanceValidationId equals a.i_maintenanceValidationId
+                var assetMaintenance = (from x in _db.as_assetClassMaintenanceProfile
+                                        join y in _db.as_frequencyProfile on x.i_frequencyId equals y.i_frequencyId
+                                        join z in _db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
+                                        join a in _db.as_maintenanceValidation on z.i_maintenanceValidationId equals a.i_maintenanceValidationId
                                         where x.i_assetClassId == assetClassId
                                         select new
                                         {
@@ -110,8 +108,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve Assosiated Maintenance Tasks: " + err.Message, "getAllMaintenanceValidators", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve Assosiated Maintenance Tasks: " + err.Message, "getAllMaintenanceValidators", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -121,12 +118,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertMaintenanceTask(int assetClassId, int maintenanceId, int frequencyId)//, [System.Web.Http.FromUri] int[] validationIds)
+        public async Task<JsonResult> InsertMaintenanceTask(int assetClassId, int maintenanceId, int frequencyId)//, [System.Web.Http.FromUri] int[] validationIds)
         {
             try
             {
                 //Get Frequency ID
-                int freqId = db.as_frequencyProfile.Where(q => q.f_frequency == frequencyId).Select(q => q.i_frequencyId).FirstOrDefault();
+                int freqId = _db.as_frequencyProfile.Where(q => q.f_frequency == frequencyId).Select(q => q.i_frequencyId).FirstOrDefault();
 
                 //Add Assosiation
                 as_assetClassMaintenanceProfile newAssosiation = new as_assetClassMaintenanceProfile();
@@ -134,22 +131,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 newAssosiation.i_frequencyId = freqId;
                 newAssosiation.i_maintenanceId = maintenanceId;
 
-                db.as_assetClassMaintenanceProfile.Add(newAssosiation);
-                db.SaveChanges();
+                _db.as_assetClassMaintenanceProfile.Add(newAssosiation);
+                _db.SaveChanges();
 
                 //Build cache for newly added task
-                CacheHelper cache = new CacheHelper();
-                cache.rebuildAssetProfileForAssetClass(assetClassId);
+                await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                 //update iOS Cache Hash
-                cache.updateiOSCache("getAllAssetClasses");
+                _cache.UpdateiOsCache("getAllAssetClasses");
 
                 return Json(new { message = "Success"});
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTask", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTask", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -158,12 +153,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllMaintenanceTasks()
+        public JsonResult GetAllMaintenanceTasks()
         {
             try
             {
-                var tasks = (from x in db.as_maintenanceProfile 
-                                 join y in db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
+                var tasks = (from x in _db.as_maintenanceProfile 
+                                 join y in _db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
                                  select new {
                                      vc_description = x.vc_description,
                                      i_maintenanceId = x.i_maintenanceId,
@@ -175,8 +170,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all maintenance tasks: " + err.Message, "getAllMaintenanceTasks", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all maintenance tasks: " + err.Message, "getAllMaintenanceTasks", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -186,7 +180,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertMaintenanceCategory(string name, string description, int type)
+        public JsonResult InsertMaintenanceCategory(string name, string description, int type)
         {
             try
             {
@@ -195,15 +189,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 newCat.vc_categoryDescription = description;
                 newCat.vc_maintenanceCategory = name;
 
-                db.as_maintenanceCategory.Add(newCat);
-                db.SaveChanges();
+                _db.as_maintenanceCategory.Add(newCat);
+                _db.SaveChanges();
 
                 return Json(new {message = "Success" });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert new maintenance category: " + err.Message, "insertMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert new maintenance category: " + err.Message, "insertMaintenanceCategory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -213,22 +206,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult editMaintenanceCategory(int id, string categoryName)
+        public JsonResult EditMaintenanceCategory(int id, string categoryName)
         {
             try
             {
-                var category = db.as_maintenanceCategory.Find(id);
+                var category = _db.as_maintenanceCategory.Find(id);
                 category.vc_maintenanceCategory = categoryName;
                 category.vc_categoryDescription = categoryName;
-                db.Entry(category).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(category).State = EntityState.Modified;
+                _db.SaveChanges();
 
                 return Json(new { message = "Category successfully edited and saved."});
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to edit maintenance category: " + err.Message, "editMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to edit maintenance category: " + err.Message, "editMaintenanceCategory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -238,28 +230,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult editMaintenanceTask(int id, string taskName, string validationName)
+        public JsonResult EditMaintenanceTask(int id, string taskName, string validationName)
         {
             try
             {
-                var validation = db.as_maintenanceValidation.Where(q => q.vc_validationName == validationName).FirstOrDefault();
-                var task = db.as_maintenanceProfile.Find(id);
+                var validation = _db.as_maintenanceValidation.Where(q => q.vc_validationName == validationName).FirstOrDefault();
+                var task = _db.as_maintenanceProfile.Find(id);
                 task.vc_description = taskName;
                 task.i_maintenanceValidationId = validation.i_maintenanceValidationId;
 
-                db.Entry(task).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(task).State = EntityState.Modified;
+                _db.SaveChanges();
 
                 //update iOS Cache Hash
-                CacheHelper cache = new CacheHelper();
-                cache.updateiOSCache("getMaintenanceProfile");
+                _cache.UpdateiOsCache("getMaintenanceProfile");
 
                 return Json(new { message = "Task successfully edited and saved." });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to edit maintenance task: " + err.Message, "editMaintenanceTask", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to edit maintenance task: " + err.Message, "editMaintenanceTask", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -269,33 +259,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult removeMaintenanceCategory(int id)
+        public JsonResult RemoveMaintenanceCategory(int id)
         {
             try
             {
-                int maintenaceProfile = (from x in db.as_assetClassMaintenanceProfile
-                                         join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
-                                         join z in db.as_maintenanceCategory on y.i_maintenanceCategoryId equals z.i_maintenanceCategoryId
+                int maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
+                                         join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                                         join z in _db.as_maintenanceCategory on y.i_maintenanceCategoryId equals z.i_maintenanceCategoryId
                                          where z.i_maintenanceCategoryId == id
                                          select x).Count();
 
                 if (maintenaceProfile == 0)
                 {
-                    var category = db.as_maintenanceCategory.Find(id);
-                    db.as_maintenanceCategory.Remove(category);
-                    db.SaveChanges();
+                    var category = _db.as_maintenanceCategory.Find(id);
+                    _db.as_maintenanceCategory.Remove(category);
+                    _db.SaveChanges();
                     
                     //Remove All Tasks assosiated with the Category
-                    var assosiatedTasks = db.as_maintenanceProfile.Where(q => q.i_maintenanceCategoryId == id);
+                    var assosiatedTasks = _db.as_maintenanceProfile.Where(q => q.i_maintenanceCategoryId == id);
                     foreach(var item in assosiatedTasks)
                     {
-                        db.as_maintenanceProfile.Remove(item);
-                        db.SaveChanges();
+                        _db.as_maintenanceProfile.Remove(item);
+                        _db.SaveChanges();
                     }
 
                     //update iOS Cache Hash
-                    CacheHelper cache = new CacheHelper();
-                    cache.updateiOSCache("getMaintenanceProfile");
+                    _cache.UpdateiOsCache("getMaintenanceProfile");
 
                     Response.StatusCode = 200;
                     return Json(new { message = category.vc_maintenanceCategory + " category successfully removed" });
@@ -308,8 +297,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -319,24 +307,23 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult removeMaintenanceTask(int id)
+        public JsonResult RemoveMaintenanceTask(int id)
         {
             try
             {
-                int maintenaceProfile = (from x in db.as_assetClassMaintenanceProfile
-                                         join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                int maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
+                                         join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
                                          where y.i_maintenanceId == id
                                          select x).Count();
 
                 if (maintenaceProfile == 0)
                 {
-                    var task = db.as_maintenanceProfile.Find(id);
-                    db.as_maintenanceProfile.Remove(task);
-                    db.SaveChanges();
+                    var task = _db.as_maintenanceProfile.Find(id);
+                    _db.as_maintenanceProfile.Remove(task);
+                    _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    CacheHelper cache = new CacheHelper();
-                    cache.updateiOSCache("getMaintenanceProfile");
+                    _cache.UpdateiOsCache("getMaintenanceProfile");
 
                     Response.StatusCode = 200;
                     return Json(new { message = task.vc_description + " task successfully removed" });
@@ -350,8 +337,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to remove maintenance category: " + err.Message, "removeMaintenanceCategory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -361,7 +347,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertMaintenanceTaskType(string description, int catId, int validationId)
+        public JsonResult InsertMaintenanceTaskType(string description, int catId, int validationId)
         {
             try
             {
@@ -370,19 +356,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 newTask.vc_description = description;
                 newTask.i_maintenanceValidationId = validationId;
 
-                db.as_maintenanceProfile.Add(newTask);
-                db.SaveChanges();
+                _db.as_maintenanceProfile.Add(newTask);
+                _db.SaveChanges();
 
                 //update iOS Cache Hash
-                CacheHelper cache = new CacheHelper();
-                cache.updateiOSCache("getMaintenanceProfile");
+                _cache.UpdateiOsCache("getMaintenanceProfile");
 
                 return Json(new { message = "Success" });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTaskType", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert new maintenance task: " + err.Message, "insertMaintenanceTaskType", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -391,17 +375,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllMaintenanceCategories()
+        public JsonResult GetAllMaintenanceCategories()
         {
             try
             {
-                var categories = db.as_maintenanceCategory.ToList();
+                var categories = _db.as_maintenanceCategory.ToList();
                 return Json(categories);
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all maintenance categories: " + err.Message, "getAllMaintenanceCategories", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all maintenance categories: " + err.Message, "getAllMaintenanceCategories", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -410,12 +393,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllAssetClasses()
+        public JsonResult GetAllAssetClasses()
         {
             try
             {
-                var AssetClassList = (from x in db.as_assetClassProfile
-                                      join y in db.as_pictureProfile on x.i_pictureId equals y.i_pictureId
+                var assetClassList = (from x in _db.as_assetClassProfile
+                                      join y in _db.as_pictureProfile on x.i_pictureId equals y.i_pictureId
                                       select new
                                       {
                                           assetClassId = x.i_assetClassId,
@@ -425,12 +408,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                           model = x.vc_model,
                                           manualURL = x.vc_webSiteLink
                                       }).ToList();
-                return Json(AssetClassList);
+                return Json(assetClassList);
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -449,14 +431,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var assetClass = db.as_assetClassProfile.Find(id);
-
+                var assetClass = _db.as_assetClassProfile.Find(id);
+                var assetInfo = _db.as_assetInfoProfile.FirstOrDefault(q => q.i_assetClassId == assetClass.i_assetClassId && q.vc_description == "Fixing Points");
                 ViewBag.description = assetClass.vc_description;
                 ViewBag.manufacturer = assetClass.vc_manufacturer;
                 ViewBag.model = assetClass.vc_model;
                 ViewBag.manualURL = assetClass.vc_webSiteLink;
                 ViewBag.picture = assetClass.i_pictureId;
                 ViewBag.assetClassId = assetClass.i_assetClassId;
+                ViewBag.fixingpoints = assetInfo != null ? assetInfo.vc_value : "0";
                 ViewBag.error = "";
 
                 return View();
@@ -469,6 +452,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ViewBag.picture = "";
                 ViewBag.assetClassId = -1;
                 ViewBag.error = "Failed to retrieve record: " + err.Message;
+                ViewBag.fixingpoints = "-1";
                 return View();
             }
         }
@@ -477,25 +461,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult deleteAssetClass(int id)
+        public JsonResult DeleteAssetClass(int id)
         {
             try
             {
                 //Select the asset class to be deleted
-                var assetClass = db.as_assetClassProfile.Find(id);
+                var assetClass = _db.as_assetClassProfile.Find(id);
 
                 //Check if this asset class is being used
-                int assets = db.as_assetProfile.Where(q => q.i_assetClassId == assetClass.i_assetClassId).Count();
+                int assets = _db.as_assetProfile.Where(q => q.i_assetClassId == assetClass.i_assetClassId).Count();
 
                 //Remove Asset Class
                 if (assets == 0)
                 {
-                    db.as_assetClassProfile.Remove(assetClass);
-                    db.SaveChanges();
+                    _db.as_assetClassProfile.Remove(assetClass);
+                    _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    CacheHelper cache = new CacheHelper();
-                    cache.updateiOSCache("getAllAssetClasses");
+                    _cache.UpdateiOsCache("getAllAssetClasses");
 
                     return Json(assetClass.vc_description);
                 } else
@@ -507,8 +490,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to delete asset class: " + err.Message, "deleteAssetClass", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to delete asset class: " + err.Message, "deleteAssetClass", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -518,7 +500,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, int assetClassId, string manualUrl)
+        public JsonResult InsertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, int assetClassId, string manualUrl, string fixingpoints)
         {
             try
             {
@@ -526,25 +508,39 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 if(assetClassId == 0)
                 {
                     //Validate Description
-                    var existingAssetClass = db.as_assetClassProfile.Where(q => q.vc_description == description).FirstOrDefault();
+                    var existingAssetClass = _db.as_assetClassProfile.FirstOrDefault(q => q.vc_description == description);
 
                     if (existingAssetClass == null)
                     {
-                        as_assetClassProfile newAssetClass = new as_assetClassProfile();
-                        newAssetClass.i_pictureId = pictureId;
-                        newAssetClass.vc_description = description;
-                        newAssetClass.vc_manufacturer = manufacturer;
-                        newAssetClass.vc_model = model;
-                        newAssetClass.vc_webSiteLink = manualUrl;
+                        as_assetClassProfile newAssetClass = new as_assetClassProfile
+                        {
+                            i_pictureId = pictureId,
+                            vc_description = description,
+                            vc_manufacturer = manufacturer,
+                            vc_model = model,
+                            vc_webSiteLink = manualUrl
+                        };
 
-                        db.as_assetClassProfile.Add(newAssetClass);
-                        db.SaveChanges();
+                       
+
+                        _db.as_assetClassProfile.Add(newAssetClass);
+                        _db.SaveChanges();
+
+                        //Add Asset Info
+                        as_assetInfoProfile newInfo = new as_assetInfoProfile
+                        {
+                            vc_description = "Fixing Points",
+                            i_assetClassId = newAssetClass.i_assetClassId,
+                            vc_value = fixingpoints,
+                        };
+
+                        _db.as_assetInfoProfile.Add(newInfo);
+                        _db.SaveChanges();
 
                         //update iOS Cache Hash
-                        CacheHelper cache = new CacheHelper();
-                        cache.updateiOSCache("getAllAssetClasses");
+                        _cache.UpdateiOsCache("getAllAssetClasses");
 
-                        return Json(new { description = description, assetClassId = newAssetClass.i_assetClassId });
+                        return Json(new {description, assetClassId = newAssetClass.i_assetClassId });
                     }
                     else
                     {
@@ -554,27 +550,37 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
                 else
                 {
-                    var assetClass = db.as_assetClassProfile.Find(assetClassId);
+                    var assetClass = _db.as_assetClassProfile.Find(assetClassId);
                     assetClass.i_pictureId = pictureId;
                     assetClass.vc_description = description;
                     assetClass.vc_manufacturer = manufacturer;
                     assetClass.vc_model = model;
                     assetClass.vc_webSiteLink = manualUrl;
 
-                    db.Entry(assetClass).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
+                    _db.Entry(assetClass).State = EntityState.Modified;
+                    _db.SaveChanges();
+
+                    var assetinfo =
+                        _db.as_assetInfoProfile.FirstOrDefault(
+                            q => q.i_assetClassId == assetClass.i_assetClassId && q.vc_description == "Fixing Points");
+
+                    if (assetinfo != null)
+                    {
+                        assetinfo.vc_value = fixingpoints;
+
+                        _db.Entry(assetinfo).State = EntityState.Modified;
+                    }
+                    _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    CacheHelper cacheHelp = new CacheHelper();
-                    cacheHelp.updateiOSCache("getAllAssetClasses");
+                    _cache.UpdateiOsCache("getAllAssetClasses");
 
                     return Json(description);
                 }
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert/update asset class: " + err.Message, "insertUpdateAssetClass", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert/update asset class: " + err.Message, "insertUpdateAssetClass", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -583,17 +589,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getFrequencies()
+        public JsonResult GetFrequencies()
         {
             try
             {
-                var frequencies = db.as_frequencyProfile.Select(q => new { frequencyId = q.i_frequencyId, frequency = q.f_frequency, type = q.i_frequencyType }).Where(q=>q.type == 1).ToList();
+                var frequencies = _db.as_frequencyProfile.Select(q => new { frequencyId = q.i_frequencyId, frequency = q.f_frequency, type = q.i_frequencyType }).Where(q=>q.type == 1).ToList();
                 return Json(frequencies);
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Faile to retrieve frequencies: " + err.Message, "getFrequencies", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Faile to retrieve frequencies: " + err.Message, "getFrequencies", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -602,11 +607,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getPictures()
+        public JsonResult GetPictures()
         {
             try
             {
-                var pictures = (from x in db.as_pictureProfile
+                var pictures = (from x in _db.as_pictureProfile
                                 where x.i_fileType == 2 || x.i_fileType == 3
                                 select new
                                 {
@@ -619,14 +624,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve pictures: " + err.Message, "getPictures", LogHelper.logTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve pictures: " + err.Message, "getPictures", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
         }
 
-        public JsonResult getTaskCheckList(int maintenanceId)
+        public JsonResult GetTaskCheckList(int maintenanceId)
         {
             try
             {
@@ -634,14 +638,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Create Date: 2015/03/03
                 //Author: Bernard Willer
 
-                var items = db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId);
+                var items = _db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId);
 
                 return Json(items.ToList());
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -652,7 +655,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult addUpdateTaskList(TaskCheck checks)
+        public JsonResult AddUpdateTaskList(TaskCheck checks)
         {
             
             try
@@ -662,14 +665,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Author: Bernard Willer
 
                 //Remove Current List
-                var currentList = db.as_maintenanceCheckListDef.Where(x => x.i_maintenanceId == checks.maintenanceId);
+                var currentList = _db.as_maintenanceCheckListDef.Where(x => x.i_maintenanceId == checks.maintenanceId);
 
                 foreach (var item in currentList)
                 {
-                    db.as_maintenanceCheckListDef.Remove(item);
+                    _db.as_maintenanceCheckListDef.Remove(item);
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
 
                 //Persist New List
                 foreach(string taskCheck in checks.taskChecks)
@@ -680,17 +683,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     newDef.i_maintenanceId = checks.maintenanceId;
                     newDef.vc_description = taskCheck;
 
-                    db.as_maintenanceCheckListDef.Add(newDef);
+                    _db.as_maintenanceCheckListDef.Add(newDef);
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
 
                 return Json(new { message = "success" });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }

@@ -17,6 +17,7 @@ using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +29,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class MapController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         public ActionResult AirportMap()
         {
@@ -66,17 +68,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CacheHelper cache = new CacheHelper();
-                var assets = Task.Factory.StartNew(() => cache.getAllAssets());
-                await assets;
-                var jsonResult = Json(assets.Result);
+                var assets = await cache.GetAllAssets();
+                var jsonResult = Json(assets);
                 jsonResult.MaxJsonLength = int.MaxValue;
                 return jsonResult;
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve assets: " + err.Message, "getAllAssets", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve assets: " + err.Message, "getAllAssets", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

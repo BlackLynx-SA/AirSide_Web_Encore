@@ -31,16 +31,6 @@ namespace ADB.AirSide.Encore.V1
         public static readonly string Project = GetValue<string>("Project");
 
         /// <summary>
-        ///     Retrieves the entry value for the following composed key: "config:Project" as a string.
-        /// </summary>
-        public static readonly string MongoDBServer = GetValue<string>("MongoDBServer");
-
-        /// <summary>
-        ///     Retrieves the entry value for the following composed key: "config:Project" as a string.
-        /// </summary>
-        public static readonly string MongoDBDatabase = GetValue<string>("MongoDBDatabase");
-
-        /// <summary>
         ///     Retrieves the entry value for the following composed key: "config:EnableTiles" as a boolean.
         /// </summary>
         public static readonly bool EnableTiles = GetValue<bool>("EnableTiles");

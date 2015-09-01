@@ -20,9 +20,11 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -31,8 +33,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class ShiftsController : Controller
     {
-        private readonly LogHelper logger = new LogHelper();
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+        private readonly DatabaseHelper dbHelper = new DatabaseHelper();
 
         public ActionResult Calendar()
         {
@@ -54,7 +57,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
+        public async Task<JsonResult> addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -101,7 +104,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.as_shifts.Add(newShift);
                 db.SaveChanges();
 
-                List<int> assets = findAssets(shift, bounds);
+                List<int> assets = await findAssets(shift, bounds);
                 foreach(int asset in assets)
                 {
                     as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile();
@@ -113,22 +116,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.SaveChanges();
 
                 //update iOS Cache Hash
-                CacheHelper cacheHelp = new CacheHelper();
-                cacheHelp.updateiOSCache("getTechnicianShifts");
+                cache.UpdateiOsCache("getTechnicianShifts");
 
                 return Json(new { message = "Success", count = assets.Count() });
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert custom shift: " + err.Message, "addCustomShift", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to insert custom shift: " + err.Message, "addCustomShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
         }
 
         //2015/01/19 Custom Shift Helpers----------------------------------------------------------------------------------------------------------------------------
-        private List<int> findAssets(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> findAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -140,22 +141,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 switch (shift.filterType)
                 {   case 101:   //Process All
-                        assets = processAllAssets(shift, bounds);
+                        assets = await processAllAssets(shift, bounds);
                         break;
                     case 102: //Process Asset Type
-                        assets = processAssetType(shift, bounds);
+                        assets = await processAssetType(shift, bounds);
                         break;
                     case 103: //Process Maintneace Cycle
-                        assets = processAssetCycle(shift, bounds);
+                        assets = await processAssetCycle(shift, bounds);
                         break;
                     case 104: //Main Area
-                        assets = processMainArea(shift, bounds);
+                        assets = await processMainArea(shift, bounds);
                         break;
                     case 105: //Sub Area
-                        assets = processSubArea(shift, bounds);
+                        assets = await processSubArea(shift, bounds);
                         break;
                     case 106: //Faulty Lights
-                        assets = processFaultyLights(shift, bounds);
+                        assets = await processFaultyLights(shift, bounds);
                         break;
                     case 107: //Visual Surveyor => TODO: Need to build it out for reported other than just assets
                         assets = processVisualSurveyor(shift, bounds);
@@ -168,8 +169,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<int> assets = new List<int>();
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return assets;
             }
         
@@ -273,7 +273,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
 
 
-            logger.quickDebugLog(assets.Count.ToString());
+            cache.QuickDebugLog(assets.Count.ToString());
 
             foreach (var asset in assets)
             {
@@ -294,10 +294,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -319,10 +318,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -347,10 +345,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processSubArea(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processSubArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -377,10 +374,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processMainArea(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processMainArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -407,10 +403,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -437,10 +432,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<int> processAllAssets(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> processAllAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoFullAsset> assets = cache.getAllAssetDownload();
+            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
             List<int> assetList = new List<int>();
             foreach(var asset in assets)
             {
@@ -483,8 +477,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -555,8 +548,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -574,8 +566,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -606,8 +597,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -648,8 +638,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -729,7 +718,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                DatabaseHelper dbHelper = new DatabaseHelper();
 
                 //Planned Area Shifts
                 var shifts = (from x in db.as_shifts
@@ -776,8 +764,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
-                            shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                            shift.shiftData = dbHelper.GetCompletedAssetsForShift(item.shiftId);
+                            shift.assets = dbHelper.GetAssetCountPerSubArea(item.subAreaId);
                             if (shift.assets == 0) shift.progress = 0;
                             else
                                 shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -790,11 +778,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == item.shiftId && q.bt_validated == true).Count();
-                            shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
-                            if (shift.assets == 0) shift.progress = 0;
-                            else
-                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                            shift.shiftData = db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated == true);
+                            shift.assets = dbHelper.GetAssetCountPerSubArea(item.subAreaId);
+                            shift.progress = shift.assets == 0 ? 0 : Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
                         }
                         else
                         {
@@ -848,8 +834,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
-                            shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
+                            shift.shiftData = dbHelper.GetCompletedAssetsForShift(item.shiftId);
+                            shift.assets = db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
                             if (shift.assets == 0) shift.progress = 0;
                             else
                                 shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -862,8 +848,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = db.as_validationTaskProfile.Where(q=>q.i_shiftId == item.shiftId && q.bt_validated == true).Count();
-                            shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
+                            shift.shiftData = db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated == true);
+                            shift.assets = db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
                             if (shift.assets == 0) shift.progress = 0;
                             else
                                 shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -882,8 +868,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -902,27 +887,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Author: Bernard Willer
 
                 //Get User
-                var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
-                var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+                var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
                                
                 var shift = db.as_shifts.Find(shiftId);
                 shift.bt_completed = true;
                 shift.dt_completionDate = DateTime.Now;
-                shift.i_closedBy = user.UserId;
+                if (user != null) shift.i_closedBy = user.UserId;
                 db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
                 //update iOS Cache Hash
-                CacheHelper cacheHelp = new CacheHelper();
-                cacheHelp.updateiOSCache("getTechnicianShifts");
+                cache.UpdateiOsCache("getTechnicianShifts");
 
                 return Json(new { message = "success" });
-               
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 Response.Status = err.Message;
                 return Json(new { message = err.Message });
@@ -964,8 +946,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert user event: " + err.Message, "insertUserEvent", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to insert user event: " + err.Message, "insertUserEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -979,7 +960,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CacheHelper cache = new CacheHelper();
                 CultureInfo provider = CultureInfo.InvariantCulture;
 
                 switch (recuring)
@@ -1013,10 +993,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             db.SaveChanges();
 
                             //update iOS Cache Hash
-                            cache.updateiOSCache("getTechnicianShifts");
-
-                            //Update MongoDB
-                            cache.rebuildShiftAgregation();
+                            cache.UpdateiOsCache("getTechnicianShifts");
                         }
                         break;
                     case 1:
@@ -1037,8 +1014,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert new shift: " + err.Message, "insertNewShift", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to insert new shift: " + err.Message, "insertNewShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -1052,7 +1028,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         public ActionResult ShiftDataDump(int shiftId, int type, string fileType)
         {
-            LogHelper log = new LogHelper(); 
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -1102,12 +1077,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftDataDump." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", LogHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }
@@ -1242,7 +1217,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public ActionResult ShiftReport(int shiftId, int type)
         {
-            LogHelper log = new LogHelper(); 
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -1292,12 +1266,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftReport." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", LogHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }
@@ -1356,7 +1330,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult EventReport(int shiftId, int type)
         {
-            LogHelper log = new LogHelper();
             try
             {
                 //Create Report Settings
@@ -1396,12 +1369,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportBytes renderedReport = report.generateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
-                log.log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", LogHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedReport.renderedBytes, "application/pdf ");
             }
             catch (Exception ex)
             {
-                log.logError(ex, User.Identity.Name);
+                cache.LogError(ex, User.Identity.Name);
                 Response.StatusCode = 500;
                 return null;
             }
@@ -1486,15 +1459,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private List<EventAssetInfo> getEventAssetInfo(int shiftId, int type)
+        private async Task<List<EventAssetInfo>> getEventAssetInfo(int shiftId, int type)
         {
             List<EventAssetInfo> returnList = new List<EventAssetInfo>();
 
             var shift = db.as_shifts.Find(shiftId);
             var maintenance = db.as_maintenanceProfile.Find(shift.i_maintenanceId);
 
-            CacheHelper cache = new CacheHelper();
-            var assetStatus = cache.getAssetStatusHistory();
+            var assetStatus = await cache.GetAssetStatusHistory();
 
             if(maintenance.i_maintenanceValidationId == 2)
             {
@@ -1545,7 +1517,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
             } else if(maintenance.i_maintenanceValidationId == 1)
             {
-                LogHelper log = new LogHelper();
                 var shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
                 var dataSet = from x in shiftData
                               select new

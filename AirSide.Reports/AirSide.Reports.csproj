@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AirSide.Reports</RootNamespace>
     <AssemblyName>AirSide.Reports</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="DataSets\EventReportData.cs">
       <DependentUpon>EventReportData.xsd</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="DataSets\EventReportData.Designer.cs">
       <AutoGen>True</AutoGen>

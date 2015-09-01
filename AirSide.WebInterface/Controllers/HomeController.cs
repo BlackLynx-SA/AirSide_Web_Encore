@@ -31,6 +31,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
 using AirSide.ServerModules.Models;
 using AirSide.ServerModules.Helpers;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -39,13 +40,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+        private readonly DatabaseHelper database = new DatabaseHelper();
 
         [AllowAnonymous]
-        public ActionResult rebuildCache()
+        public async Task<ActionResult> rebuildCache()
         {
-            CacheHelper cache = new CacheHelper();
-            cache.rebuildAssetProfile();
+            await cache.RebuildAssetProfile();
             return View();
         }
 
@@ -79,7 +81,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         // GET: home/index
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             //Section for all Map Events for maintenance tasks
             var maintenanceTasks = db.as_maintenanceProfile.ToList();
@@ -100,21 +102,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewBag.CompletedShifts = getCompletedShifts();
 
             //Maintenance
-            ViewBag.completedMaint = getCompletedAssets();
-            ViewBag.midMaint = getMidAssets();
-            ViewBag.almostMaint = getAlmostAssets();
-            ViewBag.dueAssets = getDueAssets();
-            ViewBag.totalTasks = getTotalTasks();
+            ViewBag.completedMaint = await getCompletedAssets();
+            ViewBag.midMaint = await getMidAssets();
+            ViewBag.almostMaint = await getAlmostAssets();
+            ViewBag.dueAssets = await getDueAssets();
+            ViewBag.totalTasks = await getTotalTasks();
 
             return View();
         }
 
         #region Dashboard Helpers
 
-        private string getCompletedAssets()
+        private async Task<string> getCompletedAssets()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
 
@@ -139,12 +140,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        private string getMidAssets()
+        private async Task<string> getMidAssets()
         {
             try
             {
-                CacheHelper cache = new CacheHelper();
-                List<mongoAssetProfile> assets = cache.getAllAssets();
+                List<mongoAssetProfile> assets = await cache.GetAllAssets();
                 double assetCount = 0;
                 double total = 0;
                 if (assets != null)
@@ -173,12 +173,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        private string getAlmostAssets()
+        private async Task<string> getAlmostAssets()
         {
             try
             {
-                CacheHelper cache = new CacheHelper();
-                List<mongoAssetProfile> assets = cache.getAllAssets();
+                List<mongoAssetProfile> assets = await cache.GetAllAssets();
                 int assetCount = 0;
                 int total = 0;
                 if (assets != null)
@@ -206,10 +205,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        private string getDueAssets()
+        private async Task<string> getDueAssets()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
             if (assets != null)
@@ -232,10 +230,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
         }
 
-        private string getNoDataAssets()
+        private async Task<string> getNoDataAssets()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
             foreach (mongoAssetProfile asset in assets)
@@ -252,10 +249,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Math.Round(persentage, 2).ToString();
         }
 
-        private string getTotalTasks()
+        private async Task<string> getTotalTasks()
         {
-            CacheHelper cache = new CacheHelper();
-            List<mongoAssetProfile> assets = cache.getAllAssets();
+            List<mongoAssetProfile> assets = await cache.GetAllAssets();
             double total = 0;
             foreach (mongoAssetProfile asset in assets)
             {
@@ -301,9 +297,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getActivities()
         {
-            DatabaseHelper database = new DatabaseHelper();
-
-            List<ActivityChart> activities = database.getActivitiesForMonth();
+            List<ActivityChart> activities = database.GetActivitiesForMonth();
 
             return Json(activities);
         }
@@ -311,44 +305,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult getAnomalies()
         {
-            DatabaseHelper database = new DatabaseHelper();
-
-            List<ActivityChart> activities = database.getAnomaliesForMonth();
+            List<ActivityChart> activities = database.GetAnomaliesForMonth();
 
             return Json(activities);
         }
 
         #endregion
-
-        // GET: home/inbox
-        public ActionResult Inbox()
-        {
-            return View();
-        }
-
-        // GET: home/calendar
-        public ActionResult Calendar()
-        {
-            return View();
-        }
-
-        // GET: home/google-map
-        public ActionResult GoogleMap()
-        {
-            return View();
-        }
-
-        // GET: home/widgets
-        public ActionResult Widgets()
-        {
-            return View();
-        }
-
-        // GET: home/chat
-        public ActionResult Chat()
-        {
-            return View();
-        }
 
         //POST: home/getUserDetails
         [HttpPost]
@@ -367,8 +329,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to get User Details: " + err.Message, "getUserDetails", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to get User Details: " + err.Message, "getUserDetails", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { client = "Unknown", email = "unknown@unknown.com" });
             }
         }
@@ -396,8 +357,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -459,8 +419,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 return Json(new { message = err.Message });
             }
@@ -506,8 +465,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, Request.UserHostAddress);
+                cache.LogError(err, Request.UserHostAddress);
                 return Json(new { error = err.Message });
             }
         }
@@ -523,8 +481,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return Json(new { error = err.Message });
             }
         }
@@ -560,8 +517,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -581,8 +537,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
                 return Json(new { error = err.InnerException.Message });
             }
         }
@@ -618,7 +573,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult AnalyticsReport(string fileType)
         {
-            LogHelper log = new LogHelper();
             try
             {
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
@@ -679,12 +633,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=AirSideAnalyticReport." + fileNameExtension);
-                log.log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", LogHelper.logTypes.Info, User.Identity.Name);
+                cache.Log("User " + User.Identity.Name + " requested AirSideAnalyticReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "AirSideAnalyticReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                log.log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", LogHelper.logTypes.Error, User.Identity.Name);
+                cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message }, JsonRequestBehavior.AllowGet);
             }
@@ -708,16 +662,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return memoryStream;
         }
 
-        private List<Analytic_Cycles> getAnalyticReportCycles()
+        private async Task<List<Analytic_Cycles>> getAnalyticReportCycles()
         {
             Analytic_Cycles cycles = new Analytic_Cycles();
-            cycles.completed = double.Parse(getCompletedAssets());
-            cycles.almostDue = double.Parse(getAlmostAssets());
-            cycles.due = double.Parse(getDueAssets());
-            cycles.midCycle = double.Parse(getMidAssets());
-            cycles.noData = double.Parse(getNoDataAssets());
+            cycles.completed = double.Parse(await getCompletedAssets());
+            cycles.almostDue = double.Parse(await getAlmostAssets());
+            cycles.due = double.Parse(await getDueAssets());
+            cycles.midCycle = double.Parse(await getMidAssets());
+            cycles.noData = double.Parse(await getNoDataAssets());
             cycles.totalAssets = db.as_assetProfile.Count();
-            cycles.totalTasks = double.Parse(getTotalTasks());
+            cycles.totalTasks = double.Parse(await getTotalTasks());
             cycles.totalShifts = db.as_shifts.Where(q => q.bt_completed == false).Count();
 
             List<Analytic_Cycles> allCycles = new List<Analytic_Cycles>();
@@ -730,8 +684,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                DatabaseHelper dbHelper = new DatabaseHelper();
-
                 var shifts = (from x in db.as_shifts
                               join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
                               join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
@@ -764,8 +716,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 1;
                    
-                    shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
-                    shift.assets = dbHelper.getAssetCountPerSubArea(item.subAreaId);
+                    shift.shiftData = database.GetCompletedAssetsForShift(item.shiftId);
+                    shift.assets = database.GetAssetCountPerSubArea(item.subAreaId);
                     if (shift.assets == 0) shift.progress = 0;
                     else
                         shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
@@ -802,7 +754,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     shift.shiftId = item.shiftId;
                     shift.shiftType = 2;
 
-                    shift.shiftData = dbHelper.getCompletedAssetsForShift(item.shiftId);
+                    shift.shiftData = database.GetCompletedAssetsForShift(item.shiftId);
                     shift.assets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == item.shiftId).Count();
                     if (shift.assets == 0) shift.progress = 0;
                     else
@@ -816,8 +768,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<ShiftData> shiftList = new List<ShiftData>();
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve shifts: " + err.Message, "getShifts", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 return shiftList;
             }
         }

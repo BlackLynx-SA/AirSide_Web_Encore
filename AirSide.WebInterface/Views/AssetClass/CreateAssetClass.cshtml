@@ -35,7 +35,7 @@
                         <section class="col col-6">
                             <label>Manufacturer</label>
                             <label class="input">
-                                <i class="icon-prepend fa fa-wrench"></i>
+                                <i class="icon-prepend fa fa-industry"></i>
                                 <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" class="invalid">
                             </label>
                         </section>
@@ -54,7 +54,7 @@
                             <label>Web Reference</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-globe"></i>
-                                <input type="url" name="manualUrl" id="manualUrl" placeholder="Manual Reference" class="invalid" value="@ViewBag.manualURL">
+                                <input type="url" name="manualUrl" id="manualUrl" placeholder="Manual Reference" class="invalid">
                             </label>
                             <div class="note">
                                 <strong>Note: </strong> This is a URL that points to a reference for the asset
@@ -64,9 +64,17 @@
 
                     <div class="row">
                         <section class="col col-6">
+                            <label>Fixing Points</label>
+                            <label class="input">
+                                <i class="icon-prepend fa fa-wrench"></i>
+                                <input type="text" name="fixingpoints" id="fixingpoints" placeholder="Fixing Points" class="invalid">
+                            </label>
+                        </section>
+
+                        <section class="col col-6">
                             <label>Asset Picture</label>
-                            <div id="assetPic" class="dd-container" style="display:none;"></div>
-                            <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom:0.5;" />
+                            <div id="assetPic" class="dd-container" style="display: none;"></div>
+                            <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom: 0.5;"/>
                             <div class="note">
                                 <strong>Hint: </strong> You can load up additional images into the library.
                             </div>
@@ -158,8 +166,9 @@
             var manufacturer = $('#manufacturer').val();
             var model = $('#model').val();
             var manualURL = $('#manualUrl').val();
+            var fixingpoints = $('#fixingpoints').val();
 
-            if (assetPic === "" && flag) {
+            if (assetPic === "") {
                 $.smallBox({
                     title: "No Picture Selected",
                     content: "Please select a picture",
@@ -213,13 +222,14 @@
                     if (ButtonPressed === "Yes") {
                         var token = $("input[name='__RequestVerificationToken']").val();
 
-                        data = {
+                        var data = {
                             description: description,
                             manufacturer: manufacturer,
                             model: model,
                             manualUrl: manualURL,
                             pictureId: assetPic,
                             assetClassId: 0,
+                            fixingpoints: fixingpoints,
                             __RequestVerificationToken: token
                         };
                         //URL For Call

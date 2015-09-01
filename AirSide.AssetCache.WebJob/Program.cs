@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define DEBUG
+
+using System;
 using Microsoft.Azure.WebJobs;
 using AirSide.ServerModules.Helpers;
 
@@ -6,50 +8,50 @@ namespace AirSide.AssetCache.WebJob
 {
     public class Program
     {
+        #if DEBUG
+        private static readonly CacheHelper cache = new CacheHelper("AirSideEncore","mongodb://127.0.0.1");
+        #endif
+
         static void Main()
         {
-            LogHelper log = new LogHelper();
             try
             {
                 //A simple webjob to recreate cache in MongoDB
                 //Create Date: 2015/01/22
                 //Author: Bernard Willer
                 var host = new JobHost();
-                log.log("WebJob Starting", "Main", LogHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Starting", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
                 host.Call(typeof(Program).GetMethod("reCreateWebCache"));
-                log.log("WebJob Completed Web Cache Rebuild", "Main", LogHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Completed Web Cache Rebuild", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
                 host.Call(typeof(Program).GetMethod("ReCreateiOSCache"));
-                log.log("WebJob Completed iOS Cache Rebuild", "Main", LogHelper.logTypes.Info, "WEBJOB");
-                log.log("WebJob Finished", "Main", LogHelper.logTypes.Info, "WEBJOB");
+                cache.Log("WebJob Completed iOS Cache Rebuild", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
+                cache.Log("WebJob Finished", "Main", CacheHelper.LogTypes.Info, "WEBJOB");
             }
             catch (Exception err)
             {
-                log.logError(err, "WEBJOB");
+                cache.LogError(err, "WEBJOB");
             }
         }
 
         [NoAutomaticTriggerAttribute]
-        public static void ReCreateiOSCache()
+        public async static void ReCreateiOSCache()
         {
             try
             {
-                CacheHelper cache = new CacheHelper();
-                cache.createAllAssetDownload();
-                cache.createAssetDownloadCache();
-                cache.createAssetClassDownloadCache();
+                await cache.CreateAllAssetDownload();
+                await cache.CreateAssetDownloadCache();
+                await cache.CreateAssetClassDownloadCache();
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.logError(err, "WEBJOB");
+                cache.LogError(err, "WEBJOB");
             }
         }
 
         [NoAutomaticTriggerAttribute]
-        public static void reCreateWebCache()
+        public async static void reCreateWebCache()
         {
-            CacheHelper cache = new CacheHelper();
-            cache.rebuildAssetProfile();
+            await cache.RebuildAssetProfile();
         }
     }
 }

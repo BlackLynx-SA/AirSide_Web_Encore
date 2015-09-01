@@ -17,8 +17,10 @@ using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -27,7 +29,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class SettingsController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -38,10 +41,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public ActionResult EmailSettings()
+        public async Task<ActionResult> EmailSettings()
         {
-            CacheHelper cache = new CacheHelper();
-            mongoEmailSettings mailSettings = cache.getEmailSettings();
+            mongoEmailSettings mailSettings = await cache.GetEmailSettings();
             ViewBag.apiKey = mailSettings.apiKey;
             ViewBag.domain = mailSettings.domain;
             ViewBag.fromAddress = mailSettings.fromAddress;
@@ -60,8 +62,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all AirSide images: " + err.Message, "getAllAirSideImages", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve all AirSide images: " + err.Message, "getAllAirSideImages", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -85,8 +86,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to edit image: " + err.Message, "EditImage", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to edit image: " + err.Message, "EditImage", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -124,8 +124,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to delete image: " + err.Message, "DeleteImage", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to delete image: " + err.Message, "DeleteImage", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -168,8 +167,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to upload client image: " + err.Message, "uploadClientImage", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to upload client image: " + err.Message, "uploadClientImage", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

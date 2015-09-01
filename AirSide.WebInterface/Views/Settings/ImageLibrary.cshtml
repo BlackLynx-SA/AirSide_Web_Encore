@@ -190,7 +190,7 @@
                             placeholder: "File Title"
                         }, function (ButtonPress, Value) {
                             if (ButtonPress === "Accept") {
-                                if (Value != "") {
+                                if (Value !== "") {
                                     myDropZone.options.url = 'uploadClientImage?description=' + Value;
                                     myDropZone.processQueue();
                                 } else {

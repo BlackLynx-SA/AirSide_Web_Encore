@@ -1,6 +1,8 @@
-﻿namespace AirSide.Reports.DataSets {
-    
-    
-    public partial class EventReportData {
+﻿namespace AirSide.Reports.DataSets
+{
+
+
+    public partial class EventReportData
+    {
     }
 }

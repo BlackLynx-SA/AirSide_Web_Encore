@@ -19,6 +19,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +31,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        private Entities db = new Entities();
+        private readonly Entities db = new Entities();
+        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -91,8 +93,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all users: " + err.Message, "getAllUsers", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve all users: " + err.Message, "getAllUsers", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -118,8 +119,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to change password: " + err.Message, "ChangePassword", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to change password: " + err.Message, "ChangePassword", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 return Json(err.Message);
             }
         }
@@ -176,19 +176,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
 
-                CacheHelper cache = new CacheHelper();
-                cache.rebuildTechnicianGroups();
-
                 //update iOS Cache Hash
-                cache = new CacheHelper();
-                cache.updateiOSCache("getGroupsTechnicians");
+                cache.UpdateiOsCache("getGroupsTechnicians");
 
                 return Json(user);
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -212,8 +207,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to add new technician group: " + err.Message, "addNewGroup", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to add new technician group: " + err.Message, "addNewGroup", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -240,8 +234,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -259,8 +252,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                LogHelper log = new LogHelper();
-                log.log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", LogHelper.logTypes.Error, Request.UserHostAddress);
+                cache.Log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
