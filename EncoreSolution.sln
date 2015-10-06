@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADB.AirSide.Encore.V1", "AirSide.WebInterface\ADB.AirSide.Encore.V1.csproj", "{24CA74F5-6AF8-4C67-AC79-3E648ECBEA68}"
 EndProject
@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{55F924
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirSide.DocDB", "AirSide.DocDB\AirSide.DocDB.csproj", "{62785B6A-7414-43B5-90CA-3F0DFF55C991}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{98FF727B-1808-4E66-99E5-732601A3FE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98FF727B-1808-4E66-99E5-732601A3FE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98FF727B-1808-4E66-99E5-732601A3FE9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62785B6A-7414-43B5-90CA-3F0DFF55C991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62785B6A-7414-43B5-90CA-3F0DFF55C991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62785B6A-7414-43B5-90CA-3F0DFF55C991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62785B6A-7414-43B5-90CA-3F0DFF55C991}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

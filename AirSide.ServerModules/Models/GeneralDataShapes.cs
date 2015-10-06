@@ -64,6 +64,17 @@ namespace AirSide.ServerModules.Models
 
     #region General Models
 
+    public class shiftDataUpload
+    {
+        public int i_uniqueId { get; set; }
+        public int i_shiftId { get; set; }
+        public int i_assetId { get; set; }
+        public int i_maintenanceId { get; set; }
+        public string vc_dateStamp { get; set; }
+        public double f_capturedValue { get; set; }
+        public int i_assetCheckId { get; set; }
+    }
+
     public class ios_validationTaskProfile
     {
         public int i_validationProfileId { get; set; }

@@ -76,40 +76,38 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //  106 - Faulty Lights
 
                 //Get User 
-                var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
-                var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+                var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
-                as_shifts newShift = new as_shifts();
-                newShift.bt_completed = false;
-                newShift.dt_completionDate = new DateTime(1970, 1, 1);
-                newShift.dt_scheduledDate = DateTime.ParseExact(shift.scheduledDate, "dd/MM/yyyy h:mm tt", provider);
-                newShift.i_maintenanceId = shift.maintenanceId;
-                newShift.i_technicianGroup = shift.techGroupId;
-                
-                if (shift.externalRef != null)
-                    newShift.vc_externalRef = shift.externalRef;
-                else
-                    newShift.vc_externalRef = "---";
+                as_shifts newShift = new as_shifts
+                {
+                    bt_completed = false,
+                    dt_completionDate = new DateTime(1970, 1, 1),
+                    dt_scheduledDate = DateTime.ParseExact(shift.scheduledDate, "dd/MM/yyyy h:mm tt", provider),
+                    i_maintenanceId = shift.maintenanceId,
+                    i_technicianGroup = shift.techGroupId
+                };
 
-                if (shift.permitNumber != null)
-                    newShift.vc_permitNumber = shift.permitNumber;
-                else
-                    newShift.vc_permitNumber = "---";
+                newShift.vc_externalRef = shift.externalRef ?? "---";
+
+                newShift.vc_permitNumber = shift.permitNumber ?? "---";
 
                 newShift.bt_custom = true;
                 newShift.dt_dateCreated = DateTime.Now;
-                newShift.i_createdBy = user.UserId;
+                if (user != null) newShift.i_createdBy = user.UserId;
                 newShift.i_closedBy = 0;
 
                 db.as_shifts.Add(newShift);
                 db.SaveChanges();
 
-                List<int> assets = await findAssets(shift, bounds);
+                List<int> assets = await FindAssets(shift, bounds);
                 foreach(int asset in assets)
                 {
-                    as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile();
-                    shiftProfile.i_assetId = asset;
-                    shiftProfile.i_shiftId = newShift.i_shiftId;
+                    as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile
+                    {
+                        i_assetId = asset,
+                        i_shiftId = newShift.i_shiftId
+                    };
                     db.as_shiftsCustomProfile.Add(shiftProfile);
                 }
 
@@ -129,7 +127,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //2015/01/19 Custom Shift Helpers----------------------------------------------------------------------------------------------------------------------------
-        private async Task<List<int>> findAssets(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> FindAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -156,7 +154,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         assets = await processSubArea(shift, bounds);
                         break;
                     case 106: //Faulty Lights
-                        assets = await processFaultyLights(shift, bounds);
+                        assets = await ProcessFaultyLights(shift, bounds);
                         break;
                     case 107: //Visual Surveyor => TODO: Need to build it out for reported other than just assets
                         assets = processVisualSurveyor(shift, bounds);
@@ -294,7 +292,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<int>> processFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             List<mongoAssetProfile> assets = await cache.GetAllAssets();
             List<int> assetList = new List<int>();

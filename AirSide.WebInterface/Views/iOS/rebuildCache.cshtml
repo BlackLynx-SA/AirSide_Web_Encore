@@ -10,40 +10,128 @@
 }
 
 <div class="row">
-    <div class="col-md-12" style="color:#808080;">
-        <h4 style="text-decoration:underline;">Cache Update Results:</h4>
-        @if (ViewBag.AssetRebuild == true)
-        {
-            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
-            <label>The Asset Cache has been recreated.</label><br />
-        }
-        else
-        {
-            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
-            <label>The Asset Cache failed to recreate. Please have a look at the logs.</label><br />
-        }
+    <div class="col-md-12" style="color:#808080; margin: 10px;">
+        <h4 style="text-decoration: underline;">Cache Rebuild Options:</h4>
+        <br/>
 
-        @if (ViewBag.AssetClassRebuild == true)
-        {
-            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
-            <label>The Asset Class Cache has been recreated.</label><br />
-        }
-        else
-        {
-            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
-            <label>The Asset Class Cache failed to recreate. Please have a look at the logs.</label><br />
-        }
+        <p><a href="#" id="fullDownloadBtn" class="btn btn-primary">Create Full Asset List</a></p>
+        <p><a href="#" id="assetDownloadBtn" class="btn btn-primary">Create Asset Downlaod List</a></p>
+        <p>
+            <a href="#" id="assetClassBtn" class="btn btn-primary">Create Asset Class List</a>
+        </p>
+        <hr/>
+        <p><a href="#" id="assetsBtn" class="btn btn-primary">Get All Assets</a>
+        </p>
 
-        @if (ViewBag.AssetFullDownload == true)
-        {
-            <label style="color:#0094ff; "><i class="fa fa-thumbs-o-up"></i> </label>
-            <label>The All Assets Download Cache has been recreated.</label><br />
-        }
-        else
-        {
-            <label style="color:#ff0000;"><i class="fa fa-times"></i> </label>
-            <label>The All Assets Download Cache failed to recreate. Please have a look at the logs.</label><br />
-        }
-    </div>
+</div>
 </div>
 
+@section PageScripts{
+    <script>
+        $(document).on('click', '#fullDownloadBtn', function() {
+            $.ajax({
+                url: "../../ios/RebuildAssetFull",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Cache Created",
+                        content: "Full Asset Download Created.",
+                        color: "#0266C8",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error creating cache",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#assetDownloadBtn', function () {
+            $.ajax({
+                url: "../../ios/RebuildAssetDownload",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Cache Created",
+                        content: "Asset Download Created.",
+                        color: "#0266C8",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error creating cache",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#assetClassBtn', function () {
+            $.ajax({
+                url: "../../ios/RebuildAssetClass",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Cache Created",
+                        content: "Asset Class Download Created.",
+                        color: "#0266C8",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error creating cache",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#assetsBtn', function () {
+            $.ajax({
+                url: "../../ios/getAllAssets",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Cache Retrieved",
+                        content: "Assets Downloaded.",
+                        color: "#0266C8",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error creating cache",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        });
+
+
+    </script>
+}

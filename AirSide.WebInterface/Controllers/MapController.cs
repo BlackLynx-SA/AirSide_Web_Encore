@@ -18,6 +18,7 @@ using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,6 +77,45 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 cache.Log("Failed to retrieve assets: " + err.Message, "getAllAssets", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                Response.StatusCode = 500;
+                return Json(err.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> UpdateFaultyLight(int assetId, bool flag)
+        {
+            try
+            {
+                var asset = db.as_assetStatusProfile.Find(assetId);
+
+                if (asset != null)
+                {
+                    asset.bt_assetStatus = flag;
+                    db.Entry(asset).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    as_assetStatusProfile status = new as_assetStatusProfile()
+                    {
+                        bt_assetStatus = flag,
+                        dt_lastUpdated = DateTime.Now,
+                        i_assetProfileId = assetId,
+                        i_assetSeverity = 0
+                    };
+
+                    db.as_assetStatusProfile.Add(status);
+                    db.SaveChanges();
+                }
+
+                await cache.RebuildAssetProfileForAsset(assetId);
+
+                return Json(new {status = "success"});
+            }
+            catch (Exception err)
+            {
+                cache.Log("Failed to update asset status: " + err.Message, "updateFaultyLight", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }

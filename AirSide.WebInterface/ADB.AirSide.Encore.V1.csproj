@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ADB.AirSide.Encore.V1</RootNamespace>
     <AssemblyName>ADB.AirSide.Encore.V1</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -72,9 +72,9 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.1.0\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.4.1\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -1272,6 +1272,8 @@
     <Content Include="Views\Reporting\Setup.cshtml" />
     <Content Include="Views\Reporting\_SetupAirportInfo.cshtml" />
     <Content Include="Views\Reporting\_SurveyorText.cshtml" />
+    <Content Include="Views\DocDb\MethodCreation.cshtml" />
+    <Content Include="Views\Administration\SystemRoles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1320,8 +1322,10 @@
     <Compile Include="Areas\Landing\Controllers\LandingController.cs" />
     <Compile Include="Areas\Landing\LandingAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdministrationController.cs" />
     <Compile Include="Controllers\AssetClassController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\DocDbController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\iOSController.cs" />
@@ -1365,6 +1369,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AirSide.DocDB\AirSide.DocDB.csproj">
+      <Project>{62785b6a-7414-43b5-90ca-3f0dff55c991}</Project>
+      <Name>AirSide.DocDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AirSide.ServerModules\AirSide.ServerModules.csproj">
       <Project>{98ff727b-1808-4e66-99e5-732601a3fe9d}</Project>
       <Name>AirSide.ServerModules</Name>

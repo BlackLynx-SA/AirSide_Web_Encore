@@ -56,7 +56,6 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_reportParameters> as_reportParameters { get; set; }
         public virtual DbSet<as_reportProfile> as_reportProfile { get; set; }
         public virtual DbSet<as_settingsProfile> as_settingsProfile { get; set; }
-        public virtual DbSet<as_shiftData> as_shiftData { get; set; }
         public virtual DbSet<as_technicianGroupProfile> as_technicianGroupProfile { get; set; }
         public virtual DbSet<as_technicianGroups> as_technicianGroups { get; set; }
         public virtual DbSet<as_technicianWrenchProfile> as_technicianWrenchProfile { get; set; }
@@ -74,6 +73,7 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<as_shiftsCustomProfile> as_shiftsCustomProfile { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
+        public virtual DbSet<as_shiftData> as_shiftData { get; set; }
     
         public virtual ObjectResult<as_get_closest_point_to_gps_coordinate1_Result> as_get_closest_point_to_gps_coordinate(Nullable<double> latitude, Nullable<double> longitude)
         {

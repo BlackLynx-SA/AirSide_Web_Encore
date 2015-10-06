@@ -23,6 +23,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
@@ -36,25 +37,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
 {
 
 	[Authorize]
-	public class iOSController : Controller
+	public class IosController : Controller
 	{
-		private readonly Entities db = new Entities();
-		private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
-		private readonly DatabaseHelper func = new DatabaseHelper();
+		private readonly Entities _db = new Entities();
+		private readonly CacheHelper _cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+		private readonly DatabaseHelper _func = new DatabaseHelper();
 
 
 		#region Authentication
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		public iOSController()
+		public IosController()
 			: this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
 		{
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		public iOSController(UserManager<ApplicationUser> userManager)
+		public IosController(UserManager<ApplicationUser> userManager)
 		{
 			UserManager = userManager;
 		}
@@ -75,7 +76,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			{
 				return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 			}
-			private set { _signInManager = value; }
+			private set
+			{
+				if (value == null) throw new ArgumentNullException(nameof(value));
+				_signInManager = value;
+			}
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -92,14 +97,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			{
 				case SignInStatus.Success:
 					{
-						var loggedInUser = (from data in db.UserProfiles
+						var loggedInUser = (from data in _db.UserProfiles
 											where data.UserName == username
 											select data).First();
 
 						iOSLogin user = new iOSLogin();
 						Guid newSession = Guid.NewGuid();
 
-						var groupId = (from x in db.as_technicianGroupProfile
+						var groupId = (from x in _db.as_technicianGroupProfile
 									   where x.UserId == loggedInUser.UserId
 									   select x.i_currentGroup).First();
 
@@ -112,17 +117,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						user.i_groupId = groupId;
 						return Json(user);
 					}
-				case SignInStatus.Failure:
 				default:
 					{
-						iOSLogin user = new iOSLogin();
-						user.FirstName = "None";
-						user.LastName = "None";
-						user.UserId = -1;
-						user.i_accessLevel = -1;
-						user.i_airPortId = -1;
-						user.SessionKey = "None";
-						user.i_groupId = -1;
+						iOSLogin user = new iOSLogin
+						{
+							FirstName = "None",
+							LastName = "None",
+							UserId = -1,
+							i_accessLevel = -1,
+							i_airPortId = -1,
+							SessionKey = "None",
+							i_groupId = -1
+						};
 						return Json(user);
 					}
 			}
@@ -135,7 +141,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getMaintenanceChecks(int maintenanceId)
+		public JsonResult GetMaintenanceChecks(int maintenanceId)
 		{
 			try
 			{
@@ -143,13 +149,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/03/04
 				//Author: Bernard Willer
 
-				var checks = db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId).ToList();
+				var checks = _db.as_maintenanceCheckListDef.Where(q => q.i_maintenanceId == maintenanceId).ToList();
 
 				return Json(checks);
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -159,7 +165,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		[HttpPost]
-		public JsonResult getAllMaintenanceChecks()
+		public JsonResult GetAllMaintenanceChecks()
 		{
 			try
 			{
@@ -167,13 +173,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/03/18
 				//Author: Bernard Willer
 
-				var checks = db.as_maintenanceCheckListDef.ToList();
+				var checks = _db.as_maintenanceCheckListDef.ToList();
 
 				return Json(checks);
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -183,7 +189,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult addMaintenanceCheckEntity(as_maintenanceCheckListEntity entity)
+		public JsonResult AddMaintenanceCheckEntity(as_maintenanceCheckListEntity entity)
 		{
 			try
 			{
@@ -191,14 +197,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/03/04
 				//Author: Bernard Willer
 
-				db.as_maintenanceCheckListEntity.Add(entity);
-				db.SaveChanges();
+				_db.as_maintenanceCheckListEntity.Add(entity);
+				_db.SaveChanges();
 
 				return Json(new { message = "Added Check" });
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -208,7 +214,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		[HttpPost]
-		public JsonResult addMaintenanceCheckEntities(List<TaskCheckUpload> entities)
+		public JsonResult AddMaintenanceCheckEntities(List<TaskCheckUpload> entities)
 		{
 			try
 			{
@@ -218,23 +224,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				foreach (TaskCheckUpload entity in entities)
 				{
-					as_maintenanceCheckListEntity check = new as_maintenanceCheckListEntity();
-					check.dt_captureDate = DateTime.Now;
-					check.i_assetId = entity.i_assetId;
-					check.i_maintenanceCheckId = entity.i_maintenanceCheckId;
-					check.i_shiftId = entity.i_shiftId;
-					check.UserId = entity.UserId;
-					check.vc_capturedValue = entity.vc_capturedValue;
+					as_maintenanceCheckListEntity check = new as_maintenanceCheckListEntity
+					{
+						dt_captureDate = DateTime.Now,
+						i_assetId = entity.i_assetId,
+						i_maintenanceCheckId = entity.i_maintenanceCheckId,
+						i_shiftId = entity.i_shiftId,
+						UserId = entity.UserId,
+						vc_capturedValue = entity.vc_capturedValue
+					};
 
-					db.as_maintenanceCheckListEntity.Add(check);
-					db.SaveChanges();
+					_db.as_maintenanceCheckListEntity.Add(check);
+					_db.SaveChanges();
 				}
 
 				return Json(new { message = "Added Check" });
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -244,17 +252,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getMaintenanceProfile()
+		public JsonResult GetMaintenanceProfile()
 		{
-			var maintenanceProfiles = (from x in db.as_maintenanceProfile
-									   join y in db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
+			var maintenanceProfiles = (from x in _db.as_maintenanceProfile
+									   join y in _db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
 									   select new
 									   {
-										   i_maintenanceId = x.i_maintenanceId,
-										   vc_description = x.vc_description,
-										   i_maintenanceCategoryId = x.i_maintenanceCategoryId,
-										   i_maintenanceValidationId = x.i_maintenanceValidationId,
-										   vc_validationName = y.vc_validationName,
+										   x.i_maintenanceId, x.vc_description, x.i_maintenanceCategoryId, x.i_maintenanceValidationId, y.vc_validationName,
 										   vc_validationDescr = y.vc_validationDescription
 									   }).ToList();
 
@@ -264,7 +268,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		[HttpPost]
-		public JsonResult getAssetHistory(int assetId)
+		public JsonResult GetAssetHistory(int assetId)
 		{
 			try
 			{
@@ -273,9 +277,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Author: Bernard Willer
 
 				List<assetHistory> allHistory = new List<assetHistory>();
-				allHistory.AddRange(validationTasks(assetId));
-				allHistory.AddRange(torqueTasks(assetId));
-				allHistory.AddRange(visualSurveys(assetId));
+				allHistory.AddRange(ValidationTasks(assetId));
+				allHistory.AddRange(TorqueTasks(assetId));
+				allHistory.AddRange(VisualSurveys(assetId));
 
 				if (allHistory.Count == 1)
 					if (allHistory[0].maintenance == null)
@@ -285,7 +289,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -293,7 +297,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		}
 
 		[HttpPost]
-		public JsonResult uploadImage(iOSImageUpload imageUpload)
+		public JsonResult UploadImage(iOSImageUpload imageUpload)
 		{
 			try
 			{
@@ -308,9 +312,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				//Convert received image
 				byte[] bytes = Convert.FromBase64String(imageUpload.image);
-				MemoryStream ms = new MemoryStream(bytes);
+				MemoryStream ms = new MemoryStream(bytes) {Position = 0};
 
-				ms.Position = 0;
 				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
 				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 				CloudBlobContainer container = blobClient.GetContainerReference("surveyorimages");
@@ -324,7 +327,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -334,11 +337,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getGroupsTechnicians(int groupId)
+		public JsonResult GetGroupsTechnicians(int groupId)
 		{
-			var technicians = from x in db.UserProfiles
-							  join y in db.as_technicianGroupProfile on x.UserId equals y.UserId
-							  join z in db.as_technicianGroups on y.i_currentGroup equals z.i_groupId
+			var technicians = from x in _db.UserProfiles
+							  join y in _db.as_technicianGroupProfile on x.UserId equals y.UserId
+							  join z in _db.as_technicianGroups on y.i_currentGroup equals z.i_groupId
 							  where z.i_groupId == groupId && x.i_accessLevelId == 3
 							  select new
 							  {
@@ -356,51 +359,58 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		
 		[HttpPost]
 		[AllowAnonymous]
-		public JsonResult checkVersion()
+		public JsonResult CheckVersion()
 		{
-			var iOSVersion = (from data in db.as_settingsProfile
+			var iOsVersion = (from data in _db.as_settingsProfile
 							  where data.vc_settingDescription == "iOSVersion"
 							  select data.vc_settingValue).First();
-			return Json(new { CurrentVersion = iOSVersion });
+			return Json(new { CurrentVersion = iOsVersion });
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		//TODO: Change date time to come from iPad not server
-		public async Task<JsonResult> insertAssetValidation(List<ios_validationTaskProfile> validations)
+		public async Task<JsonResult> InsertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			try
 			{
 				DateTime now = DateTime.Now;
-				List<as_validationTaskProfile> newValues = new List<as_validationTaskProfile>();
 
 				foreach (ios_validationTaskProfile item in validations)
 				{
-					as_validationTaskProfile validation = new as_validationTaskProfile();
-					validation.bt_validated = item.bt_validated;
-					validation.i_assetId = item.i_assetId;
-					validation.i_shiftId = item.i_shiftId;
-					validation.i_validationProfileId = item.i_validationProfileId;
-					validation.UserId = item.UserId;
+					as_validationTaskProfile validation = new as_validationTaskProfile
+					{
+						bt_validated = item.bt_validated,
+						i_assetId = item.i_assetId,
+						i_shiftId = item.i_shiftId,
+						i_validationProfileId = item.i_validationProfileId,
+						UserId = item.UserId,
+						dt_dateTimeStamp =
+							item.dt_dateTimeStamp != null
+								? DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
+								: now
+					};
 
-					if (item.dt_dateTimeStamp != null)
-						validation.dt_dateTimeStamp = DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
-					else
-						validation.dt_dateTimeStamp = now;
 
-					db.as_validationTaskProfile.Add(validation);
-					db.SaveChanges();
+					_db.as_validationTaskProfile.Add(validation);
+					_db.SaveChanges();
 
-					//rebuild cache for asset
-					await cache.RebuildAssetProfileForAsset(item.i_assetId);
+				    var status = _db.as_assetStatusProfile.Find(item.i_assetId);
+				    {
+				        status.bt_assetStatus = false;
+				        _db.Entry(status).State = EntityState.Modified;
+				        _db.SaveChanges();
+				    }
+
+				    //rebuild cache for asset
+					await _cache.RebuildAssetProfileForAsset(item.i_assetId);
 				}
 
 				return Json(new { status = "success", count = validations.Count});
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to insert validation values: " + err.Message, "insertAssetValidation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to insert validation values: " + err.Message, "insertAssetValidation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -409,23 +419,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getTechnicianShifts(int userId, int closeShifts)
+		public JsonResult GetTechnicianShifts(int userId, int closeShifts)
 		{
 			try
 			{
-				Boolean closeShiftsFlag = false;
-				if (closeShifts == 1) closeShiftsFlag = true;
-				var shifts = (from x in db.as_shifts
-							  join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
-							  join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
-							  join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
-							  join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+				bool closeShiftsFlag = closeShifts == 1;
+				var shifts = (from x in _db.as_shifts
+							  join y in _db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
+							  join z in _db.as_areaProfile on y.i_areaId equals z.i_areaId
+							  join a in _db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
+							  join b in _db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
 							  where x.i_technicianGroup == userId && x.bt_completed == closeShiftsFlag && x.bt_custom == false
 							  select new
 							  {
-								  i_shiftId = x.i_shiftId,
-								  sheduledDate = x.dt_scheduledDate,
-								  i_areaSubId = x.i_areaSubId,
+								  x.i_shiftId,
+								  sheduledDate = x.dt_scheduledDate, x.i_areaSubId,
 								  sheduleTime = x.dt_scheduledDate,
 								  permitNumber = x.vc_permitNumber,
 								  techGroup = a.vc_groupName,
@@ -434,39 +442,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								  maintenanceId = x.i_maintenanceId,
 							  }
 							  ).ToList();
-				List<technicianShift> shiftList = new List<technicianShift>();
-				foreach (var item in shifts)
+				List<technicianShift> shiftList = shifts.Select(item => new technicianShift
 				{
-					technicianShift shift = new technicianShift();
-					shift.i_shiftId = item.i_shiftId;
-					shift.sheduledDate = item.sheduledDate.ToString("yyy/MM/dd");
-					shift.i_areaSubId = item.i_areaSubId;
-					shift.sheduleTime = item.sheduleTime.ToString("hh:mm:ss");
-					shift.permitNumber = item.permitNumber;
-					shift.techGroup = item.techGroup;
-					shift.areaName = item.areaName;
-					if (item.validation == 1)
-						shift.validation = "YES";
-					else 
-						shift.validation = "NO";
-					
-					//2015/01/19
-					//Add functionality for custom shifts
-					shift.shiftType = 0;
-					shift.assets = new int[0];
-					shift.maintenanceId = item.maintenanceId;
-
-					shiftList.Add(shift);
-				}
+					i_shiftId = item.i_shiftId, sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"), i_areaSubId = item.i_areaSubId, sheduleTime = item.sheduleTime.ToString("hh:mm:ss"), permitNumber = item.permitNumber, techGroup = item.techGroup, areaName = item.areaName, validation = item.validation == 1 ? "YES" : "NO", shiftType = 0, assets = new int[0], maintenanceId = item.maintenanceId
+				}).ToList();
 
 				//Add custom shifts to array
-				var customShifts = (from x in db.as_shifts
-								   join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
-								   join z in db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
-								   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag && x.bt_custom == true
+				var customShifts = (from x in _db.as_shifts
+								   join y in _db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+								   join z in _db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
+								   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag && x.bt_custom
 								   select new
 								   {
-									   i_shiftId = x.i_shiftId,
+									   x.i_shiftId,
 									   sheduledDate = x.dt_scheduledDate,
 									   i_areaSubId = 0,
 									   sheduleTime = x.dt_scheduledDate,
@@ -479,22 +467,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				foreach (var item in customShifts)
 				{
-					technicianShift shift = new technicianShift();
-					shift.i_shiftId = item.i_shiftId;
-					shift.sheduledDate = item.sheduledDate.ToString("yyy/MM/dd");
-					shift.i_areaSubId = item.i_areaSubId;
-					shift.sheduleTime = item.sheduleTime.ToString("hh:mm:ss");
-					shift.permitNumber = item.permitNumber;
-					shift.techGroup = item.techGroup;
-					shift.areaName = item.areaName;
-					if (item.validation == 1)
-						shift.validation = "YES";
-					else 
-						shift.validation = "NO";
+					technicianShift shift = new technicianShift
+					{
+						i_shiftId = item.i_shiftId,
+						sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"),
+						i_areaSubId = item.i_areaSubId,
+						sheduleTime = item.sheduleTime.ToString("hh:mm:ss"),
+						permitNumber = item.permitNumber,
+						techGroup = item.techGroup,
+						areaName = item.areaName,
+						validation = item.validation == 1 ? "YES" : "NO",
+						shiftType = 1,
+						maintenanceId = item.maintenanceId
+					};
 
-					shift.shiftType = 1;
-					shift.maintenanceId = item.maintenanceId;
-					var assets = (from x in db.as_shiftsCustomProfile
+					var assets = (from x in _db.as_shiftsCustomProfile
 								  where x.i_shiftId == item.i_shiftId
 								  select x.i_assetId).ToList();
 
@@ -513,7 +500,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve technician shifts: " + err.Message, "getTechnicianShifts(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve technician shifts: " + err.Message, "getTechnicianShifts(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -522,34 +509,43 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> insertShiftData(List<as_shiftData> shiftData)
+		public async Task<JsonResult> InsertShiftData(List<shiftDataUpload> shiftData)
 		{
 			try
 			{
-				foreach (as_shiftData shift in shiftData)
+				foreach (shiftDataUpload shift in shiftData)
 				{
-					if (shift.vc_dateStamp != null)
-						shift.dt_captureDate = DateTime.ParseExact(shift.vc_dateStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture);
-					else
-						shift.dt_captureDate = DateTime.Now;
+					as_shiftData newData = new as_shiftData()
+					{
+						dt_captureDate =
+							shift.vc_dateStamp != null
+								? DateTime.ParseExact(shift.vc_dateStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
+								: DateTime.Now,
+						f_capturedValue = shift.f_capturedValue,
+						i_assetCheckId = shift.i_assetCheckId,
+						i_assetId = shift.i_assetId,
+						i_maintenanceId = shift.i_maintenanceId,
+						i_shiftId = shift.i_shiftId
+					};
 
-					db.as_shiftData.Add(shift);
-					db.SaveChanges();
+
+					_db.as_shiftData.Add(newData);
+					_db.SaveChanges();
 
 					try
 					{
-						await cache.RebuildAssetProfileForAsset(shift.i_assetId);
+						await _cache.RebuildAssetProfileForAsset(shift.i_assetId);
 					}
 					catch (Exception err)
 					{
-						cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						_cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
 				}
 				return Json("[{success:1}]");
 			}
 			catch (Exception err)
 			{
-				return Json("[{error:" + err.Message + "}]");
+				return Json(new {error = err.Message});
 			}
 		}
 
@@ -560,34 +556,35 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult updateAssetStatusBulk(List<AssetStatusUpload> assetList)
+		public JsonResult UpdateAssetStatusBulk(List<AssetStatusUpload> assetList)
 		{
 			try
 			{
 				foreach (AssetStatusUpload item in assetList)
 				{
-					Boolean status = true;
-					if (item.assetStatus == "False") status = false;
-					var asset = db.as_assetStatusProfile.Find(item.assetId);
+					bool status = item.assetStatus != "False";
+					var asset = _db.as_assetStatusProfile.Find(item.assetId);
 
 					if (asset != null)
 					{
 						asset.bt_assetStatus = status;
 						asset.dt_lastUpdated = DateTime.Now;
 
-						db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-						db.SaveChanges();
+						_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+						_db.SaveChanges();
 					}
 					else
 					{
-						as_assetStatusProfile newStatus = new as_assetStatusProfile();
-						newStatus.bt_assetStatus = status;
-						newStatus.i_assetProfileId = item.assetId;
-						newStatus.i_assetSeverity = item.assetSeverity;
-						asset.dt_lastUpdated = DateTime.Now;
+						as_assetStatusProfile newStatus = new as_assetStatusProfile
+						{
+							bt_assetStatus = status,
+							i_assetProfileId = item.assetId,
+							i_assetSeverity = item.assetSeverity,
+							dt_lastUpdated = DateTime.Now
+						};
 
-						db.as_assetStatusProfile.Add(newStatus);
-						db.SaveChanges();
+						_db.as_assetStatusProfile.Add(newStatus);
+						_db.SaveChanges();
 					}
 				}
 
@@ -596,7 +593,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			catch (Exception err)
 			{
 				Response.StatusCode = 500;
-				cache.Log("Failed to set asset status: " + err.Message, "updateAssetStatusBulk", CacheHelper.LogTypes.Error, "iOS");
+				_cache.Log("Failed to set asset status: " + err.Message, "updateAssetStatusBulk", CacheHelper.LogTypes.Error, "iOS");
 				return Json("Failed");
 			}
 		}
@@ -604,39 +601,42 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> setAssetStatus(int assetId, string assetStatus, int assetSeverity)
+		public async Task<JsonResult> SetAssetStatus(int assetId, string assetStatus, int assetSeverity)
 		{
 			try
 			{
-				Boolean status = true;
-				if (assetStatus == "False") status = false;
-				var asset = db.as_assetStatusProfile.Find(assetId);
+				bool status = assetStatus != "False";
+				var asset = _db.as_assetStatusProfile.Find(assetId);
 
 				if (asset != null)
 				{
 					asset.bt_assetStatus = status;
 					asset.dt_lastUpdated = DateTime.Now;
 
-					db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-					db.SaveChanges();
+					_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+					_db.SaveChanges();
 				}
 				else
 				{
-					as_assetStatusProfile newStatus = new as_assetStatusProfile();
-					newStatus.bt_assetStatus = status;
-					newStatus.i_assetProfileId = assetId;
-					newStatus.i_assetSeverity = assetSeverity;
-					newStatus.dt_lastUpdated = DateTime.Now;
+					as_assetStatusProfile newStatus = new as_assetStatusProfile
+					{
+						bt_assetStatus = status,
+						i_assetProfileId = assetId,
+						i_assetSeverity = assetSeverity,
+						dt_lastUpdated = DateTime.Now
+					};
 
-					db.as_assetStatusProfile.Add(newStatus);
-					db.SaveChanges();
+					_db.as_assetStatusProfile.Add(newStatus);
+					_db.SaveChanges();
 				}
 
-				await cache.RebuildAssetProfileForAsset(assetId);
+				await _cache.RebuildAssetProfileForAsset(assetId);
 
-				AssetStatus returnType = new AssetStatus();
-				returnType.i_assetProfileId = assetId;
-				returnType.bt_assetStatus = status;
+				AssetStatus returnType = new AssetStatus
+				{
+					i_assetProfileId = assetId,
+					bt_assetStatus = status
+				};
 
 				return Json(returnType);
 
@@ -644,7 +644,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			catch (Exception err)
 			{
 
-				cache.Log("Failed to set asset status: " + err.Message, "setAssetStatus", CacheHelper.LogTypes.Error, "iOS");
+				_cache.Log("Failed to set asset status: " + err.Message, "setAssetStatus", CacheHelper.LogTypes.Error, "iOS");
 				return Json("Failed");
 			}
 
@@ -653,16 +653,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> getAllAssets()
+		public async Task<JsonResult> GetAllAssets()
 		{
 			try
 			{
-				List<mongoFullAsset> assetClassList = await cache.GetAllAssetDownload();
-				return Json(assetClassList);
+				List<mongoFullAsset> assetList = await _cache.GetAllAssetDownload();
+				var jsonResult = Json(assetList);
+				jsonResult.MaxJsonLength = int.MaxValue;
+				return jsonResult;
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve all asset download: " + err.Message, "getAllAssets(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve all asset download: " + err.Message, "getAllAssets(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -671,16 +673,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> getAllAssetClasses()
+		public async Task<JsonResult> GetAllAssetClasses()
 		{
 			try
 			{
-				List<mongoAssetClassDownload> assetClassList = await cache.GetAllAssetClasses();
+				List<mongoAssetClassDownload> assetClassList = await _cache.GetAllAssetClasses();
 				return Json(assetClassList);
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve all asset classes: " + err.Message, "getAllAssetClasses(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -689,46 +691,43 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> getAssetPerTagId(string tagId)
+		public async Task<JsonResult> GetAssetPerTagId(string tagId)
 		{
 			try
 			{
 				List<AssetTagReply> assetList = new List<AssetTagReply>();
 
-				var assetInfo = from x in db.as_assetProfile
-								join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
-								join z in db.as_areaSubProfile on y.i_areaSubId equals z.i_areaSubId
-								join a in db.as_assetClassProfile on x.i_assetClassId equals a.i_assetClassId
+				var assetInfo = from x in _db.as_assetProfile
+								join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
+								join z in _db.as_areaSubProfile on y.i_areaSubId equals z.i_areaSubId
+								join a in _db.as_assetClassProfile on x.i_assetClassId equals a.i_assetClassId
 								where x.vc_rfidTag == tagId
 								select new
 								{
-									i_assetId = x.i_assetId,
-									vc_serialNumber = x.vc_serialNumber,
-									f_latitude = y.f_latitude,
-									f_longitude = y.f_longitude,
-									i_areaSubId = z.i_areaSubId,
-									i_assetClassId = a.i_assetClassId
+									x.i_assetId, x.vc_serialNumber, y.f_latitude, y.f_longitude, z.i_areaSubId, a.i_assetClassId
 								};
 
 				foreach (var item in assetInfo)
 				{
-					AssetTagReply asset = new AssetTagReply();
-					asset.assetId = item.i_assetId;
-					asset.serialNumber = item.vc_serialNumber;
-					asset.firstMaintainedDate = func.GetFirstMaintanedDate(item.i_assetId).ToString("yyyMMdd");
-					asset.lastMaintainedDate = await cache.GetAssetPreviousDateForFirstTask(item.i_assetId);
-					asset.nextMaintenanceDate =  await cache.GetAssetNextDateForFirstTask(item.i_assetId);
-					asset.latitude = item.f_latitude;
-					asset.longitude = item.f_longitude;
-					asset.subAreaId = item.i_areaSubId;
-					asset.assetClassId = item.i_assetClassId;
+					AssetTagReply asset = new AssetTagReply
+					{
+						assetId = item.i_assetId,
+						serialNumber = item.vc_serialNumber,
+						firstMaintainedDate = _func.GetFirstMaintanedDate(item.i_assetId).ToString("yyyMMdd"),
+						lastMaintainedDate = await _cache.GetAssetPreviousDateForFirstTask(item.i_assetId),
+						nextMaintenanceDate = await _cache.GetAssetNextDateForFirstTask(item.i_assetId),
+						latitude = item.f_latitude,
+						longitude = item.f_longitude,
+						subAreaId = item.i_areaSubId,
+						assetClassId = item.i_assetClassId
+					};
 					assetList.Add(asset);
 				}
 				return Json(assetList);
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve asset per tagId: " + err.Message, "getAssetPerTagId(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve asset per tagId: " + err.Message, "getAssetPerTagId(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -737,45 +736,40 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> getAssetAssosiations(int areaSubId)
+		public async Task<JsonResult> GetAssetAssosiations(int areaSubId)
 		{
 			try
 			{
-				List<mongoAssetDownload> assetListMongo = await cache.GetAssetAssosiations(areaSubId);
+				List<mongoAssetDownload> assetListMongo = await _cache.GetAssetAssosiations(areaSubId);
 
 				if (assetListMongo.Count == 0)
 				{
 					List<AssetDownload> assetList = new List<AssetDownload>();
 
-					var assets = from x in db.as_assetProfile
-								 join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+					var assets = from x in _db.as_assetProfile
+								 join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
 								 where y.i_areaSubId == areaSubId
 								 select new
 								 {
-									 i_assetId = x.i_assetId,
-									 i_assetClassId = x.i_assetClassId,
-									 vc_rfidTag = x.vc_rfidTag,
-									 vc_serialNumber = x.vc_serialNumber,
-									 i_locationId = x.i_locationId,
-									 i_areaSubId = y.i_areaSubId,
-									 f_longitude = y.f_longitude,
-									 f_latitude = y.f_latitude
+									 x.i_assetId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber, x.i_locationId, y.i_areaSubId, y.f_longitude, y.f_latitude
 								 };
 
 					foreach (var item in assets)
 					{
-						AssetDownload asset = new AssetDownload();
-						asset.i_assetId = item.i_assetId;
-						asset.i_assetClassId = item.i_assetClassId;
-						asset.vc_tagId = item.vc_rfidTag;
-						asset.vc_serialNumber = item.vc_serialNumber;
-						asset.i_locationId = item.i_locationId;
-						asset.i_areaSubId = item.i_areaSubId;
-						asset.longitude = item.f_longitude;
-						asset.latitude = item.f_latitude;
-						asset.lastDate = func.GetLastShiftDateForAsset(item.i_assetId);
-						asset.maintenance = "0";
-						asset.submitted = func.GetSubmittedShiftData(item.i_assetId);
+						AssetDownload asset = new AssetDownload
+						{
+							i_assetId = item.i_assetId,
+							i_assetClassId = item.i_assetClassId,
+							vc_tagId = item.vc_rfidTag,
+							vc_serialNumber = item.vc_serialNumber,
+							i_locationId = item.i_locationId,
+							i_areaSubId = item.i_areaSubId,
+							longitude = item.f_longitude,
+							latitude = item.f_latitude,
+							lastDate = _func.GetLastShiftDateForAsset(item.i_assetId),
+							maintenance = "0",
+							submitted = _func.GetSubmittedShiftData(item.i_assetId)
+						};
 						assetList.Add(asset);
 					}
 					return Json(assetList);
@@ -788,7 +782,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve asset assosiations: " + err.Message, "getAssetAssosiations(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve asset assosiations: " + err.Message, "getAssetAssosiations(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -797,47 +791,42 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getAssetWithTagId(string tagId)
+		public JsonResult GetAssetWithTagId(string tagId)
 		{
 			try
 			{
 				List<AssetDownload> assetList = new List<AssetDownload>();
 
-				var assets = from x in db.as_assetProfile
-							 join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+				var assets = from x in _db.as_assetProfile
+							 join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
 							 where x.vc_rfidTag == tagId
 							 select new
 							 {
-								 i_assetId = x.i_assetId,
-								 i_assetClassId = x.i_assetClassId,
-								 vc_rfidTag = x.vc_rfidTag,
-								 vc_serialNumber = x.vc_serialNumber,
-								 i_locationId = x.i_locationId,
-								 i_areaSubId = y.i_areaSubId,
-								 f_longitude = y.f_longitude,
-								 f_latitude = y.f_latitude
+								 x.i_assetId, x.i_assetClassId, x.vc_rfidTag, x.vc_serialNumber, x.i_locationId, y.i_areaSubId, y.f_longitude, y.f_latitude
 							 };
 
 				foreach (var item in assets)
 				{
-					AssetDownload asset = new AssetDownload();
-					asset.i_assetId = item.i_assetId;
-					asset.i_assetClassId = item.i_assetClassId;
-					asset.vc_tagId = item.vc_rfidTag;
-					asset.vc_serialNumber = item.vc_serialNumber;
-					asset.i_locationId = item.i_locationId;
-					asset.i_areaSubId = item.i_areaSubId;
-					asset.longitude = item.f_longitude;
-					asset.latitude = item.f_latitude;
-					asset.lastDate = func.GetLastShiftDateForAsset(item.i_assetId);
-					asset.maintenance = "---";
+					AssetDownload asset = new AssetDownload
+					{
+						i_assetId = item.i_assetId,
+						i_assetClassId = item.i_assetClassId,
+						vc_tagId = item.vc_rfidTag,
+						vc_serialNumber = item.vc_serialNumber,
+						i_locationId = item.i_locationId,
+						i_areaSubId = item.i_areaSubId,
+						longitude = item.f_longitude,
+						latitude = item.f_latitude,
+						lastDate = _func.GetLastShiftDateForAsset(item.i_assetId),
+						maintenance = "---"
+					};
 					assetList.Add(asset);
 				}
 				return Json(assetList);
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to retrieve asset with tagid: " + err.Message, "getAssetWithTagId(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to retrieve asset with tagid: " + err.Message, "getAssetWithTagId(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -846,40 +835,40 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> updateAssetTagBulk(List<AssetAssosiationUpload> assetList)
+		public async Task<JsonResult> UpdateAssetTagBulk(List<AssetAssosiationUpload> assetList)
 		{
 			try
 			{
 				int i = 0;
 				foreach (AssetAssosiationUpload item in assetList)
 				{
-					as_assetProfile asset = db.as_assetProfile.Find(item.assetId);
+					as_assetProfile asset = _db.as_assetProfile.Find(item.assetId);
 
 					if (asset != null)
 					{
 						string currentTagId = asset.vc_rfidTag;
 						asset.vc_rfidTag = item.tagId;
 						asset.vc_serialNumber = item.serialNumber;
-						db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-						db.SaveChanges();
+						_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+						_db.SaveChanges();
 
 						//Log the change
-						cache.Log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
+						_cache.Log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
 						i++;
 
 						try
 						{
-							await cache.RebuildAssetProfileForAsset(item.assetId);
-							await cache.CreateAllAssetDownloadForAsset(asset.i_assetId);
+							await _cache.RebuildAssetProfileForAsset(item.assetId);
+							await _cache.CreateAllAssetDownloadForAsset(asset.i_assetId);
 						}
 						catch (Exception err)
 						{
-							cache.Log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+							_cache.Log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 						}
 					}
 					else
 					{
-						cache.Log("Reference tag for assetid " + item.assetId.ToString() + " wasn't found.", "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
+						_cache.Log("Reference tag for assetid " + item.assetId.ToString() + " wasn't found.", "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
 					}
 				}
 
@@ -887,7 +876,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to update asset tag: " + err.Message, "updateAssetTagBulk(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to update asset tag: " + err.Message, "updateAssetTagBulk(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -896,32 +885,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> updateAssetTag(int assetId, int UserId, string tagId, string serialNumber)
+		public async Task<JsonResult> UpdateAssetTag(int assetId, int userId, string tagId, string serialNumber)
 		{
 			try
 			{
 
-				as_assetProfile asset = db.as_assetProfile.Find(assetId);
+				as_assetProfile asset = _db.as_assetProfile.Find(assetId);
 
 				if (asset != null)
 				{
 					string currentTagId = asset.vc_rfidTag;
 					asset.vc_rfidTag = tagId;
 					asset.vc_serialNumber = serialNumber;
-					db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-					db.SaveChanges();
+					_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+					_db.SaveChanges();
 
 					//Log the change
-					cache.Log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, UserId.ToString());
+					_cache.Log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, userId.ToString());
 
 					try
 					{
-						await cache.RebuildAssetProfileForAsset(asset.i_assetId);
-						await cache.CreateAllAssetDownloadForAsset(asset.i_assetId);
+						await _cache.RebuildAssetProfileForAsset(asset.i_assetId);
+						await _cache.CreateAllAssetDownloadForAsset(asset.i_assetId);
 					}
 					catch (Exception err)
 					{
-						cache.Log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						_cache.Log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
 
 					return Json("[{success:1}]");
@@ -935,7 +924,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to update asset tag: " + err.Message, "updateAssetTag(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to update asset tag: " + err.Message, "updateAssetTag(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json(err.Message);
 			}
@@ -944,38 +933,42 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public async Task<JsonResult> insertAssetAssosiation(List<NewAssetAssosiation> assets)
+		public async Task<JsonResult> InsertAssetAssosiation(List<NewAssetAssosiation> assets)
 		{
 			try
 			{
 				foreach (NewAssetAssosiation asset in assets)
 				{
-					as_locationProfile location = new as_locationProfile();
-					location.f_latitude = asset.latitude;
-					location.f_longitude = asset.longitude;
-					location.i_areaSubId = asset.i_areaSubId;
-					location.vc_designation = "---";
+					as_locationProfile location = new as_locationProfile
+					{
+						f_latitude = asset.latitude,
+						f_longitude = asset.longitude,
+						i_areaSubId = asset.i_areaSubId,
+						vc_designation = "---"
+					};
 
-					db.as_locationProfile.Add(location);
-					db.SaveChanges();
+					_db.as_locationProfile.Add(location);
+					_db.SaveChanges();
 
-					as_assetProfile newAsset = new as_assetProfile();
-					newAsset.i_assetClassId = asset.i_assetClassId;
-					newAsset.i_locationId = location.i_locationId;
-					newAsset.vc_rfidTag = asset.vc_rfidTag;
-					newAsset.vc_serialNumber = asset.vc_serialNumber;
-					newAsset.dt_initDate = DateTime.Now;
+					as_assetProfile newAsset = new as_assetProfile
+					{
+						i_assetClassId = asset.i_assetClassId,
+						i_locationId = location.i_locationId,
+						vc_rfidTag = asset.vc_rfidTag,
+						vc_serialNumber = asset.vc_serialNumber,
+						dt_initDate = DateTime.Now
+					};
 
-					db.as_assetProfile.Add(newAsset);
-					db.SaveChanges();
+					_db.as_assetProfile.Add(newAsset);
+					_db.SaveChanges();
 
 					try
 					{
-						await cache.RebuildAssetProfileForAsset(newAsset.i_assetId);
+						await _cache.RebuildAssetProfileForAsset(newAsset.i_assetId);
 					}
 					catch (Exception err)
 					{
-						cache.Log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						_cache.Log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
 				}
 
@@ -984,7 +977,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("[{error:" + err.Message + "}]");
 			}
@@ -997,14 +990,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getMapCenter()
+		public JsonResult GetMapCenter()
 		{
-			string longitude = db.as_settingsProfile.Where(q => q.vc_settingDescription == "Longitude").Select(q => q.vc_settingValue).FirstOrDefault();
-			string latitude = db.as_settingsProfile.Where(q => q.vc_settingDescription == "Latitude").Select(q => q.vc_settingValue).FirstOrDefault();
+			string longitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Longitude").Select(q => q.vc_settingValue).FirstOrDefault();
+			string latitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Latitude").Select(q => q.vc_settingValue).FirstOrDefault();
 
 			mapCenter center = new mapCenter();
-			center.latitude = double.Parse(latitude);
-			center.longitude = double.Parse(longitude);
+			if (latitude != null) center.latitude = double.Parse(latitude);
+			if (longitude != null) center.longitude = double.Parse(longitude);
 
 			return Json(center);
 		}
@@ -1012,16 +1005,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getMainAreas()
+		public JsonResult GetMainAreas()
 		{
 			try
 			{
-				var areas = db.as_areaProfile;
+				var areas = _db.as_areaProfile;
 				return Json(areas.ToList());
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to get main areas: " + err.Message, "getMainAreas(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to get main areas: " + err.Message, "getMainAreas(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("error: " + err.Message);
 			}
@@ -1030,16 +1023,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getSubAreas()
+		public JsonResult GetSubAreas()
 		{
 			try
 			{
-				var subAreas = db.as_areaSubProfile;
+				var subAreas = _db.as_areaSubProfile;
 				return Json(subAreas.ToList());
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to get sub areas: " + err.Message, "getSubAreas(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				_cache.Log("Failed to get sub areas: " + err.Message, "getSubAreas(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
 				Response.StatusCode = 500;
 				return Json("error: " + err.Message);
 			}
@@ -1052,42 +1045,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult getWrenches()
+		public JsonResult GetWrenches()
 		{
-			List<iOSwrench> iosWrenchList = new List<iOSwrench>();
-			List<as_wrenchProfile> wrenchList = new List<as_wrenchProfile>();
+			var wrenchList = (from data in _db.as_wrenchProfile select data).ToList();
 
-			wrenchList = (from data in db.as_wrenchProfile select data).ToList();
-
-			foreach (as_wrenchProfile wrench in wrenchList)
+			List<iOSwrench> iosWrenchList = wrenchList.Select(wrench => new iOSwrench
 			{
-				iOSwrench iosWrench = new iOSwrench();
-				iosWrench.bt_active = wrench.bt_active;
-				iosWrench.dt_lastCalibrated = wrench.dt_lastCalibrated.ToString("yyyyMMdd");
-				iosWrench.f_batteryLevel = wrench.f_batteryLevel;
-				iosWrench.i_calibrationCycle = wrench.i_calibrationCycle;
-				iosWrench.i_wrenchId = wrench.i_wrenchId;
-				iosWrench.vc_model = wrench.vc_model;
-				iosWrench.vc_serialNumber = wrench.vc_serialNumber;
-
-				iosWrenchList.Add(iosWrench);
-			}
+				bt_active = wrench.bt_active, dt_lastCalibrated = wrench.dt_lastCalibrated.ToString("yyyyMMdd"), f_batteryLevel = wrench.f_batteryLevel, i_calibrationCycle = wrench.i_calibrationCycle, i_wrenchId = wrench.i_wrenchId, vc_model = wrench.vc_model, vc_serialNumber = wrench.vc_serialNumber
+			}).ToList();
 			return Json(iosWrenchList);
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult updateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
+		public JsonResult UpdateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
 		{
 			try
 			{
 				foreach (WrenchBatteryUpdate battery in batteryUpdate)
 				{
-					as_wrenchProfile updateWrench = db.as_wrenchProfile.Find(battery.wrenchId);
+					as_wrenchProfile updateWrench = _db.as_wrenchProfile.Find(battery.wrenchId);
 					updateWrench.f_batteryLevel = battery.batteryLevel;
-					db.Entry(updateWrench).State = System.Data.Entity.EntityState.Modified;
-					db.SaveChanges();
+					_db.Entry(updateWrench).State = System.Data.Entity.EntityState.Modified;
+					_db.SaveChanges();
 				}
 				return Json("Success");
 			}
@@ -1100,18 +1081,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public JsonResult insertWrenchAssosiation(List<WrenchAssosiation> assosiations)
+		public JsonResult InsertWrenchAssosiation(List<WrenchAssosiation> assosiations)
 		{
 			try
 			{
 				foreach (WrenchAssosiation assosiation in assosiations)
 				{
-					as_technicianWrenchProfile assosiationInsert = new as_technicianWrenchProfile();
-					assosiationInsert.dt_dateTime = DateTime.Now;
-					assosiationInsert.i_wrenchId = assosiation.wrenchId;
-					assosiationInsert.UserId = assosiation.UserId;
-					db.as_technicianWrenchProfile.Add(assosiationInsert);
-					db.SaveChanges();
+					as_technicianWrenchProfile assosiationInsert = new as_technicianWrenchProfile
+					{
+						dt_dateTime = DateTime.Now,
+						i_wrenchId = assosiation.wrenchId,
+						UserId = assosiation.UserId
+					};
+					_db.as_technicianWrenchProfile.Add(assosiationInsert);
+					_db.SaveChanges();
 				}
 
 				return Json("Success");
@@ -1136,19 +1119,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				if (file.ContentLength > 0)
 				{
 					var fileName = Path.GetFileName(file.FileName);
-					var path = Path.Combine(Server.MapPath("~/images/uploads"), fileName);
-					file.SaveAs(path);
-
-					if (IsImage(file))
+					if (fileName != null)
 					{
-						try
-						{
-							saveThumbNails(path);
-						}
-						catch (Exception err)
-						{
+						var path = Path.Combine(Server.MapPath("~/images/uploads"), fileName);
+						file.SaveAs(path);
 
-							cache.Log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+						if (IsImage(file))
+						{
+							try
+							{
+								SaveThumbNails(path);
+							}
+							catch (Exception err)
+							{
+
+								_cache.Log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+							}
 						}
 					}
 
@@ -1164,27 +1150,27 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							break;
 						case "text": fileType = 3;
 							break;
-						default:
-							break;
 					}
 
 
-					as_fileUploadProfile dbFile = new as_fileUploadProfile();
-					dbFile.guid_file = guid;
-					dbFile.vc_filePath = "../../images/uploads/" + fileName;
-					dbFile.vc_fileDescription = fileName;
-					dbFile.i_fileType = fileType;
-					dbFile.dt_datetime = DateTime.Now;
+					as_fileUploadProfile dbFile = new as_fileUploadProfile
+					{
+						guid_file = guid,
+						vc_filePath = "../../images/uploads/" + fileName,
+						vc_fileDescription = fileName,
+						i_fileType = fileType,
+						dt_datetime = DateTime.Now
+					};
 
-					db.as_fileUploadProfile.Add(dbFile);
-					db.SaveChanges();
+					_db.as_fileUploadProfile.Add(dbFile);
+					_db.SaveChanges();
 				}
 
 				return guid.ToString();
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+				_cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1192,14 +1178,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		private void saveThumbNails(string file)
+		private void SaveThumbNails(string file)
 		{
 			// Get a bitmap.
 			Bitmap bmp1 = new Bitmap(file);
 			ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
 
-			System.Drawing.Imaging.Encoder myEncoder =
-				System.Drawing.Imaging.Encoder.Quality;
+			var myEncoder =
+				Encoder.Quality;
 
 			EncoderParameters myEncoderParameters = new EncoderParameters(1);
 
@@ -1234,39 +1220,34 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 			ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
 
-			foreach (ImageCodecInfo codec in codecs)
-			{
-				if (codec.FormatID == format.Guid)
-				{
-					return codec;
-				}
-			}
-			return null;
+			return codecs.FirstOrDefault(codec => codec.FormatID == format.Guid);
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		[HttpPost]
-		public string updateFileInfo(List<fileUpload> info)
+		public string UpdateFileInfo(List<fileUpload> info)
 		{
 			try
 			{
 				string lastUpdated = "";
 				foreach (fileUpload item in info)
 				{
-					as_fileUploadInfo file = new as_fileUploadInfo();
-					file.guid_file = Guid.Parse(item.file_guid);
-					file.vc_description = item.description;
-					file.f_latitude = item.latitude;
-					file.f_longitude = item.longitude;
-					file.i_shiftId = item.shiftId;
-					file.i_userId_logged = item.userId;
-					file.i_severityId = item.severity;
-					file.i_userId_resolved = 0;
-					file.dt_dateTimeResolved = DateTime.Parse("2300/01/01");
+					as_fileUploadInfo file = new as_fileUploadInfo
+					{
+						guid_file = Guid.Parse(item.file_guid),
+						vc_description = item.description,
+						f_latitude = item.latitude,
+						f_longitude = item.longitude,
+						i_shiftId = item.shiftId,
+						i_userId_logged = item.userId,
+						i_severityId = item.severity,
+						i_userId_resolved = 0,
+						dt_dateTimeResolved = DateTime.Parse("2300/01/01")
+					};
 
-					db.as_fileUploadInfo.Add(file);
-					db.SaveChanges();
+					_db.as_fileUploadInfo.Add(file);
+					_db.SaveChanges();
 					lastUpdated = item.file_guid;
 				}
 
@@ -1274,7 +1255,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.Log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", CacheHelper.LogTypes.Error, "iOS");
+				_cache.Log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", CacheHelper.LogTypes.Error, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1286,17 +1267,70 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		public ActionResult rebuildCache()
+		public ActionResult RebuildCache()
 		{
-			@ViewBag.AssetFullDownload = cache.CreateAllAssetDownload();
-			@ViewBag.AssetRebuild = cache.CreateAssetDownloadCache();
-			@ViewBag.AssetClassRebuild = cache.CreateAssetClassDownloadCache();
 			return View();
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-		public string UploadLogFile(HttpPostedFileBase file, int UserId, string uid)
+
+		[HttpPost]
+		public async Task<JsonResult> RebuildAssetFull()
+		{
+			try
+			{
+				await _cache.CreateAllAssetDownload();
+				return Json(new { status = "success" });
+			}
+			catch (Exception)
+			{
+				return Json(new {status = "failed"});
+			}
+		}
+
+
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		[HttpPost]
+		public async Task<JsonResult> RebuildAssetDownload()
+		{
+			try
+			{
+				Boolean flag = await _cache.CreateAssetDownloadCache();
+				if(flag)
+					return Json(new { status = "success" });
+				else
+				{
+					return Json(new {status = "Failed at procedure"});
+				}
+			}
+			catch (Exception)
+			{
+				return Json(new { status = "failed" });
+			}
+		}
+
+
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		[HttpPost]
+		public async Task<JsonResult> RebuildAssetClass()
+		{
+			try
+			{
+				await _cache.CreateAssetClassDownloadCache();
+				return Json(new { status = "success" });
+			}
+			catch (Exception)
+			{
+				return Json(new { status = "failed" });
+			}
+		}
+
+
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		public string UploadLogFile(HttpPostedFileBase file, int userId, string uid)
 		{
 			try
 			{
@@ -1316,21 +1350,23 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				blockBlob.UploadFromStream(file.InputStream);
 
 				//Persist to Database
-				as_iosLogProfile log = new as_iosLogProfile();
-				log.dt_logCaptureDate = DateTime.Now;
-				log.UserId = UserId;
-				log.vc_deviceUID = uid;
-				log.vc_logContainer = container.Name;
-				log.vc_logName = fileName + ".log";
+				as_iosLogProfile log = new as_iosLogProfile
+				{
+					dt_logCaptureDate = DateTime.Now,
+					UserId = userId,
+					vc_deviceUID = uid,
+					vc_logContainer = container.Name,
+					vc_logName = fileName + ".log"
+				};
 
-				db.as_iosLogProfile.Add(log);
-				db.SaveChanges();
+				_db.as_iosLogProfile.Add(log);
+				_db.SaveChanges();
 
 				return "Success";
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, "iOS");
+				_cache.LogError(err, "iOS");
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1339,7 +1375,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		public JsonResult getCacheStatus()
+		public JsonResult GetCacheStatus()
 		{
 			
 			try
@@ -1348,12 +1384,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/01/27   
 				//Author: Bernard Willer
 
-				var cache = db.as_cacheProfile.Where(q => q.bt_active == true).ToList();
+				var cache = _db.as_cacheProfile.Where(q => q.bt_active).ToList();
 				return Json(cache);
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, "iOS");
+				_cache.LogError(err, "iOS");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1366,17 +1402,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		public ActionResult iOSImages()
+		public ActionResult IosImages()
 		{
 			//Send List of Images
-			var allFiles = db.as_iosImageProfile.Where(q => q.bt_active == true).OrderByDescending(q => q.dt_dateTimeStamp).ToList();
+			var allFiles = _db.as_iosImageProfile.Where(q => q.bt_active).OrderByDescending(q => q.dt_dateTimeStamp).ToList();
 			ViewData["iosImages"] = allFiles;
 			return View();
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		public ActionResult uploadiOSFile(HttpPostedFileBase file, string description, string version, string releaseNotes)
+		public ActionResult UploadiOsFile(HttpPostedFileBase file, string description, string version, string releaseNotes)
 		{
 
 			try
@@ -1397,23 +1433,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
 				blockBlob.UploadFromStream(file.InputStream);
 
-				as_iosImageProfile image = new as_iosImageProfile();
-				image.dt_dateTimeStamp = DateTime.Now;
-				image.bt_active = true;
-				image.vc_description = description;
-				image.vc_fileName = filename;
-				image.vc_version = version;
-				image.vc_releaseNotes = releaseNotes;
+				as_iosImageProfile image = new as_iosImageProfile
+				{
+					dt_dateTimeStamp = DateTime.Now,
+					bt_active = true,
+					vc_description = description,
+					vc_fileName = filename,
+					vc_version = version,
+					vc_releaseNotes = releaseNotes
+				};
 
-				db.as_iosImageProfile.Add(image);
-				db.SaveChanges();
+				_db.as_iosImageProfile.Add(image);
+				_db.SaveChanges();
 
 				Response.StatusCode = 200;
 				return Json(new { message = "success" });
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1422,7 +1460,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		public ActionResult downloadFile(int id)
+		public ActionResult DownloadFile(int id)
 		{
 			try
 			{
@@ -1430,7 +1468,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/01/27
 				//Author: Bernard Willer
 
-				as_iosImageProfile image = db.as_iosImageProfile.Find(id);
+				as_iosImageProfile image = _db.as_iosImageProfile.Find(id);
 
 				//Downlaod File
 				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
@@ -1446,7 +1484,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
 				Response.StatusCode = 500;
 				return Json(new { message = err.Message });
 			}
@@ -1461,12 +1499,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		private List<assetHistory> validationTasks(int assetId)
+		private List<assetHistory> ValidationTasks(int assetId)
 		{
-			var validation = from x in db.as_validationTaskProfile
-							 join y in db.UserProfiles on x.UserId equals y.UserId
-							 join a in db.as_shifts on x.i_shiftId equals a.i_shiftId
-							 join z in db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+			var validation = from x in _db.as_validationTaskProfile
+							 join y in _db.UserProfiles on x.UserId equals y.UserId
+							 join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
+							 join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
 							 where x.i_assetId == assetId
 							 select new
 							 {
@@ -1479,11 +1517,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 			foreach (var item in validation.OrderByDescending(q=>q.date).Take(3))
 			{
-				assetHistory task = new assetHistory();
-				task.type = 2;
-				task.maintenance = item.maintenanceTask + "(" + item.user + ")";
-				task.valueCaptured = item.user + " performed a " + item.maintenanceTask + " task";
-				task.datetimeStamp = item.date.ToString("dd MMM, yyyy");
+				assetHistory task = new assetHistory
+				{
+					type = 2,
+					maintenance = item.maintenanceTask + "(" + item.user + ")",
+					valueCaptured = item.user + " performed a " + item.maintenanceTask + " task",
+					datetimeStamp = item.date.ToString("dd MMM, yyyy")
+				};
 				tasks.Add(task);
 			}
 
@@ -1492,12 +1532,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		private List<assetHistory> torqueTasks(int assetId)
+		private List<assetHistory> TorqueTasks(int assetId)
 		{
-			var torque = (from x in db.as_shiftData
-						  join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-						  join z in db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
-						  join a in db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
+			var torque = (from x in _db.as_shiftData
+						  join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+						  join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
+						  join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
 						  where x.i_assetId == assetId
 						  select new
 						  {
@@ -1522,18 +1562,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					if (shiftId != 0)
 						tasks.Add(task);
 
-					task = new assetHistory();
-					task.maintenance = "Fitting was torqued (" + item.name + ")";
-					task.datetimeStamp = item.date.ToString("dd MMM, yyyy");
-					task.type = 1;
+					task = new assetHistory
+					{
+						maintenance = "Fitting was torqued (" + item.name + ")",
+						datetimeStamp = item.date.ToString("dd MMM, yyyy"),
+						type = 1
+					};
 					shiftId = item.shiftId;
 					pointer = 0;
 				}
 
 				if(pointer != 0)
-					task.valueCaptured += "," + item.value.ToString();
+					task.valueCaptured += "," + item.value.ToString(CultureInfo.InvariantCulture);
 				else
-					task.valueCaptured = item.value.ToString();
+					task.valueCaptured = item.value.ToString(CultureInfo.InvariantCulture);
 
 				pointer++;
 			}
@@ -1545,14 +1587,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		private List<assetHistory> visualSurveys(int assetId)
+		private List<assetHistory> VisualSurveys(int assetId)
 		{
 			List<assetHistory> items = new List<assetHistory>();
 
 			try
 			{
-				var location = (from x in db.as_assetProfile
-								join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
+				var location = (from x in _db.as_assetProfile
+								join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
 								where x.i_assetId == assetId
 								select new
 								{
@@ -1560,54 +1602,59 @@ namespace ADB.AirSide.Encore.V1.Controllers
 									latitude = y.f_latitude
 								}).FirstOrDefault();
 
-				as_get_closest_point_to_gps_coordinate1_Result closest = db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
+				if (location != null)
+				{
+					as_get_closest_point_to_gps_coordinate1_Result closest = _db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
 
-				var surveys = (from x in db.as_fileUploadInfo
-							   join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
-							   join b in db.UserProfiles on x.i_userId_logged equals b.UserId
-							   where x.f_longitude == closest.longitude && x.f_latitude == closest.latitude
-							   select new
-							   {
-								   user = b.FirstName + " " + b.LastName,
-								   date = y.dt_datetime,
-								   fileLocation = y.vc_filePath,
-								   type = y.i_fileType,
-								   resolved = x.bt_resolved
-							   }).OrderByDescending(q => q.date).Take(10);
+					var surveys = (from x in _db.as_fileUploadInfo
+						join y in _db.as_fileUploadProfile on x.guid_file equals y.guid_file
+						join b in _db.UserProfiles on x.i_userId_logged equals b.UserId
+						where x.f_longitude == closest.longitude && x.f_latitude == closest.latitude
+						select new
+						{
+							user = b.FirstName + " " + b.LastName,
+							date = y.dt_datetime,
+							fileLocation = y.vc_filePath,
+							type = y.i_fileType,
+							resolved = x.bt_resolved
+						}).OrderByDescending(q => q.date).Take(10);
 
 				
-				foreach (var item in surveys.OrderByDescending(q => q.date).Take(5))
-				{
-					assetHistory asset = new assetHistory();
-					asset.datetimeStamp = item.date.ToString("dd MMM, yyyy");
-					asset.type = 3;
-					string resolved = "Open";
-					if (item.resolved) resolved = "Resolved";
-					asset.valueCaptured = item.user + "(" + resolved + ")";
-
-					string[] filepath = item.fileLocation.Split(char.Parse("."));
-					int place = filepath.Count() - 1;
-
-					if (filepath[place] == "jpg")
+					foreach (var item in surveys.OrderByDescending(q => q.date).Take(5))
 					{
-						asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
-					}
-					else if (filepath[place] == "m4a")
-					{
-						asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
-					}
-					else if (filepath[place] == "text")
-					{
-						asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
-					}
+						assetHistory asset = new assetHistory
+						{
+							datetimeStamp = item.date.ToString("dd MMM, yyyy"),
+							type = 3
+						};
+						string resolved = "Open";
+						if (item.resolved) resolved = "Resolved";
+						asset.valueCaptured = item.user + "(" + resolved + ")";
 
-					items.Add(asset);
+						string[] filepath = item.fileLocation.Split(char.Parse("."));
+						int place = filepath.Count() - 1;
+
+						if (filepath[place] == "jpg")
+						{
+							asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
+						}
+						else if (filepath[place] == "m4a")
+						{
+							asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
+						}
+						else if (filepath[place] == "text")
+						{
+							asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+						}
+
+						items.Add(asset);
+					}
 				}
 
 				return items;
 			} catch(Exception ex)
 			{
-				cache.LogError(ex, User.Identity.Name);
+				_cache.LogError(ex, User.Identity.Name);
 				return items;
 			}
 		}

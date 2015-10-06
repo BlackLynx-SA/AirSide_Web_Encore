@@ -1012,18 +1012,26 @@ namespace AirSide.ServerModules.Helpers
         //Converted to new Mongo API 2015/08/11
         public async Task<List<mongoFullAsset>> GetAllAssetDownload()
         {
-            IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
-            var filter = new BsonDocument();
             List<mongoFullAsset> assets = new List<mongoFullAsset>();
-            using (var cursor = await collection.FindAsync(filter))
+            try
             {
-                while (await cursor.MoveNextAsync())
+                IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+                var filter = new BsonDocument();
+                using (var cursor = await collection.FindAsync(filter))
                 {
-                    var batch = cursor.Current;
-                    assets.AddRange(batch);
+                    while (await cursor.MoveNextAsync())
+                    {
+                        var batch = cursor.Current;
+                        assets.AddRange(batch);
+                    }
                 }
+                return assets;
             }
-            return assets;
+            catch (Exception err)
+            {
+                return assets;
+            }
+           
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------

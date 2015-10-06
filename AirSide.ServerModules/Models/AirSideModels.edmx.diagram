@@ -34,7 +34,6 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_reportParameters" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_reportProfile" Width="1.5" PointX="6.75" PointY="14.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_settingsProfile" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="14.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroupProfile" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroups" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_technicianWrenchProfile" Width="1.5" PointX="8.75" PointY="15.75" IsExpanded="true" />
@@ -55,6 +54,7 @@
         <EntityTypeShape EntityType="airside.encoreModel.UserProfile" Width="1.5" PointX="4.75" PointY="17.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_shiftsCustomProfile" Width="1.5" PointX="17.75" PointY="0.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_shifts" Width="1.5" PointX="14.75" PointY="17.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="17.375" PointY="17.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

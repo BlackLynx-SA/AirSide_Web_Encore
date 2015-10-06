@@ -916,18 +916,6 @@
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
           <Property Name="vc_settingValue" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_shiftData">
-          <Key>
-            <PropertyRef Name="i_uniqueId" />
-          </Key>
-          <Property Name="i_uniqueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
-          <Property Name="dt_captureDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="f_capturedValue" Type="Double" Nullable="false" />
-          <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_technicianGroupProfile">
           <Key>
             <PropertyRef Name="UserId" />
@@ -1119,7 +1107,6 @@
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" />
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" />
           <EntitySet Name="as_settingsProfile" EntityType="Self.as_settingsProfile" />
-          <EntitySet Name="as_shiftData" EntityType="Self.as_shiftData" />
           <EntitySet Name="as_technicianGroupProfile" EntityType="Self.as_technicianGroupProfile" />
           <EntitySet Name="as_technicianGroups" EntityType="Self.as_technicianGroups" />
           <EntitySet Name="as_technicianWrenchProfile" EntityType="Self.as_technicianWrenchProfile" />
@@ -1153,6 +1140,7 @@
             <Parameter Name="latitude" Mode="In" Type="Double" />
             <Parameter Name="longitude" Mode="In" Type="Double" />
           </FunctionImport>
+          <EntitySet Name="as_shiftData" EntityType="airside.encoreModel.as_shiftData" />
         </EntityContainer>
         <EntityType Name="as_assetStatusProfile">
           <Key>
@@ -1222,6 +1210,18 @@
           <Property Type="Double" Name="latitude" Nullable="true" />
           <Property Type="Double" Name="longitude" Nullable="true" />
         </ComplexType>
+        <EntityType Name="as_shiftData">
+          <Key>
+            <PropertyRef Name="i_uniqueId" />
+          </Key>
+          <Property Name="i_uniqueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_shiftId" Type="Int32" Nullable="false" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="i_maintenanceId" Type="Int32" Nullable="false" />
+          <Property Name="dt_captureDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="f_capturedValue" Type="Double" Nullable="false" />
+          <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1544,19 +1544,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_shiftData">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftData">
-              <MappingFragment StoreEntitySet="as_shiftData">
-                <ScalarProperty Name="i_uniqueId" ColumnName="i_uniqueId" />
-                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
-                <ScalarProperty Name="dt_captureDate" ColumnName="dt_captureDate" />
-                <ScalarProperty Name="f_capturedValue" ColumnName="f_capturedValue" />
-                <ScalarProperty Name="i_assetCheckId" ColumnName="i_assetCheckId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_technicianGroupProfile">
             <EntityTypeMapping TypeName="airside.encoreModel.as_technicianGroupProfile">
               <MappingFragment StoreEntitySet="as_technicianGroupProfile">
@@ -1775,6 +1762,19 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="as_shiftData">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_shiftData">
+              <MappingFragment StoreEntitySet="as_shiftData">
+                <ScalarProperty Name="i_assetCheckId" ColumnName="i_assetCheckId" />
+                <ScalarProperty Name="f_capturedValue" ColumnName="f_capturedValue" />
+                <ScalarProperty Name="dt_captureDate" ColumnName="dt_captureDate" />
+                <ScalarProperty Name="i_maintenanceId" ColumnName="i_maintenanceId" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
+                <ScalarProperty Name="i_uniqueId" ColumnName="i_uniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -1,0 +1,38 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <a href="#" class="btn btn-primary" id="assetCollectionBtn">Create Asset Collection</a>
+        </div>
+    </div>
+</div>
+
+@section PageScripts
+{
+    <script>
+        $(document).on('click', '#assetCollectionBtn', function() {
+            $.ajax({
+                url: "../../docdb/CreateAssetClassCollection",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    $.smallBox({
+                        title: "Cache Created",
+                        content: "Asset Class Download Created.",
+                        color: "#0266C8",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Error creating cache",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        });
+    </script>
+}
