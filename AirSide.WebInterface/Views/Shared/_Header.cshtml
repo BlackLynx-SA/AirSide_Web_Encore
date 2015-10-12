@@ -5,12 +5,12 @@
         @if (Request.IsAuthenticated)
         {
             <!-- PLACE YOUR LOGO HERE -->
-            <span id="logo"> <img src="~/Content/img/adb_img/adb_color_white.png" alt="SmartAdmin"> </span>
+            <span id="logo"> <img src="~/Content/img/adb_img/adb_color_white.png" alt="ADB Airfield Solutions"> </span>
         }
         else
         {
             <!-- PLACE YOUR LOGO HERE -->
-            <span id="logo"> <img src="~/Content/img/adb_img/adb_color.png" alt="SmartAdmin"> </span>
+            <span id="logo"> <img src="~/Content/img/adb_img/adb_color.png" alt="ADB Airfield Solutions"> </span>
         }
         <!-- END LOGO PLACEHOLDER -->
         @if (Request.IsAuthenticated)
@@ -48,10 +48,11 @@
                 </div>
                 <!-- end notification content -->
                 <!-- footer: refresh area -->
-                <span>
+                <span>@{
+	                      var loadTxt = "<i class='fa fa-refresh fa-spin'></i> Loading... ";
+                      }
                     Last updated on: <span id="lastUpdated">@DateTime.Now</span>
-                    <button type="button" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Loading..." class="btn btn-xs btn-default pull-right">
-                        <i class="fa fa-refresh"></i>
+                    <button type="button" class="btn btn-xs btn-default pull-right" data-loading-text="@loadTxt">
                     </button>
                 </span>
                 <!-- end footer -->

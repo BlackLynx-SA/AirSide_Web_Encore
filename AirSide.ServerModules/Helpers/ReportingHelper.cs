@@ -21,107 +21,104 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace AirSide.ServerModules.Helpers
 {
-    public class ReportingHelper
-    {
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+	public class ReportingHelper
+	{
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        public ReportBytes generateReport(ReportSettings settings)
-        {
-            try
-            {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference(settings.blobContainer);
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(settings.blobReference);
+		public ReportBytes GenerateReport(ReportSettings settings)
+		{
+			try
+			{
+				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+				CloudBlobContainer container = blobClient.GetContainerReference(settings.blobContainer);
+				CloudBlockBlob blockBlob = container.GetBlockBlobReference(settings.blobReference);
 
-                LocalReport localReport = new LocalReport();
-                localReport.EnableExternalImages = true;
+				LocalReport localReport = new LocalReport {EnableExternalImages = true};
 
-                using (var memoryStream = new MemoryStream())
-                {
-                    blockBlob.DownloadToStream(memoryStream);
-                    memoryStream.Position = 0;
-                    localReport.LoadReportDefinition(memoryStream);
-                }
+				using (var memoryStream = new MemoryStream())
+				{
+					blockBlob.DownloadToStream(memoryStream);
+					memoryStream.Position = 0;
+					localReport.LoadReportDefinition(memoryStream);
+				}
 
-                foreach (ReportDataSource item in settings.dataSources)
-                {
-                    localReport.DataSources.Add(item);
-                }
+				foreach (ReportDataSource item in settings.dataSources)
+				{
+					localReport.DataSources.Add(item);
+				}
 
-                if (settings.logoReference != null)
-                {
-                    ReportParameter paramLogo = new ReportParameter();
-                    paramLogo.Name = "AirportLogo";
-                    paramLogo.Values.Add(@"http://airsidecdn.azurewebsites.net/images/" + settings.logoReference.ToLower() + ".png");
-                    localReport.SetParameters(paramLogo);
-                }
+				if (settings.logoReference != null)
+				{
+					ReportParameter paramLogo = new ReportParameter {Name = "AirportLogo"};
+					paramLogo.Values.Add(@"http://airsidecdn.azurewebsites.net/images/" + settings.logoReference.ToLower() + ".png");
+					localReport.SetParameters(paramLogo);
+				}
 
-                string fileType = "";
-                switch (settings.fileType)
-                {
-                    case ReportFileTypes.image: fileType = "Image";
-                        break;
-                    case ReportFileTypes.pdf: fileType = "PDF";
-                        break;
-                    case ReportFileTypes.excel: fileType = "Excel";
-                        break;
-                    case ReportFileTypes.word: fileType = "Word";
-                        break;
-                    default: fileType = "PDF";
-                        break;
-                }
+				string fileType;
+				switch (settings.fileType)
+				{
+					case ReportFileTypes.image: fileType = "Image";
+						break;
+					case ReportFileTypes.pdf: fileType = "PDF";
+						break;
+					case ReportFileTypes.excel: fileType = "Excel";
+						break;
+					case ReportFileTypes.word: fileType = "Word";
+						break;
+					default: fileType = "PDF";
+						break;
+				}
 
-                string reportType = fileType;
-                string mimeType;
-                string encoding;
-                string fileNameExtension;
+				string reportType = fileType;
+				string mimeType;
+				string encoding;
+				string fileNameExtension;
 
-                string deviceInfo =
-                "<DeviceInfo>" +
-                "  <OutputFormat>" + fileType + "</OutputFormat>" +
-                "  <PageWidth>210mm</PageWidth>" +
-                "  <PageHeight>297mm</PageHeight>" +
-                "  <MarginTop>1cm</MarginTop>" +
-                "  <MarginLeft>1cm</MarginLeft>" +
-                "  <MarginRight>1cm</MarginRight>" +
-                "  <MarginBottom>1cm</MarginBottom>" +
-                "</DeviceInfo>";
+				string deviceInfo =
+				"<DeviceInfo>" +
+				"  <OutputFormat>" + fileType + "</OutputFormat>" +
+				"  <PageWidth>210mm</PageWidth>" +
+				"  <PageHeight>297mm</PageHeight>" +
+				"  <MarginTop>1cm</MarginTop>" +
+				"  <MarginLeft>1cm</MarginLeft>" +
+				"  <MarginRight>1cm</MarginRight>" +
+				"  <MarginBottom>1cm</MarginBottom>" +
+				"</DeviceInfo>";
 
-                Warning[] warnings;
-                string[] streams;
-                byte[] renderedBytes;
+				Warning[] warnings;
+				string[] streams;
 
-                //Render the report
-                ReportBytes newReport = new ReportBytes();
-                newReport.renderedBytes = localReport.Render(
-                    reportType,
-                    deviceInfo,
-                    out mimeType,
-                    out encoding,
-                    out fileNameExtension,
-                    out streams,
-                    out warnings);
+				//Render the report
+				ReportBytes newReport = new ReportBytes();
+				newReport.renderedBytes = localReport.Render(
+					reportType,
+					deviceInfo,
+					out mimeType,
+					out encoding,
+					out fileNameExtension,
+					out streams,
+					out warnings);
 
-                //log.log("Report Rendered", "Report", LogHelper.logTypes.Debug, "SYSTEM");
+				//log.log("Report Rendered", "Report", LogHelper.logTypes.Debug, "SYSTEM");
 
-                newReport.header = new ReportHeader();
-                newReport.header.name = "content-disposition";
-                newReport.header.value = "attachment; filename="+ settings.reportName +"." + fileNameExtension;
-                newReport.mimeType = mimeType;
+				newReport.header = new ReportHeader();
+				newReport.header.name = "content-disposition";
+				newReport.header.value = "attachment; filename="+ settings.reportName +"." + fileNameExtension;
+				newReport.mimeType = mimeType;
 
-                return newReport;
-            }
-            catch (Exception err)
-            {
-                //log.log("Failed to generate report: " + err.Message + "|" + err.InnerException.Message, settings.reportName, LogHelper.logTypes.Error, "REPORTING");
-                ReportBytes newReport = new ReportBytes();
-                return newReport;
-            }
-        }
+				return newReport;
+			}
+			catch (Exception)
+			{
+				//log.log("Failed to generate report: " + err.Message + "|" + err.InnerException.Message, settings.reportName, LogHelper.logTypes.Error, "REPORTING");
+				ReportBytes newReport = new ReportBytes();
+				return newReport;
+			}
+		}
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
-    }
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+	}
 }

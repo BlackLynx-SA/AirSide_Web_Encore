@@ -1027,7 +1027,7 @@ namespace AirSide.ServerModules.Helpers
                 }
                 return assets;
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 return assets;
             }

@@ -1364,7 +1364,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportingHelper report = new ReportingHelper();
 
                 //Render the report
-                ReportBytes renderedReport = report.generateReport(settings);
+                ReportBytes renderedReport = report.GenerateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
                 cache.Log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", CacheHelper.LogTypes.Info, User.Identity.Name);

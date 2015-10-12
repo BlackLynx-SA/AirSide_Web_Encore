@@ -17,13 +17,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region System Roles
 
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public JsonResult CreateNewRole()
-        {
-
-        }
-
         #endregion
     }
 }
