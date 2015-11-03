@@ -60,9 +60,9 @@
                                         <img src="~/images/adbimages/ADB_Logo_100.png" class="adb_logo" />
                                     </div>
                                     <div class="form-main">
-                                        @if (!Request.IsAuthenticated)
-                                        {
-                                            using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "form_1" }))
+                                        @*@if (!Request.IsAuthenticated)
+                                        {*@
+                                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", id = "form_1" }))
                                             {
                                                 @Html.AntiForgeryToken()
                                                 <div class="form-group">
@@ -73,11 +73,11 @@
                                                 </div>
                                                 <input id="signIn_1" type="submit" class="btn btn-block" style="background-color:#22a1e4; color:#fff;" value="Sign In" />
                                             }
-                                        }
+                                        @*}
                                         else
                                         {
                                             <h4 style="color:#fff;">Your session has expired. Please <a href="~/account/login">login</a> again.</h4>
-                                        }
+                                        }*@
                                     </div>
                                     <div class="form-footer">
                                         <div class="row">

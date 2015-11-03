@@ -14,7 +14,6 @@
 
 #region Using
 
-using ADB.AirSide.Encore.V1.Models;
 using System.Web.Mvc;
 using System.Linq;
 using System;
@@ -22,9 +21,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.Reporting.WebForms;
-using System.Globalization;
 using System.Web;
-using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
 using System.Configuration;
 using Microsoft.WindowsAzure.Storage.Blob;
