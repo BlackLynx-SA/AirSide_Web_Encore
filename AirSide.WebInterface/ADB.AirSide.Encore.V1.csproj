@@ -578,11 +578,15 @@
     <Content Include="Content\sound\voice_on.mp3" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\adbimages\ADB_Logo_100c.png" />
+    <Content Include="Images\adbimages\ADB_Logo_100.jpg" />
     <Content Include="Images\adbimages\ADB_Logo_100.png" />
     <Content Include="Images\adbimages\ADB_Logo_100_white.png" />
     <Content Include="Images\adbimages\ADB_Symbol.png" />
     <Content Include="Images\adbimages\ADB_Symbol_White.png" />
+    <Content Include="Images\adbimages\AssetIcon.jpg" />
+    <Content Include="Images\adbimages\CalendarIcon.jpg" />
+    <Content Include="Images\adbimages\TasksIcon.jpg" />
+    <Content Include="Images\adbimages\UsersIcon.jpg" />
     <Content Include="Images\icons\excel_ico.png" />
     <Content Include="Images\icons\map_icon_blue.png" />
     <Content Include="Images\icons\map_icon_green.png" />
@@ -599,6 +603,9 @@
     <Content Include="Images\lights\DTS_LightType.png" />
     <Content Include="Images\lights\DTS_LP_LightType.png" />
     <Content Include="Images\lights\DTZ_LightType.png" />
+    <Content Include="Images\lights\ERNI\EL217_LightType.jpg" />
+    <Content Include="Images\lights\ERNI\EL225_LightType.jpg" />
+    <Content Include="Images\lights\ERNI\IL_LightType.jpg" />
     <Content Include="Images\lights\ETEL_LightType.png" />
     <Content Include="Images\lights\FAP_LightType.png" />
     <Content Include="Images\lights\FED_L_LightType.png" />
@@ -1217,15 +1224,8 @@
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
-    <None Include="Properties\PublishProfiles\AirSide Baneasa.pubxml" />
-    <None Include="Properties\PublishProfiles\AirSide Birmingham.pubxml" />
-    <None Include="Properties\PublishProfiles\AirSide Encore.pubxml" />
-    <None Include="Properties\PublishProfiles\AirSide Manchester.pubxml" />
-    <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Encore.pubxml" />
-    <None Include="Properties\PublishProfiles\AirSide Hamad.pubxml" />
-    <None Include="Properties\PublishProfiles\Manchester.pubxml" />
+    <None Include="Properties\PublishProfiles\Hamad.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
