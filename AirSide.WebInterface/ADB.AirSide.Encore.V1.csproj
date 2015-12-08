@@ -1103,7 +1103,6 @@
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
-    <None Include="Properties\PublishProfiles\Baneasa.pubxml" />
     <None Include="Properties\PublishProfiles\Encore.pubxml" />
     <None Include="Properties\PublishProfiles\Hamad.pubxml" />
     <None Include="Properties\Settings.settings">

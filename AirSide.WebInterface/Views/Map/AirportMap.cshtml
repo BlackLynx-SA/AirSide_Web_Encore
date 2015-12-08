@@ -176,10 +176,7 @@
 
 @section pagespecific{
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
-
-
-    
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization">
     </script>
 
     <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
@@ -205,7 +202,6 @@
         var lastFilter, filterEnum, filterValue;
 
         initMap();
-
 
         function setTask(id, desc) {
             selectedTask = id;
@@ -379,7 +375,7 @@
             var marker = new google.maps.Marker({
                 map: map,
                 position: latLongMarker,
-                title: json.assetId.toString(),
+                title: json.serialNumber,
                 icon: image
             });
 
@@ -456,7 +452,6 @@
                     var mapOptions = {
                         center: new google.maps.LatLng(json[0], json[1]),
                         zoom: zoom,
-                        disableDefaultUI: true,
                         mapTypeId: google.maps.MapTypeId.SATELLITE,
                     };
                     map = new google.maps.Map(document.getElementById("map-canvas"),

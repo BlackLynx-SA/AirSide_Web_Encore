@@ -860,7 +860,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						_db.SaveChanges();
 
 						//Log the change
-						_cache.Log("Tag id was update from " + currentTagId + " to " + item.tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
+						_cache.Log("Tag id was updated from " + currentTagId + " to " + item.tagId + " (bulk update on asset id: " + item.assetId + ")", "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, "iOS Device");
 						i++;
 
 						try
@@ -908,7 +908,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					_db.SaveChanges();
 
 					//Log the change
-					_cache.Log("Tag id was update from " + currentTagId + " to " + tagId, "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, userId.ToString());
+					_cache.Log("Tag id was updated from " + currentTagId + " to " + tagId + " (single update on asset id: " + asset.i_assetId + ")", "updateAssetTag(iOS)", CacheHelper.LogTypes.Info, userId.ToString());
 
 					try
 					{
