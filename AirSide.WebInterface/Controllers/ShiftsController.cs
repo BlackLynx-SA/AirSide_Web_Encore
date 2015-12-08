@@ -1331,16 +1331,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 //Create Report Settings
-                ReportSettings settings = new ReportSettings();
+                ReportSettings settings = new ReportSettings
+                {
+                    blobContainer = "reportcontent",
+                    blobReference = "EventReport.rdlc",
+                    fileType = ReportFileTypes.pdf,
+                    dataSources = new ReportDataSource[4]
+                };
 
-                settings.blobContainer = "reportcontent";
-                settings.blobReference = "EventReport.rdlc";
-
-                settings.fileType = ReportFileTypes.pdf;
-
-                //Set the data sources
-                settings.dataSources = new ReportDataSource[4];
-                
                 //Prepare Data Sources for Report
                 ReportDataSource reportDataSource = new ReportDataSource("SheduleTasks", getEventSheduleData(shiftId, type));
                 settings.dataSources[0] = reportDataSource;

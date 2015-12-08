@@ -500,7 +500,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult InsertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, int assetClassId, string manualUrl, string fixingpoints)
+        public async Task<JsonResult> InsertUpdateAssetClass(string description, string manufacturer, string model, int pictureId, int assetClassId, string manualUrl, string fixingpoints)
         {
             try
             {
@@ -539,6 +539,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                         //update iOS Cache Hash
                         _cache.UpdateiOsCache("getAllAssetClasses");
+                        await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                         return Json(new {description, assetClassId = newAssetClass.i_assetClassId });
                     }

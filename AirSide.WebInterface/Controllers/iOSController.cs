@@ -375,52 +375,52 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			
 				DateTime now = DateTime.Now;
 
-		    foreach (ios_validationTaskProfile item in validations)
-		    {
-		        as_validationTaskProfile validation = new as_validationTaskProfile
-		        {
-		            bt_validated = item.bt_validated,
-		            i_assetId = item.i_assetId,
-		            i_shiftId = item.i_shiftId,
-		            UserId = item.UserId,
-		            dt_dateTimeStamp =
-		                item.dt_dateTimeStamp != null
-		                    ? DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
-		                    : now
-		        };
+			foreach (ios_validationTaskProfile item in validations)
+			{
+				as_validationTaskProfile validation = new as_validationTaskProfile
+				{
+					bt_validated = item.bt_validated,
+					i_assetId = item.i_assetId,
+					i_shiftId = item.i_shiftId,
+					UserId = item.UserId,
+					dt_dateTimeStamp =
+						item.dt_dateTimeStamp != null
+							? DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
+							: now
+				};
 
-		        try
-		        {
-		            _db.as_validationTaskProfile.Add(validation);
-		            _db.SaveChanges();
+				try
+				{
+					_db.as_validationTaskProfile.Add(validation);
+					_db.SaveChanges();
 
-		            var status = _db.as_assetStatusProfile.Find(item.i_assetId);
-                    if(status != null)
-                    {
-		                status.bt_assetStatus = false;
-		                _db.Entry(status).State = EntityState.Modified;
-		                _db.SaveChanges();
-		            }
+					var status = _db.as_assetStatusProfile.Find(item.i_assetId);
+					if(status != null)
+					{
+						status.bt_assetStatus = false;
+						_db.Entry(status).State = EntityState.Modified;
+						_db.SaveChanges();
+					}
 
-		            //rebuild cache for asset
-		            await _cache.RebuildAssetProfileForAsset(item.i_assetId);
-		        }
+					//rebuild cache for asset
+					await _cache.RebuildAssetProfileForAsset(item.i_assetId);
+				}
 
-		        catch (Exception err)
-		        {
-		            string tmp = validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
-                                 validation.bt_validated
-		                         + "|" + validation.i_shiftId + "|" + validation.i_validationProfileId;
-                      
+				catch (Exception err)
+				{
+					string tmp = validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
+								 validation.bt_validated
+								 + "|" + validation.i_shiftId + "|" + validation.i_validationProfileId;
+					  
 
-		            _cache.Log("Failed to insert validation values: " + err.Message + "|***" + tmp,
-		                "insertAssetValidation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
-		            Response.StatusCode = 500;
-		            return Json(err.Message);
-		        }
+					_cache.Log("Failed to insert validation values: " + err.Message + "|***" + tmp,
+						"insertAssetValidation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+					Response.StatusCode = 500;
+					return Json(err.Message);
+				}
 
-		    }
-		    return Json(new { status = "success", count = validations.Count});
+			}
+			return Json(new { status = "success", count = validations.Count});
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1289,9 +1289,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				await _cache.CreateAllAssetDownload();
 				return Json(new { status = "success" });
 			}
-			catch (Exception)
+			catch (Exception err)
 			{
-				return Json(new {status = "failed"});
+				return Json(new {status = "failed", error = err.Message });
 			}
 		}
 

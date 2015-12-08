@@ -110,7 +110,7 @@ namespace AirSide.ServerModules.Helpers
                               });
 
                 {
-
+                    Log("Assets Selected", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
                     mongoFullAsset[] assetArray = new mongoFullAsset[assets.Count()];
                     int i = 0;
 
@@ -120,7 +120,8 @@ namespace AirSide.ServerModules.Helpers
                         var status = _db.as_assetStatusProfile.FirstOrDefault(q => q.i_assetProfileId == item.assetId);
                         if (status != null)
                             lightStatus = status.bt_assetStatus;
-
+                    try
+                    {
                         mongoFullAsset asset = new mongoFullAsset
                         {
                             assetId = item.assetId,
@@ -138,13 +139,22 @@ namespace AirSide.ServerModules.Helpers
                         assetArray[i] = asset;
                         i++;
                     }
+                    catch (Exception e)
+                    {
+                        Log("Object Error: " + e.Message, "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
+                    }
+
+                }
+                    Log("Object created", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
 
                     //Drop Existing
                     await Database.DropCollectionAsync("md_assetFullDownload");
+                    Log("Dropped DB", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
 
                     //Recreate New
                     IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
                     await collection.InsertManyAsync(assetArray);
+                    Log("Inserted new", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
 
                     return true;
                 }
@@ -930,19 +940,27 @@ namespace AirSide.ServerModules.Helpers
         //Converted to new Mongo API 2015/08/11
         public async Task<string> GetAssetNextDateForFirstTask(int assetId)
         {
-            IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
-
-            List<mongoAssetProfile> assets = await collection.Find(q => q.assetId == assetId).ToListAsync();
-
-            mongoAssetProfile asset = assets.FirstOrDefault();
-            if (asset != null)
+            try
             {
-                maintenance task = asset.maintenance.FirstOrDefault();
+                IMongoCollection<mongoAssetProfile> collection =
+                    Database.GetCollection<mongoAssetProfile>("md_assetProfile");
 
-                if (task != null) return task.nextDate;
+                List<mongoAssetProfile> assets = await collection.Find(q => q.assetId == assetId).ToListAsync();
+
+                mongoAssetProfile asset = assets.FirstOrDefault();
+                if (asset != null)
+                {
+                    maintenance task = asset.maintenance.FirstOrDefault();
+
+                    if (task != null) return task.nextDate;
+                    else return "1970/01/01";
+                }
                 else return "1970/01/01";
             }
-            else return "1970/01/01";
+            catch (Exception err)
+            {
+                return "1970/01/01";
+            }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------

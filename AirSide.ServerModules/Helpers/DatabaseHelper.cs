@@ -54,11 +54,18 @@ namespace AirSide.ServerModules.Helpers
         public DateTime GetFirstMaintanedDate(int assetId)
         {
             DateTime newDate = new DateTime(1970, 1, 1);
-            DateTime firstDate = (from x in _db.as_shiftData
-                                  join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
-                                  where y.i_assetId == assetId
-                                  select x.dt_captureDate).DefaultIfEmpty(newDate).First();
-            return firstDate;
+            try
+            {
+                DateTime firstDate = (from x in _db.as_shiftData
+                    join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
+                    where y.i_assetId == assetId
+                    select x.dt_captureDate).DefaultIfEmpty(newDate).First();
+                return firstDate;
+            }
+            catch (Exception)
+            {
+                return newDate;
+            }
         }
 
         public maintenance[] GetMaintenaceTasks(int assetId)

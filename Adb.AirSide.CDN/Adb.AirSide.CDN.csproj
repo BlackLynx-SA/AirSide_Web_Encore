@@ -69,6 +69,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\baneasa.png" />
     <Content Include="Images\birmingham.png" />
     <Content Include="Images\encore.png" />
     <Content Include="Images\hamad.png" />
