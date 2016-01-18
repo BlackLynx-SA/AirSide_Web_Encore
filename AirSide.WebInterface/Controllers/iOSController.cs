@@ -373,7 +373,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		public async Task<JsonResult> InsertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			
-				DateTime now = DateTime.Now;
+			DateTime now = DateTime.Now;
 
 			foreach (ios_validationTaskProfile item in validations)
 			{
@@ -389,26 +389,32 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							: now
 				};
 
+				string log = "Start";
+
 				try
 				{
+					log = "validationTaskProfile";
 					_db.as_validationTaskProfile.Add(validation);
 					_db.SaveChanges();
 
 					var status = _db.as_assetStatusProfile.Find(item.i_assetId);
 					if(status != null)
 					{
+						log = "Assset Status";
 						status.bt_assetStatus = false;
 						_db.Entry(status).State = EntityState.Modified;
 						_db.SaveChanges();
+
 					}
 
 					//rebuild cache for asset
+				    log = "Rebuild Cache";
 					await _cache.RebuildAssetProfileForAsset(item.i_assetId);
 				}
 
 				catch (Exception err)
 				{
-					string tmp = validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
+					string tmp = log + "|" + validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
 								 validation.bt_validated
 								 + "|" + validation.i_shiftId + "|" + validation.i_validationProfileId;
 					  
