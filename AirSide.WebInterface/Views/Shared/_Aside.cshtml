@@ -1,4 +1,6 @@
-﻿    <!-- Left panel : Navigation area -->
+﻿@using System.Diagnostics
+@using AirSide.ServerModules.Models
+    <!-- Left panel : Navigation area -->
 <!-- Note: This width of the aside area can be adjusted through LESS variables -->
 <aside id="left-panel">
 
@@ -12,10 +14,15 @@
     will not initialize.
     -->
     <nav>
-        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
-        Please note that these links work a bit different than
-        traditional href="" links. See documentation for details.
-        -->
+        @{
+            Entities db = new Entities();
+            UserProfile user = db.UserProfiles.FirstOrDefault(q => q.EmailAddress == User.Identity.Name);
+            bool flag = false;
+            if (user != null)
+            {
+                flag = user.i_accessLevelId == 1 || user.i_accessLevelId == 2;
+            }
+        }
 
         <ul>
             <li class="@Html.RouteIf("index", "active")">
@@ -25,48 +32,41 @@
             <li class="@Html.RouteIf("airportmap", "active")">
                 <a href="@Url.Action("airportmap", "map")" title="Dashboard"><i class="fa fa-lg fa-fw fa-map-marker"></i> <span class="menu-item-parent">Geo Information</span></a>
             </li>
-          
+
             @* Shift Planning *@
-            <li class="@Html.RouteIf("shifts", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Shift Planning</span></a>
-                <ul>
-                    <li class="@Html.RouteIf("calendar", "active")">
-                        <a href="@Url.Action("calendar", "shifts")">Calendar View</a>
-                    </li>
-                    <li class="@Html.RouteIf("AllShifts", "active")">
-                        <a href="@Url.Action("AllShifts", "shifts")">All Events</a>
-                    </li>
-                    <li class="@Html.RouteIf("MaintenanceTasks", "active")">
-                        <a href="@Url.Action("MaintenanceTasks", "shifts")">Maintenance Tasks</a>
-                    </li>
-                </ul>
-            </li>
+            @if (flag)
+            {
+                <li class="@Html.RouteIf("shifts", "active")">
+                    <a href="#"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Shift Planning</span></a>
+                    <ul>
+                        <li class="@Html.RouteIf("calendar", "active")">
+                            <a href="@Url.Action("calendar", "shifts")">Calendar View</a>
+                        </li>
+                        <li class="@Html.RouteIf("AllShifts", "active")">
+                            <a href="@Url.Action("AllShifts", "shifts")">All Events</a>
+                        </li>
+                        <li class="@Html.RouteIf("MaintenanceTasks", "active")">
+                            <a href="@Url.Action("MaintenanceTasks", "shifts")">Maintenance Tasks</a>
+                        </li>
+                    </ul>
+                </li>
+            }
 
-            @* Inspection *@
-            @*<li class="@Html.RouteIf("inspection", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-eye"></i> <span class="menu-item-parent">Inspection</span></a>
-                <ul>
-                    <li class="@Html.RouteIf("normal", "active")">
-                        <a href="@Url.Action("normal", "tables")">Surveyor&trade; Anomalies</a>
-                    </li>
-                    <li class="@Html.RouteIf("jqgrid", "active")">
-                        <a href="@Url.Action("jqgrid", "tables")">Movement Areas</a>
-                    </li>
-                </ul>
-            </li>*@
-
+            @if (flag)
+            {
             @* Assets *@
-            <li class="@Html.RouteIf("AssetClass", "active") @Html.RouteIf("Asset", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-lightbulb-o"></i> <span class="menu-item-parent">Assets</span></a>
-                <ul>
-                    <li class="@Html.RouteIf("AssetClasses", "active")">
-                        <a href="@Url.Action("AssetClasses", "AssetClass")">Asset Types</a>
-                    </li>
-                    <li class="@Html.RouteIf("Assets", "active")">
-                        <a href="@Url.Action("Assets", "Asset")">Loaded Assets</a>
-                    </li>
-                </ul>
-            </li>
+                <li class="@Html.RouteIf("AssetClass", "active") @Html.RouteIf("Asset", "active")">
+                    <a href="#"><i class="fa fa-lg fa-fw fa-lightbulb-o"></i> <span class="menu-item-parent">Assets</span></a>
+                    <ul>
+                        <li class="@Html.RouteIf("AssetClasses", "active")">
+                            <a href="@Url.Action("AssetClasses", "AssetClass")">Asset Types</a>
+                        </li>
+                        <li class="@Html.RouteIf("Assets", "active")">
+                            <a href="@Url.Action("Assets", "Asset")">Loaded Assets</a>
+                        </li>
+                    </ul>
+                </li>
+            }
 
             @* History *@
             <li class="@Html.RouteIf("history", "active")">
@@ -78,21 +78,24 @@
                 </ul>
             </li>
 
+            @if (flag)
+            {
             @* Users *@
-            <li class="@Html.RouteIf("Users", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">System Users</span></a>
-                <ul>
-                    <li class="@Html.RouteIf("viewallusers", "active")">
-                        <a href="@Url.Action("viewallusers", "users")">View All Users</a>
-                    </li>
-                    <li class="@Html.RouteIf("register", "active")">
-                        <a href="@Url.Action("register", "users")">Create New User</a>
-                    </li>
-                    <li class="@Html.RouteIf("techniciangroups", "active")">
-                        <a href="@Url.Action("techniciangroups", "users")">Technician Groups</a>
-                    </li>
-                </ul>
-            </li>
+                <li class="@Html.RouteIf("Users", "active")">
+                    <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">System Users</span></a>
+                    <ul>
+                        <li class="@Html.RouteIf("viewallusers", "active")">
+                            <a href="@Url.Action("viewallusers", "users")">View All Users</a>
+                        </li>
+                        <li class="@Html.RouteIf("register", "active")">
+                            <a href="@Url.Action("register", "users")">Create New User</a>
+                        </li>
+                        <li class="@Html.RouteIf("techniciangroups", "active")">
+                            <a href="@Url.Action("techniciangroups", "users")">Technician Groups</a>
+                        </li>
+                    </ul>
+                </li>
+            }
 
             @* Reports *@
             <li class="@Html.RouteIf("Reporting", "active")">
@@ -106,25 +109,28 @@
                     </li>
                 </ul>
             </li>
-            
+
+            @if (flag)
+            {
             @* Settings *@
-            <li class="@Html.RouteIf("Settings", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">System Settings</span></a>
-                <ul>
-                    @*<li class="@Html.RouteIf("AirSidetools", "active")">
+                <li class="@Html.RouteIf("Settings", "active")">
+                    <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">System Settings</span></a>
+                    <ul>
+                        @*<li class="@Html.RouteIf("AirSidetools", "active")">
                         <a href="@Url.Action("viewallusers", "Settings")">AirSide&trade; Tools</a>
                     </li>
                     <li class="@Html.RouteIf("EmailSettings", "active")">
                         <a href="@Url.Action("EmailSettings", "Settings")">Email and SMS</a>
                     </li>*@
-                    <li class="@Html.RouteIf("ImageLibrary", "active")">
-                        <a href="@Url.Action("ImageLibrary", "Settings")">Image Library</a>
-                    </li>
-                    @*<li class="@Html.RouteIf("iOsImages", "active")">
+                        <li class="@Html.RouteIf("ImageLibrary", "active")">
+                            <a href="@Url.Action("ImageLibrary", "Settings")">Image Library</a>
+                        </li>
+                        @*<li class="@Html.RouteIf("iOsImages", "active")">
                         <a href="@Url.Action("iOsImages", "iOS")">iOS Files</a>
                     </li>*@
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            }
         </ul>
     </nav>
     <span class="minifyme" data-action="minifyMenu">

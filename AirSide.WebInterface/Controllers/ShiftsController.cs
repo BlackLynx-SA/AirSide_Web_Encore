@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ADB.AirSide.Encore.V1.App_Helpers;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
@@ -57,6 +58,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminAccess]
         public async Task<JsonResult> addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
@@ -291,7 +293,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
         private async Task<List<int>> ProcessFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             List<mongoAssetProfile> assets = await cache.GetAllAssets();
@@ -315,7 +316,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
         private async Task<List<int>> processAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             List<mongoAssetProfile> assets = await cache.GetAllAssets();
@@ -873,7 +873,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
+        [AdminAccess]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdateShiftStatus(int shiftId, int shiftType)
@@ -951,7 +952,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
+        [AdminAccess]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId, int maintenanceId)
@@ -965,8 +967,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     case 0:
                         {
                             //Get User
-                            var aspUser = db.AspNetUsers.Where(q => q.UserName == User.Identity.Name).FirstOrDefault();
-                            var user = db.UserProfiles.Where(q => q.aspId == aspUser.Id).FirstOrDefault();
+                            var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                            var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
                             as_shifts newShift = new as_shifts();
                             DateTime shiftTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
@@ -1279,8 +1281,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<ActiveShiftsReport> getShiftReportData(int shiftId, int type)
         {
-            bool customShift = false;
-            if (type == 2) customShift = true;
+            bool customShift = type == 2;
 
             var data = from x in db.as_shifts
                         join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
@@ -1290,11 +1291,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         where x.i_shiftId == shiftId && x.bt_custom == customShift
                         select new
                         {
-                            dt_scheduledDate = x.dt_scheduledDate,
-                            vc_groupName = z.vc_groupName,
-                            vc_externalRef = z.vc_externalRef,
-                            vc_permitNumber = x.vc_permitNumber,
-                            bt_completed = x.bt_completed,
+                            x.dt_scheduledDate, z.vc_groupName, z.vc_externalRef, x.vc_permitNumber, x.bt_completed,
                             area = b.vc_description,
                             subArea = a.vc_description
                         };
