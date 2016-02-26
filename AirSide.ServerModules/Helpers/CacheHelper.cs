@@ -797,7 +797,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                Log("Failed to rebuild asset profile:(" + assetId.ToString() + ") " + err.InnerException.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
+                Log("Failed to rebuild asset profile:(" + assetId + ") " + err.InnerException.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
                 return false;
             }
         }
@@ -957,7 +957,7 @@ namespace AirSide.ServerModules.Helpers
                 }
                 else return "1970/01/01";
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 return "1970/01/01";
             }

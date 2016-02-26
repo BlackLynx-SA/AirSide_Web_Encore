@@ -1331,7 +1331,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				await _cache.CreateAssetClassDownloadCache();
+                await _cache.CreateAssetClassDownloadCache();
 				return Json(new { status = "success" });
 			}
 			catch (Exception)

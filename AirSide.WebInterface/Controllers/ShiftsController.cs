@@ -12,7 +12,6 @@
 // SUMMARY: This class contains all controller calls for the Shifts route
 #endregion
 
-using ADB.AirSide.Encore.V1.Models;
 using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
 using Microsoft.Reporting.WebForms;
@@ -25,9 +24,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using ADB.AirSide.Encore.V1.App_Helpers;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
@@ -58,7 +55,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AdminAccess]
         public async Task<JsonResult> addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
@@ -874,7 +870,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [AdminAccess]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult UpdateShiftStatus(int shiftId, int shiftType)
@@ -953,7 +948,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [AdminAccess]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId, int maintenanceId)

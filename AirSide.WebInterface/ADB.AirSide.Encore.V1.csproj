@@ -1190,7 +1190,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Helpers\AirSideAttributeHelper.cs" />
     <Compile Include="App_Helpers\HandleAntiforgeryTokenErrorAttribute.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
