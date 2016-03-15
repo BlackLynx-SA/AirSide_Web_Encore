@@ -17,3 +17,5 @@ TypeScript lets you write JavaScript the way you really want to. [TypeScript](ht
 ### CSS 3
 
 [CSS3](http://en.wikipedia.org/wiki/Cascading_Style_Sheets) is the latest evolution of the Cascading Style Sheets language and aims at extending CSS2.1. It brings a lot of long-awaited novelties, like rounded corners, shadows, gradients , transitions or animations, as well as new layouts like multi-columns, flexible box or grid layouts.
+
+### New Stuff
