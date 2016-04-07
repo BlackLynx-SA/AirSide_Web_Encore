@@ -31,13 +31,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
     [Authorize]
     public class ShiftsController : Controller
     {
-        private readonly Entities db = new Entities();
-        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
-        private readonly DatabaseHelper dbHelper = new DatabaseHelper();
+        private readonly Entities _db = new Entities();
+        private readonly CacheHelper _cache;
+        private readonly DatabaseHelper _dbHelper = new DatabaseHelper();
+
+        public ShiftsController()
+        {
+            _cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+        }
 
         public ActionResult Calendar()
         {
-            ViewBag.maintenanceTasks = new SelectList(db.as_maintenanceProfile.OrderBy(q => q.vc_description).Distinct(), "i_maintenanceId", "vc_description");
+            ViewBag.maintenanceTasks = new SelectList(_db.as_maintenanceProfile.OrderBy(q => q.vc_description).Distinct(), "i_maintenanceId", "vc_description");
             return View();
         }
 
@@ -45,7 +50,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         public ActionResult MaintenanceTasks()
         {
-            ViewBag.maintenanceValidation = new SelectList(db.as_maintenanceValidation.OrderBy(q => q.vc_validationName).Distinct(), "i_maintenanceValidationId", "vc_validationName");
+            ViewBag.maintenanceValidation = new SelectList(_db.as_maintenanceValidation.OrderBy(q => q.vc_validationName).Distinct(), "i_maintenanceValidationId", "vc_validationName");
             return View();
         }
 
@@ -55,7 +60,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> addCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
+        public async Task<JsonResult> AddCustomShift(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             try
             {
@@ -74,8 +79,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //  106 - Faulty Lights
 
                 //Get User 
-                var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
-                var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
+                var aspUser = _db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                var user = _db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
                 as_shifts newShift = new as_shifts
                 {
@@ -83,42 +88,39 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     dt_completionDate = new DateTime(1970, 1, 1),
                     dt_scheduledDate = DateTime.ParseExact(shift.scheduledDate, "dd/MM/yyyy h:mm tt", provider),
                     i_maintenanceId = shift.maintenanceId,
-                    i_technicianGroup = shift.techGroupId
+                    i_technicianGroup = shift.techGroupId,
+                    vc_externalRef = shift.externalRef ?? "---",
+                    vc_permitNumber = shift.permitNumber ?? "---",
+                    bt_custom = true,
+                    dt_dateCreated = DateTime.Now
                 };
 
-                newShift.vc_externalRef = shift.externalRef ?? "---";
-
-                newShift.vc_permitNumber = shift.permitNumber ?? "---";
-
-                newShift.bt_custom = true;
-                newShift.dt_dateCreated = DateTime.Now;
                 if (user != null) newShift.i_createdBy = user.UserId;
                 newShift.i_closedBy = 0;
 
-                db.as_shifts.Add(newShift);
-                db.SaveChanges();
+                _db.as_shifts.Add(newShift);
+                _db.SaveChanges();
 
-                List<int> assets = await FindAssets(shift, bounds);
-                foreach(int asset in assets)
+                var assets = await FindAssets(shift, bounds);
+                foreach (as_shiftsCustomProfile shiftProfile in assets.Select(asset => new as_shiftsCustomProfile
                 {
-                    as_shiftsCustomProfile shiftProfile = new as_shiftsCustomProfile
-                    {
-                        i_assetId = asset,
-                        i_shiftId = newShift.i_shiftId
-                    };
-                    db.as_shiftsCustomProfile.Add(shiftProfile);
+                    i_assetId = asset,
+                    i_shiftId = newShift.i_shiftId
+                }))
+                {
+                    _db.as_shiftsCustomProfile.Add(shiftProfile);
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
 
                 //update iOS Cache Hash
-                cache.UpdateiOsCache("getTechnicianShifts");
+                _cache.UpdateiOsCache("getTechnicianShifts");
 
-                return Json(new { message = "Success", count = assets.Count() });
+                return Json(new { message = "Success", count = assets.Count });
             }
             catch (Exception err)
             {
-                cache.Log("Failed to insert custom shift: " + err.Message, "addCustomShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert custom shift: " + err.Message, "addCustomShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -133,31 +135,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Create Date: 2015/01/19
                 //Author: Bernard Willer
 
-                List<int> assets = new List<int>(); ;
+                List<int> assets = new List<int>(); 
 
                 switch (shift.filterType)
                 {   case 101:   //Process All
-                        assets = await processAllAssets(shift, bounds);
+                        assets = await ProcessAllAssets(shift, bounds);
                         break;
                     case 102: //Process Asset Type
-                        assets = await processAssetType(shift, bounds);
+                        assets = await ProcessAssetType(shift, bounds);
                         break;
                     case 103: //Process Maintneace Cycle
-                        assets = await processAssetCycle(shift, bounds);
+                        assets = await ProcessAssetCycle(shift, bounds);
                         break;
                     case 104: //Main Area
-                        assets = await processMainArea(shift, bounds);
+                        assets = await ProcessMainArea(shift, bounds);
                         break;
                     case 105: //Sub Area
-                        assets = await processSubArea(shift, bounds);
+                        assets = await ProcessSubArea(shift, bounds);
                         break;
                     case 106: //Faulty Lights
                         assets = await ProcessFaultyLights(shift, bounds);
                         break;
                     case 107: //Visual Surveyor => TODO: Need to build it out for reported other than just assets
-                        assets = processVisualSurveyor(shift, bounds);
-                        break;
-                    default:
+                        assets = ProcessVisualSurveyor(shift, bounds);
                         break;
                 }
                 return assets;
@@ -165,7 +165,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             catch (Exception err)
             {
                 List<int> assets = new List<int>();
-                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return assets;
             }
         
@@ -173,14 +173,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private class assetObject
+        private class AssetObject
         {
             public int assetId { get; set; }
             public double latitude { get; set; }
             public double longitude { get; set; }
         }
 
-        private List<int> processVisualSurveyor(CustomShiftClass shift, CustomShiftBounds bounds)
+        private List<int> ProcessVisualSurveyor(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             //Disseminate the date range
             string[] dates = shift.dateRange.Split(char.Parse("-"));
@@ -188,15 +188,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             DateTime endDate = DateTime.ParseExact(dates[1], "yyyy/MM/dd", CultureInfo.InvariantCulture);
 
             List<int> assetList = new List<int>();
-            List<assetObject> assets = new List<assetObject>();
+            List<AssetObject> assets = new List<AssetObject>();
 
             //Get Images Elements
             if(shift.imageChk)
             {
-                var assetSelect = from x in db.as_fileUploadProfile
-                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
-                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
-                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                var assetSelect = from x in _db.as_fileUploadProfile
+                                  join y in _db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in _db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in _db.as_assetProfile on z.i_locationId equals a.i_locationId
                                   where x.i_fileType == 1 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
                                   select new
                                   {
@@ -207,10 +207,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach(var item in assetSelect)
                 {
-                    assetObject obj = new assetObject();
-                    obj.assetId = item.assetId;
-                    obj.latitude = item.latitude;
-                    obj.longitude = item.longitude;
+                    AssetObject obj = new AssetObject
+                    {
+                        assetId = item.assetId,
+                        latitude = item.latitude,
+                        longitude = item.longitude
+                    };
 
                     assets.Add(obj);
                 }
@@ -219,10 +221,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
             //Get Voice Elements
             if (shift.voiceChk)
             {
-                var assetSelect = from x in db.as_fileUploadProfile
-                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
-                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
-                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                var assetSelect = from x in _db.as_fileUploadProfile
+                                  join y in _db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in _db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in _db.as_assetProfile on z.i_locationId equals a.i_locationId
                                   where x.i_fileType == 2 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
                                   select new
                                   {
@@ -233,10 +235,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in assetSelect)
                 {
-                    assetObject obj = new assetObject();
-                    obj.assetId = item.assetId;
-                    obj.latitude = item.latitude;
-                    obj.longitude = item.longitude;
+                    var obj = new AssetObject
+                    {
+                        assetId = item.assetId,
+                        latitude = item.latitude,
+                        longitude = item.longitude
+                    };
 
                     assets.Add(obj);
                 }
@@ -245,10 +249,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
             //Get Images Elements
             if (shift.textChk)
             {
-                var assetSelect = from x in db.as_fileUploadProfile
-                                  join y in db.as_fileUploadInfo on x.guid_file equals y.guid_file
-                                  join z in db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
-                                  join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
+                var assetSelect = from x in _db.as_fileUploadProfile
+                                  join y in _db.as_fileUploadInfo on x.guid_file equals y.guid_file
+                                  join z in _db.as_locationProfile on new { latitude = Math.Round(y.f_latitude, 5), longitude = Math.Round(y.f_longitude, 5) } equals new { latitude = Math.Round(z.f_latitude, 5), longitude = Math.Round(z.f_longitude, 5) }
+                                  join a in _db.as_assetProfile on z.i_locationId equals a.i_locationId
                                   where x.i_fileType == 3 && y.bt_resolved == false && x.dt_datetime >= startDate && x.dt_datetime <= endDate
                                   select new
                                   {
@@ -259,22 +263,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in assetSelect)
                 {
-                    assetObject obj = new assetObject();
-                    obj.assetId = item.assetId;
-                    obj.latitude = item.latitude;
-                    obj.longitude = item.longitude;
+                    AssetObject obj = new AssetObject
+                    {
+                        assetId = item.assetId,
+                        latitude = item.latitude,
+                        longitude = item.longitude
+                    };
 
                     assets.Add(obj);
                 }
             }
 
 
-            cache.QuickDebugLog(assets.Count.ToString());
+            _cache.QuickDebugLog(assets.Count.ToString());
 
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
                 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
@@ -291,12 +297,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         private async Task<List<int>> ProcessFaultyLights(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoAssetProfile> assets = await cache.GetAllAssets();
-            List<int> assetList = new List<int>();
+            if (shift == null) throw new ArgumentNullException(nameof(shift));
+            var assets = await _cache.GetAllAssets();
+            var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
@@ -312,25 +319,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        private async Task<List<int>> processAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessAssetCycle(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoAssetProfile> assets = await cache.GetAllAssets();
-            List<int> assetList = new List<int>();
+            var assets = await _cache.GetAllAssets();
+            var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude  >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag)
                 {
-                    foreach (var item in asset.maintenance)
-                    {
-                        if(item.maintenanceCycle == shift.filterValue && item.maintenanceId == shift.maintenanceFilter)
-                            assetList.Add(asset.assetId);
-                    }
+                    assetList.AddRange(from item in asset.maintenance where item.maintenanceCycle == shift.filterValue && item.maintenanceId == shift.maintenanceFilter select asset.assetId);
                 }
             }
 
@@ -339,28 +342,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<int>> processSubArea(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessSubArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
-            List<int> assetList = new List<int>();
+            var assets = await _cache.GetAllAssetDownload();
+            var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
-                if (latFlag && longFlag && asset.subAreaId == shift.filterValue)
-                {
-                    int task = (from x in db.as_assetClassProfile
-                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
-                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
-                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
-                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
-                    if (task > 0)
-                        assetList.Add(asset.assetId);
-                }
+                if (!latFlag || !longFlag || asset.subAreaId != shift.filterValue) continue;
+                int task = (from x in _db.as_assetClassProfile
+                    join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                    join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                    where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                    select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                if (task > 0)
+                    assetList.Add(asset.assetId);
             }
 
             return assetList;
@@ -368,23 +369,23 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<int>> processMainArea(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessMainArea(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoAssetProfile> assets = await cache.GetAllAssets();
-            List<int> assetList = new List<int>();
+            var assets = await _cache.GetAllAssets();
+            var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.location.areaId == shift.filterValue)
                 {
-                    int task = (from x in db.as_assetClassProfile
-                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
-                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                    int task = (from x in _db.as_assetClassProfile
+                                join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                                 where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
                                 select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
                     if (task > 0)
@@ -397,9 +398,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<int>> processAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
+            List<mongoFullAsset> assets = await _cache.GetAllAssetDownload();
             List<int> assetList = new List<int>();
             foreach (var asset in assets)
             {
@@ -411,9 +412,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 if (latFlag && longFlag && asset.assetClassId == shift.filterValue)
                 {
-                    int task = (from x in db.as_assetClassProfile
-                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
-                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                    int task = (from x in _db.as_assetClassProfile
+                                join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                                join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                                 where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
                                 select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
                     if (task > 0)
@@ -426,28 +427,26 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<int>> processAllAssets(CustomShiftClass shift, CustomShiftBounds bounds)
+        private async Task<List<int>> ProcessAllAssets(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoFullAsset> assets = await cache.GetAllAssetDownload();
-            List<int> assetList = new List<int>();
+            var assets = await _cache.GetAllAssetDownload();
+            var assetList = new List<int>();
             foreach(var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                bool latFlag = false;
+                bool longFlag = false;
 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
-                if(latFlag && longFlag)
-                {
-                    int task = (from x in db.as_assetClassProfile
-                                join y in db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
-                                join z in db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
-                                where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
-                                select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
-                    if (task > 0)
-                        assetList.Add(asset.assetId);
-                }
+                if (!latFlag || !longFlag) continue;
+                int task = (from x in _db.as_assetClassProfile
+                    join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
+                    join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
+                    where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
+                    select x.i_assetClassId).DefaultIfEmpty(0).FirstOrDefault();
+                if (task > 0)
+                    assetList.Add(asset.assetId);
             }
 
             return assetList;
@@ -462,16 +461,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllTechnicianGroups()
+        public JsonResult GetAllTechnicianGroups()
         {
             try
             {
-                var techGroups = db.as_technicianGroups.OrderBy(q => q.vc_groupName).ToList();
+                var techGroups = _db.as_technicianGroups.OrderBy(q => q.vc_groupName).ToList();
                 return Json(techGroups);
             }
             catch(Exception err)
             {
-                cache.Log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve Technician Groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -480,17 +479,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllShifts()
+        public JsonResult GetAllShifts()
         {
             try
             {
                 //Area Based Shifts
-                var shifts = (from x in db.as_shifts
-                              join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
-                              join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
-                              join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
-                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                              join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                var shifts = (from x in _db.as_shifts
+                              join y in _db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
+                              join z in _db.as_areaProfile on y.i_areaId equals z.i_areaId
+                              join a in _db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
+                              join b in _db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              join c in _db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
                               where x.bt_completed == false && x.bt_custom == false
                               select new { 
                                 description = z.vc_description + "(" + y.vc_description + ")",
@@ -499,25 +498,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 validation = c.i_maintenanceValidationId
                               }).ToList();
 
-                List<shiftInfo> shiftList = new List<shiftInfo>();
-                foreach(var item in shifts)
+                List<shiftInfo> shiftList = shifts.Select(item => new shiftInfo
                 {
-                    shiftInfo newItem = new shiftInfo();
-                    newItem.description = item.description;
-                    newItem.dateTime = item.dateTime.ToString("dd-MM-yyyy h:mm tt");
-                    newItem.groupName = item.groupName;
-                    newItem.validationId = item.validation;
-
-                    //Push to list
-                    shiftList.Add(newItem);
-                }
+                    description = item.description, dateTime = item.dateTime.ToString("yyyy/MM/dd h:mm tt"), groupName = item.groupName, validationId = item.validation
+                }).ToList();
 
                 //Custom Shifts
-                shifts = (from x in db.as_shifts
-                          join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
-                          join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                          join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                          where x.bt_completed == false && x.bt_custom == true
+                shifts = (from x in _db.as_shifts
+                          join a in _db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
+                          join b in _db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                          join c in _db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                          where x.bt_completed == false && x.bt_custom
                           select new
                           {
                               description = "Selected Assets",
@@ -526,23 +517,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                               validation = c.i_maintenanceValidationId
                           }).ToList();
 
-                foreach (var item in shifts)
+                shiftList.AddRange(shifts.Select(item => new shiftInfo
                 {
-                    shiftInfo newItem = new shiftInfo();
-                    newItem.description = item.description;
-                    newItem.dateTime = item.dateTime.ToString("dd-MM-yyyy h:mm tt");
-                    newItem.groupName = item.groupName;
-                    newItem.validationId = item.validation;
-
-                    //Push to list
-                    shiftList.Add(newItem);
-                }
+                    description = item.description, dateTime = item.dateTime.ToString("yyyy/MM/dd h:mm tt"), groupName = item.groupName, validationId = item.validation
+                }));
 
                 return Json(shiftList);
             }
             catch (Exception err)
             {
-                cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -551,16 +535,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getUserEvents()
+        public JsonResult GetUserEvents()
         {
             try
             {
-                var allEvents = db.as_eventTypes.Where(q => q.vc_userId == "All" || q.vc_userId == User.Identity.Name).ToList();
+                var allEvents = _db.as_eventTypes.Where(q => q.vc_userId == "All" || q.vc_userId == User.Identity.Name).ToList();
                 return Json(allEvents);
             }
             catch (Exception err)
             {
-                cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all shifts: " + err.Message, "getAllShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -570,28 +554,27 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertUserDefinedEvent(string description, string title, string color, string icon, Boolean userSpesific)
+        public JsonResult InsertUserDefinedEvent(string description, string title, string color, string icon, Boolean userSpesific)
         {
             try
             {
-                as_eventTypes newEvent = new as_eventTypes();
-                newEvent.vc_color = color;
-                newEvent.vc_description = description;
-                newEvent.vc_icon = icon;
-                newEvent.vc_title = title;
-                if (userSpesific)
-                    newEvent.vc_userId = User.Identity.Name;
-                else
-                    newEvent.vc_userId = "All";
+                as_eventTypes newEvent = new as_eventTypes
+                {
+                    vc_color = color,
+                    vc_description = description,
+                    vc_icon = icon,
+                    vc_title = title,
+                    vc_userId = userSpesific ? User.Identity.Name : "All"
+                };
 
                 //write to DB
-                db.as_eventTypes.Add(newEvent);
-                db.SaveChanges();
+                _db.as_eventTypes.Add(newEvent);
+                _db.SaveChanges();
                 return Json(newEvent);
             }
             catch (Exception err)
             {
-                cache.Log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert user defined shift: " + err.Message, "insertUserDefinedEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -600,13 +583,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getUserActiveEvents()
+        public JsonResult GetUserActiveEvents()
         {
             try
             {
-                var events = (from x in db.as_eventPofile
-                              join y in db.as_eventTypes on x.i_eventId equals y.i_eventId
-                              where y.vc_userId == "All" || y.vc_userId == User.Identity.Name && x.bt_active == true
+                var events = (from x in _db.as_eventPofile
+                              join y in _db.as_eventTypes on x.i_eventId equals y.i_eventId
+                              where y.vc_userId == "All" || y.vc_userId == User.Identity.Name && x.bt_active
                               select new { 
                                     title = y.vc_title,
                                     description = y.vc_description,
@@ -615,24 +598,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                     start = x.dt_dateTimeStart
                               }).ToList();
 
-                List<EventInfo> eventList = new List<EventInfo>();
-                foreach(var item  in events)
+                List<EventInfo> eventList = events.Select(item => new EventInfo
                 {
-                    EventInfo eventItem = new EventInfo();
-                    eventItem.title = item.title;
-                    eventItem.description = item.description;
-                    eventItem.icon = item.icon;
-                    eventItem.color = item.color;
-                    eventItem.start = item.start.ToString("dd-MM-yyyy h:mm tt");
-
-                    eventList.Add(eventItem);
-                }
+                    title = item.title, description = item.description, icon = item.icon, color = item.color, start = item.start.ToString("yyyy/MM/dd h:mm tt")
+                }).ToList();
 
                 return Json(eventList);
             }
             catch (Exception err)
             {
-                cache.Log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve user events: " + err.Message, "getUserActiveEvents", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -647,19 +622,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        public ActionResult getAirSideCalendar()
+        public ActionResult GetAirSideCalendar()
         {
             MemoryStream mStream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(mStream);
+            StreamWriter writer = new StreamWriter(mStream) {AutoFlush = true};
 
-            writer.AutoFlush = true;
 
-            string airportName = db.as_settingsProfile.Where(q=>q.vc_settingDescription == "Airport Name").Select(q=>q.vc_settingValue).FirstOrDefault();
+            string airportName = _db.as_settingsProfile.Where(q=>q.vc_settingDescription == "Airport Name").Select(q=>q.vc_settingValue).FirstOrDefault();
 
-            var shifts = (from x in db.as_shifts
-                          join y in db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
-                          join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
-                          join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
+            var shifts = (from x in _db.as_shifts
+                          join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
+                          join z in _db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
+                          join a in _db.as_areaProfile on z.i_areaId equals a.i_areaId
                           where x.bt_completed == false
                           select new { 
                                 beginDate = x.dt_scheduledDate,
@@ -708,18 +682,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getShifts(Boolean active)
+        public JsonResult GetShifts(Boolean active)
         {
             try
             {
 
                 //Planned Area Shifts
-                var shifts = (from x in db.as_shifts
-                              join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
-                              join z in db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
-                              join a in db.as_areaProfile on z.i_areaId equals a.i_areaId
-                              join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                              join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                var shifts = (from x in _db.as_shifts
+                              join y in _db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+                              join z in _db.as_areaSubProfile on x.i_areaSubId equals z.i_areaSubId
+                              join a in _db.as_areaProfile on z.i_areaId equals a.i_areaId
+                              join b in _db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                              join c in _db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
                               where x.bt_completed != active && x.bt_custom == false
                               select new { 
                                 eventType = "Shift",
@@ -740,29 +714,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 List<ShiftData> shiftList = new List<ShiftData>();
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData();
-                    shift.area = item.area;
-                    shift.completed = item.end.ToString("dd-MM-yyyy HH:mm");
-                    shift.eventType = "Shift";
-                    shift.start = item.start.ToString("dd-MM-yyyy HH:mm");
-                    shift.subArea = item.subArea;
-                    shift.team = item.team;
-                    shift.shiftId = item.shiftId;
-                    shift.shiftType = 1;
-                    shift.validation = item.validation;
-                    shift.task = item.task;
-                    shift.permit = item.permit;
+                    ShiftData shift = new ShiftData
+                    {
+                        area = item.area,
+                        completed = item.end.ToString("yyyy/MM/dd HH:mm"),
+                        eventType = "Shift",
+                        start = item.start.ToString("yyyy/MM/dd HH:mm"),
+                        subArea = item.subArea,
+                        team = item.team,
+                        shiftId = item.shiftId,
+                        shiftType = 1,
+                        validation = item.validation,
+                        task = item.task,
+                        permit = item.permit
+                    };
 
                     //Calculate the shift progress
                     if (item.validationId == 2)
                     {
                         if (active)
                         {
-                            shift.shiftData = dbHelper.GetCompletedAssetsForShift(item.shiftId);
-                            shift.assets = dbHelper.GetAssetCountPerSubArea(item.subAreaId);
-                            if (shift.assets == 0) shift.progress = 0;
-                            else
-                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                            shift.shiftData = _dbHelper.GetCompletedAssetsForShift(item.shiftId);
+                            shift.assets = _dbHelper.GetAssetCountPerSubArea(item.subAreaId);
+                            shift.progress = shift.assets == 0 ? 0 : Math.Round(value: (shift.shiftData / (double)shift.assets) * 100, digits: 0);
                         }
                         else
                         {
@@ -772,9 +746,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated == true);
-                            shift.assets = dbHelper.GetAssetCountPerSubArea(item.subAreaId);
-                            shift.progress = shift.assets == 0 ? 0 : Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                            shift.shiftData = _db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated);
+                            shift.assets = _dbHelper.GetAssetCountPerSubArea(item.subAreaId);
+                            shift.progress = shift.assets == 0 ? 0 : Math.Round((shift.shiftData / (double)shift.assets) * 100, 0);
                         }
                         else
                         {
@@ -786,11 +760,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
 
                 //Custom Shifts
-                shifts = (from x in db.as_shifts
-                          join y in db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
-                          join b in db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
-                          join c in db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
-                          where x.bt_completed != active && x.bt_custom == true
+                shifts = (from x in _db.as_shifts
+                          join y in _db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+                          join b in _db.as_maintenanceProfile on x.i_maintenanceId equals b.i_maintenanceId
+                          join c in _db.as_maintenanceValidation on b.i_maintenanceValidationId equals c.i_maintenanceValidationId
+                          where x.bt_completed != active && x.bt_custom
                           select new
                           {
                               eventType = "Shift",
@@ -810,29 +784,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData();
-                    shift.area = item.area;
-                    shift.completed = item.end.ToString("dd-MM-yyyy HH:mm");
-                    shift.eventType = "Custom Shift";
-                    shift.start = item.start.ToString("dd-MM-yyyy HH:mm");
-                    shift.subArea = item.subArea;
-                    shift.team = item.team;
-                    shift.shiftId = item.shiftId;
-                    shift.shiftType = 2;
-                    shift.validation = item.validation;
-                    shift.task = item.task;
-                    shift.permit = item.permit;
+                    ShiftData shift = new ShiftData
+                    {
+                        area = item.area,
+                        completed = item.end.ToString("yyyy/MM/dd HH:mm"),
+                        eventType = "Custom Shift",
+                        start = item.start.ToString("yyyy/MM/dd HH:mm"),
+                        subArea = item.subArea,
+                        team = item.team,
+                        shiftId = item.shiftId,
+                        shiftType = 2,
+                        validation = item.validation,
+                        task = item.task,
+                        permit = item.permit
+                    };
 
                     //Calculate the shift progress
                     if (item.validationId == 2)
                     {
                         if (active)
                         {
-                            shift.shiftData = dbHelper.GetCompletedAssetsForShift(item.shiftId);
-                            shift.assets = db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
-                            if (shift.assets == 0) shift.progress = 0;
-                            else
-                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                            shift.shiftData = _dbHelper.GetCompletedAssetsForShift(item.shiftId);
+                            shift.assets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
+                            shift.progress = shift.assets == 0 ? 0 : Math.Round((shift.shiftData / (double)shift.assets) * 100, 0);
                         }
                         else
                         {
@@ -842,11 +816,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     {
                         if (active)
                         {
-                            shift.shiftData = db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated == true);
-                            shift.assets = db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
-                            if (shift.assets == 0) shift.progress = 0;
-                            else
-                                shift.progress = Math.Round(((double)shift.shiftData / (double)shift.assets) * 100, 0);
+                            shift.shiftData = _db.as_validationTaskProfile.Count(q => q.i_shiftId == item.shiftId && q.bt_validated);
+                            shift.assets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == item.shiftId);
+                            shift.progress = shift.assets == 0 ? 0 : Math.Round(value: (shift.shiftData / (double)shift.assets) * 100, digits: 0);
                         }
                         else
                         {
@@ -862,7 +834,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -881,24 +853,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Author: Bernard Willer
 
                 //Get User
-                var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
-                var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
+                var aspUser = _db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                var user = _db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
                                
-                var shift = db.as_shifts.Find(shiftId);
+                var shift = _db.as_shifts.Find(shiftId);
                 shift.bt_completed = true;
                 shift.dt_completionDate = DateTime.Now;
                 if (user != null) shift.i_closedBy = user.UserId;
-                db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(shift).State = System.Data.Entity.EntityState.Modified;
+                _db.SaveChanges();
 
                 //update iOS Cache Hash
-                cache.UpdateiOsCache("getTechnicianShifts");
+                _cache.UpdateiOsCache("getTechnicianShifts");
 
                 return Json(new { message = "success" });
             }
             catch (Exception err)
             {
-                cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
+                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 Response.StatusCode = 500;
                 Response.Status = err.Message;
                 return Json(new { message = err.Message });
@@ -910,7 +882,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertUserEvent(string dateTime, int recuring, int groupId)
+        public JsonResult InsertUserEvent(string dateTime, int recuring, int groupId)
         {
             try
             {
@@ -920,19 +892,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     case 0:
                         {
-                            as_eventPofile newEvent = new as_eventPofile();
-                            newEvent.bt_active = true;
-                            newEvent.bt_viewed = false;
+                            as_eventPofile newEvent = new as_eventPofile
+                            {
+                                bt_active = true,
+                                bt_viewed = false
+                            };
                             DateTime eventTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
                             newEvent.dt_dateTimeStart = eventTime;
                             newEvent.i_eventId = groupId;
 
-                            db.as_eventPofile.Add(newEvent);
-                            db.SaveChanges();
+                            _db.as_eventPofile.Add(newEvent);
+                            _db.SaveChanges();
 
                         }
-                        break;
-                    default:
                         break;
                 }
 
@@ -940,7 +912,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.Log("Failed to insert user event: " + err.Message, "insertUserEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert user event: " + err.Message, "insertUserEvent", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -950,7 +922,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId, int maintenanceId)
+        public JsonResult InsertNewShift(string dateTime, string workPermit, int recuring, int groupId, int subAreaId, int maintenanceId)
         {
             try
             {
@@ -961,33 +933,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     case 0:
                         {
                             //Get User
-                            var aspUser = db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
-                            var user = db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
+                            var aspUser = _db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
+                            var user = _db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
-                            as_shifts newShift = new as_shifts();
+                            var newShift = new as_shifts();
                             DateTime shiftTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
                             newShift.bt_completed = false;
                             newShift.dt_completionDate = new DateTime(1970, 1, 1);
                             newShift.dt_scheduledDate = shiftTime;
                             newShift.i_technicianGroup = groupId;
                             newShift.i_areaSubId = subAreaId;
-                            if (workPermit != null)
-                                newShift.vc_permitNumber = workPermit;
-                            else
-                                newShift.vc_permitNumber = "---";
-
+                            newShift.vc_permitNumber = workPermit ?? "---";
                             newShift.i_maintenanceId = maintenanceId;
                             newShift.vc_externalRef = "---";
                             newShift.bt_custom = false;
                             newShift.dt_dateCreated = DateTime.Now;
-                            newShift.i_createdBy = user.UserId;
+                            if (user != null) newShift.i_createdBy = user.UserId;
                             newShift.i_closedBy = 0;
 
-                            db.as_shifts.Add(newShift);
-                            db.SaveChanges();
+                            _db.as_shifts.Add(newShift);
+                            _db.SaveChanges();
 
                             //update iOS Cache Hash
-                            cache.UpdateiOsCache("getTechnicianShifts");
+                            _cache.UpdateiOsCache("getTechnicianShifts");
                         }
                         break;
                     case 1:
@@ -1000,15 +968,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                         }
                         break;
-                    default:
-                        break;
                 }
 
                 return Json(new {message = "Shift Created" });
             }
             catch (Exception err)
             {
-                cache.Log("Failed to insert new shift: " + err.Message, "insertNewShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert new shift: " + err.Message, "insertNewShift", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -1038,7 +1004,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("AirSide_Reporting", getReportData(shiftId, type));
+                ReportDataSource reportDataSource = new ReportDataSource("AirSide_Reporting", GetReportData(shiftId, type));
                 localReport.DataSources.Add(reportDataSource);
 
                 string reportType = fileType;
@@ -1059,10 +1025,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 Warning[] warnings;
                 string[] streams;
-                byte[] renderedBytes;
 
                 //Render the report
-                renderedBytes = localReport.Render(
+                var renderedBytes = localReport.Render(
                     reportType,
                     deviceInfo,
                     out mimeType,
@@ -1071,12 +1036,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftDataDump." + fileNameExtension);
-                cache.Log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", CacheHelper.LogTypes.Info, User.Identity.Name);
+                _cache.Log("User " + User.Identity.Name + " requested ExcelDataDump Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ExcelDataDump", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", CacheHelper.LogTypes.Error, User.Identity.Name);
+                _cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "ExcelDataDump", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }
@@ -1084,126 +1049,56 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private List<BigExcelDump> getReportData(int shiftId, int type)
+        private List<BigExcelDump> GetReportData(int shiftId, int type)
         {
-            bool customShift = false;
-            if (type == 2) customShift = true;
+            bool customShift = type == 2;
             
             //Captured Torque Data
-                var data = (from x in db.as_shiftData
-                            join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                            join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
-                            join a in db.as_locationProfile on z.i_locationId equals a.i_locationId
-                            join b in db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
-                            join c in db.as_areaProfile on b.i_areaId equals c.i_areaId
-                            join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
+                var data = (from x in _db.as_shiftData
+                            join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+                            join z in _db.as_assetProfile on x.i_assetId equals z.i_assetId
+                            join a in _db.as_locationProfile on z.i_locationId equals a.i_locationId
+                            join b in _db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
+                            join c in _db.as_areaProfile on b.i_areaId equals c.i_areaId
+                            join d in _db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
                             where x.i_shiftId == shiftId && y.bt_custom == customShift
                             select new
                             {
-                                dt_captureDate = x.dt_captureDate,
-                                f_capturedValue = x.f_capturedValue,
-                                i_assetCheckId = x.i_assetCheckId,
-                                bt_completed = y.bt_completed,
-                                dt_scheduledDate = y.dt_scheduledDate,
-                                dt_completionDate = y.dt_completionDate,
-                                vc_permitNumber = y.vc_permitNumber,
-                                vc_rfidTag = z.vc_rfidTag,
-                                vc_serialNumber = z.vc_serialNumber,
-                                assetClass = d.vc_description,
-                                vc_manufacturer = d.vc_manufacturer,
-                                vc_model = d.vc_model,
-                                f_latitude = a.f_latitude,
-                                f_longitude = a.f_longitude,
-                                vc_designation = a.vc_designation,
+                                x.dt_captureDate, x.f_capturedValue, x.i_assetCheckId, y.bt_completed, y.dt_scheduledDate, y.dt_completionDate, y.vc_permitNumber, z.vc_rfidTag, z.vc_serialNumber,
+                                assetClass = d.vc_description, d.vc_manufacturer, d.vc_model, a.f_latitude, a.f_longitude, a.vc_designation,
                                 subArea = b.vc_description,
                                 mainArea = c.vc_description
                             }).ToList();
 
-                List<BigExcelDump> returnList = new List<BigExcelDump>();
-
-                foreach (var item in data)
+                List<BigExcelDump> returnList = data.Select(item => new BigExcelDump
                 {
-                    BigExcelDump newItem = new BigExcelDump();
-                    newItem.assetClass = item.assetClass;
-                    newItem.bt_completed = item.bt_completed;
-                    newItem.dt_captureDate = item.dt_captureDate;
-                    newItem.dt_completionDate = item.dt_completionDate;
-                    newItem.dt_scheduledDate = item.dt_scheduledDate;
-                    newItem.f_capturedValue = item.f_capturedValue.ToString();
-                    newItem.f_latitude = item.f_latitude;
-                    newItem.f_longitude = item.f_longitude;
-                    newItem.i_assetCheckId = item.i_assetCheckId;
-                    newItem.mainArea = item.mainArea;
-                    newItem.subArea = item.subArea;
-                    newItem.vc_designation = item.vc_designation;
-                    newItem.vc_manufacturer = item.vc_manufacturer;
-                    newItem.vc_model = item.vc_model;
-                    newItem.vc_permitNumber = item.vc_permitNumber;
-                    newItem.vc_rfidTag = item.vc_rfidTag;
-                    newItem.vc_serialNumber = item.vc_serialNumber;
+                    assetClass = item.assetClass, bt_completed = item.bt_completed, dt_captureDate = item.dt_captureDate, dt_completionDate = item.dt_completionDate, dt_scheduledDate = item.dt_scheduledDate, f_capturedValue = item.f_capturedValue.ToString(CultureInfo.InvariantCulture), f_latitude = item.f_latitude, f_longitude = item.f_longitude, i_assetCheckId = item.i_assetCheckId, mainArea = item.mainArea, subArea = item.subArea, vc_designation = item.vc_designation, vc_manufacturer = item.vc_manufacturer, vc_model = item.vc_model, vc_permitNumber = item.vc_permitNumber, vc_rfidTag = item.vc_rfidTag, vc_serialNumber = item.vc_serialNumber
+                }).ToList();
 
-                    returnList.Add(newItem);
-
-                }
-
-                var validation = (from x in db.as_validationTaskProfile
-                        join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                        join z in db.as_assetProfile on x.i_assetId equals z.i_assetId
-                        join a in db.as_locationProfile on z.i_locationId equals a.i_locationId
-                        join b in db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
-                        join c in db.as_areaProfile on b.i_areaId equals c.i_areaId
-                        join d in db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
+            var validation = (from x in _db.as_validationTaskProfile
+                        join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+                        join z in _db.as_assetProfile on x.i_assetId equals z.i_assetId
+                        join a in _db.as_locationProfile on z.i_locationId equals a.i_locationId
+                        join b in _db.as_areaSubProfile on a.i_areaSubId equals b.i_areaSubId
+                        join c in _db.as_areaProfile on b.i_areaId equals c.i_areaId
+                        join d in _db.as_assetClassProfile on z.i_assetClassId equals d.i_assetClassId
                         where x.i_shiftId == shiftId && y.bt_custom == customShift
                         select new
                         {
                             dt_captureDate = x.dt_dateTimeStamp,
                             capturedValue = x.bt_validated,
-                            i_assetCheckId = 0,
-                            bt_completed = y.bt_completed,
-                            dt_scheduledDate = y.dt_scheduledDate,
-                            dt_completionDate = y.dt_completionDate,
-                            vc_permitNumber = y.vc_permitNumber,
-                            vc_rfidTag = z.vc_rfidTag,
-                            vc_serialNumber = z.vc_serialNumber,
-                            assetClass = d.vc_description,
-                            vc_manufacturer = d.vc_manufacturer,
-                            vc_model = d.vc_model,
-                            f_latitude = a.f_latitude,
-                            f_longitude = a.f_longitude,
-                            vc_designation = a.vc_designation,
+                            i_assetCheckId = 0, y.bt_completed, y.dt_scheduledDate, y.dt_completionDate, y.vc_permitNumber, z.vc_rfidTag, z.vc_serialNumber,
+                            assetClass = d.vc_description, d.vc_manufacturer, d.vc_model, a.f_latitude, a.f_longitude, a.vc_designation,
                             subArea = b.vc_description,
                             mainArea = c.vc_description
                         }).ToList();
 
-                foreach (var item in validation)
-                {
-                    BigExcelDump newItem = new BigExcelDump();
-                    newItem.assetClass = item.assetClass;
-                    newItem.bt_completed = item.bt_completed;
-                    newItem.dt_captureDate = item.dt_captureDate;
-                    newItem.dt_completionDate = item.dt_completionDate;
-                    newItem.dt_scheduledDate = item.dt_scheduledDate;
-                    if (item.capturedValue)
-                        newItem.f_capturedValue = "Validated";
-                    else
-                        newItem.f_capturedValue = "Not Validated";
+            returnList.AddRange(validation.Select(item => new BigExcelDump
+            {
+                assetClass = item.assetClass, bt_completed = item.bt_completed, dt_captureDate = item.dt_captureDate, dt_completionDate = item.dt_completionDate, dt_scheduledDate = item.dt_scheduledDate, f_capturedValue = item.capturedValue ? "Validated" : "Not Validated", f_latitude = item.f_latitude, f_longitude = item.f_longitude, i_assetCheckId = item.i_assetCheckId, mainArea = item.mainArea, subArea = item.subArea, vc_designation = item.vc_designation, vc_manufacturer = item.vc_manufacturer, vc_model = item.vc_model, vc_permitNumber = item.vc_permitNumber, vc_rfidTag = item.vc_rfidTag, vc_serialNumber = item.vc_serialNumber
+            }));
 
-                    newItem.f_latitude = item.f_latitude;
-                    newItem.f_longitude = item.f_longitude;
-                    newItem.i_assetCheckId = item.i_assetCheckId;
-                    newItem.mainArea = item.mainArea;
-                    newItem.subArea = item.subArea;
-                    newItem.vc_designation = item.vc_designation;
-                    newItem.vc_manufacturer = item.vc_manufacturer;
-                    newItem.vc_model = item.vc_model;
-                    newItem.vc_permitNumber = item.vc_permitNumber;
-                    newItem.vc_rfidTag = item.vc_rfidTag;
-                    newItem.vc_serialNumber = item.vc_serialNumber;
-
-                    returnList.Add(newItem);
-                }
-
-                return returnList;
+            return returnList;
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1227,7 +1122,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("ShiftDS", getShiftReportData(shiftId, type));
+                ReportDataSource reportDataSource = new ReportDataSource("ShiftDS", GetShiftReportData(shiftId, type));
                 localReport.DataSources.Add(reportDataSource);
 
                 string reportType = "PDF";
@@ -1248,10 +1143,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 Warning[] warnings;
                 string[] streams;
-                byte[] renderedBytes;
 
                 //Render the report
-                renderedBytes = localReport.Render(
+                var renderedBytes = localReport.Render(
                     reportType,
                     deviceInfo,
                     out mimeType,
@@ -1260,12 +1154,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     out streams,
                     out warnings);
                 Response.AddHeader("content-disposition", "attachment; filename=ShiftReport." + fileNameExtension);
-                cache.Log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", CacheHelper.LogTypes.Info, User.Identity.Name);
+                _cache.Log("User " + User.Identity.Name + " requested PDF ShiftReport Report -> Mime: " + mimeType + ", File Extension: " + fileNameExtension, "ShiftReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedBytes, mimeType);
             }
             catch (Exception err)
             {
-                cache.Log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException.ToString(), "ShiftReport", CacheHelper.LogTypes.Error, User.Identity.Name);
+                _cache.Log("ShiftReport Error: " + err.Message + " Inner: " + err.InnerException, "ShiftReport", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message });
             }
@@ -1273,15 +1167,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private List<ActiveShiftsReport> getShiftReportData(int shiftId, int type)
+        private List<ActiveShiftsReport> GetShiftReportData(int shiftId, int type)
         {
             bool customShift = type == 2;
 
-            var data = from x in db.as_shifts
-                        join y in db.as_shiftData on x.i_shiftId equals y.i_shiftId
-                        join z in db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
-                        join a in db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
-                        join b in db.as_areaProfile on a.i_areaId equals b.i_areaId
+            var data = from x in _db.as_shifts
+                        join y in _db.as_shiftData on x.i_shiftId equals y.i_shiftId
+                        join z in _db.as_technicianGroups on x.i_technicianGroup equals z.i_groupId
+                        join a in _db.as_areaSubProfile on x.i_areaSubId equals a.i_areaSubId
+                        join b in _db.as_areaProfile on a.i_areaId equals b.i_areaId
                         where x.i_shiftId == shiftId && x.bt_custom == customShift
                         select new
                         {
@@ -1290,18 +1184,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             subArea = a.vc_description
                         };
 
-            List<ActiveShiftsReport> returnList = new List<ActiveShiftsReport>();
+            var returnList = new List<ActiveShiftsReport>();
 
             foreach (var item in data)
             {
-                ActiveShiftsReport newShift = new ActiveShiftsReport();
-                newShift.area = item.area;
-                newShift.bt_completed = item.bt_completed;
-                newShift.dt_scheduledDate = item.dt_scheduledDate;
-                newShift.subArea = item.subArea;
-                newShift.vc_externalRef = item.vc_externalRef;
-                newShift.vc_groupName = item.vc_groupName;
-                newShift.vc_permitNumber = item.vc_permitNumber;
+                ActiveShiftsReport newShift = new ActiveShiftsReport
+                {
+                    area = item.area,
+                    bt_completed = item.bt_completed,
+                    dt_scheduledDate = item.dt_scheduledDate,
+                    subArea = item.subArea,
+                    vc_externalRef = item.vc_externalRef,
+                    vc_groupName = item.vc_groupName,
+                    vc_permitNumber = item.vc_permitNumber
+                };
 
                 returnList.Add(newShift);
             }
@@ -1331,16 +1227,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 };
 
                 //Prepare Data Sources for Report
-                ReportDataSource reportDataSource = new ReportDataSource("SheduleTasks", getEventSheduleData(shiftId, type));
+                ReportDataSource reportDataSource = new ReportDataSource("SheduleTasks", GetEventSheduleData(shiftId, type));
                 settings.dataSources[0] = reportDataSource;
 
-                reportDataSource = new ReportDataSource("AssetInfo", getEventAssetInfo(shiftId, type));
+                reportDataSource = new ReportDataSource("AssetInfo", GetEventAssetInfo(shiftId, type));
                 settings.dataSources[1] = reportDataSource;
 
-                reportDataSource = new ReportDataSource("ReportInfo", getEventReportInfo(shiftId, type));
+                reportDataSource = new ReportDataSource("ReportInfo", GetEventReportInfo(shiftId, type));
                 settings.dataSources[2] = reportDataSource;
 
-                reportDataSource = new ReportDataSource("CheckList", getEventCheckList(shiftId, type));
+                reportDataSource = new ReportDataSource("CheckList", GetEventCheckList(shiftId, type));
                 settings.dataSources[3] = reportDataSource;
 
                 settings.reportName = "EventReport";
@@ -1356,12 +1252,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 ReportBytes renderedReport = report.GenerateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
-                cache.Log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", CacheHelper.LogTypes.Info, User.Identity.Name);
+                _cache.Log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", CacheHelper.LogTypes.Info, User.Identity.Name);
                 return File(renderedReport.renderedBytes, "application/pdf ");
             }
             catch (Exception ex)
             {
-                cache.LogError(ex, User.Identity.Name);
+                _cache.LogError(ex, User.Identity.Name);
                 Response.StatusCode = 500;
                 return null;
             }
@@ -1371,17 +1267,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private List<EventScheduleData> getEventSheduleData(int shiftId, int type)
+        private List<EventScheduleData> GetEventSheduleData(int shiftId, int type)
         {
+            if (type <= 0) throw new ArgumentOutOfRangeException(nameof(type));
             List<EventScheduleData> returnList = new List<EventScheduleData>();
 
-            var shiftObject = db.as_shifts.Find(shiftId);
+            var shiftObject = _db.as_shifts.Find(shiftId);
 
-            var userOpen = db.UserProfiles.Find(shiftObject.i_createdBy);
-            var userClose = db.UserProfiles.Find(shiftObject.i_closedBy);
-            var techGroup = db.as_technicianGroups.Find(shiftObject.i_technicianGroup);
+            var userOpen = _db.UserProfiles.Find(shiftObject.i_createdBy);
+            var userClose = _db.UserProfiles.Find(shiftObject.i_closedBy);
+            var techGroup = _db.as_technicianGroups.Find(shiftObject.i_technicianGroup);
 
-            var maintenance = db.as_maintenanceProfile.Find(shiftObject.i_maintenanceId);
+            var maintenance = _db.as_maintenanceProfile.Find(shiftObject.i_maintenanceId);
 
             string shiftType = "";
 
@@ -1389,10 +1286,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             else if (maintenance.i_maintenanceValidationId == 2) shiftType = "Torque";
 
             //Event Created
-            EventScheduleData item = new EventScheduleData();
-            item.DateOfEvent = shiftObject.dt_dateCreated.ToString("yyyy/MM/dd");
-            item.TimeOfEvent = shiftObject.dt_dateCreated.ToString("HH:mm:ss");
-            item.Description = shiftType + " shift created by " + userOpen.FirstName + " " + userOpen.LastName + ". The shift was created to " + maintenance.vc_description + " on " + shiftObject.dt_scheduledDate.ToString("yyy/MM/dd HH:mm");
+            EventScheduleData item = new EventScheduleData
+            {
+                DateOfEvent = shiftObject.dt_dateCreated.ToString("yyyy/MM/dd"),
+                TimeOfEvent = shiftObject.dt_dateCreated.ToString("HH:mm:ss"),
+                Description =
+                    shiftType + " shift created by " + userOpen.FirstName + " " + userOpen.LastName +
+                    ". The shift was created to " + maintenance.vc_description + " on " +
+                    shiftObject.dt_scheduledDate.ToString("yyy/MM/dd HH:mm")
+            };
             returnList.Add(item);
             
 
@@ -1401,44 +1303,50 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             if(maintenance.i_maintenanceValidationId == 1)
             {
-                int count = db.as_shiftData.Where(q => q.i_shiftId == shiftId).Count();
+                int count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
                 if (count > 0)
                 {
-                    var shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
+                    var shiftData = _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
                     firstDate = shiftData.OrderBy(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
                     lastDate = shiftData.OrderByDescending(q => q.dt_dateTimeStamp).First().dt_dateTimeStamp;
                 }
             }
             else if (maintenance.i_maintenanceValidationId == 2)
             {
-                int count = db.as_shiftData.Where(q => q.i_shiftId == shiftId).Count();
+                int count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
                 if (count > 0)
                 {
-                    var shiftData = db.as_shiftData.Where(q => q.i_shiftId == shiftId).OrderBy(q => q.dt_captureDate);
+                    var shiftData = _db.as_shiftData.Where(q => q.i_shiftId == shiftId).OrderBy(q => q.dt_captureDate);
                     firstDate = shiftData.OrderBy(q => q.dt_captureDate).First().dt_captureDate;
                     lastDate = shiftData.OrderByDescending(q => q.dt_captureDate).First().dt_captureDate;
                 }
             }
 
             //First Event
-            item = new EventScheduleData();
-            item.DateOfEvent = firstDate.ToString("yyyy/MM/dd");
-            item.TimeOfEvent = firstDate.ToString("HH:mm:ss");
-            item.Description = "The first asset was maintained by " + techGroup.vc_groupName;
+            item = new EventScheduleData
+            {
+                DateOfEvent = firstDate.ToString("yyyy/MM/dd"),
+                TimeOfEvent = firstDate.ToString("HH:mm:ss"),
+                Description = "The first asset was maintained by " + techGroup.vc_groupName
+            };
             returnList.Add(item);
 
             //Last Event
-            item = new EventScheduleData();
-            item.DateOfEvent = lastDate.ToString("yyyy/MM/dd");
-            item.TimeOfEvent = lastDate.ToString("HH:mm:ss");
-            item.Description = "The last asset was maintained by " + techGroup.vc_groupName;
+            item = new EventScheduleData
+            {
+                DateOfEvent = lastDate.ToString("yyyy/MM/dd"),
+                TimeOfEvent = lastDate.ToString("HH:mm:ss"),
+                Description = "The last asset was maintained by " + techGroup.vc_groupName
+            };
             returnList.Add(item);
 
             //Event Closed By
-            item = new EventScheduleData();
-            item.DateOfEvent = shiftObject.dt_completionDate.ToString("yyyy/MM/dd");
-            item.TimeOfEvent = shiftObject.dt_completionDate.ToString("HH:mm:ss");
-            item.Description = "The shift was closed by " + userClose.FirstName + " " + userClose.LastName + ".";
+            item = new EventScheduleData
+            {
+                DateOfEvent = shiftObject.dt_completionDate.ToString("yyyy/MM/dd"),
+                TimeOfEvent = shiftObject.dt_completionDate.ToString("HH:mm:ss"),
+                Description = "The shift was closed by " + userClose.FirstName + " " + userClose.LastName + "."
+            };
             returnList.Add(item);
 
             return returnList;
@@ -1446,18 +1354,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private async Task<List<EventAssetInfo>> getEventAssetInfo(int shiftId, int type)
+        private async Task<List<EventAssetInfo>> GetEventAssetInfo(int shiftId, int type)
         {
+            if (type <= 0) throw new ArgumentOutOfRangeException(nameof(type));
             List<EventAssetInfo> returnList = new List<EventAssetInfo>();
 
-            var shift = db.as_shifts.Find(shiftId);
-            var maintenance = db.as_maintenanceProfile.Find(shift.i_maintenanceId);
+            var shift = _db.as_shifts.Find(shiftId);
+            var maintenance = _db.as_maintenanceProfile.Find(shift.i_maintenanceId);
 
-            var assetStatus = await cache.GetAssetStatusHistory();
+            var assetStatus = await _cache.GetAssetStatusHistory();
 
             if(maintenance.i_maintenanceValidationId == 2)
             {
-                var shiftData = db.as_shiftData.Where(q => q.i_shiftId == shiftId);
+                var shiftData = _db.as_shiftData.Where(q => q.i_shiftId == shiftId);
 
                 var dataSet = from x in shiftData
                               group x by x.i_assetId into asset
@@ -1468,11 +1377,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 foreach(var item in dataSet)
                 {
                     EventAssetInfo info = new EventAssetInfo();
-                    var asset = db.as_assetProfile.Find(item.asset);
-                    var assetClass = db.as_assetClassProfile.Find(asset.i_assetClassId);
-                    var dateOfCapture = db.as_shiftData.Where(q => q.i_shiftId == shiftId && q.i_assetId == item.asset).FirstOrDefault();
+                    var asset = _db.as_assetProfile.Find(item.asset);
+                    var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
+                    var dateOfCapture = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shiftId && q.i_assetId == item.asset);
 
-                    var status = assetStatus.Where(q => q.lastValid.Date <= dateOfCapture.dt_captureDate.Date && q.assetId == item.asset).FirstOrDefault();
+                    var status = assetStatus.FirstOrDefault(q => dateOfCapture != null && (q.lastValid.Date <= dateOfCapture.dt_captureDate.Date && q.assetId == item.asset));
 
                     info.AssetName = asset.vc_serialNumber;
                     info.CurrentState = "---";
@@ -1490,21 +1399,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 break;
                             case 4: info.PriorState = "Over Due (Red)";
                                 break;
-                            default:
-                                break;
                         }
                     } else
                     {
                         info.PriorState = "No Data (Blue)";
                     }
-                    info.DateOfEvent = dateOfCapture.dt_captureDate.ToString("yyy/MM/dd HH:mm");
+                    if (dateOfCapture != null)
+                        info.DateOfEvent = dateOfCapture.dt_captureDate.ToString("yyy/MM/dd HH:mm");
                     info.TypeOfAsset = assetClass.vc_description;
                     info.ValidationType = "Torquing";
                     returnList.Add(info);
                 }
             } else if(maintenance.i_maintenanceValidationId == 1)
             {
-                var shiftData = db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
+                var shiftData = _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
                 var dataSet = from x in shiftData
                               select new
                               {
@@ -1515,10 +1423,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 foreach (var item in dataSet)
                 {
                     EventAssetInfo info = new EventAssetInfo();
-                    var asset = db.as_assetProfile.Find(item.assetId);
-                    var assetClass = db.as_assetClassProfile.Find(asset.i_assetClassId);
+                    var asset = _db.as_assetProfile.Find(item.assetId);
+                    var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
 
-                    var status = assetStatus.Where(q => q.lastValid.Date == item.maintenanceDate.Date && q.assetId == item.assetId).FirstOrDefault();
+                    var status = assetStatus.FirstOrDefault(q => q.lastValid.Date == item.maintenanceDate.Date && q.assetId == item.assetId);
 
                     info.AssetName = asset.vc_serialNumber;
                     info.CurrentState = "---";
@@ -1535,8 +1443,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             case 3: info.PriorState = "Almost Due (Orange)";
                                 break;
                             case 4: info.PriorState = "Over Due (Red)";
-                                break;
-                            default:
                                 break;
                         }
                     } else
@@ -1555,24 +1461,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<EventCheckList> getEventCheckList(int shiftId, int type)
+        private List<EventCheckList> GetEventCheckList(int shiftId, int type)
         {
             List<EventCheckList> returnList = new List<EventCheckList>();
-            bool customShift = false;
-            if (type == 2) customShift = true;
+            bool customShift = type == 2;
            
-            int maintenanceId = (from x in db.as_shifts
+            int maintenanceId = (from x in _db.as_shifts
                                     where x.i_shiftId == shiftId && x.bt_custom == customShift
                                     select x.i_maintenanceId).FirstOrDefault();
 
-            var checkList = from x in db.as_maintenanceCheckListDef
+            var checkList = from x in _db.as_maintenanceCheckListDef
                             where x.i_maintenanceId == maintenanceId
                             select x.vc_description;
 
             foreach(var item in checkList)
             {
-                EventCheckList listItem = new EventCheckList();
-                listItem.ListItem = item;
+                EventCheckList listItem = new EventCheckList {ListItem = item};
 
                 returnList.Add(listItem);
             }
@@ -1582,26 +1486,25 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<EventReportInfo> getEventReportInfo(int shiftId, int type)
+        private List<EventReportInfo> GetEventReportInfo(int shiftId, int type)
         {
             List<EventReportInfo> returnList = new List<EventReportInfo>();
-            bool customShift = false;
-            if (type == 2) customShift = true;
+            bool customShift = type == 2;
 
-            var shift = db.as_shifts.Find(shiftId);
-            var maintenance = db.as_maintenanceProfile.Find(shift.i_maintenanceId);
+            var shift = _db.as_shifts.Find(shiftId);
+            var maintenance = _db.as_maintenanceProfile.Find(shift.i_maintenanceId);
 
             if (maintenance.i_maintenanceValidationId == 2)
             {
-                int count = (from x in db.as_shiftData
-                             join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                int count = (from x in _db.as_shiftData
+                             join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                              where y.i_shiftId == shiftId && y.bt_custom == customShift
                              select x).Count();
 
                 if (count > 0)
                 {
-                    var shiftData = from x in db.as_shiftData
-                                    join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                    var shiftData = from x in _db.as_shiftData
+                                    join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                                     where y.i_shiftId == shiftId && y.bt_custom == customShift
                                     select new
                                     {
@@ -1612,61 +1515,67 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                         TechGroupId = y.i_technicianGroup
                                     };
 
-                    int areaId = shiftData.FirstOrDefault().AreaId;
-                    int totalAssets = 0;
+                    var firstOrDefault = shiftData.FirstOrDefault();
+                    if (firstOrDefault != null)
+                    {
+                        int areaId = firstOrDefault.AreaId;
+                        int totalAssets;
 
-                    if (areaId != 0)
-                        totalAssets = (from x in db.as_assetProfile
-                                       join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
-                                       where y.i_areaSubId == areaId
-                                       select x).Count();
-                    else
-                        totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
+                        if (areaId != 0)
+                            totalAssets = (from x in _db.as_assetProfile
+                                join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
+                                where y.i_areaSubId == areaId
+                                select x).Count();
+                        else
+                            totalAssets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == shiftId);
 
-                    int completedAssets = (from x in shiftData
-                                           group x by x.AssetId into assetGroup
-                                           select new
-                                           {
-                                               numberAssets = assetGroup.Count()
-                                           }).Count();
+                        int completedAssets = (from x in shiftData
+                            group x by x.AssetId into assetGroup
+                            select new
+                            {
+                                numberAssets = assetGroup.Count()
+                            }).Count();
 
-                    int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+                        int techGroupId = firstOrDefault.TechGroupId;
 
-                    string technicianGroup = (from x in db.as_technicianGroups
-                                              where x.i_groupId == techGroupId
-                                              select x.vc_groupName).FirstOrDefault();
+                        string technicianGroup = (from x in _db.as_technicianGroups
+                            where x.i_groupId == techGroupId
+                            select x.vc_groupName).FirstOrDefault();
 
-                    decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
+                        decimal percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
 
-                    string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+                        string eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
 
-                    int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+                        int maintenanceId = firstOrDefault.MaintenanceId;
 
-                    string maintenanceTask = (from x in db.as_maintenanceProfile
-                                              where x.i_maintenanceId == maintenanceId
-                                              select x.vc_description).FirstOrDefault();
+                        string maintenanceTask = (from x in _db.as_maintenanceProfile
+                            where x.i_maintenanceId == maintenanceId
+                            select x.vc_description).FirstOrDefault();
 
-                    EventReportInfo info = new EventReportInfo();
-                    info.EventDate = EventDate;
-                    info.MaintenanceTask = maintenanceTask;
-                    info.NumberOfAssets = totalAssets;
-                    info.PercentageComplete = percentage;
-                    info.PercentageNotComplete = 100 - percentage;
-                    info.TechGroup = technicianGroup;
+                        EventReportInfo info = new EventReportInfo
+                        {
+                            EventDate = eventDate,
+                            MaintenanceTask = maintenanceTask,
+                            NumberOfAssets = totalAssets,
+                            PercentageComplete = percentage,
+                            PercentageNotComplete = 100 - percentage,
+                            TechGroup = technicianGroup
+                        };
 
-                    returnList.Add(info);
+                        returnList.Add(info);
+                    }
                 }
             } else if(maintenance.i_maintenanceValidationId == 1)
             {
-                int count = (from x in db.as_validationTaskProfile
-                             join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                int count = (from x in _db.as_validationTaskProfile
+                             join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                              where y.i_shiftId == shiftId && y.bt_custom == customShift
                              select x).Count();
 
                 if (count > 0)
                 {
-                    var shiftData = from x in db.as_validationTaskProfile
-                                    join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
+                    var shiftData = from x in _db.as_validationTaskProfile
+                                    join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                                     where y.i_shiftId == shiftId && y.bt_custom == customShift
                                     select new
                                     {
@@ -1677,49 +1586,55 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                         TechGroupId = y.i_technicianGroup
                                     };
 
-                    int areaId = shiftData.FirstOrDefault().AreaId;
-                    int totalAssets = 0;
+                    var firstOrDefault = shiftData.FirstOrDefault();
+                    if (firstOrDefault != null)
+                    {
+                        int areaId = firstOrDefault.AreaId;
+                        int totalAssets;
 
-                    if (areaId != 0)
-                        totalAssets = (from x in db.as_assetProfile
-                                       join y in db.as_locationProfile on x.i_locationId equals y.i_locationId
-                                       where y.i_areaSubId == areaId
-                                       select x).Count();
-                    else
-                        totalAssets = db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).Count();
+                        if (areaId != 0)
+                            totalAssets = (from x in _db.as_assetProfile
+                                join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
+                                where y.i_areaSubId == areaId
+                                select x).Count();
+                        else
+                            totalAssets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == shiftId);
 
-                    int completedAssets = (from x in shiftData
-                                           group x by x.AssetId into assetGroup
-                                           select new
-                                           {
-                                               numberAssets = assetGroup.Count()
-                                           }).Count();
+                        int completedAssets = (from x in shiftData
+                            group x by x.AssetId into assetGroup
+                            select new
+                            {
+                                numberAssets = assetGroup.Count()
+                            }).Count();
 
-                    int techGroupId = shiftData.FirstOrDefault().TechGroupId;
+                        int techGroupId = firstOrDefault.TechGroupId;
 
-                    string technicianGroup = (from x in db.as_technicianGroups
-                                              where x.i_groupId == techGroupId
-                                              select x.vc_groupName).FirstOrDefault();
+                        string technicianGroup = (from x in _db.as_technicianGroups
+                            where x.i_groupId == techGroupId
+                            select x.vc_groupName).FirstOrDefault();
 
-                    decimal percentage = Math.Round((decimal)completedAssets / (decimal)totalAssets * 100, 0);
+                        decimal percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
 
-                    string EventDate = shiftData.FirstOrDefault().SheduledDate.ToString("yyyy/MM/dd");
+                        string eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
 
-                    int maintenanceId = shiftData.FirstOrDefault().MaintenanceId;
+                        int maintenanceId = firstOrDefault.MaintenanceId;
 
-                    string maintenanceTask = (from x in db.as_maintenanceProfile
-                                              where x.i_maintenanceId == maintenanceId
-                                              select x.vc_description).FirstOrDefault();
+                        string maintenanceTask = (from x in _db.as_maintenanceProfile
+                            where x.i_maintenanceId == maintenanceId
+                            select x.vc_description).FirstOrDefault();
 
-                    EventReportInfo info = new EventReportInfo();
-                    info.EventDate = EventDate;
-                    info.MaintenanceTask = maintenanceTask;
-                    info.NumberOfAssets = totalAssets;
-                    info.PercentageComplete = percentage;
-                    info.PercentageNotComplete = 100 - percentage;
-                    info.TechGroup = technicianGroup;
+                        EventReportInfo info = new EventReportInfo
+                        {
+                            EventDate = eventDate,
+                            MaintenanceTask = maintenanceTask,
+                            NumberOfAssets = totalAssets,
+                            PercentageComplete = percentage,
+                            PercentageNotComplete = 100 - percentage,
+                            TechGroup = technicianGroup
+                        };
 
-                    returnList.Add(info);
+                        returnList.Add(info);
+                    }
                 }
             }
           

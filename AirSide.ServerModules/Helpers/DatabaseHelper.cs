@@ -166,10 +166,12 @@ namespace AirSide.ServerModules.Helpers
         {
             try
             {
-                //Get the last maintained date for a asset
-                //Create Date: 2014/12/09
+                //Get the last maintained date for a asset and the maintenance id
+                //Create Date: 2016/03/31
                 //Author: Bernard Willer
 
+                var maintenance = _db.as_maintenanceProfile.Find(maintenanceId);
+                
                 Boolean shiftFlag = true;
                 Boolean validationFlag = true;
 
@@ -177,43 +179,37 @@ namespace AirSide.ServerModules.Helpers
                 DateTime valDate = DateTime.Now;
                 DateTime returnDate = new DateTime(1970, 1, 1);
 
-                //Get the last shift date for asset
-                var lastDate = (from x in _db.as_shiftData
-                                join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
-                                join z in _db.as_shifts on x.i_shiftId equals z.i_shiftId
-                                where x.i_assetId == assetId && z.i_maintenanceId == maintenanceId
-                                select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
-
-                if (lastDate == null)
-                    shiftFlag = false;
-                else
-                    shiftDate = lastDate.dt_captureDate;
-
-
-                //get last validation date for asset
-                var lastValDate = (from x in _db.as_validationTaskProfile
-                                   where x.i_assetId == assetId
-                                   select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
-
-                if (lastValDate == null)
-                    validationFlag = false;
-                else
-                    valDate = lastValDate.dt_dateTimeStamp;
-
-                //get the latest date
-                if (shiftFlag && validationFlag)
+                if (maintenance.i_maintenanceValidationId == 2)
                 {
-                    returnDate = shiftDate > valDate ? shiftDate : valDate;
-                }
-                else if (shiftFlag)
-                {
-                    returnDate = shiftDate;
-                }
-                else if (validationFlag)
-                {
-                    returnDate = valDate;
-                }
+                    //Get the last shift date for asset
+                    var lastDate = (from x in _db.as_shiftData
+                        join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
+                        join z in _db.as_shifts on x.i_shiftId equals z.i_shiftId
+                        where x.i_assetId == assetId && z.i_maintenanceId == maintenanceId
+                        select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
 
+                    if (lastDate == null)
+                        shiftFlag = false;
+                    else
+                        shiftDate = lastDate.dt_captureDate;
+
+                    if (shiftFlag) returnDate = shiftDate;
+
+                } else if (maintenance.i_maintenanceId == 1)
+                {
+                    //get last validation date for asset
+                    var lastValDate = (from x in _db.as_validationTaskProfile
+                        where x.i_assetId == assetId
+                        select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
+
+                    if (lastValDate == null)
+                        validationFlag = false;
+                    else
+                        valDate = lastValDate.dt_dateTimeStamp;
+
+                    if (validationFlag) returnDate = valDate;
+                }
+                
                 return returnDate;
 
             }
@@ -227,12 +223,14 @@ namespace AirSide.ServerModules.Helpers
 
         public DateTime GetMaintenanceNextDate(int maintenanceId, int assetId, double frequency)
         {
-            //Gets the next maintenance date for a asset
-            //Create Date: 2014/12/09
+            //Gets the next maintenance date for a asset and maintenance id
+            //Create Date: 2016/03/31
             //Author: Bernard Willer
 
             try
             {
+                var maintenance = _db.as_maintenanceProfile.Find(maintenanceId);
+
                 Boolean shiftFlag = true;
                 Boolean validationFlag = true;
 
@@ -240,41 +238,34 @@ namespace AirSide.ServerModules.Helpers
                 DateTime valDate = DateTime.Now;
                 DateTime returnDate = new DateTime(1970, 1, 1);
 
-                //Get the last shift date for asset
-                var lastDate = (from x in _db.as_shiftData
-                                join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
-                                join z in _db.as_shifts on x.i_shiftId equals z.i_shiftId
-                                where x.i_assetId == assetId && z.i_maintenanceId == maintenanceId
-                                select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
-
-                if (lastDate == null)
-                    shiftFlag = false;
-                else
-                    shiftDate = lastDate.dt_captureDate;
-
-
-                //get last validation date for asset
-                var lastValDate = (from x in _db.as_validationTaskProfile
-                                   where x.i_assetId == assetId
-                                   select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
-
-                if (lastValDate == null)
-                    validationFlag = false;
-                else
-                    valDate = lastValDate.dt_dateTimeStamp;
-
-                //get the latest date
-                if (shiftFlag && validationFlag)
+                if (maintenance.i_maintenanceValidationId == 2)
                 {
-                    returnDate = shiftDate > valDate ? shiftDate.AddDays(frequency) : valDate.AddDays(frequency);
-                }
-                else if (shiftFlag)
+                    //Get the last shift date for asset
+                    var lastDate = (from x in _db.as_shiftData
+                        join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
+                        join z in _db.as_shifts on x.i_shiftId equals z.i_shiftId
+                        where x.i_assetId == assetId && z.i_maintenanceId == maintenanceId
+                        select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
+
+                    if (lastDate == null)
+                        shiftFlag = false;
+                    else
+                        shiftDate = lastDate.dt_captureDate;
+
+                    if (shiftFlag) returnDate = shiftDate.AddDays(frequency);
+                } else if (maintenance.i_maintenanceValidationId == 1)
                 {
-                    returnDate = shiftDate.AddDays(frequency);
-                }
-                else if (validationFlag)
-                {
-                    returnDate = valDate.AddDays(frequency);
+                    //get last validation date for asset
+                    var lastValDate = (from x in _db.as_validationTaskProfile
+                        where x.i_assetId == assetId
+                        select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
+
+                    if (lastValDate == null)
+                        validationFlag = false;
+                    else
+                        valDate = lastValDate.dt_dateTimeStamp;
+
+                    if (validationFlag) returnDate = valDate.AddDays(frequency);
                 }
 
                 return returnDate;
@@ -427,11 +418,20 @@ namespace AirSide.ServerModules.Helpers
                                  }).OrderBy(q => q.dateOfActivity).ToList();
 
                 //Add Anomalies
+                List<ActivityChart> activities = new List<ActivityChart>();
 
-                return anomalies.Select(anomaly => new ActivityChart
+                foreach (var item in anomalies)
                 {
-                    dateOfActivity = new DateTime(anomaly.dateOfActivity.y, anomaly.dateOfActivity.m, anomaly.dateOfActivity.d).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, numberOfActivities = anomaly.numberOfActivities
-                }).ToList();
+                    var anomaly = new ActivityChart
+                    {
+                        dateOfActivity = CalcDateForChart(item.dateOfActivity.y, item.dateOfActivity.m, item.dateOfActivity.d),
+                        numberOfActivities = item.numberOfActivities
+                    };
+
+                    activities.Add(anomaly);
+                }
+
+                return activities;
             }
             catch (Exception)
             {
@@ -471,18 +471,37 @@ namespace AirSide.ServerModules.Helpers
                                 }).OrderBy(q => q.dateOfActivity);
 
 
-                return filtered.Select(shift => new ActivityChart
+                List<ActivityChart> activities = new List<ActivityChart>();
+
+                foreach (var item in filtered)
                 {
-                    dateOfActivity = new DateTime(shift.dateOfActivity.y, shift.dateOfActivity.m, shift.dateOfActivity.d).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, numberOfActivities = shift.numberOfActivities
-                }).ToList();
+                    var activity = new ActivityChart
+                    {
+                        dateOfActivity = CalcDateForChart(item.dateOfActivity.y, item.dateOfActivity.m, item.dateOfActivity.d),
+                        numberOfActivities = item.numberOfActivities
+                    };
+
+                    activities.Add(activity);
+                }
+
+                return activities;
             }
-            catch (Exception)
+            catch (Exception err)
             {
                 List<ActivityChart> activities = new List<ActivityChart>();
                 //log.logError(err, "SYSTEM");
                 return activities;
             }
 
+        }
+
+        private double CalcDateForChart(int year, int month, int day)
+        {
+            var seventy = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var returnDate = new DateTime(year, month, day);
+            returnDate = returnDate.ToUniversalTime();
+            var gap = returnDate.Subtract(seventy);
+            return gap.TotalMilliseconds;
         }
 
         #endregion

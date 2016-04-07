@@ -375,9 +375,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			
 			DateTime now = DateTime.Now;
 
-			foreach (ios_validationTaskProfile item in validations)
+			foreach (var item in validations)
 			{
-				as_validationTaskProfile validation = new as_validationTaskProfile
+				var validation = new as_validationTaskProfile
 				{
 					bt_validated = item.bt_validated,
 					i_assetId = item.i_assetId,
@@ -389,7 +389,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							: now
 				};
 
-				string log = "Start";
+				var log = "Start";
 
 				try
 				{
@@ -408,7 +408,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 
 					//rebuild cache for asset
-				    log = "Rebuild Cache";
+					log = "Rebuild Cache";
 					await _cache.RebuildAssetProfileForAsset(item.i_assetId);
 				}
 
@@ -541,8 +541,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						i_shiftId = shift.i_shiftId
 					};
 
+				    //var data = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shift.i_shiftId && q.i_assetId == shift.i_assetId);
 
-					_db.as_shiftData.Add(newData);
+				    //if (data != null)
+				    //{
+				    //    _db.as_shiftData.Remove(data);
+				    //    _db.SaveChanges();
+				    //}
+
+				    _db.as_shiftData.Add(newData);
 					_db.SaveChanges();
 
 					try
@@ -554,7 +561,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						_cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
 				}
-				return Json("[{success:1}]");
+				return Json(new { ShiftData = shiftData });
 			}
 			catch (Exception err)
 			{
@@ -1331,7 +1338,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-                await _cache.CreateAssetClassDownloadCache();
+				await _cache.CreateAssetClassDownloadCache();
 				return Json(new { status = "success" });
 			}
 			catch (Exception)

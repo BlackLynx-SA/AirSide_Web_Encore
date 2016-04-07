@@ -821,7 +821,7 @@ namespace AirSide.ServerModules.Helpers
                     assets = await coll1.Find(q => q.assetClassId == id).ToListAsync();
             }
             else
-                assets = await coll1.Find(q => q.assetId != id).ToListAsync();
+                assets = await coll1.Find(q => q.assetId != 0).ToListAsync();
 
             foreach(var item in assets)
             {

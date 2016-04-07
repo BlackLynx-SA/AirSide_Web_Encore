@@ -30,17 +30,19 @@ var AirSide;
                             switch (c.AlertType.severity) {
                                 case SeverityLevels.Critical:
                                     _this.$criticalCount.html(c.AlertCount.toString());
+                                    total += c.AlertCount;
                                     break;
                                 case SeverityLevels.Major:
                                     _this.$majorCount.html(c.AlertCount.toString());
+                                    total += c.AlertCount;
                                     break;
                                 case SeverityLevels.Minor:
                                     _this.$minorCount.html(c.AlertCount.toString());
+                                    total += c.AlertCount;
                                     break;
                                 default:
                                     break;
                             }
-                            total += c.AlertCount;
                         });
                         _this.$total.html(total.toString());
                     }

@@ -57,8 +57,7 @@ var AirSide;
     })();
     var myAssets = new AllAssets();
     function process() {
-        var assetClass;
-        assetClass = myAssets.findAllInAssetClass(2);
+        var assetClass = myAssets.findAllInAssetClass(2);
         console.log(assetClass);
     }
 })(AirSide || (AirSide = {}));

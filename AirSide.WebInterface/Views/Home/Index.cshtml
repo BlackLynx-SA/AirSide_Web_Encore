@@ -62,7 +62,10 @@
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-green"> @{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100); } @Math.Round(numberAssets, 0) </span>
+                                                    <span class="label bg-color-green"> @{
+                                                        double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100);
+                                                                                        }
+                                                     @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
                                                     <span class="label bg-color-green"> @ViewBag.totalTasks</span>
@@ -144,10 +147,6 @@
                 <!-- new widget -->
                     @{Html.RenderPartial("_MapView");}
                 <!-- end widget -->
-
-                <!-- ToDo Widget -->
-                    @{Html.RenderPartial("_ToDoView");}
-                <!-- end ToDo Widget -->
 
             </article>
         </div>

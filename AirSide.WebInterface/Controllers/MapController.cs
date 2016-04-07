@@ -43,15 +43,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var maintenanceTasks = db.as_maintenanceProfile.ToList();
             
             //Add Worst Case Category
-            as_maintenanceProfile worstCase = new as_maintenanceProfile();
-            worstCase.i_maintenanceCategoryId = 0;
-            worstCase.i_maintenanceId = 0;
-            worstCase.i_maintenanceValidationId = 0;
-            worstCase.vc_description = "Worst Case";
+            as_maintenanceProfile worstCase = new as_maintenanceProfile
+            {
+                i_maintenanceCategoryId = 0,
+                i_maintenanceId = 0,
+                i_maintenanceValidationId = 0,
+                vc_description = "Worst Case"
+            };
             maintenanceTasks.Add(worstCase);
 
             ViewData["maintenanceTasks"] = maintenanceTasks.OrderBy(q=>q.i_maintenanceId).ToList();
-            ViewBag.firstTask = 0;
             ViewBag.taskDesc = "Worst Case";
 
             return View();

@@ -105,7 +105,7 @@
             filterValue = cycle;
         } else if (filterType === 'asset') {
             var asset = $('#assetClasses').val();
-            showAssetClass(asset, clustered)
+            showAssetClass(asset, clustered);
             filterEnum = 102;
             filterValue = asset;
         }
@@ -134,7 +134,7 @@
         $.each(Assets.jsonData, function (i,v) {
             if (asset === v.assetClass.assetClassId.toString()) {
                 $.each(v.maintenance, function (index, value) {
-                    if (value.maintenanceId == selectedTask) {
+                    if (value.maintenanceId === selectedTask) {
                         addMarker(v);
                         return false;
                     }

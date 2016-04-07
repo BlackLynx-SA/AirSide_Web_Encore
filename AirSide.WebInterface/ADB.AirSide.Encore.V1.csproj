@@ -1100,11 +1100,13 @@
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
+    <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Baneasa.pubxml" />
     <None Include="Properties\PublishProfiles\Birmingham.pubxml" />
-    <None Include="Properties\PublishProfiles\Encore.pubxml" />
     <None Include="Properties\PublishProfiles\Hamad.pubxml" />
     <None Include="Properties\PublishProfiles\Heathrow.pubxml" />
+    <None Include="Properties\PublishProfiles\Nordholz - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

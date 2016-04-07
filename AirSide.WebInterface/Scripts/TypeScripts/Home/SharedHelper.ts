@@ -40,18 +40,19 @@ module AirSide.SharedHelper {
                         switch (c.AlertType.severity) {
                             case SeverityLevels.Critical:
                                 this.$criticalCount.html(c.AlertCount.toString());
+                                total += c.AlertCount;
                                 break;
                             case SeverityLevels.Major:
                                 this.$majorCount.html(c.AlertCount.toString());
+                                total += c.AlertCount;
                                 break;
                             case SeverityLevels.Minor:
                                 this.$minorCount.html(c.AlertCount.toString());
+                                total += c.AlertCount;
                                 break;
                             default:
                                 break;
                         }
-
-                        total += c.AlertCount;
                     });
 
                     this.$total.html(total.toString());
