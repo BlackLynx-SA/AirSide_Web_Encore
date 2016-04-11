@@ -1106,6 +1106,7 @@
     <None Include="Properties\PublishProfiles\Birmingham.pubxml" />
     <None Include="Properties\PublishProfiles\Hamad.pubxml" />
     <None Include="Properties\PublishProfiles\Heathrow.pubxml" />
+    <None Include="Properties\PublishProfiles\heathrowairside - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Nordholz - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -1238,6 +1239,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
+    <Folder Include="Content\Images\" />
     <Folder Include="Images\releases\2.0.0.1\" />
   </ItemGroup>
   <ItemGroup>

@@ -61,13 +61,14 @@
         var map;
         var markers = [];
         var Assets = new AllAssets();
+        var selectedMarker = 0;
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             $.ajax({
                 url: '../../Map/getMapCenter',
                 type: 'post',
                 dataType: 'json',
-                success: function (json) {
+                success: function(json) {
                     centerLat = json[0];
                     centerLong = json[1];
 
@@ -85,37 +86,32 @@
                 }
             });
 
-            var assetId = getUrlParameter('id');
-            if(assetId != null)
-                getAssetTimeLine(assetId);
+
         });
 
-        function getAssetTimeLine(id)
-        {
+        function getAssetTimeLine(id) {
             $.ajax({
                 url: '../../History/GetAssetHistory?assetId=' + id,
                 type: 'post',
                 dataType: 'json',
-                success: function (json) {
+                success: function(json) {
                     createAssetTimeLine(json);
                     setAssetHeader(id);
                 }
             });
         }
 
-        function setAssetHeader(id)
-        {
-            $.each(Assets.jsonData, function (i, v) {
+        function setAssetHeader(id) {
+            $.each(Assets.jsonData, function(i, v) {
                 if (v.assetId === id)
                     $('#AssetIdHeader').html('Asset Id: ' + v.serialNumber + ' (RFID: ' + v.rfidTag + ')');
             });
         }
 
-        function createAssetTimeLine(json)
-        {
+        function createAssetTimeLine(json) {
             $('#assetTimeLine').empty();
             var j = 0;
-            $.each(json, function (i, v) {
+            $.each(json, function(i, v) {
                 j++;
                 var html = '<li><div class="smart-timeline-icon" style="background-color:' + v.colour + ';"><i class="fa ' + v.icon + '"></i></div>';
                 html += '<div class="smart-timeline-time"><small>' + v.dateString + '</small></div>';
@@ -131,28 +127,30 @@
                         html += '<p><a href="' + v.content[0] + '">View Text Here</a></p>';
                 } else if (v.type === 2) {
                     html += '<p><b>Torque Values:</b> ';
-                    $.each(v.content, function (index, value) {
-                        if(value != null)
-                        {
+                    $.each(v.content, function(index, value) {
+                        if (value != null) {
                             if (index === 0)
                                 html += value;
                             else
                                 html += ', ' + value;
                         }
-                            
+
                     });
                     html += '</p>';
                 } else if (v.type === 1) {
-                    html += '<p><b>' + v.content[0] + '</b> performed "<i>' + v.content[1] + '"</i> task</p>'
+                    html += '<p><b>' + v.content[0] + '</b> performed "<i>' + v.content[1] + '"</i> task</p>';
+                } else if (v.type === 4) {
+                    html += '<p>' + v.content[0] + '</p>';
+                } else if (v.type === 5) {
+                    html += '<p><b>' + v.content[0] + '</b> performed the following checks:<br/>' + v.content[1] + '</p>';
                 }
 
                 html += '</div></div></li>';
-                
+
                 $('#assetTimeLine').append(html);
             });
 
-            if (j === 0)
-            {
+            if (j === 0) {
                 $.smallBox({
                     title: "No History",
                     content: "The asset you selected has no history.",
@@ -173,10 +171,16 @@
                 url: '../../Map/getAllAssets',
                 type: 'post',
                 dataType: 'json',
-                success: function (json) {
+                success: function(json) {
                     Assets.jsonData = json;
+
+                    var assetId = getUrlParameter('id');
+                    if (assetId != null) {
+                        selectedMarker =  parseInt(assetId);
+                        getAssetTimeLine(selectedMarker);
+                    }
+
                     showAllAssets();
-                    //getAssetTimeLine(1);
                 }
             });
         }
@@ -193,13 +197,10 @@
         }
 
         function showAllAssets() {
+            clearAllMarkers();
             markers = [];
-            $.each(Assets.jsonData, function (i, v) {
-                var flag = false;
-                $.each(v.maintenance, function (index, value) {
-                        addMarker(v);
-                    }
-                );
+            $.each(Assets.jsonData, function(i, v) {
+                addMarker(v);
             });
         }
 
@@ -208,14 +209,20 @@
             var lat = json.location.latitude;
             var latLongMarker = new google.maps.LatLng(lat, long);
             var image = '/images/map_images/NutralMarker.png';
+
+            if (json.assetId === selectedMarker)
+                image = '/images/map_images/GreenMarker.png';
+
             var marker = new google.maps.Marker({
                 map: map,
                 position: latLongMarker,
                 title: json.assetId.toString(),
                 icon: image
             });
-            google.maps.event.addListener(marker, 'click', function () {
+            google.maps.event.addListener(marker, 'click', function(e) {
+                selectedMarker = json.assetId;
                 getAssetTimeLine(json.assetId);
+                showAllAssets();
             });
             markers.push(marker);
         }
@@ -226,6 +233,7 @@
             for (var i = 0; i < sURLVariables.length; i++) {
                 var sParameterName = sURLVariables[i].split('=');
                 if (sParameterName[0] == sParam) {
+                    selectedMarker = sParameterName[1];
                     return sParameterName[1];
                 }
             }

@@ -93,6 +93,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 if (asset != null)
                 {
                     asset.bt_assetStatus = flag;
+                    asset.dt_lastUpdated = DateTime.Now;
                     db.Entry(asset).State = EntityState.Modified;
                     db.SaveChanges();
                 }

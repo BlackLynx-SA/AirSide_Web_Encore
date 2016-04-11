@@ -59,7 +59,7 @@
         </button>
 
         @* Photometric Buttons *@
-        @*<button type="button" class="btn btn-danger hidden-md hidden-lg photoBtn">
+        <button type="button" class="btn btn-danger hidden-md hidden-lg photoBtn">
             <i class="fa fa-sun-o "></i>
         </button>
         <button type="button" class="btn btn-labeled btn-danger hidden-sm hidden-xs photoBtn">
@@ -67,7 +67,7 @@
                 <i class="fa fa-sun-o "></i>
             </span>
             Photometric
-        </button>*@
+        </button>
 
         @* AutoCAD Buttons *@
         @*<button type="button" class="btn btn-info hidden-lg autoCadBtn">
@@ -170,7 +170,7 @@
     Html.RenderPartial("_AssetFilter");
     Html.RenderPartial("_AreaFilter");
     Html.RenderPartial("_VisualSurveyor");
-    //Html.RenderPartial("_Photometric");
+    Html.RenderPartial("_Photometric");
     Html.RenderPartial("_ShiftCreate");
 }
 
