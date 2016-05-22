@@ -571,6 +571,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                         _db.Entry(assetinfo).State = EntityState.Modified;
                     }
+                    else
+                    {
+                        var assetInfo = new as_assetInfoProfile
+                        {
+                            i_assetClassId = assetClass.i_assetClassId,
+                            i_assetInfoId = 0,
+                            vc_description = "Fixing Points",
+                            vc_value = fixingpoints
+                        };
+                        _db.as_assetInfoProfile.Add(assetInfo);
+                    }
                     _db.SaveChanges();
 
                     //update iOS Cache Hash
