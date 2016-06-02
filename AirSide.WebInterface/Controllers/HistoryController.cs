@@ -151,7 +151,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     colour = "#ff7700",
                     heading = "Validation Task Performed",
                     icon = "fa-check",
-                    content = new String[2]
+                    content = new string[2]
                 };
                 task.content[0] = item.user;
                 task.content[1] = item.maintenanceTask;
