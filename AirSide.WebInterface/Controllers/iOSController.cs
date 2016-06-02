@@ -526,6 +526,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
+			    List<int> assets = new List<int>();
 				foreach (shiftDataUpload shift in shiftData)
 				{
 					as_shiftData newData = new as_shiftData()
@@ -560,12 +561,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					{
 						_cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
+
+                    assets.Add(shift.i_assetId);
 				}
-				return Json(new { ShiftData = shiftData });
+
+				return Json(new { Status = 1, Assets =  assets.Select(o => o).Distinct().ToList() });
 			}
 			catch (Exception err)
 			{
-				return Json(new {error = err.Message});
+			    Response.StatusCode = 500;
+				return Json(new { Status = 0,  Error = err.Message});
 			}
 		}
 

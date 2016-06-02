@@ -195,7 +195,7 @@ namespace AirSide.ServerModules.Helpers
 
                     if (shiftFlag) returnDate = shiftDate;
 
-                } else if (maintenance.i_maintenanceId == 1)
+                } else if (maintenance.i_maintenanceValidationId == 1)
                 {
                     //get last validation date for asset
                     var lastValDate = (from x in _db.as_validationTaskProfile

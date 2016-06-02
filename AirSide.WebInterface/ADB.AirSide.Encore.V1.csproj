@@ -1159,6 +1159,7 @@
     <Content Include="Views\DocDb\MethodCreation.cshtml" />
     <Content Include="Views\Administration\SystemRoles.cshtml" />
     <Content Include="Views\Api\index.cshtml" />
+    <Content Include="Views\Settings\About.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
