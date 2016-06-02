@@ -24,7 +24,7 @@
     <RestorePackages>true</RestorePackages>
     <ApplicationInsightsResourceId>/subscriptions/7a64b313-2774-4b61-a5e0-d9b83ba97657/resourcegroups/Default-Web-NorthEurope/providers/microsoft.insights/components/airsideencore</ApplicationInsightsResourceId>
     <NuGetPackageImportStamp>75c498bb</NuGetPackageImportStamp>
-    <TypeScriptToolsVersion>1.7</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
   </PropertyGroup>
@@ -1100,10 +1100,10 @@
     <Content Include="Views\Account\_SocialMedia.cshtml" />
     <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
-    <None Include="Properties\PublishProfiles\airsideencore - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\airsideencore - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\airsidebirmingham - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\airsidebirmingham - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Encore.pubxml" />
     <None Include="Properties\PublishProfiles\Baneasa.pubxml" />
-    <None Include="Properties\PublishProfiles\Birmingham.pubxml" />
     <None Include="Properties\PublishProfiles\Hamad.pubxml" />
     <None Include="Properties\PublishProfiles\Heathrow.pubxml" />
     <None Include="Properties\PublishProfiles\heathrowairside - Web Deploy.pubxml" />
