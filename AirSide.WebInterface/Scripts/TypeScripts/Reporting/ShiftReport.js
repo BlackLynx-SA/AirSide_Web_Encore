@@ -75,7 +75,7 @@ var Reporting;
             });
         };
         return ShiftReport;
-    })();
+    }());
     Reporting.ShiftReport = ShiftReport;
 })(Reporting || (Reporting = {}));
 var ShiftReport;

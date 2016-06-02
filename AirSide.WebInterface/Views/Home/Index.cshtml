@@ -63,7 +63,7 @@
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
                                                     <span class="label bg-color-green"> @{
-                                                        double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.completedMaint) / 100);
+                                                                                            double numberAssets = double.Parse(ViewBag.totalTasks)*(double.Parse(ViewBag.completedMaint)/100);
                                                                                         }
                                                      @Math.Round(numberAssets, 0) </span>
                                                 </li>
@@ -81,7 +81,7 @@
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-yellow"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.midMaint) / 100); } @Math.Round(numberAssets, 0) </span>
+                                                    <span class="label bg-color-yellow"> @{ numberAssets = double.Parse(ViewBag.totalTasks)*(double.Parse(ViewBag.midMaint)/100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
                                                     <span class="label bg-color-yellow"> @ViewBag.totalTasks</span>
@@ -97,7 +97,7 @@
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-pink"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.almostMaint) / 100); } @Math.Round(numberAssets, 0) </span>
+                                                    <span class="label bg-color-pink"> @{ numberAssets = double.Parse(ViewBag.totalTasks)*(double.Parse(ViewBag.almostMaint)/100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
                                                     <span class="label bg-color-pink"> @ViewBag.totalTasks</span>
@@ -113,7 +113,7 @@
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
-                                                    <span class="label bg-color-red"> @{ numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0) </span>
+                                                    <span class="label bg-color-red"> @{ numberAssets = double.Parse(ViewBag.totalTasks)*(double.Parse(ViewBag.dueAssets)/100); } @Math.Round(numberAssets, 0) </span>
                                                 </li>
                                                 <li>
                                                     <span class="label bg-color-red"> @ViewBag.totalTasks</span>
@@ -140,12 +140,12 @@
                 <!-- new widget -->
                 <!-- end widget -->
                 <!-- new widget -->
-                    @{Html.RenderPartial("_CalendarView");}
+                @{Html.RenderPartial("_CalendarView");}
                 <!-- end widget -->
             </article>
             <article class="col-sm-12 col-md-12 col-lg-6">
                 <!-- new widget -->
-                    @{Html.RenderPartial("_MapView");}
+                @{Html.RenderPartial("_MapView");}
                 <!-- end widget -->
 
             </article>
@@ -154,6 +154,11 @@
     </section>
     <!-- end widget grid -->
 </div>
+
+@{
+    Html.RenderPartial("_ReleaseNotes");
+}
+
 <!-- END MAIN CONTENT -->
 @section pagespecific {
 <script src="~/scripts/plugin/date/date.js"></script>

@@ -74,7 +74,7 @@ var AirSide;
                 $shiftCompletionBar.css('width', persentage.toString() + '%');
             };
             return ActivityStats;
-        })();
+        }());
         HomeHelper.ActivityStats = ActivityStats;
         var ActivityChart = (function () {
             function ActivityChart() {
@@ -226,7 +226,7 @@ var AirSide;
                 ;
             };
             return ActivityChart;
-        })();
+        }());
         HomeHelper.ActivityChart = ActivityChart;
         var ToDo = (function () {
             function ToDo() {
@@ -363,43 +363,22 @@ var AirSide;
                 });
             };
             return ToDo;
-        })();
+        }());
         HomeHelper.ToDo = ToDo;
     })(HomeHelper = AirSide.HomeHelper || (AirSide.HomeHelper = {}));
 })(AirSide || (AirSide = {}));
 var activityChart = new AirSide.HomeHelper.ActivityChart();
 var activityStats = new AirSide.HomeHelper.ActivityStats();
-var todos = new AirSide.HomeHelper.ToDo();
 $(document).on('ready', function (c) {
-    todos.init();
     activityChart.init();
     activityStats.init();
+    //Check for new release notes
+    var release = localStorage.getItem('releasenotes.20160528');
+    if (release === null)
+        $('#releaseNotesModal').modal('show');
 });
-//init button clicks
-$(document).on('click', '#todoAddBtn', function () {
-    var itemDesc, itemCat;
-    $.SmartMessageBox({
-        title: '<i class="fa fa-check fa-lg txt-color-blue"></i> New To-Do Item',
-        content: "Please enter the item description",
-        buttons: "[Cancel][Accept]",
-        input: "text",
-        inputValue: "",
-        placeholder: "Enter your to-do item"
-    }, function (ButtonPress, Value) {
-        if (ButtonPress == "Cancel") {
-            return 0;
-        }
-        itemDesc = Value;
-        $.SmartMessageBox({
-            title: '<i class="fa fa-list fa-lg txt-color-blue"></i> Select To-Do Category',
-            content: "Please select a category for the new item",
-            buttons: "[Done]",
-            input: "select",
-            options: todos.todoCategoriesTxt,
-        }, function (ButtonPress, Value) {
-            itemCat = Value;
-            todos.addTodo(itemDesc, itemCat);
-        });
-    });
+$(document).on('click', '#ReleaseOkBtn', function (c) {
+    $('#releaseNotesModal').modal('hide');
+    localStorage.setItem('releasenotes.20160528', 'true');
 });
 //# sourceMappingURL=HomeHelper.js.map

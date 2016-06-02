@@ -116,7 +116,7 @@ var AirSide;
                 return image;
             };
             return SingleView;
-        })();
+        }());
         Surveyor.SingleView = SingleView;
     })(Surveyor = AirSide.Surveyor || (AirSide.Surveyor = {}));
 })(AirSide || (AirSide = {}));

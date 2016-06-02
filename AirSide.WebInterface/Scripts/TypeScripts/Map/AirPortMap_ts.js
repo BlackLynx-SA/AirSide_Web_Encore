@@ -54,7 +54,7 @@ var AirSide;
             var newArray = [];
         };
         return AllAssets;
-    })();
+    }());
     var myAssets = new AllAssets();
     function process() {
         var assetClass = myAssets.findAllInAssetClass(2);

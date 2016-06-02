@@ -457,6 +457,7 @@
     <Content Include="Images\adbimages\ADB_Logo_100.jpg" />
     <Content Include="Images\adbimages\ADB_Logo_100.png" />
     <Content Include="Images\adbimages\ADB_Logo_100_white.png" />
+    <Content Include="Images\adbimages\ADB_Safegate.png" />
     <Content Include="Images\adbimages\ADB_Symbol.png" />
     <Content Include="Images\adbimages\ADB_Symbol_White.png" />
     <Content Include="Images\adbimages\AssetIcon.jpg" />
@@ -1160,6 +1161,7 @@
     <Content Include="Views\Administration\SystemRoles.cshtml" />
     <Content Include="Views\Api\index.cshtml" />
     <Content Include="Views\Settings\About.cshtml" />
+    <Content Include="Views\Home\_ReleaseNotes.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

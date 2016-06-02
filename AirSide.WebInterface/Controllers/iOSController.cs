@@ -526,7 +526,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-			    List<int> assets = new List<int>();
+				List<int> assets = new List<int>();
 				foreach (shiftDataUpload shift in shiftData)
 				{
 					as_shiftData newData = new as_shiftData()
@@ -542,15 +542,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						i_shiftId = shift.i_shiftId
 					};
 
-				    //var data = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shift.i_shiftId && q.i_assetId == shift.i_assetId);
+					//var data = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shift.i_shiftId && q.i_assetId == shift.i_assetId);
 
-				    //if (data != null)
-				    //{
-				    //    _db.as_shiftData.Remove(data);
-				    //    _db.SaveChanges();
-				    //}
+					//if (data != null)
+					//{
+					//    _db.as_shiftData.Remove(data);
+					//    _db.SaveChanges();
+					//}
 
-				    _db.as_shiftData.Add(newData);
+					_db.as_shiftData.Add(newData);
 					_db.SaveChanges();
 
 					try
@@ -562,14 +562,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						_cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 					}
 
-                    assets.Add(shift.i_assetId);
+					assets.Add(shift.i_assetId);
 				}
 
 				return Json(new { Status = 1, Assets =  assets.Select(o => o).Distinct().ToList() });
 			}
 			catch (Exception err)
 			{
-			    Response.StatusCode = 500;
+				Response.StatusCode = 500;
 				return Json(new { Status = 0,  Error = err.Message});
 			}
 		}

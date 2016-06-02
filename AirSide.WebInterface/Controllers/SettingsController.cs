@@ -41,6 +41,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+        public ActionResult About()
+        {
+            return View();
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         public async Task<ActionResult> EmailSettings()
         {
             mongoEmailSettings mailSettings = await cache.GetEmailSettings();

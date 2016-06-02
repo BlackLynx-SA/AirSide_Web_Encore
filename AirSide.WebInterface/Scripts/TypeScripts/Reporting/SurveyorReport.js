@@ -108,7 +108,7 @@ var AirSide;
                 });
             };
             return SurveyorData;
-        })();
+        }());
         Reporting.SurveyorData = SurveyorData;
     })(Reporting = AirSide.Reporting || (AirSide.Reporting = {}));
 })(AirSide || (AirSide = {}));

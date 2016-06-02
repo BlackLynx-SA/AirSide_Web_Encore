@@ -87,7 +87,7 @@ var AirSide;
                 $('.to').val(yearToStr + "/" + monthToStr + "/" + dayToStr);
             };
             return CustomDateRangePicker;
-        })();
+        }());
         Components.CustomDateRangePicker = CustomDateRangePicker;
     })(Components = AirSide.Components || (AirSide.Components = {}));
 })(AirSide || (AirSide = {}));

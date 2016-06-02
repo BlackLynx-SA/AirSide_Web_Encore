@@ -49,7 +49,7 @@ var AirSide;
                 });
             };
             return SurveyorAlerts;
-        })();
+        }());
         SharedHelper.SurveyorAlerts = SurveyorAlerts;
     })(SharedHelper = AirSide.SharedHelper || (AirSide.SharedHelper = {}));
 })(AirSide || (AirSide = {}));

@@ -216,7 +216,9 @@ function applySearchFilter() {
 
     Assets.jsonData.forEach(function (c) {
         var item = c.serialNumber.toLowerCase();
-        if (item.indexOf(searchStr.toLowerCase()) >= 0) {
+        var item2 = c.rfidTag.toLowerCase();
+
+        if (item.indexOf(searchStr.toLowerCase()) >= 0 || item2.indexOf(searchStr.toLowerCase()) >= 0) {
             addMarker(c);
         }
     });

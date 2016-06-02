@@ -1012,18 +1012,26 @@ namespace AirSide.ServerModules.Helpers
         //Converted to new Mongo API 2015/08/11
         public async Task<List<mongoAssetClassDownload>> GetAllAssetClasses()
         {
-            IMongoCollection<mongoAssetClassDownload> collection = Database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
-            var filter = new BsonDocument();
             List<mongoAssetClassDownload> assets = new List<mongoAssetClassDownload>();
-            using (var cursor = await collection.FindAsync(filter))
+            try
             {
-                while (await cursor.MoveNextAsync())
+                var collection =
+                    Database.GetCollection<mongoAssetClassDownload>("md_assetClassDownload");
+                var filter = new BsonDocument();
+                using (var cursor = await collection.FindAsync(filter))
                 {
-                    var batch = cursor.Current;
-                    assets.AddRange(batch);
+                    while (await cursor.MoveNextAsync())
+                    {
+                        var batch = cursor.Current;
+                        assets.AddRange(batch);
+                    }
                 }
+                return assets;
             }
-            return assets;
+            catch (Exception)
+            {
+                return assets;
+            }
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1033,7 +1041,7 @@ namespace AirSide.ServerModules.Helpers
             List<mongoFullAsset> assets = new List<mongoFullAsset>();
             try
             {
-                IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+                var collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
                 var filter = new BsonDocument();
                 using (var cursor = await collection.FindAsync(filter))
                 {
