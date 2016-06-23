@@ -515,6 +515,7 @@
     <Content Include="Images\lights\UEL_LightType.png" />
     <Content Include="Images\map_images\exclamation.png" />
     <Content Include="Images\map_images\GreenMarker.png" />
+    <Content Include="Images\map_images\MultiAssetMarker.png" />
     <Content Include="Images\map_images\NutralMarker.png" />
     <Content Include="Images\map_images\OrangeMarker.png" />
     <Content Include="Images\map_images\RedMarker.png" />
@@ -1172,6 +1173,8 @@
     <TypeScriptCompile Include="Scripts\TypeScripts\Components\ComponentsHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\GeoInfo.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\IMultiAssetProfileViewModel.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\SurveyorReport.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Surveyor\SurveyorHelper.ts" />

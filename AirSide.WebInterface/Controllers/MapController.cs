@@ -224,6 +224,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
             return Json(data);
         }
 
+        [HttpGet]
+        public JsonResult GetAllMultiAssets()
+        {
+            return Json(db.as_multiAssetProfile.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
         //2014/12/09 Decomissioned 
         //[HttpPost]
         //public JsonResult getAllAssetProfiles(int? subAreaId, int? areaId)

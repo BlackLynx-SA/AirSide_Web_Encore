@@ -268,6 +268,9 @@
     <Compile Include="Models\as_maintenanceValidation.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\as_multiAssetProfile.cs">
+      <DependentUpon>AirSideModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\as_nodeRegionProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>

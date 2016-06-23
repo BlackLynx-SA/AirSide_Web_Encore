@@ -74,6 +74,7 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_shiftsCustomProfile> as_shiftsCustomProfile { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
         public virtual DbSet<as_shiftData> as_shiftData { get; set; }
+        public virtual DbSet<as_multiAssetProfile> as_multiAssetProfile { get; set; }
     
         public virtual ObjectResult<as_get_closest_point_to_gps_coordinate1_Result> as_get_closest_point_to_gps_coordinate(Nullable<double> latitude, Nullable<double> longitude)
         {

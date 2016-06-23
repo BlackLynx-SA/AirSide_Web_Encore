@@ -271,6 +271,14 @@
           <Property Name="vc_validationName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_validationDescription" Type="nvarchar" MaxLength="500" Nullable="false" />
         </EntityType>
+        <EntityType Name="as_multiAssetProfile">
+          <Key>
+            <PropertyRef Name="i_multiId" />
+          </Key>
+          <Property Name="i_multiId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_assetId" Type="int" Nullable="false" />
+          <Property Name="i_childId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="as_nodeRegionProfile">
           <Key>
             <PropertyRef Name="i_nodeRegion" />
@@ -366,7 +374,7 @@
           <Key>
             <PropertyRef Name="i_groupId" />
           </Key>
-          <Property Name="i_groupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_groupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="vc_groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -586,6 +594,7 @@
           <EntitySet Name="as_maintenanceCheckListEntity" EntityType="Self.as_maintenanceCheckListEntity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceProfile" EntityType="Self.as_maintenanceProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_multiAssetProfile" EntityType="Self.as_multiAssetProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="dbo" store:Type="Tables" />
@@ -1141,6 +1150,7 @@
             <Parameter Name="longitude" Mode="In" Type="Double" />
           </FunctionImport>
           <EntitySet Name="as_shiftData" EntityType="airside.encoreModel.as_shiftData" />
+          <EntitySet Name="as_multiAssetProfile" EntityType="airside.encoreModel.as_multiAssetProfile" />
         </EntityContainer>
         <EntityType Name="as_assetStatusProfile">
           <Key>
@@ -1221,6 +1231,14 @@
           <Property Name="dt_captureDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="f_capturedValue" Type="Double" Nullable="false" />
           <Property Name="i_assetCheckId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_multiAssetProfile">
+          <Key>
+            <PropertyRef Name="i_multiId" />
+          </Key>
+          <Property Name="i_multiId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetId" Type="Int32" Nullable="false" />
+          <Property Name="i_childId" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1772,6 +1790,15 @@
                 <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
                 <ScalarProperty Name="i_shiftId" ColumnName="i_shiftId" />
                 <ScalarProperty Name="i_uniqueId" ColumnName="i_uniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_multiAssetProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_multiAssetProfile">
+              <MappingFragment StoreEntitySet="as_multiAssetProfile">
+                <ScalarProperty Name="i_childId" ColumnName="i_childId" />
+                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
+                <ScalarProperty Name="i_multiId" ColumnName="i_multiId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

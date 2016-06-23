@@ -545,7 +545,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         #region Reporting
 
-        public ActionResult AnalyticsReport(string fileType)
+        public async Task<ActionResult> AnalyticsReport(string fileType)
         {
             try
             {
@@ -563,7 +563,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("MaintenanceDS", GetAnalyticReportCycles());
+                ReportDataSource reportDataSource = new ReportDataSource("MaintenanceDS", await GetAnalyticReportCycles());
                 localReport.DataSources.Add(reportDataSource);
 
                 reportDataSource = new ReportDataSource("ShiftsDS", GetShifts().OrderBy(q=>q.start));
@@ -635,7 +635,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<List<Analytic_Cycles>> GetAnalyticReportCycles()
         {
-            Analytic_Cycles cycles = new Analytic_Cycles
+            var cycles = new Analytic_Cycles
             {
                 completed = double.Parse(await GetCompletedAssets()),
                 almostDue = double.Parse(await GetAlmostAssets()),
@@ -647,7 +647,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 totalShifts = _db.as_shifts.Count(q => q.bt_completed == false)
             };
 
-            List<Analytic_Cycles> allCycles = new List<Analytic_Cycles> {cycles};
+            var allCycles = new List<Analytic_Cycles> {cycles};
 
             return allCycles;
         }

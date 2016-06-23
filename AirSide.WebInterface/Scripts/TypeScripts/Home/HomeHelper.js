@@ -373,12 +373,12 @@ $(document).on('ready', function (c) {
     activityChart.init();
     activityStats.init();
     //Check for new release notes
-    var release = localStorage.getItem('releasenotes.20160528');
+    var release = localStorage.getItem('releasenotes.20160623');
     if (release === null)
         $('#releaseNotesModal').modal('show');
 });
 $(document).on('click', '#ReleaseOkBtn', function (c) {
     $('#releaseNotesModal').modal('hide');
-    localStorage.setItem('releasenotes.20160528', 'true');
+    localStorage.setItem('releasenotes.20160623', 'true');
 });
 //# sourceMappingURL=HomeHelper.js.map

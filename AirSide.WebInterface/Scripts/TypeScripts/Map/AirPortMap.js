@@ -181,20 +181,73 @@ function loadOverlay() {
     }
 }
 
+function checkMultiAsset(id) {
+    var flag = false;
+    geoInfo.multiAssets.forEach(function (c) {
+        if(!flag)
+            if (c.i_assetId === id)
+                flag = true;
+    });
+    return flag;
+}
+
+function getAsset(id) {
+    var flag = false;
+    var asset = null;
+    Assets.jsonData.forEach(function (c) {
+        if (!flag)
+            if (c.assetId === id) {
+                flag = true;
+                asset = c;
+            }
+    });
+    return asset;
+}
+
+function getMultiAssets(id) {
+    var assets = [];
+    var flag = false;
+    geoInfo.multiAssets.forEach(function (c) {
+        if (!flag)
+            if (c.i_assetId === id) {
+                assets.push(c.i_childId);
+            }
+    });
+
+    return assets;
+}
+
+function markerInfoForMultiAsset(json) {
+    var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">Multi Asset Location<small> - (' + json.rfidTag + ')</small></h3><hr/>';
+    getMultiAssets(json.assetId).forEach(function(c) {
+        var asset = getAsset(c);
+        content += '<h5>' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
+    });
+    content += '</div>';
+    return content;
+}
+
 function addMarker(json) {
     var long = json.location.longitude;
     var lat = json.location.latitude;
     var latLongMarker = new google.maps.LatLng(lat, long);
-    var image = getImage(json.maintenance, json.status);
+    var image = '';
+    var content = '';
+
+    if (!checkMultiAsset(json.assetId)) {
+        image = getImage(json.maintenance, json.status);
+        content = markerInfo(json);
+    } else {
+        image = '/images/map_images/MultiAssetMarker.png';
+        content = markerInfoForMultiAsset(json);
+    }
+
     var marker = new google.maps.Marker({
         map: map,
         position: latLongMarker,
         title: json.serialNumber,
         icon: image
     });
-
-    //Generate Info Window Content
-    var content = markerInfo(json);
 
     google.maps.event.addListener(marker, 'click', function() {
         if (infowindow) infowindow.close();
