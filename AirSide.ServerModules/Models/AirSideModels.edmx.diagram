@@ -55,6 +55,7 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_shiftsCustomProfile" Width="1.5" PointX="17.75" PointY="0.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_shifts" Width="1.5" PointX="14.75" PointY="17.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="17.375" PointY="17.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_multiAssetProfile" Width="1.5" PointX="7.375" PointY="18.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -429,12 +429,12 @@ $(document).on('ready', c=> {
     activityStats.init();
 
     //Check for new release notes
-    var release: string = localStorage.getItem('releasenotes.20160528');
+    var release: string = localStorage.getItem('releasenotes.20160623');
     if (release === null)
         $('#releaseNotesModal').modal('show');
 });
 
 $(document).on('click', '#ReleaseOkBtn', c => {
     $('#releaseNotesModal').modal('hide');
-    localStorage.setItem('releasenotes.20160528', 'true');
+    localStorage.setItem('releasenotes.20160623', 'true');
 });

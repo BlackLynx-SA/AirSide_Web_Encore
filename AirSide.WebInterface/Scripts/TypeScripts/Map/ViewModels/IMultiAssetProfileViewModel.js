@@ -1,0 +1,1 @@
+//# sourceMappingURL=IMultiAssetProfileViewModel.js.map
