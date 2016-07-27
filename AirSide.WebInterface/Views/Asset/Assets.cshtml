@@ -26,6 +26,8 @@
                 <thead>
                     <tr>
                         <th data-hide="expand" style="width:20px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                        <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> Area</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> Sub Area</th>
                         <th data-class="expand"><i class="fa fa-fw fa-barcode txt-color-blue"></i> Reference</th>
                         <th data-class="expand"><i class="fa fa-fw fa-wifi txt-color-blue hidden-md hidden-sm hidden-xs"></i> RFID</th>
                         <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
@@ -67,6 +69,8 @@
         var markers = [];
         var size = 500;
         var map;
+        var areas = [];
+        var subAreas = [];
 
         var breakpointDefinition = {
             tablet: 1024,
@@ -122,13 +126,13 @@
                         if (v.maintenance[0].maintenanceCycle === 0) cycle = "btn-primary";
                         else if (v.maintenance[0].maintenanceCycle === 1) cycle = "bg-color-green";
                         else if (v.maintenance[0].maintenanceCycle === 2) cycle = "bg-color-yellow";
-                        else if (v.maintenance[0].maintenanceCycle === 3) cycle = "bg-color-orange"
+                        else if (v.maintenance[0].maintenanceCycle === 3) cycle = "bg-color-orange";
                         else if (v.maintenance[0].maintenanceCycle === 4) { cycle = "bg-color-red"; color = "danger"; }
-
-
 
                         var html = "";
                         html += '<tr class="' + color + '" id="asset_' + v.assetId + '" data-arr-index="' + i + '"><td><a href="#" class="btn ' + cycle + '" style="width:100%;"></a></td>';
+                        html += '<td>' + getArea(v.location.areaId).vc_description + '</td>';
+                        html += '<td>' + getSubArea(v.location.areaSubId).vc_description + '</td>';
                         html += '<td>' + v.serialNumber + '</td>';
                         html += '<td>' + v.rfidTag + '</td>';
                         html += '<td><a href="../../AssetClass/EditAssetClass/' + v.assetClass.assetClassId + '">' + v.assetClass.description + '</a></td>';
@@ -150,6 +154,59 @@
                     $('.sparkline').sparkline('html', { type: 'bullet' });
                 }
             });
+        }
+
+        function requestMainAreas() {
+            $.ajax({
+                url: "../../map/getMainAreas",
+                type: "POST",
+                dataType: "json",
+                success: function (json) {
+                    areas = json;
+                    requestAllSubAreas();
+                },
+                error: function (err) {
+                    $.smallBox({
+                        title: "Maintenance Areas Failed",
+                        content: err.responseText,
+                        color: "#f51414",
+                        timeout: 5000,
+                        icon: "fa fa-bell swing animated"
+                    });
+                }
+            });
+        }
+
+        function requestAllSubAreas() {
+            $.ajax({
+                url: '../../map/getAllSubAreas',
+                type: 'post',
+                dataType: 'json',
+                success: function (json) {
+                    subAreas = json;
+                    requestAllAssetData();
+                }
+            });
+        }
+
+        function getArea(id) {
+            var area = null;
+            areas.forEach(function(c) {
+                if (c.i_areaId === id) {
+                    area = c;
+                }
+            });
+            return area;
+        }
+
+        function getSubArea(id) {
+            var area = null;
+            subAreas.forEach(function (c) {
+                if (c.i_areaSubId === id) {
+                    area = c;
+                }
+            });
+            return area;
         }
 
         function initMap() {
@@ -179,7 +236,7 @@
         }
 
         $(document).ready(function () {
-            requestAllAssetData();
+            requestMainAreas();
             initMap();
             $('#mapModal').on('shown.bs.modal', function () {
 

@@ -322,12 +322,12 @@ function resize() {
     $('#map-canvas').css('height', Math.round($(window).height() - 170));
     $('#mapTopMenuBack').css('width', $('#map-canvas').width());
     $('#mapMenuItems').css('width', $('#map-canvas').width());
-    if (map != null)
+    if (map !== null)
         google.maps.event.trigger(map, 'resize');
 }
 
 function clearAllMarkers() {
-    if (markers != null) {
+    if (markers !== null) {
         for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
         }
