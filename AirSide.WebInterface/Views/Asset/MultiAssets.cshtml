@@ -1,0 +1,67 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-th"></i>
+                Assets<span> 
+                    >
+                     Multi Assets
+                </span>
+            </h1>
+        </div>
+    </div>
+    <section id="widget-grid">
+        <div class="row ">
+            <!-- NEW WIDGET START -->
+            <article class="col-sm-12 col-md-12 col-lg-12">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget jarviswidget-color-blue" id="wid-id-1" data-widget-editbutton="false">
+
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-sitemap"></i> </span>
+                        <h2>Multi Asset Locations </h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+                            <a href="javascript:void(0)" class="btn btn-primary" id="addParent"><i class="fa fa-plus"></i> Add Parent</a>
+                            <hr/>
+                            <div class="tree smart-form">
+                                <ul id="mainList"></ul>
+                            </div>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+            <!-- WIDGET END -->
+        </div>
+    </section>
+</div>
+
+@{
+    Html.RenderPartial("_MultiAssetInsert");
+}
+
+@section pagespecific{
+    <script src="~/Scripts/plugin/select2/select2.min.js"></script>
+    <script src="~/Scripts/TypeScripts/Assets/Controllers/MultiAsset.Controller.js"></script>
+    <script src="~/Scripts/TypeScripts/Assets/Views/MultiAsset.js"></script>
+}

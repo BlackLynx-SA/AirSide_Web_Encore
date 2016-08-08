@@ -1,6 +1,4 @@
 ﻿
-#define DEBUG
-
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -1086,6 +1084,21 @@ namespace AirSide.ServerModules.Helpers
             }
         }
 
+        public async Task<List<mongoAssetProfile>> GetAssetInfo(int id)
+        {
+            try
+            {
+                var collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                var filter = Builders<mongoAssetProfile>.Filter.Eq("assetId", id); 
+                return await collection.Find(filter).ToListAsync();
+            }
+            catch (Exception err)
+            {
+                Log("Failed to retrive all asset profiles from Mongo: " + err.Message, "getAllAssets", LogTypes.Error, "SYSTEM");
+                return null;
+            }
+        }
+
         #endregion
 
         #region LogHelper
@@ -1233,5 +1246,6 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         #endregion
+
     }
 }

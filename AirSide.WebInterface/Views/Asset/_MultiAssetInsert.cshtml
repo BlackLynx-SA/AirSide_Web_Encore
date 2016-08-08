@@ -1,0 +1,34 @@
+﻿<div class="modal fade" id="multiAssetInsert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title"><i class="fa fa-map-marker txt-color-blue fa-2x"></i> Asset Selection</h4>
+            </div>
+            <div class="modal-body">
+                <form class="smart-form">
+                    <div class="row">
+                        <section class="col col-10">
+                            <label>
+                               All Assets
+                            </label>
+                            <label class="select">
+                                @Html.DropDownList("allAssets", null, String.Empty)<i></i>
+                            </label>
+                        </section>
+                    </div>
+                    <div class="row">
+                        <section class="col col-11">
+                            <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="assetLoader" style="height:15px; display:none;" />
+                        </section>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" style="float:right" id="addAsset">Add Asset</button>
+            </div>
+        </div>
+    </div>
+</div>

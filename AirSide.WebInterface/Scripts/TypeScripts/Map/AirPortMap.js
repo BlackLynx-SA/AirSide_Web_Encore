@@ -218,10 +218,10 @@ function getMultiAssets(id) {
 }
 
 function markerInfoForMultiAsset(json) {
-    var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">Multi Asset Location<small> - (' + json.rfidTag + ')</small></h3><hr/>';
+    var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue"><li class="fa fa-list"></li> Multi Asset Location<small> - (' + json.rfidTag + ')</small></h3><hr/>';
     getMultiAssets(json.assetId).forEach(function(c) {
         var asset = getAsset(c);
-        content += '<h5>' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
+        content += '<h5><img src="' + getImage(json.maintenance, json.status) + '"/> ' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
     });
     content += '</div>';
     return content;

@@ -63,5 +63,5 @@ module AirSide.SharedHelper {
 } 
 
 $(document).on('ready', c=> {
-    var SurveyorAlerts = new AirSide.SharedHelper.SurveyorAlerts();
+    var surveyorAlerts = new AirSide.SharedHelper.SurveyorAlerts();
 });

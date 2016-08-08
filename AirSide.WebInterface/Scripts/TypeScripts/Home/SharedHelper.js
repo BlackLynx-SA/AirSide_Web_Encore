@@ -54,6 +54,6 @@ var AirSide;
     })(SharedHelper = AirSide.SharedHelper || (AirSide.SharedHelper = {}));
 })(AirSide || (AirSide = {}));
 $(document).on('ready', function (c) {
-    var SurveyorAlerts = new AirSide.SharedHelper.SurveyorAlerts();
+    var surveyorAlerts = new AirSide.SharedHelper.SurveyorAlerts();
 });
 //# sourceMappingURL=SharedHelper.js.map

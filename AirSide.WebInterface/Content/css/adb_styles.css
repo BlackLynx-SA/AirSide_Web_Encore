@@ -68,3 +68,33 @@ a:focus, a:hover {
 .surveyBtn{
     margin-left:10px;
 }
+
+.asset_no_data {
+    background-color: #1e90ff;
+    color: #fff;
+}
+
+.asset_no_data a {
+    color: #fff;
+}
+
+.asset_recent {
+    background-color: #00ff00;
+}
+
+.asset_mid {
+    background-color: #ffd700;
+}
+
+.asset_almost {
+    background-color: #ffa500;
+}
+
+.asset_due {
+    background-color: #ff0000;
+    color: #fff;
+}
+
+.asset_due a {
+    color: #fff;
+}
