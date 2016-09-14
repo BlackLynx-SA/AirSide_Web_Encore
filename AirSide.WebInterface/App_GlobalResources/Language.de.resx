@@ -1,0 +1,800 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Shift_Planning" xml:space="preserve">
+    <value>Schichtplanung</value>
+  </data>
+  <data name="Calendar_View" xml:space="preserve">
+    <value>Kalenderansicht</value>
+  </data>
+  <data name="All_Events" xml:space="preserve">
+    <value>Alle Ereignisse</value>
+  </data>
+  <data name="Maintenance_Tasks" xml:space="preserve">
+    <value>Wartungsaufgaben</value>
+  </data>
+  <data name="Assets" xml:space="preserve">
+    <value>Bauteil</value>
+  </data>
+  <data name="Asset_Types" xml:space="preserve">
+    <value>Bauteiltyp</value>
+  </data>
+  <data name="Loaded_Assets" xml:space="preserve">
+    <value>Geladenes Bauteil</value>
+  </data>
+  <data name="Multi_Asset" xml:space="preserve">
+    <value>Multiple Bauteile</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Verlauf</value>
+  </data>
+  <data name="Asset_History" xml:space="preserve">
+    <value>Sammelbauteil</value>
+  </data>
+  <data name="System_Users" xml:space="preserve">
+    <value>Systemanwender</value>
+  </data>
+  <data name="View_All_Users" xml:space="preserve">
+    <value>Alle Benutzer anzeigen</value>
+  </data>
+  <data name="Create_New_User" xml:space="preserve">
+    <value>Neuen Nutzer anlegen</value>
+  </data>
+  <data name="Technician_Groups" xml:space="preserve">
+    <value>Techniker Gruppen</value>
+  </data>
+  <data name="Reporting" xml:space="preserve">
+    <value>Berichterstattung</value>
+  </data>
+  <data name="Shift_Reports" xml:space="preserve">
+    <value>Schichtberichte</value>
+  </data>
+  <data name="Surveyor_Anomalies" xml:space="preserve">
+    <value>Festgestellte Unregelmäßigkeiten</value>
+  </data>
+  <data name="System_Settings" xml:space="preserve">
+    <value>System Einstellungen</value>
+  </data>
+  <data name="Image_Library" xml:space="preserve">
+    <value>Bildbibliothek</value>
+  </data>
+  <data name="About_AirSide" xml:space="preserve">
+    <value>Über Airside</value>
+  </data>
+  <data name="Critical" xml:space="preserve">
+    <value>Kritisch</value>
+  </data>
+  <data name="Major" xml:space="preserve">
+    <value>Wesentliche</value>
+  </data>
+  <data name="Minor" xml:space="preserve">
+    <value>Geringer</value>
+  </data>
+  <data name="Select_Category" xml:space="preserve">
+    <value>Anzuzeigende Kategorie zum Anzeigen auswählen</value>
+  </data>
+  <data name="Protect_Privacy" xml:space="preserve">
+    <value>Diese leere Nachrichtenseite hilft dir deine Privatsphäre zu schützen. Die berichteten Unregelmäßigkeiten via Surveyor werden hier angezeigt</value>
+  </data>
+  <data name="Last_updated_on" xml:space="preserve">
+    <value>Aktualisiert am</value>
+  </data>
+  <data name="Text_Captured" xml:space="preserve">
+    <value>Texterfassung</value>
+  </data>
+  <data name="My_Dashboard" xml:space="preserve">
+    <value>Meine Übersicht</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Number_of_Assets" xml:space="preserve">
+    <value>Anzahl der Bauteile</value>
+  </data>
+  <data name="Active_Shifts" xml:space="preserve">
+    <value>Aktive Schicht</value>
+  </data>
+  <data name="Activity_30Days" xml:space="preserve">
+    <value>Ereignisse (letzten 30 Tage)</value>
+  </data>
+  <data name="Converted_Assigned_Shifts" xml:space="preserve">
+    <value>getauschte/verschobenen Schicht</value>
+  </data>
+  <data name="Live_Stats" xml:space="preserve">
+    <value>Live Statistiken</value>
+  </data>
+  <data name="Resolved_Faulty_Lights" xml:space="preserve">
+    <value>beseitigt/fehlerhaft (gemeldete Feuer)</value>
+  </data>
+  <data name="Total_Shift_Completion" xml:space="preserve">
+    <value>Anzahl der  fertiggestellten Schichten</value>
+  </data>
+  <data name="Anomalies" xml:space="preserve">
+    <value>Unregelmäßigkeiten</value>
+  </data>
+  <data name="Updated" xml:space="preserve">
+    <value>Aktualisierte </value>
+  </data>
+  <data name="Mid_Cycle" xml:space="preserve">
+    <value>In der Hälfte/ Mitte Zyklus</value>
+  </data>
+  <data name="Almost_Due" xml:space="preserve">
+    <value>fast durch</value>
+  </data>
+  <data name="Over_Due" xml:space="preserve">
+    <value>überfällig</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="Technician_Team" xml:space="preserve">
+    <value>Team Technik</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Permit" xml:space="preserve">
+    <value>Erlaubnis</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Bereich</value>
+  </data>
+  <data name="Progress" xml:space="preserve">
+    <value>Fortschritt</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Auswahlmöglichkeit</value>
+  </data>
+  <data name="Birds_Eye" xml:space="preserve">
+    <value>Vogelperspektive</value>
+  </data>
+  <data name="Worst_Case" xml:space="preserve">
+    <value>Im schlimmsten Fall</value>
+  </data>
+  <data name="System_Support" xml:space="preserve">
+    <value>Systemunterstützung</value>
+  </data>
+  <data name="Alerts" xml:space="preserve">
+    <value>Alarme</value>
+  </data>
+  <data name="Improve_Security" xml:space="preserve">
+    <value>Sie können ihre Internetsicherheit mit dem Schließen des geöffneten Browsers erhöhen</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Ausloggen </value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nein</value>
+  </data>
+  <data name="Areas" xml:space="preserve">
+    <value>Bereiche</value>
+  </data>
+  <data name="Surveyor" xml:space="preserve">
+    <value>Beobachter</value>
+  </data>
+  <data name="Photometric" xml:space="preserve">
+    <value>Photometrisch</value>
+  </data>
+  <data name="Shifts" xml:space="preserve">
+    <value>Schichten</value>
+  </data>
+  <data name="Map_Type" xml:space="preserve">
+    <value>Kartentyp</value>
+  </data>
+  <data name="Hybrid" xml:space="preserve">
+    <value>Hybrid</value>
+  </data>
+  <data name="Satellite" xml:space="preserve">
+    <value>Satellit</value>
+  </data>
+  <data name="Road_Map" xml:space="preserve">
+    <value>Fahrplan</value>
+  </data>
+  <data name="Terrain" xml:space="preserve">
+    <value>Gelände</value>
+  </data>
+  <data name="Asset_Filter" xml:space="preserve">
+    <value>Bauteil Filter</value>
+  </data>
+  <data name="Show_Specific_Asset_Type" xml:space="preserve">
+    <value>Zeige spezielle Bauteile</value>
+  </data>
+  <data name="Note_All_Assets" xml:space="preserve">
+    <value>Anmerkung: Hier sind alle im System geladenen Bauteile. Um alle anzuzeigen hier klicken</value>
+  </data>
+  <data name="Maintenance_Cycle" xml:space="preserve">
+    <value>Wartungszyklus</value>
+  </data>
+  <data name="Note_Maintenance_Filter" xml:space="preserve">
+    <value>Anmerkung: Filtert alle Bauteile nach Wartungsintervall für die ausgewählte Aufgabe</value>
+  </data>
+  <data name="Show_Assets_Clustered" xml:space="preserve">
+    <value>Zeigt alle gruppierten Bauteile</value>
+  </data>
+  <data name="Hint_Data_Visualization" xml:space="preserve">
+    <value>Hinweis: Diese Daten Visualisierung gruppiert
+ Bauteile zusammen</value>
+  </data>
+  <data name="Area_Filter" xml:space="preserve">
+    <value>Bereiche Filter</value>
+  </data>
+  <data name="Main_Maintenance_Areas" xml:space="preserve">
+    <value>Haupt Wartungsbereiche</value>
+  </data>
+  <data name="Sub_Areas" xml:space="preserve">
+    <value>Teilbereiche</value>
+  </data>
+  <data name="Note_Area_Filter" xml:space="preserve">
+    <value>Anmerkung: Diese Gebiete sind nach den 
+Hauptbereichen gefiltert</value>
+  </data>
+  <data name="Apply_Filter" xml:space="preserve">
+    <value>Filter anwenden</value>
+  </data>
+  <data name="Select_a_date_range" xml:space="preserve">
+    <value>Zeitspanne auswählen</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>von</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>bis</value>
+  </data>
+  <data name="This_Week" xml:space="preserve">
+    <value>diese Woche</value>
+  </data>
+  <data name="Last_Week" xml:space="preserve">
+    <value>letzte Woche</value>
+  </data>
+  <data name="This_Month" xml:space="preserve">
+    <value>diesen Monat</value>
+  </data>
+  <data name="Last_Month" xml:space="preserve">
+    <value>letzten Monat</value>
+  </data>
+  <data name="This_Year" xml:space="preserve">
+    <value>dieses Jahr</value>
+  </data>
+  <data name="Last_Year" xml:space="preserve">
+    <value>letztes Jahr</value>
+  </data>
+  <data name="Filter_according_to" xml:space="preserve">
+    <value>filtern nach</value>
+  </data>
+  <data name="Voice_Memos" xml:space="preserve">
+    <value>Sprachmemo</value>
+  </data>
+  <data name="Images_Taken" xml:space="preserve">
+    <value>aufgenommene Bilder</value>
+  </data>
+  <data name="Text_Notes" xml:space="preserve">
+    <value>Notizen</value>
+  </data>
+  <data name="Show_All_Faulty" xml:space="preserve">
+    <value>Zeige alle Defekte</value>
+  </data>
+  <data name="Available_Dates" xml:space="preserve">
+    <value>verfügbare Termine</value>
+  </data>
+  <data name="Note_Photometric" xml:space="preserve">
+    <value>Anmerkung: Diese Liste enthält nur Daten worauf sich 
+die photometrische Messungen beziehen</value>
+  </data>
+  <data name="Note_Failed_Lights" xml:space="preserve">
+    <value>Anmerkung: Dieser Filter zeigt nur defekte Feuer</value>
+  </data>
+  <data name="Only_show_faulty_lights" xml:space="preserve">
+    <value>Zeigt nur fehlerhafte Feuer</value>
+  </data>
+  <data name="Show_Hide_Selector" xml:space="preserve">
+    <value>Zeige/verberge Auswahlvorrichtung</value>
+  </data>
+  <data name="Create_Shift" xml:space="preserve">
+    <value>Erstelle Schicht</value>
+  </data>
+  <data name="Create_new_shift_for" xml:space="preserve">
+    <value>Erstelle  neue Schicht für</value>
+  </data>
+  <data name="Select_a_date" xml:space="preserve">
+    <value>Wähle ein Datum</value>
+  </data>
+  <data name="Time_of_Shift" xml:space="preserve">
+    <value>Uhrzeit der Schicht</value>
+  </data>
+  <data name="Technician_Group" xml:space="preserve">
+    <value>Techniker Gruppe</value>
+  </data>
+  <data name="Maintenance_Task" xml:space="preserve">
+    <value>Wartungsaufgabe</value>
+  </data>
+  <data name="Work_Permit_Number" xml:space="preserve">
+    <value>Nummer der Arbeitsgenehmigung</value>
+  </data>
+  <data name="External_Reference" xml:space="preserve">
+    <value>Externer Bezug</value>
+  </data>
+  <data name="Info_All_Technicians" xml:space="preserve">
+    <value>Info: Diese Liste beinhaltet alle geladenen Techniker Gruppen</value>
+  </data>
+  <data name="Infor_Maintenace_Tasks" xml:space="preserve">
+    <value>Info: Die ist die  Liste von allen Wartungsaufgaben. 
+Um alle anzuzeigen hier klicken.</value>
+  </data>
+  <data name="Note_Permit_Issued" xml:space="preserve">
+    <value>Anmerkung: Bitte ausfüllen, wenn eine Genehmigung zum 
+Betreten der Flugbetriebsflächen ausgestellt wurde</value>
+  </data>
+  <data name="Info_External_Reference" xml:space="preserve">
+    <value>Info: Bitte hier alle externen Systemreferenzen versorgen</value>
+  </data>
+  <data name="Add_Shift" xml:space="preserve">
+    <value>Schicht hinzufügen</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Find_assets_and_more" xml:space="preserve">
+    <value>Finde Bauteil und mehr</value>
+  </data>
+  <data name="User_Events" xml:space="preserve">
+    <value>Benutzer Ereignisse</value>
+  </data>
+  <data name="Download_to_Local_Calendar" xml:space="preserve">
+    <value>Zum lokalen Kalender herunterladen</value>
+  </data>
+  <data name="Calendar_Events" xml:space="preserve">
+    <value>Kalender Ereignisse</value>
+  </data>
+  <data name="Info_Outlook" xml:space="preserve">
+    <value>Info: Sie können in ihrem Microsoft Outlook oder iCalender 
+offene Schichten herunterladen oder erstellen.</value>
+  </data>
+  <data name="Select_Event_Icon" xml:space="preserve">
+    <value>Ereignis Symbol auswählen</value>
+  </data>
+  <data name="Event_Title" xml:space="preserve">
+    <value>Titel Ereignis </value>
+  </data>
+  <data name="Event_Description" xml:space="preserve">
+    <value>Beschreibung Ereignis</value>
+  </data>
+  <data name="Select_Event_Color" xml:space="preserve">
+    <value>Ereignis Farbe auswählen</value>
+  </data>
+  <data name="Please_be_brief" xml:space="preserve">
+    <value>Bitte kurz fassen</value>
+  </data>
+  <data name="Make_Private" xml:space="preserve">
+    <value>Als vertraulich kennzeichnen</value>
+  </data>
+  <data name="Note_Viewable" xml:space="preserve">
+    <value>Anmerkung: Wenn dieses Ereignis ausgewählt wir 
+ist es nur von ihnen zu sehen</value>
+  </data>
+  <data name="Add_Event" xml:space="preserve">
+    <value>Ereignis hinzufügen</value>
+  </data>
+  <data name="Completed_Shifts" xml:space="preserve">
+    <value>Abgeschlossene Schicht</value>
+  </data>
+  <data name="Other_Events" xml:space="preserve">
+    <value>Andere Ereignisse </value>
+  </data>
+  <data name="Event_Type" xml:space="preserve">
+    <value>Ereignis Typ</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="Start_Date" xml:space="preserve">
+    <value>Anfangsdatum</value>
+  </data>
+  <data name="Previous_" xml:space="preserve">
+    <value>vorherig</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>nächstes</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Beschreibung</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Titel</value>
+  </data>
+  <data name="Maintenance_Items" xml:space="preserve">
+    <value>Wartungsauffälligkeit</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="Item_Name" xml:space="preserve">
+    <value>Artikelname</value>
+  </data>
+  <data name="Select_Validation" xml:space="preserve">
+    <value>Art der Überprüfung auswählen</value>
+  </data>
+  <data name="Visual_Items" xml:space="preserve">
+    <value>Sichtbare Auffälligkeiten</value>
+  </data>
+  <data name="Loaded_Asset_Types" xml:space="preserve">
+    <value>Geladene Bauteile</value>
+  </data>
+  <data name="Manufacturer" xml:space="preserve">
+    <value>Hersteller</value>
+  </data>
+  <data name="Model" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="Picture" xml:space="preserve">
+    <value>Bilder</value>
+  </data>
+  <data name="Reference" xml:space="preserve">
+    <value>Referenz/Bezug</value>
+  </data>
+  <data name="Asset_Description" xml:space="preserve">
+    <value>Beschreibung Bauteil</value>
+  </data>
+  <data name="Web_Reference" xml:space="preserve">
+    <value>Web Referenz</value>
+  </data>
+  <data name="Fixing_Points" xml:space="preserve">
+    <value>Befestigungspunkte</value>
+  </data>
+  <data name="Asset_Picture" xml:space="preserve">
+    <value>Bild Bauteil</value>
+  </data>
+  <data name="Note_Url_Reference" xml:space="preserve">
+    <value>Anmerkung: Die ist eine URL die den Bezug zum 
+Bauteil herstellt</value>
+  </data>
+  <data name="Hint_Load_Images" xml:space="preserve">
+    <value>Hinweis: Sie können zusätzliche Abbildungen 
+in die Bibliothek laden.</value>
+  </data>
+  <data name="Add_Task" xml:space="preserve">
+    <value>Aufgabe hinzufügen</value>
+  </data>
+  <data name="Frequency" xml:space="preserve">
+    <value>Häufigkeit</value>
+  </data>
+  <data name="Validation" xml:space="preserve">
+    <value>Überprüfung</value>
+  </data>
+  <data name="Select_the_Task" xml:space="preserve">
+    <value>Aufgabe auswählen</value>
+  </data>
+  <data name="Maintenance_Frequency" xml:space="preserve">
+    <value>Wartungsintervalle</value>
+  </data>
+  <data name="Hint_Frequency" xml:space="preserve">
+    <value>Hinweis: Dies ist die Wartungshäufigkeit in Tagen</value>
+  </data>
+  <data name="Add_Maintenance_Task" xml:space="preserve">
+    <value>Wartungsaufgaben hinzufügen</value>
+  </data>
+  <data name="RFID" xml:space="preserve">
+    <value>Funketikett (RFID-Chip)</value>
+  </data>
+  <data name="Multi_Asset_Locations" xml:space="preserve">
+    <value>Standort gesammelte Bauteile</value>
+  </data>
+  <data name="Add_Parent" xml:space="preserve">
+    <value>Übergeordnetes Bauteil hinzufügen</value>
+  </data>
+  <data name="Multi_Assets" xml:space="preserve">
+    <value>Gesammelte Bauteile</value>
+  </data>
+  <data name="All_Assets" xml:space="preserve">
+    <value>Alle Bauteile</value>
+  </data>
+  <data name="Load_More" xml:space="preserve">
+    <value>Mehr laden</value>
+  </data>
+  <data name="Faulty_Light_Reported" xml:space="preserve">
+    <value>Defekte Feuer gemeldet (beseitigt)</value>
+  </data>
+  <data name="Fitting_was_Torqued" xml:space="preserve">
+    <value>Schrauben sind angezogen</value>
+  </data>
+  <data name="Validation_Task_Performed" xml:space="preserve">
+    <value>Überprüfung durchgeführt</value>
+  </data>
+  <data name="User_Id" xml:space="preserve">
+    <value>Benutzerkennung</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="First_Name" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Last_Name" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="Access_Level" xml:space="preserve">
+    <value>Zugriffsstufe</value>
+  </data>
+  <data name="Airport" xml:space="preserve">
+    <value>Flughafen</value>
+  </data>
+  <data name="Technician_Users" xml:space="preserve">
+    <value>Techniker Benutzer</value>
+  </data>
+  <data name="When_loading_Technician" xml:space="preserve">
+    <value>Wenn ein Techniker in das System geladen wird, wird das System folgende Kombination für den Benutzernamen erstellen: Als erstes den Namen + drei Buchstaben des Vornamens. Standardmäßig wird auch für das Airside iPad ein Zugangscode von 1234 generiert. Sie können im Bereich "Zeige alle Benutzer" das Passwort zurücksetzen oder ändern.</value>
+  </data>
+  <data name="Email_Address" xml:space="preserve">
+    <value>Email Adresse</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Confirm_Password" xml:space="preserve">
+    <value>Passwort bestätigen</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrieren</value>
+  </data>
+  <data name="All_Available_Groups" xml:space="preserve">
+    <value>Alle verfügbaren Gruppen</value>
+  </data>
+  <data name="All_Aavailable_Users" xml:space="preserve">
+    <value>Alle  verfügbaren Benutzer</value>
+  </data>
+  <data name="Default_Group" xml:space="preserve">
+    <value>Standard Gruppen</value>
+  </data>
+  <data name="Add_new_technician" xml:space="preserve">
+    <value>Neuen Techniker hinzufügen</value>
+  </data>
+  <data name="Add_new_group" xml:space="preserve">
+    <value>Neue Gruppen hinzufügen</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Collapse" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Full_Screen" xml:space="preserve">
+    <value>Vollbild</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>löschen</value>
+  </data>
+  <data name="Get_Report" xml:space="preserve">
+    <value>Bericht erstellen</value>
+  </data>
+  <data name="Report_View" xml:space="preserve">
+    <value>Berichtsansicht</value>
+  </data>
+  <data name="Shifts_Date_Range" xml:space="preserve">
+    <value>Datumsbereich verschieben</value>
+  </data>
+  <data name="Date_Reported" xml:space="preserve">
+    <value>Berichtszeitpunkt</value>
+  </data>
+  <data name="Get_All_Anomalies" xml:space="preserve">
+    <value>Alle Unregelmäßigkeiten anzeigen</value>
+  </data>
+  <data name="Reported_By" xml:space="preserve">
+    <value>Berichtet von</value>
+  </data>
+  <data name="Severity" xml:space="preserve">
+    <value>Schwere</value>
+  </data>
+  <data name="Pictures_Taken" xml:space="preserve">
+    <value>Fotos gemacht</value>
+  </data>
+  <data name="Map_View" xml:space="preserve">
+    <value>Kartenansicht</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>Bibliothek</value>
+  </data>
+  <data name="Upload_File" xml:space="preserve">
+    <value>Datei hochladen</value>
+  </data>
+  <data name="Drop_files" xml:space="preserve">
+    <value>Drop Dateien um sie hochzuladen</value>
+  </data>
+  <data name="File_Description" xml:space="preserve">
+    <value>Dateibeschreibung</value>
+  </data>
+  <data name="Title_File" xml:space="preserve">
+    <value>Bitte eine Titel für die Datei eingeben</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Akzeptieren</value>
+  </data>
+  <data name="File_Title" xml:space="preserve">
+    <value>Dateititel</value>
+  </data>
+  <data name="Cancel_Upload" xml:space="preserve">
+    <value>Hochladen abbrechen</value>
+  </data>
+  <data name="Remove_File" xml:space="preserve">
+    <value>Datei entfernen</value>
+  </data>
+  <data name="Edit_Image" xml:space="preserve">
+    <value>Aufnahme bearbeiten</value>
+  </data>
+  <data name="Delete_Image" xml:space="preserve">
+    <value>Aufnahme entfernen</value>
+  </data>
+  <data name="Edit_the_Title" xml:space="preserve">
+    <value>Titel bearbeiten</value>
+  </data>
+  <data name="Delete_File" xml:space="preserve">
+    <value>Titel entfernen</value>
+  </data>
+  <data name="Delete_From_Server" xml:space="preserve">
+    <value>Dies wird die Datei vom Server löschen. Weitermachen?</value>
+  </data>
+  <data name="Asset_Management" xml:space="preserve">
+    <value>Bauteilverwaltung</value>
+  </data>
+  <data name="AGL_Asset_Solution" xml:space="preserve">
+    <value>Bauteilverwaltung Flughafenbefeuerung Lösung</value>
+  </data>
+  <data name="New_Era" xml:space="preserve">
+    <value>In dieser neuen Zeit der Informations- und Rechenschaftspflicht, ist es nicht leicht Daten richtig zu verstehen und zu nutzen. Airside hilft ihnen ihre Ausgaben für die aktuelle Infrastruktur zu minimieren, indem es ihnen detaillierte und  genau zählbare Informationen zur Verfügung stellt.</value>
+  </data>
+  <data name="Version_Information" xml:space="preserve">
+    <value>Versionsinformation</value>
+  </data>
+  <data name="Web_API" xml:space="preserve">
+    <value>Web Programmierschnittstelle</value>
+  </data>
+  <data name="iOS_Application" xml:space="preserve">
+    <value>iOS Anwendung</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Urheberrecht</value>
+  </data>
+  <data name="All_Rights_Reserved" xml:space="preserve">
+    <value>Urheberrecht          Alle Rechte vorbehalten</value>
+  </data>
+  <data name="Unauthorized" xml:space="preserve">
+    <value>Unerlaubte Vervielfältigung von dieser Seite, oder in jedem 
+Bereich der Webseite, mit jedem Medium ist strengstens verboten</value>
+  </data>
+  <data name="Proprietary" xml:space="preserve">
+    <value>Urheberrechtlich und vertrauliche.  Geschrieben von 
+Black Lynx, 2016</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Geo_Information" xml:space="preserve">
+    <value>Geo-Informationen</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsche</value>
+  </data>
+  <data name="Loaded_User" xml:space="preserve">
+    <value>Geladen Benutzer</value>
+  </data>
+</root>

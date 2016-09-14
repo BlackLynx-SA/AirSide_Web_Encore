@@ -56,4 +56,3 @@ var AirSide;
 $(document).on('ready', function (c) {
     var surveyorAlerts = new AirSide.SharedHelper.SurveyorAlerts();
 });
-//# sourceMappingURL=SharedHelper.js.map

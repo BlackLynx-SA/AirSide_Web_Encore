@@ -26,27 +26,27 @@
 
         <ul>
             <li class="@Html.RouteIf("index", "active")">
-                <a href="@Url.Action("index", "home")" title="Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">Dashboard</span></a>
+                <a href="@Url.Action("index", "home")" title="@Resources.Language.Dashboard"><i class="fa fa-lg fa-fw fa-home"></i> <span class="menu-item-parent">@Resources.Language.Dashboard</span></a>
             </li>
 
             <li class="@Html.RouteIf("airportmap", "active")">
-                <a href="@Url.Action("airportmap", "map")" title="Dashboard"><i class="fa fa-lg fa-fw fa-map-marker"></i> <span class="menu-item-parent">Geo Information</span></a>
+                <a href="@Url.Action("airportmap", "map")" title="@Resources.Language.Geo_Information"><i class="fa fa-lg fa-fw fa-map-marker"></i> <span class="menu-item-parent">@Resources.Language.Geo_Information</span></a>
             </li>
 
             @* Shift Planning *@
             @if (flag)
             {
                 <li class="@Html.RouteIf("shifts", "active")">
-                    <a href="#"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">Shift Planning</span></a>
+                    <a href="#"><i class="fa fa-lg fa-fw fa-calendar"></i> <span class="menu-item-parent">@Resources.Language.Shift_Planning</span></a>
                     <ul>
                         <li class="@Html.RouteIf("calendar", "active")">
-                            <a href="@Url.Action("calendar", "shifts")">Calendar View</a>
+                            <a href="@Url.Action("calendar", "shifts")">@Resources.Language.Calendar_View</a>
                         </li>
                         <li class="@Html.RouteIf("AllShifts", "active")">
-                            <a href="@Url.Action("AllShifts", "shifts")">All Events</a>
+                            <a href="@Url.Action("AllShifts", "shifts")">@Resources.Language.All_Events</a>
                         </li>
                         <li class="@Html.RouteIf("MaintenanceTasks", "active")">
-                            <a href="@Url.Action("MaintenanceTasks", "shifts")">Maintenance Tasks</a>
+                            <a href="@Url.Action("MaintenanceTasks", "shifts")">@Resources.Language.Maintenance_Tasks</a>
                         </li>
                     </ul>
                 </li>
@@ -56,16 +56,16 @@
             {
             @* Assets *@
                 <li class="@Html.RouteIf("AssetClass", "active") @Html.RouteIf("Asset", "active")">
-                    <a href="#"><i class="fa fa-lg fa-fw fa-lightbulb-o"></i> <span class="menu-item-parent">Assets</span></a>
+                    <a href="#"><i class="fa fa-lg fa-fw fa-lightbulb-o"></i> <span class="menu-item-parent">@Resources.Language.Assets</span></a>
                     <ul>
                         <li class="@Html.RouteIf("AssetClasses", "active")">
-                            <a href="@Url.Action("AssetClasses", "AssetClass")">Asset Types</a>
+                            <a href="@Url.Action("AssetClasses", "AssetClass")">@Resources.Language.Asset_Types</a>
                         </li>
                         <li class="@Html.RouteIf("Assets", "active")">
-                            <a href="@Url.Action("Assets", "Asset")">Loaded Assets</a>
+                            <a href="@Url.Action("Assets", "Asset")">@Resources.Language.Loaded_Assets</a>
                         </li>
                         <li class="@Html.RouteIf("MultiAssets", "active")">
-                            <a href="@Url.Action("MultiAssets", "Asset")">Multi Assets</a>
+                            <a href="@Url.Action("MultiAssets", "Asset")">@Resources.Language.Multi_Asset</a>
                         </li>
                     </ul>
                 </li>
@@ -73,10 +73,10 @@
 
             @* History *@
             <li class="@Html.RouteIf("history", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-history"></i> <span class="menu-item-parent">History</span></a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-history"></i> <span class="menu-item-parent">@Resources.Language.History</span></a>
                 <ul>
                     <li class="@Html.RouteIf("assethistory", "active")">
-                        <a href="@Url.Action("assethistory", "history")">Asset History</a>
+                        <a href="@Url.Action("assethistory", "history")">@Resources.Language.Asset_History</a>
                     </li>
                 </ul>
             </li>
@@ -85,16 +85,16 @@
             {
             @* Users *@
                 <li class="@Html.RouteIf("Users", "active")">
-                    <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">System Users</span></a>
+                    <a href="#"><i class="fa fa-lg fa-fw fa-users"></i> <span class="menu-item-parent">@Resources.Language.System_Users</span></a>
                     <ul>
                         <li class="@Html.RouteIf("viewallusers", "active")">
-                            <a href="@Url.Action("viewallusers", "users")">View All Users</a>
+                            <a href="@Url.Action("viewallusers", "users")">@Resources.Language.View_All_Users</a>
                         </li>
                         <li class="@Html.RouteIf("register", "active")">
-                            <a href="@Url.Action("register", "users")">Create New User</a>
+                            <a href="@Url.Action("register", "users")">@Resources.Language.Create_New_User</a>
                         </li>
                         <li class="@Html.RouteIf("techniciangroups", "active")">
-                            <a href="@Url.Action("techniciangroups", "users")">Technician Groups</a>
+                            <a href="@Url.Action("techniciangroups", "users")">@Resources.Language.Technician_Groups</a>
                         </li>
                     </ul>
                 </li>
@@ -102,13 +102,13 @@
 
             @* Reports *@
             <li class="@Html.RouteIf("Reporting", "active")">
-                <a href="#"><i class="fa fa-lg fa-fw fa-file-pdf-o"></i> <span class="menu-item-parent">Reporting</span></a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-file-pdf-o"></i> <span class="menu-item-parent">@Resources.Language.Reporting</span></a>
                 <ul>
                     <li class="@Html.RouteIf("ShiftReport", "active")">
-                        <a href="@Url.Action("ShiftReport", "Reporting")">Shift Reports</a>
+                        <a href="@Url.Action("ShiftReport", "Reporting")">@Resources.Language.Shift_Reports</a>
                     </li>
                     <li class="@Html.RouteIf("Surveyor", "active")">
-                        <a href="@Url.Action("Surveyor", "Reporting")">Surveyor&trade; Anomalies</a>
+                        <a href="@Url.Action("Surveyor", "Reporting")">@Resources.Language.Surveyor_Anomalies</a>
                     </li>
                 </ul>
             </li>
@@ -117,7 +117,7 @@
             {
             @* Settings *@
                 <li class="@Html.RouteIf("Settings", "active")">
-                    <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">System Settings</span></a>
+                    <a href="#"><i class="fa fa-lg fa-fw fa-cogs"></i> <span class="menu-item-parent">@Resources.Language.System_Settings</span></a>
                     <ul>
                         @*<li class="@Html.RouteIf("AirSidetools", "active")">
                         <a href="@Url.Action("viewallusers", "Settings")">AirSide&trade; Tools</a>
@@ -126,10 +126,10 @@
                         <a href="@Url.Action("EmailSettings", "Settings")">Email and SMS</a>
                     </li>*@
                         <li class="@Html.RouteIf("ImageLibrary", "active")">
-                            <a href="@Url.Action("ImageLibrary", "Settings")">Image Library</a>
+                            <a href="@Url.Action("ImageLibrary", "Settings")">@Resources.Language.Image_Library</a>
                         </li>
                         <li class="@Html.RouteIf("ImageLibrary", "active")">
-                            <a href="@Url.Action("About", "Settings")">About AirSide&trade;</a>
+                            <a href="@Url.Action("About", "Settings")">@Resources.Language.About_AirSide</a>
                         </li>
                         @*<li class="@Html.RouteIf("iOsImages", "active")">
                         <a href="@Url.Action("iOsImages", "iOS")">iOS Files</a>
