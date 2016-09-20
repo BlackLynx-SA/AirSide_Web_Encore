@@ -397,7 +397,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					_db.as_validationTaskProfile.Add(validation);
 					_db.SaveChanges();
 
-					var status = _db.as_assetStatusProfile.Find(item.i_assetId);
+					var status = await _db.as_assetStatusProfile.Where(q=> q.i_assetProfileId == item.i_assetId).OrderByDescending(q=>q.dt_lastUpdated).FirstOrDefaultAsync();
 					if(status != null)
 					{
 						log = "Assset Status";
@@ -585,32 +585,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				foreach (AssetStatusUpload item in assetList)
+				foreach (var item in assetList)
 				{
-					bool status = item.assetStatus != "False";
-					var asset = _db.as_assetStatusProfile.Find(item.assetId);
+					var status = item.assetStatus != "False";
 
-					if (asset != null)
+					_db.as_assetStatusProfile.Add(new as_assetStatusProfile
 					{
-						asset.bt_assetStatus = status;
-						asset.dt_lastUpdated = DateTime.Now;
+					    dt_lastUpdated = DateTime.Now,
+                        bt_assetStatus = status,
+                        i_assetSeverity = item.assetSeverity,
+                        i_assetProfileId = item.assetId
+					});
 
-						_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-						_db.SaveChanges();
-					}
-					else
-					{
-						as_assetStatusProfile newStatus = new as_assetStatusProfile
-						{
-							bt_assetStatus = status,
-							i_assetProfileId = item.assetId,
-							i_assetSeverity = item.assetSeverity,
-							dt_lastUpdated = DateTime.Now
-						};
-
-						_db.as_assetStatusProfile.Add(newStatus);
-						_db.SaveChanges();
-					}
+					_db.SaveChanges();
+					
 				}
 
 				return Json(new { assetCount = assetList.Count });
@@ -630,34 +618,20 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				bool status = assetStatus != "False";
-				var asset = _db.as_assetStatusProfile.Find(assetId);
+				var status = assetStatus != "False";
 
-				if (asset != null)
-				{
-					asset.bt_assetStatus = status;
-					asset.dt_lastUpdated = DateTime.Now;
-
-					_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
-					_db.SaveChanges();
-				}
-				else
-				{
-					as_assetStatusProfile newStatus = new as_assetStatusProfile
-					{
-						bt_assetStatus = status,
-						i_assetProfileId = assetId,
-						i_assetSeverity = assetSeverity,
-						dt_lastUpdated = DateTime.Now
-					};
-
-					_db.as_assetStatusProfile.Add(newStatus);
-					_db.SaveChanges();
-				}
+			    _db.as_assetStatusProfile.Add(new as_assetStatusProfile
+			    {
+			        dt_lastUpdated = DateTime.Now,
+                    i_assetProfileId = assetId,
+                    i_assetSeverity = assetSeverity,
+                    bt_assetStatus = status
+			    });
+				_db.SaveChanges();
 
 				await _cache.RebuildAssetProfileForAsset(assetId);
 
-				AssetStatus returnType = new AssetStatus
+				var returnType = new AssetStatus
 				{
 					i_assetProfileId = assetId,
 					bt_assetStatus = status
@@ -1285,6 +1259,92 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				return err.Message;
 			}
 		}
+
+	    [HttpPost]
+	    public async Task<JsonResult> UploadSingleFile(singleFileUpload fileInfo)
+	    {
+	        try
+	        {
+	            var fileGuid = Guid.NewGuid();
+	            if (fileInfo.file.ContentLength > 0)
+	            {
+	                var fileName = Path.GetFileName(fileInfo.file.FileName);
+	                if (fileName != null)
+	                {
+	                    var path = Path.Combine(Server.MapPath("~/images/uploads"), fileName);
+                        fileInfo.file.SaveAs(path);
+
+	                    if (IsImage(fileInfo.file))
+	                    {
+	                        try
+	                        {
+	                            SaveThumbNails(path);
+	                        }
+	                        catch (Exception err)
+	                        {
+	                            _cache.Log(
+	                                "Failed to upload File (Image Check): " + err.Message + " | " +
+	                                err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+	                        }
+	                    }
+	                }
+
+	                var fileSplit = fileInfo.file.FileName.Split(char.Parse("."));
+	                var extension = fileSplit[1];
+	                var fileType = 0;
+
+	                switch (extension)
+	                {
+	                    case "jpg":
+	                        fileType = 1;
+	                        break;
+	                    case "m4a":
+	                        fileType = 2;
+	                        break;
+	                    case "text":
+	                        fileType = 3;
+	                        break;
+	                }
+
+	                _db.as_fileUploadProfile.Add(
+	                    new as_fileUploadProfile
+	                    {
+	                        guid_file = fileGuid,
+	                        vc_filePath = "../../images/uploads/" + fileName,
+	                        vc_fileDescription = fileName,
+	                        i_fileType = fileType,
+	                        dt_datetime = DateTime.Now
+	                    }
+	                    );
+
+	                await _db.SaveChangesAsync();
+	            }
+
+	            _db.as_fileUploadInfo.Add(
+	                new as_fileUploadInfo
+	                {
+	                    guid_file = fileGuid,
+	                    vc_description = fileInfo.description,
+	                    f_latitude = fileInfo.latitude,
+	                    f_longitude = fileInfo.longitude,
+	                    i_shiftId = fileInfo.shiftId,
+	                    i_userId_logged = fileInfo.userId,
+	                    i_severityId = fileInfo.severity,
+	                    i_userId_resolved = 0,
+	                    dt_dateTimeResolved = DateTime.Parse("2300/01/01")
+	                }
+	                );
+	            await _db.SaveChangesAsync();
+
+	            return Json(new {success = true, fileInfo.token});
+	        }
+	        catch (Exception err)
+	        {
+                _cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadSingleFile", CacheHelper.LogTypes.Error, "iOS");
+                Response.StatusCode = 500;
+	            return Json(new {success = false});
+	        }
+	    }
 
 		#endregion
 

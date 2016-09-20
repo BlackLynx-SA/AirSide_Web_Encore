@@ -114,13 +114,13 @@ namespace AirSide.ServerModules.Helpers
 
                     foreach (var item in assets)
                     {
-                        Boolean lightStatus = false;
-                        var status = _db.as_assetStatusProfile.FirstOrDefault(q => q.i_assetProfileId == item.assetId);
+                        var lightStatus = false;
+                        var status = await _db.as_assetStatusProfile.OrderByDescending(q=>q.dt_lastUpdated).FirstOrDefaultAsync(q => q.i_assetProfileId == item.assetId);
                         if (status != null)
                             lightStatus = status.bt_assetStatus;
                     try
                     {
-                        mongoFullAsset asset = new mongoFullAsset
+                        var asset = new mongoFullAsset
                         {
                             assetId = item.assetId,
                             serialNumber = item.serialNumber,
@@ -150,7 +150,7 @@ namespace AirSide.ServerModules.Helpers
                     Log("Dropped DB", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
 
                     //Recreate New
-                    IMongoCollection<mongoFullAsset> collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
+                    var collection = Database.GetCollection<mongoFullAsset>("md_assetFullDownload");
                     await collection.InsertManyAsync(assetArray);
                     Log("Inserted new", "CreateAllAssetDownload(iOS)", LogTypes.Debug, "SYSTEM");
 
@@ -192,7 +192,7 @@ namespace AirSide.ServerModules.Helpers
                     foreach (var item in assets)
                     {
                         Boolean lightStatus = false;
-                        var status = _db.as_assetStatusProfile.FirstOrDefault(q => q.i_assetProfileId == item.assetId);
+                        var status = await _db.as_assetStatusProfile.OrderByDescending(q=>q.dt_lastUpdated).FirstOrDefaultAsync(q => q.i_assetProfileId == item.assetId);
                         if (status != null)
                             lightStatus = status.bt_assetStatus;
 
@@ -513,7 +513,8 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
+                        assetDoc.status = _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).OrderByDescending(q => q.dt_lastUpdated).Select(q => q.bt_assetStatus).FirstOrDefaultAsync() != null 
+                            && await _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).OrderByDescending(q=>q.dt_lastUpdated).Select(q => q.bt_assetStatus).FirstOrDefaultAsync();
 
                         assetDoc.productUrl = item.productUrl;
                         assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);
@@ -621,7 +622,13 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
+                        assetDoc.status = _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).OrderByDescending(q => q.dt_lastUpdated).Select(q => q.bt_assetStatus).FirstOrDefaultAsync() != null
+                                          &&
+                                          await
+                                              _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId)
+                                                  .OrderByDescending(q => q.dt_lastUpdated)
+                                                  .Select(q => q.bt_assetStatus)
+                                                  .FirstOrDefaultAsync();
 
                         assetDoc.productUrl = item.productUrl;
                         assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);
@@ -676,8 +683,8 @@ namespace AirSide.ServerModules.Helpers
 
                     //Drop Current Profile
                     var filter = Builders<mongoAssetProfile>.Filter.Eq(q => q.assetId, assetId);
-                    IMongoCollection<mongoAssetProfile> collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
-                    await collection.DeleteOneAsync(filter);
+                    var collection = Database.GetCollection<mongoAssetProfile>("md_assetProfile");
+                    await collection.DeleteManyAsync(filter);
 
                     //Insert Updated records
                     await collection.InsertManyAsync(assetArray);
@@ -729,7 +736,12 @@ namespace AirSide.ServerModules.Helpers
                         assetDoc.serialNumber = item.vc_serialNumber;
 
                         //Get the Light Status
-                        assetDoc.status = _db.as_assetStatusProfile.Find(item.i_assetId) != null && _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).Select(q => q.bt_assetStatus).FirstOrDefault();
+                        assetDoc.status = _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId).OrderByDescending(q => q.dt_lastUpdated).Select(q => q.bt_assetStatus).FirstOrDefaultAsync() != null &&
+                                          await
+                                              _db.as_assetStatusProfile.Where(q => q.i_assetProfileId == item.i_assetId)
+                                                  .OrderByDescending(q => q.dt_lastUpdated)
+                                                  .Select(q => q.bt_assetStatus)
+                                                  .FirstOrDefaultAsync();
 
                         assetDoc.productUrl = item.productUrl;
                         assetDoc.maintenance = _func.GetMaintenaceTasks(item.i_assetId);

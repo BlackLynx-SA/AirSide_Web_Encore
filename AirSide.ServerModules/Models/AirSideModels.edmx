@@ -82,8 +82,9 @@
         </EntityType>
         <EntityType Name="as_assetStatusProfile">
           <Key>
-            <PropertyRef Name="i_assetProfileId" />
+            <PropertyRef Name="id" />
           </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="i_assetProfileId" Type="int" Nullable="false" />
           <Property Name="bt_assetStatus" Type="bit" Nullable="false" />
           <Property Name="i_assetSeverity" Type="int" Nullable="false" />
@@ -374,7 +375,7 @@
           <Key>
             <PropertyRef Name="i_groupId" />
           </Key>
-          <Property Name="i_groupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="i_groupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vc_groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -1140,7 +1141,6 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="as_assetStatusProfile" EntityType="airside.encoreModel.as_assetStatusProfile" />
           <EntitySet Name="as_fileUploadInfo" EntityType="airside.encoreModel.as_fileUploadInfo" />
           <EntitySet Name="UserProfiles" EntityType="airside.encoreModel.UserProfile" />
           <EntitySet Name="as_shiftsCustomProfile" EntityType="airside.encoreModel.as_shiftsCustomProfile" />
@@ -1151,16 +1151,8 @@
           </FunctionImport>
           <EntitySet Name="as_shiftData" EntityType="airside.encoreModel.as_shiftData" />
           <EntitySet Name="as_multiAssetProfile" EntityType="airside.encoreModel.as_multiAssetProfile" />
+          <EntitySet Name="as_assetStatusProfile" EntityType="airside.encoreModel.as_assetStatusProfile" />
         </EntityContainer>
-        <EntityType Name="as_assetStatusProfile">
-          <Key>
-            <PropertyRef Name="i_assetProfileId" />
-          </Key>
-          <Property Name="i_assetProfileId" Type="Int32" Nullable="false" />
-          <Property Name="bt_assetStatus" Type="Boolean" Nullable="false" />
-          <Property Name="i_assetSeverity" Type="Int32" Nullable="false" />
-          <Property Name="dt_lastUpdated" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="as_fileUploadInfo">
           <Key>
             <PropertyRef Name="guid_file" />
@@ -1239,6 +1231,16 @@
           <Property Name="i_multiId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="i_assetId" Type="Int32" Nullable="false" />
           <Property Name="i_childId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_assetStatusProfile">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="i_assetProfileId" Type="Int32" Nullable="false" />
+          <Property Name="bt_assetStatus" Type="Boolean" Nullable="false" />
+          <Property Name="i_assetSeverity" Type="Int32" Nullable="false" />
+          <Property Name="dt_lastUpdated" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1703,16 +1705,6 @@
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="as_assetStatusProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_assetStatusProfile">
-              <MappingFragment StoreEntitySet="as_assetStatusProfile">
-                <ScalarProperty Name="dt_lastUpdated" ColumnName="dt_lastUpdated" />
-                <ScalarProperty Name="i_assetSeverity" ColumnName="i_assetSeverity" />
-                <ScalarProperty Name="bt_assetStatus" ColumnName="bt_assetStatus" />
-                <ScalarProperty Name="i_assetProfileId" ColumnName="i_assetProfileId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="as_fileUploadInfo">
             <EntityTypeMapping TypeName="airside.encoreModel.as_fileUploadInfo">
               <MappingFragment StoreEntitySet="as_fileUploadInfo">
@@ -1799,6 +1791,17 @@
                 <ScalarProperty Name="i_childId" ColumnName="i_childId" />
                 <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
                 <ScalarProperty Name="i_multiId" ColumnName="i_multiId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_assetStatusProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_assetStatusProfile">
+              <MappingFragment StoreEntitySet="as_assetStatusProfile">
+                <ScalarProperty Name="dt_lastUpdated" ColumnName="dt_lastUpdated" />
+                <ScalarProperty Name="i_assetSeverity" ColumnName="i_assetSeverity" />
+                <ScalarProperty Name="bt_assetStatus" ColumnName="bt_assetStatus" />
+                <ScalarProperty Name="i_assetProfileId" ColumnName="i_assetProfileId" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

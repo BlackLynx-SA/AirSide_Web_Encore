@@ -10,22 +10,35 @@
             <div class="modal-body">
                 <h4>
                     <i class="fa fa-globe"></i> Web Application - Version 4.0.4.08<br/>
-                    <small>Released: 2016/08/07</small>
+                    <small>Released: 2016/08/13</small>
                 </h4>
                 <ul>
-                    <li>Expanded multi-asset location functionality.</li>
-                    <li>Added ability to capture multi-asset information from web interface.</li>
+                    <li>Included validation checklist - Asset History</li>
+                    <li>Fixed a bug that duplicated validation tasks - Asset History</li>
+                    <li>Include Ad-Hoc Events - Asset History</li>
+                    <li>Added release notes on web interface</li>
+                    <li>Added functionality to create child parent relationship between assets - Multi-Asset locations</li>
+                    <li>Included visualization of multi-asset locations on the Geo-Information tab - Multi-Asset locations</li>
+                    <li>Bug Fixed: Fixed asset assignment</li>
+                    <li>Bug Fixed: Selector for custom shift area creation showed wrong number of assets</li>
+                    <li>Bug Fixed: Creating shift without date will be validated before submitting</li>
+                    <li>Added the ability to search for assets based on the serial number or RFID tag on the Geo-Information tab</li>
                 </ul>
-                @*<hr/>
+
+                <hr/>
+
                 <h4>
-                    <i class="fa fa-apple"></i> iOS Application - Version 4.2.0.2210<br/>
-                    <small>Released: 2016/05/24</small>
+                    <i class="fa fa-apple"></i> iOS Application - Version 4.3.0.0<br/>
+                    <small>Released: 2016/08/13</small>
                 </h4>
                 <ul>
-                    <li>Streamlined ability to upload images from surveyor</li>
-                    <li>Updated offline working</li>
-                    <li>General enhancements to speed of application</li>
-                </ul>*@
+                    <li>Manual Asset Validation – Assets can now be manually validated (without the use of a handheld scanner or wrench) by simply selecting the asset during an Asset Validation shift or using the Visual Surveyor</li>
+                    <li>Added severity level selection when reporting an anomaly.</li>
+                    <li>Fixed duplicate values being inserted during Torque Shifts</li>
+                    <li>Data is now persisted when doing a Torque Shift. Moving from an active shift to the Surveyor will no longer discard already maintained assets during the Torque Shift.</li>
+                    <li>Reporting a light out using the full screen visual surveyor no longer requires the user to submit manually. Once the appropriate asset status is selected, the asset is updated immediately.</li>
+                    <li>The correct status after submitting shift related tasks is now being displayed</li>
+                </ul>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-primary" style="float:right" id="ReleaseOkBtn">Ok</button>

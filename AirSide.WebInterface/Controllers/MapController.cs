@@ -88,29 +88,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var asset = db.as_assetStatusProfile.Find(assetId);
-
-                if (asset != null)
+                db.as_assetStatusProfile.Add(new as_assetStatusProfile
                 {
-                    asset.bt_assetStatus = flag;
-                    asset.dt_lastUpdated = DateTime.Now;
-                    db.Entry(asset).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-                else
-                {
-                    as_assetStatusProfile status = new as_assetStatusProfile()
-                    {
-                        bt_assetStatus = flag,
-                        dt_lastUpdated = DateTime.Now,
-                        i_assetProfileId = assetId,
-                        i_assetSeverity = 0
-                    };
-
-                    db.as_assetStatusProfile.Add(status);
-                    db.SaveChanges();
-                }
-
+                    i_assetProfileId = assetId,
+                    i_assetSeverity = 0,
+                    bt_assetStatus = flag,
+                    dt_lastUpdated = DateTime.Now
+                });    
+                db.SaveChanges();
+             
                 await cache.RebuildAssetProfileForAsset(assetId);
 
                 return Json(new {status = "success"});

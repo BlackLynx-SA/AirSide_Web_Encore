@@ -68,13 +68,13 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-        public virtual DbSet<as_assetStatusProfile> as_assetStatusProfile { get; set; }
         public virtual DbSet<as_fileUploadInfo> as_fileUploadInfo { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<as_shiftsCustomProfile> as_shiftsCustomProfile { get; set; }
         public virtual DbSet<as_shifts> as_shifts { get; set; }
         public virtual DbSet<as_shiftData> as_shiftData { get; set; }
         public virtual DbSet<as_multiAssetProfile> as_multiAssetProfile { get; set; }
+        public virtual DbSet<as_assetStatusProfile> as_assetStatusProfile { get; set; }
     
         public virtual ObjectResult<as_get_closest_point_to_gps_coordinate1_Result> as_get_closest_point_to_gps_coordinate(Nullable<double> latitude, Nullable<double> longitude)
         {

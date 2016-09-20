@@ -59,6 +59,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 allHistory.AddRange(visualSurveys(assetId));
                 allHistory.AddRange(ValidationCheckListTasks(assetId));
                 allHistory.AddRange(FaultyLightsTasks(assetId));
+                allHistory.AddRange(AdhocTask(assetId));
 
                 if (allHistory.Count == 1)
                     if (allHistory[0].heading == null)
@@ -207,6 +208,56 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<AssetHistory> AdhocTask(int assetId)
+        {
+            var torque = (from x in db.as_shiftData
+                          where x.i_assetId == assetId && x.i_shiftId == 0
+                          select new
+                          {
+                              name = "ADHOC",
+                              date = x.dt_captureDate,
+                              maintenanceTask = "ADHOC Torque",
+                              value = x.f_capturedValue,
+                              shiftId = x.i_shiftId
+                          }).OrderByDescending(q => q.date).Take(10);
+
+            List<AssetHistory> tasks = new List<AssetHistory>();
+
+            int shiftId = 0;
+            int pointer = 0;
+
+            AssetHistory task = new AssetHistory();
+
+            foreach (var item in torque)
+            {
+                if (item.shiftId != shiftId || shiftId == 0)
+                {
+                    if (shiftId != 0)
+                        tasks.Add(task);
+
+                    task = new AssetHistory();
+                    task.colour = "#8800c8";
+                    task.heading = "Fitting was torqued(ADHOC) - " + item.name;
+                    task.icon = "fa-wrench";
+                    task.dateString = item.date.ToString("dd MMM, yyyy");
+                    task.dateStamp = item.date;
+                    task.content = new String[10];
+                    task.type = 2;
+                    shiftId = item.shiftId;
+                    pointer = 0;
+                }
+
+                task.content[pointer] = item.value.ToString();
+                pointer++;
+            }
+
+            tasks.Add(task);
+
+            return tasks;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         private List<AssetHistory> torqueTasks(int assetId)
         {
             var torque = (from x in db.as_shiftData
@@ -263,7 +314,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             var surveys = (from x in db.as_fileUploadInfo
                           join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
-                          join z in db.as_locationProfile on new { x.f_latitude, x.f_longitude } equals new { z.f_latitude, z.f_longitude }
+                          join z in db.as_locationProfile on new { latitude = x.f_latitude, longitude = x.f_longitude } equals new { latitude = Math.Round(z.f_latitude,6), longitude = Math.Round(z.f_longitude,6) }
                           join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
                           join b in db.UserProfiles on x.i_userId_logged equals b.UserId
                           where a.i_assetId == assetId
@@ -272,17 +323,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             date = y.dt_datetime,
                             fileLocation = y.vc_filePath,
                             type = y.i_fileType
-                          }).OrderByDescending(q=>q.date).Take(10);
+                          }).OrderByDescending(q=>q.date);
 
             List<AssetHistory> items = new List<AssetHistory>();
 
             foreach(var item in surveys)
             {
-                AssetHistory asset = new AssetHistory();
-                asset.dateStamp = item.date;
-                asset.dateString = item.date.ToString("dd MMM, yyyy");
-                asset.type = 3;
-                asset.content = new String[1];
+                AssetHistory asset = new AssetHistory
+                {
+                    dateStamp = item.date,
+                    dateString = item.date.ToString("dd MMM, yyyy"),
+                    type = 3,
+                    content = new String[1]
+                };
 
                 string[] filepath = item.fileLocation.Split(char.Parse("."));
                 int place = filepath.Count() - 1;
