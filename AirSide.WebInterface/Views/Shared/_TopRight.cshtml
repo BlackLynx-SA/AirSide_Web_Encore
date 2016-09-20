@@ -1,4 +1,7 @@
-﻿<!-- collapse menu button -->
+﻿@{
+    var culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name.ToLowerInvariant();
+}
+<!-- collapse menu button -->
 <div id="hide-menu" class="btn-header pull-right">
     <span> <a href="javascript:void(0);" data-action="toggleMenu" title="Collapse Menu"><i class="fa fa-reorder"></i></a> </span>
 </div>
@@ -42,6 +45,32 @@
     <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
 </div>
 <!-- end fullscreen button -->
+
+<ul class="header-dropdown-list hidden-xs">
+    <li>
+        @switch (culture)
+        {
+            case "en":
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="~/images/blank.gif" class="flag flag-gb" alt="United Kingdom"> <span> @Resources.Language.English</span> <i class="fa fa-angle-down"></i> </a>
+                break;
+            case "de":
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="~/images/blank.gif" class="flag flag-de" alt="Germany"> <span> @Resources.Language.German</span> <i class="fa fa-angle-down"></i> </a>
+                break;
+            default:
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <img src="~/images/blank.gif" class="flag flag-gb" alt="United Kingdom"> <span> @Resources.Language.English</span> <i class="fa fa-angle-down"></i> </a>
+                break;
+        }
+        <ul class="dropdown-menu pull-right">
+            <li class="active">
+                <a href="../../Home/SetCulture?culture=en"><img src="~/images/blank.gif" class="flag flag-gb" alt="United Kingdom"> @Resources.Language.English</a>
+            </li>
+            <li>
+                <a href="../../Home/SetCulture?culture=de"><img src="~/images/blank.gif" class="flag flag-de" alt="Germany"> @Resources.Language.German</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
 <div class="btn-header transparent pull-right visible-sm visible-xs">
     <img src="../../Content/img/adb_img/page_loader.GIF" alt="" style="  margin-top: 15px; margin-right: 20px; display:none;" id="page_loader"/>
 </div>

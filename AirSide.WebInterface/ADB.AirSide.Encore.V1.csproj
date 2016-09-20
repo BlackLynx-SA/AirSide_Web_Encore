@@ -478,6 +478,7 @@
     <Content Include="Images\adbimages\CalendarIcon.jpg" />
     <Content Include="Images\adbimages\TasksIcon.jpg" />
     <Content Include="Images\adbimages\UsersIcon.jpg" />
+    <Content Include="Images\blank.gif" />
     <Content Include="Images\icons\excel_ico.png" />
     <Content Include="Images\icons\map_icon_blue.png" />
     <Content Include="Images\icons\map_icon_green.png" />
@@ -1221,6 +1222,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\Language.de.designer.cs">
+      <DependentUpon>Language.de.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="App_GlobalResources\Language.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Language.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Helpers\HandleAntiforgeryTokenErrorAttribute.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
@@ -1237,6 +1248,7 @@
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\AssetClassController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DocDbController.cs" />
     <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -1251,6 +1263,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Content Include="Logs\empty.txt" />
+    <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ViewModels\MultiAssetViewModel.cs" />
@@ -1270,6 +1283,7 @@
     <Folder Include="bin\" />
     <Folder Include="Content\Images\" />
     <Folder Include="Images\releases\2.0.0.1\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\TypeScripts\Map\AirPortMap.js" />
@@ -1282,6 +1296,18 @@
       <Project>{98ff727b-1808-4e66-99e5-732601a3fe9d}</Project>
       <Name>AirSide.ServerModules</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\Language.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Language.Designer.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\Language.de.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Language.de.designer.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -240,4 +240,3 @@ function getImage() {
     var image = '/images/icons/map_icon_blue.png';
     return image;
 }
-//# sourceMappingURL=SurveyorReport.js.map

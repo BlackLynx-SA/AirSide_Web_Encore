@@ -2,21 +2,21 @@
 <div id="content">
     <div class="row">
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-            <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>> My Dashboard</span></h1>
+            <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> @Resources.Language.Dashboard <span>> @Resources.Language.My_Dashboard</span></h1>
         </div>
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
             <ul id="sparks" class="">
                 <li class="sparks-info">
-                    <h5> Number of Assets <span class="txt-color-blue"><i class="fa fa-lightbulb-o"></i> @ViewBag.NumberAssets</span></h5>
+                    <h5> @Resources.Language.Number_of_Assets <span class="txt-color-blue"><i class="fa fa-lightbulb-o"></i> @ViewBag.NumberAssets</span></h5>
                     <div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
                         @ViewBag.AssetInit
                     </div>
                 </li>
                 <li class="sparks-info">
-                    <h5> Loaded Users <span class="txt-color-purple"><i class="fa fa-users"></i> @ViewBag.NumberUsers</span></h5>
+                    <h5> @Resources.Language.Loaded_User <span class="txt-color-purple"><i class="fa fa-users"></i> @ViewBag.NumberUsers</span></h5>
                 </li>
                 <li class="sparks-info">
-                    <h5> Active Shifts <span class="txt-color-greenDark"><i class="fa fa-calendar"></i> @ViewBag.NumberActiveShifts</span></h5>
+                    <h5> @Resources.Language.Active_Shifts <span class="txt-color-greenDark"><i class="fa fa-calendar"></i> @ViewBag.NumberActiveShifts</span></h5>
                     <div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
                         @ViewBag.CompletedShifts
                     </div>
@@ -33,10 +33,10 @@
                 <div class="jarviswidget" id="wid-id-0" data-widget-togglebutton="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
                     <header>
                         <span class="widget-icon"> <i class="glyphicon glyphicon-stats txt-color-darken"></i> </span>
-                        <h2>AirSide&trade; Activity (Last 30 days)</h2>
+                        <h2>AirSide&trade; @Resources.Language.Activity_30Days</h2>
                         <ul class="nav nav-tabs pull-right in" id="myTab">
                             <li class="active">
-                                <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">Live Stats</span></a>
+                                <a data-toggle="tab" href="#s1"><i class="fa fa-clock-o"></i> <span class="hidden-mobile hidden-tablet">@Resources.Language.Live_Stats</span></a>
                             </li>
                         </ul>
                     </header>
@@ -58,7 +58,7 @@
                                                 <span class="percent percent-sign">@ViewBag.completedMaint</span>
                                             </div>
                                             <span class="easy-pie-title">
-                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Up to 33% of the maintenance cycle specified for the asset class.">Updated</a>
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Up to 33% of the maintenance cycle specified for the asset class.">@Resources.Language.Updated</a>
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
@@ -77,7 +77,7 @@
                                                 <span class="percent percent-sign">@ViewBag.midMaint</span>
                                             </div>
                                             <span class="easy-pie-title">
-                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 33% and less than 66% of the maintenance cycle specified for the asset class">Mid Cycle</a>
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 33% and less than 66% of the maintenance cycle specified for the asset class">@Resources.Language.Mid_Cycle</a>
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
@@ -93,7 +93,7 @@
                                                 <span class="percent percent-sign">@ViewBag.almostMaint</span>
                                             </div>
                                             <span class="easy-pie-title">
-                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 66% and less than 100% of the maintenance cycle specified for the asset class">Almost Due</a>
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 66% and less than 100% of the maintenance cycle specified for the asset class">@Resources.Language.Almost_Due</a>
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
@@ -109,7 +109,7 @@
                                                 <span class="percent percent-sign">@ViewBag.dueAssets</span>
                                             </div>
                                             <span class="easy-pie-title">
-                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 100% of the maintenance cycle specified for the asset class">Over Due</a>
+                                                <a href="javascript:void(0);" rel="popover-hover" data-placement="right" data-content="Above 100% of the maintenance cycle specified for the asset class">@Resources.Language.Over_Due</a>
                                             </span>
                                             <ul class="smaller-stat hidden-sm pull-right">
                                                 <li>
