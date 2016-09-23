@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace AirSide.ServerModules.Models
 {
@@ -282,6 +283,18 @@ namespace AirSide.ServerModules.Models
         public double latitude { get; set; }
         public int userId { get; set; }
         public int severity { get; set; }
+    }
+
+    public class singleFileUpload
+    {
+        public string description { get; set; }
+        public int shiftId { get; set; }
+        public double longitude { get; set; }
+        public double latitude { get; set; }
+        public int userId { get; set; }
+        public int severity { get; set; }
+        public string token { get; set; }
+        public HttpPostedFileBase file { get; set; }
     }
 
     public class NewAssetAssosiation

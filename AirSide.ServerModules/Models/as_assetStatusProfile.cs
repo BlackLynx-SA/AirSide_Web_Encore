@@ -14,6 +14,7 @@ namespace AirSide.ServerModules.Models
     
     public partial class as_assetStatusProfile
     {
+        public int id { get; set; }
         public int i_assetProfileId { get; set; }
         public bool bt_assetStatus { get; set; }
         public int i_assetSeverity { get; set; }

@@ -245,7 +245,7 @@ function addMarker(json) {
     var marker = new google.maps.Marker({
         map: map,
         position: latLongMarker,
-        title: json.serialNumber,
+        title: json.assetId.toString(),
         icon: image
     });
 
@@ -359,7 +359,7 @@ function toggleFaultyLight(id, flag) {
             e.status = flag;
             var i = 0;
             markers.forEach(function(d) {
-                if(d.title === id)
+                if (d.title === e.assetId.toString())
                     markers[i].setMap(null);
                 i++;
             });
