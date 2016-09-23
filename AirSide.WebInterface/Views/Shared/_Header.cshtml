@@ -23,15 +23,15 @@
                 <div class="btn-group btn-group-justified" data-toggle="buttons">
                     <label class="btn btn-default svCriticalBtn">
                         <input type="radio" name="activity" id="~/Surveyor/AlertBox?severityId=1">
-                        Critical <b class="badge" id="svCritical"> 0 </b>
+                        @Resources.Language.Critical <b class="badge" id="svCritical"> 0 </b>
                     </label>
                     <label class="btn btn-default svMajorBtn">
                         <input type="radio" name="activity" id="~/Surveyor/AlertBox?severityId=2">
-                        Major <b class="badge" id="svMajor"> 0 </b>
+                        @Resources.Language.Major <b class="badge" id="svMajor"> 0 </b>
                     </label>
                     <label class="btn btn-default svMinorBtn">
                         <input type="radio" name="activity" id="~/Surveyor/AlertBox?severityId=3">
-                        Minor <b class="badge" id="svMinor"> 0 </b>
+                        @Resources.Language.Minor <b class="badge" id="svMinor"> 0 </b>
                     </label>
                 </div>
 
@@ -39,8 +39,8 @@
                 <div class="ajax-notifications custom-scroll">
 
                     <div class="alert alert-transparent">
-                        <h4>Select a category above to view.</h4>
-                        This blank page message helps protect your privacy. The anomalies reported via Surveyor&trade; will be retrieved an shown here.
+                        <h4>@Resources.Language.Select_Category</h4>
+                        @Resources.Language.Protect_Privacy
                     </div>
 
                     <i class="fa fa-lock fa-4x fa-border"></i>
@@ -51,7 +51,7 @@
                 <span>@{
 	                      var loadTxt = "<i class='fa fa-refresh fa-spin'></i> Loading... ";
                       }
-                    Last updated on: <span id="lastUpdated">@DateTime.Now</span>
+                    @Resources.Language.Last_updated_on: <span id="lastUpdated">@DateTime.Now</span>
                     <button type="button" class="btn btn-xs btn-default pull-right" data-loading-text="@loadTxt">
                     </button>
                 </span>
@@ -65,7 +65,7 @@
     {
     <!-- projects dropdown -->
         <div class="project-context hidden-xs">
-            <span class="label">Surveyor&trade; Alerts</span>
+            <span class="label">Surveyor&trade; @Resources.Language.Alerts</span>
         </div>
     <!-- end projects dropdown -->
     }

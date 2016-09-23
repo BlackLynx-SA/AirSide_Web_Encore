@@ -797,4 +797,97 @@ Black Lynx, 2016</value>
   <data name="Loaded_User" xml:space="preserve">
     <value>Geladen Benutzer</value>
   </data>
+  <data name="Change_Shift_Status_Close" xml:space="preserve">
+    <value>Dadurch wird der Status der Verschiebung ändern zu schließen.</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Erledigt</value>
+  </data>
+  <data name="Error_Shift_Status" xml:space="preserve">
+    <value>Fehler der Schaltstatusänderung</value>
+  </data>
+  <data name="Failed_To_Get_Active_Shifts" xml:space="preserve">
+    <value>Fehler beim aktiven Schichten erhalten</value>
+  </data>
+  <data name="Generate_PDF" xml:space="preserve">
+    <value>PDF Generieren</value>
+  </data>
+  <data name="Mark_As_Complete" xml:space="preserve">
+    <value>Als abgeschlossen markieren?</value>
+  </data>
+  <data name="Shift_Set_Complete" xml:space="preserve">
+    <value>Die Verschiebung wurde eingestellt abzuschließen. Sie können durch Klicken auf "Neues Ereignis erstellen" eine neue Verschiebung erstellen</value>
+  </data>
+  <data name="Shift_Status_Changed" xml:space="preserve">
+    <value>Verschiebung Statusänderung</value>
+  </data>
+  <data name="View_All_Events" xml:space="preserve">
+    <value>Alle Veranstaltungen</value>
+  </data>
+  <data name="Add_Item" xml:space="preserve">
+    <value>Artikel hinzufügen</value>
+  </data>
+  <data name="Add_New_Event" xml:space="preserve">
+    <value>Neuen Termin hinzufügen</value>
+  </data>
+  <data name="Agenda" xml:space="preserve">
+    <value>Woche</value>
+  </data>
+  <data name="Check_List_Added" xml:space="preserve">
+    <value>Checkliste hinzugefügt</value>
+  </data>
+  <data name="Check_List_Added_Desc" xml:space="preserve">
+    <value>Die Checkliste wurde hinzugefügt. Bitte aktualisieren Sie den Cache auf dem iPad zu reflektieren.</value>
+  </data>
+  <data name="Completion" xml:space="preserve">
+    <value>Fertigstellung</value>
+  </data>
+  <data name="Create_Checklist" xml:space="preserve">
+    <value>Erstellen Checkliste</value>
+  </data>
+  <data name="Download_Outlook" xml:space="preserve">
+    <value>Sie können offene Verschiebungen in Microsoft Outlook oder iCalendar herunterladen und erstellen.</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Veranstaltungen</value>
+  </data>
+  <data name="Max_Length" xml:space="preserve">
+    <value>Maxlength ist auf 40 Zeichen gesetzt</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Monat</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Hinweis</value>
+  </data>
+  <data name="Note_Add_To_List" xml:space="preserve">
+    <value>Die Einzelteile werden hinzugefügt werden unten aufgelistet. Wenn Sie bereit sind, können Sie es auf dem Server speichern.</value>
+  </data>
+  <data name="Released" xml:space="preserve">
+    <value>Freigegeben</value>
+  </data>
+  <data name="Release_Notes" xml:space="preserve">
+    <value>Versionshinweise</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Berichte</value>
+  </data>
+  <data name="Save_List" xml:space="preserve">
+    <value>Liste speichern</value>
+  </data>
+  <data name="Showing" xml:space="preserve">
+    <value>Zeigt</value>
+  </data>
+  <data name="Task_Assosiated" xml:space="preserve">
+    <value>Diese Aufgabe wird mit dieser Verschiebung assosiated werden</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="Viewable_By_You" xml:space="preserve">
+    <value>Wenn dieses Ereignis ausgewählt ist nur für Sie sichtbar.</value>
+  </data>
+  <data name="Web_Application" xml:space="preserve">
+    <value>Internetanwendung</value>
+  </data>
 </root>

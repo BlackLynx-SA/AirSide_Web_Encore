@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title" id="eventModalLabel"><i class="fa fa-check-square-o txt-color-blueDark"></i> Create Check List </h4>
+                <h4 class="modal-title" id="eventModalLabel"><i class="fa fa-check-square-o txt-color-blueDark"></i> @Resources.Language.Create_Checklist </h4>
             </div>
             <div class="modal-body">
 
@@ -18,12 +18,12 @@
                                 <input class="form-control" type="text" id="checkItemTxt" placeholder="Validation Check Item">
                                 <div class="input-group-btn">
                                     <button class="btn btn-default btn-success" type="button" onclick="addNewCheckBox();">
-                                        <i class="fa fa-plus"></i> Add Item
+                                        <i class="fa fa-plus"></i> @Resources.Language.Add_Item
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="note"><strong>Note:</strong> The items will be added to list below. When you are ready you can save it to the server.</div>
+                            <div class="note">@Resources.Language.Note_Add_To_List</div>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
             <div class="modal-footer">
                 <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="modalLoader2" style="height:20px; display:none;" />
                 <button class="btn btn-primary" onclick="saveChecks();"><i class="fa fa-plus"></i> Save List</button>
-                <button class="btn btn-danger" onclick="$('#checksModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+                <button class="btn btn-danger" onclick="$('#checksModal').modal('hide');"><i class="fa fa-times"></i> @Resources.Language.Cancel</button>
             </div>
         </div>
     </div>
@@ -117,8 +117,8 @@
             traditional: true,
             success: function (json) {
                 $.smallBox({
-                    title: "Check List Added",
-                    content: "The Check List was added successfully. Please update the cache on the iPad to reflect.",
+                    title: "@Resources.Language.Check_List_Added",
+                    content: "@Resources.Language.Check_List_Added_Desc",
                     color: "#5384AF",
                     timeout: 4000,
                     icon: "fa fa-check-square-o"

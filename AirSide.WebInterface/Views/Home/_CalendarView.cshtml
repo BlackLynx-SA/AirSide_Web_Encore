@@ -1,11 +1,11 @@
 ﻿<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-editbutton="false" data-widget-deletebutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-        <h2> Active Shifts <sup class="badge bg-color-red bounceIn animated" id="shiftCount">0</sup></h2>
+        <h2> @Resources.Language.Active_Shifts <sup class="badge bg-color-red bounceIn animated" id="shiftCount">0</sup></h2>
         <div class="widget-toolbar">
             <!-- add: non-hidden - to disable auto hide -->
             <div class="btn-group">
-                <a href="~/shifts/allshifts" class="btn btn-xs btn-default">View All Events</a>
+                <a href="~/shifts/allshifts" class="btn btn-xs btn-default">@Resources.Language.View_All_Events</a>
             </div>
         </div>
     </header>
@@ -22,13 +22,13 @@
             <table class="table no-padding table-striped" id="activeShiftsTbl" style="display:none;">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Tech. Team</th>
-                        <th>Date</th>
-                        <th>Permit</th>
-                        <th>Area</th>
-                        <th>Progress</th>
-                        <th>Options</th>
+                        <th>@Resources.Language.Type</th>
+                        <th>@Resources.Language.Technician_Team</th>
+                        <th>@Resources.Language.Date</th>
+                        <th>@Resources.Language.Permit</th>
+                        <th>@Resources.Language.Area</th>
+                        <th>@Resources.Language.Progress</th>
+                        <th>@Resources.Language.Options</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -58,7 +58,7 @@
                         html += "<td>" + v.area + "</td>";
                     html += '<td><div class="progress progress-sm"><div class="progress-bar bg-color-greenLight" role="progressbar" style="width: ' + v.progress + '%"></div></div>';
                     html += '<div class="note"><strong>Info:</strong> ' + v.shiftData + ' / ' + v.assets + '</div></td>';
-                    html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> Done</button></td></tr>';
+                    html += '<td><button class="btn btn-xs btn-primary" onclick="RemoveActiveShift(' + v.shiftId + ', ' + v.shiftType + ')"><i class="fa fa-check"></i> @Resources.Language.Done</button></td></tr>';
                     j++;
 
                     total += v.assets;
@@ -75,7 +75,7 @@
             },
             error: function (err) {
                 $.smallBox({
-                    title: "Failed to active shifts",
+                    title: "@Resources.Language.Failed_To_Get_Active_Shifts",
                     content: err.responseText,
                     color: "#f51414",
                     timeout: 5000,
@@ -88,8 +88,8 @@
 
     function RemoveActiveShift(id, type) {
         $.SmartMessageBox({
-            title: '<i class="fa fa-check fa-lg txt-color-green"></i> Mark as complete?',
-            content: "This will change the status of the shift to close.",
+            title: '<i class="fa fa-check fa-lg txt-color-green"></i> @Resources.Language.Mark_As_Complete',
+            content: "@Resources.Language.Change_Shift_Status_Close",
             buttons: '[No][Yes]'
         }, function (ButtonPressed) {
 
@@ -102,8 +102,8 @@
                     success: function (json) {
                         $('#dt_shifts tbody').empty();
                         $.smallBox({
-                            title: "Shift Status Changed",
-                            content: "The shift has been set to complete. You can create a new shift by clicking 'Create New Event'.",
+                            title: "@Resources.Language.Shift_Status_Changed",
+                            content: "@Resources.Language.Shift_Set_Complete",
                             color: "#5384AF",
                             timeout: 4000,
                             icon: "fa fa-calendar"
@@ -113,7 +113,7 @@
                     },
                     error: function (err) {
                         $.smallBox({
-                            title: "Error changing the shift status",
+                            title: "@Resources.Language.Error_Shift_Status",
                             content: err.responseText,
                             color: "#f51414",
                             timeout: 5000,

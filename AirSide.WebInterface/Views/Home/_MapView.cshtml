@@ -3,10 +3,10 @@
 <div class="jarviswidget" id="wid-id-2" data-widget-editbutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false">
     <header>
         <span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
-        <h2>Birds Eye <sup class="badge bg-color-red bounceIn animated" id="overDueCount">@{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0)</sup></h2>
+        <h2>@Resources.Language.Birds_Eye <sup class="badge bg-color-red bounceIn animated" id="overDueCount">@{ double numberAssets = double.Parse(ViewBag.totalTasks) * (double.Parse(ViewBag.dueAssets) / 100); } @Math.Round(numberAssets, 0)</sup></h2>
         <div class="widget-toolbar" role="menu">
             <div class="btn-group">
-                <button id="taskBtn" class="btn dropdown-toggle btn-xs btn-primary" data-toggle="dropdown"><i class="fa fa-wrench"></i> <span id="taskLabel">Worst Case</span> <i class="fa fa-caret-down"></i></button>
+                <button id="taskBtn" class="btn dropdown-toggle btn-xs btn-primary" data-toggle="dropdown"><i class="fa fa-wrench"></i> <span id="taskLabel">@Resources.Language.Worst_Case</span> <i class="fa fa-caret-down"></i></button>
                 <ul class="dropdown-menu pull-right js-status-update">
                     @foreach (var prod in (List<as_maintenanceProfile>)ViewData["maintenanceTasks"])
                     {
@@ -18,13 +18,6 @@
     </header>
     <!-- widget div-->
     <div>
-        <!-- widget edit box -->
-        <div class="jarviswidget-editbox">
-            <div>
-                <label>Title:</label>
-                <input type="text" />
-            </div>
-        </div>
         <!-- end widget edit box -->
         <div class="widget-body no-padding" id="map-content">
             <!-- content goes here -->
@@ -36,136 +29,149 @@
     <!-- end widget div -->
 </div>
 
-<script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+
+<script>
+    function initGoogle() {
+        var language = $.cookie("_culture");
+        var googleSrc =
+            "https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization&language=" + language;
+        var jsElement = document.createElement('script');
+        jsElement.src = googleSrc;
+        document.getElementsByTagName('head')[0].appendChild(jsElement);
+    }
 </script>
 
-<script type="text/javascript">
-    var map;
-    var markers = [];
-    var Assets = new AllAssets();
-    var selectedTask = 0;
 
-    function setTask(id, desc)
-    {
-        selectedTask = id;
-        $('#taskLabel').html(desc);
-        clearAllMarkers();
-        showAllAssets();
-    }
+    <script type="text/javascript">
+        var map;
+        var markers = [];
+        var Assets = new AllAssets();
+        var selectedTask = 0;
 
-    function requestAllAssetData() {
-        $.ajax({
-            url: '../../Map/getAllAssets',
-            type: 'post',
-            dataType: 'json',
-            success: function (json) {
-                Assets.jsonData = json;
-                $('#mapLoader').fadeOut(500);
-                initMap();
-            }
-        });
-    }
-
-    function AllAssets() {
-        this.jsonData = {};
-    }
-
-    function clearAllMarkers() {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
+        function setTask(id, desc) {
+            selectedTask = id;
+            $('#taskLabel').html(desc);
+            clearAllMarkers();
+            showAllAssets();
         }
-        markers = null;
-    }
 
-    function showAllAssets() {
-        markers = [];
-        $.each(Assets.jsonData, function (i,v) {
-            var flag = false;
-            if(selectedTask != 0)
-            {
-                $.each(v.maintenance, function (index, value) {
-                    if (value.maintenanceId == selectedTask) {
-                        addMarker(v);
-                        return false;
-                    }
-                });
-            }
-            else{
-                addMarker(v);
-            }
-        });
-    }
-
-    function addMarker(json) {
-        var long = json.location.longitude;
-        var lat = json.location.latitude;
-        var latLongMarker = new google.maps.LatLng(lat, long);
-        var image = getImage(json.maintenance);
-        var marker = new google.maps.Marker({
-            map: map,
-            position: latLongMarker,
-            title: json.assetId.toString(),
-            icon: image
-        });
-        markers.push(marker);
-    }
-
-    function getImage(value) {
-        var image, cycle;
-        if(selectedTask === 0)
-        {
-            cycle = value[0].maintenanceCycle;
-        }
-        else{
-            $.each(value, function (i, v) {
-                if (v.maintenanceId === selectedTask)
-                    cycle = v.maintenanceCycle;
+        function requestAllAssetData() {
+            $.ajax({
+                url: '../../Map/getAllAssets',
+                type: 'post',
+                dataType: 'json',
+                success: function(json) {
+                    Assets.jsonData = json;
+                    $('#mapLoader').fadeOut(500);
+                    initMap();
+                }
             });
         }
 
-        switch (cycle) {
-            case 0: image = '/images/map_images/NutralMarker.png';
+        function AllAssets() {
+            this.jsonData = {};
+        }
+
+        function clearAllMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = null;
+        }
+
+        function showAllAssets() {
+            markers = [];
+            $.each(Assets.jsonData,
+                function(i, v) {
+                    var flag = false;
+                    if (selectedTask != 0) {
+                        $.each(v.maintenance,
+                            function(index, value) {
+                                if (value.maintenanceId == selectedTask) {
+                                    addMarker(v);
+                                    return false;
+                                }
+                            });
+                    } else {
+                        addMarker(v);
+                    }
+                });
+        }
+
+        function addMarker(json) {
+            var long = json.location.longitude;
+            var lat = json.location.latitude;
+            var latLongMarker = new google.maps.LatLng(lat, long);
+            var image = getImage(json.maintenance);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: latLongMarker,
+                title: json.assetId.toString(),
+                icon: image
+            });
+            markers.push(marker);
+        }
+
+        function getImage(value) {
+            var image, cycle;
+            if (selectedTask === 0) {
+                cycle = value[0].maintenanceCycle;
+            } else {
+                $.each(value,
+                    function(i, v) {
+                        if (v.maintenanceId === selectedTask)
+                            cycle = v.maintenanceCycle;
+                    });
+            }
+
+            switch (cycle) {
+            case 0:
+                image = '/images/map_images/NutralMarker.png';
                 break;
-            case 1: image = '/images/map_images/GreenMarker.png';
+            case 1:
+                image = '/images/map_images/GreenMarker.png';
                 break;
-            case 2: image = '/images/map_images/YellowMarker.png';
+            case 2:
+                image = '/images/map_images/YellowMarker.png';
                 break;
-            case 3: image = '/images/map_images/OrangeMarker.png';
+            case 3:
+                image = '/images/map_images/OrangeMarker.png';
                 break;
-            case 4: image = '/images/map_images/RedMarker.png';
+            case 4:
+                image = '/images/map_images/RedMarker.png';
                 break;
 
             default:
                 break;
+            }
+
+            return image;
         }
 
-        return image;
-    }
+        function initMap() {
 
-    function initMap() {
-        $.ajax({
-            url: '../../Map/getMapCenter',
-            type: 'post',
-            dataType: 'json',
-            success: function (json) {
-                centerLat = json[0];
-                centerLong = json[1];
+            $.ajax({
+                url: '../../Map/getMapCenter',
+                type: 'post',
+                dataType: 'json',
+                success: function(json) {
+                    centerLat = json[0];
+                    centerLong = json[1];
 
-                var zoom = 14;
+                    var zoom = 14;
 
-                var mapOptions = {
-                    center: new google.maps.LatLng(json[0], json[1]),
-                    zoom: zoom,
-                    disableDefaultUI: true,
-                };
-                map = new google.maps.Map(document.getElementById("map-canvas"),
-                    mapOptions);
+                    var mapOptions = {
+                        center: new google.maps.LatLng(json[0], json[1]),
+                        zoom: zoom,
+                        disableDefaultUI: true,
+                    };
+                    map = new google.maps.Map(document.getElementById("map-canvas"),
+                        mapOptions);
 
-                showAllAssets();
-            }
-        });
-    }
+                    showAllAssets();
+                }
+            });
+        }
 
 
-</script>
+    </script>

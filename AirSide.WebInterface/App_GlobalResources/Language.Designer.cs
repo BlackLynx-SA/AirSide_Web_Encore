@@ -115,11 +115,29 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Item.
+        /// </summary>
+        internal static string Add_Item {
+            get {
+                return ResourceManager.GetString("Add_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Maintenance Task.
         /// </summary>
         internal static string Add_Maintenance_Task {
             get {
                 return ResourceManager.GetString("Add_Maintenance_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Event.
+        /// </summary>
+        internal static string Add_New_Event {
+            get {
+                return ResourceManager.GetString("Add_New_Event", resourceCulture);
             }
         }
         
@@ -165,6 +183,15 @@ namespace Resources {
         internal static string Add_Task {
             get {
                 return ResourceManager.GetString("Add_Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agenda.
+        /// </summary>
+        internal static string Agenda {
+            get {
+                return ResourceManager.GetString("Agenda", resourceCulture);
             }
         }
         
@@ -421,6 +448,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This will change the status of the shift to close..
+        /// </summary>
+        internal static string Change_Shift_Status_Close {
+            get {
+                return ResourceManager.GetString("Change_Shift_Status_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check List Added.
+        /// </summary>
+        internal static string Check_List_Added {
+            get {
+                return ResourceManager.GetString("Check_List_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Check List was added successfully. Please update the cache on the iPad to reflect..
+        /// </summary>
+        internal static string Check_List_Added_Desc {
+            get {
+                return ResourceManager.GetString("Check_List_Added_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collapse.
         /// </summary>
         internal static string Collapse {
@@ -435,6 +489,15 @@ namespace Resources {
         internal static string Completed_Shifts {
             get {
                 return ResourceManager.GetString("Completed_Shifts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Completion.
+        /// </summary>
+        internal static string Completion {
+            get {
+                return ResourceManager.GetString("Completion", resourceCulture);
             }
         }
         
@@ -462,6 +525,15 @@ namespace Resources {
         internal static string Copyright {
             get {
                 return ResourceManager.GetString("Copyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create Checklist.
+        /// </summary>
+        internal static string Create_Checklist {
+            get {
+                return ResourceManager.GetString("Create_Checklist", resourceCulture);
             }
         }
         
@@ -583,6 +655,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        internal static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can download and create open shifts in your Microsoft Outlook or iCalendar..
+        /// </summary>
+        internal static string Download_Outlook {
+            get {
+                return ResourceManager.GetString("Download_Outlook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download to Local Calendar.
         /// </summary>
         internal static string Download_to_Local_Calendar {
@@ -646,6 +736,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error changing the shift status.
+        /// </summary>
+        internal static string Error_Shift_Status {
+            get {
+                return ResourceManager.GetString("Error_Shift_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Events.
+        /// </summary>
+        internal static string Events {
+            get {
+                return ResourceManager.GetString("Events", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Event Description.
         /// </summary>
         internal static string Event_Description {
@@ -678,6 +786,15 @@ namespace Resources {
         internal static string External_Reference {
             get {
                 return ResourceManager.GetString("External_Reference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get active shifts.
+        /// </summary>
+        internal static string Failed_To_Get_Active_Shifts {
+            get {
+                return ResourceManager.GetString("Failed_To_Get_Active_Shifts", resourceCulture);
             }
         }
         
@@ -777,6 +894,15 @@ namespace Resources {
         internal static string Full_Screen {
             get {
                 return ResourceManager.GetString("Full_Screen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate PDF.
+        /// </summary>
+        internal static string Generate_PDF {
+            get {
+                return ResourceManager.GetString("Generate_PDF", resourceCulture);
             }
         }
         
@@ -1150,6 +1276,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mark as complete?.
+        /// </summary>
+        internal static string Mark_As_Complete {
+            get {
+                return ResourceManager.GetString("Mark_As_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maxlength is set to 40 characters.
+        /// </summary>
+        internal static string Max_Length {
+            get {
+                return ResourceManager.GetString("Max_Length", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mid Cycle.
         /// </summary>
         internal static string Mid_Cycle {
@@ -1173,6 +1317,15 @@ namespace Resources {
         internal static string Model {
             get {
                 return ResourceManager.GetString("Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        internal static string Month {
+            get {
+                return ResourceManager.GetString("Month", resourceCulture);
             }
         }
         
@@ -1236,6 +1389,24 @@ namespace Resources {
         internal static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note.
+        /// </summary>
+        internal static string Note {
+            get {
+                return ResourceManager.GetString("Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The items will be added to list below. When you are ready you can save it to the server..
+        /// </summary>
+        internal static string Note_Add_To_List {
+            get {
+                return ResourceManager.GetString("Note_Add_To_List", resourceCulture);
             }
         }
         
@@ -1465,6 +1636,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Released.
+        /// </summary>
+        internal static string Released {
+            get {
+                return ResourceManager.GetString("Released", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release Notes.
+        /// </summary>
+        internal static string Release_Notes {
+            get {
+                return ResourceManager.GetString("Release_Notes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         internal static string Remove {
@@ -1497,6 +1686,15 @@ namespace Resources {
         internal static string Reporting {
             get {
                 return ResourceManager.GetString("Reporting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reports.
+        /// </summary>
+        internal static string Reports {
+            get {
+                return ResourceManager.GetString("Reports", resourceCulture);
             }
         }
         
@@ -1542,6 +1740,15 @@ namespace Resources {
         internal static string Satellite {
             get {
                 return ResourceManager.GetString("Satellite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save List.
+        /// </summary>
+        internal static string Save_List {
+            get {
+                return ResourceManager.GetString("Save_List", resourceCulture);
             }
         }
         
@@ -1654,6 +1861,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The shift has been set to complete. You can create a new shift by clicking &apos;Create New Event&apos;.
+        /// </summary>
+        internal static string Shift_Set_Complete {
+            get {
+                return ResourceManager.GetString("Shift_Set_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shift Status Changed.
+        /// </summary>
+        internal static string Shift_Status_Changed {
+            get {
+                return ResourceManager.GetString("Shift_Status_Changed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Showing.
+        /// </summary>
+        internal static string Showing {
+            get {
+                return ResourceManager.GetString("Showing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show All Faulty.
         /// </summary>
         internal static string Show_All_Faulty {
@@ -1749,6 +1983,15 @@ namespace Resources {
         internal static string System_Users {
             get {
                 return ResourceManager.GetString("System_Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This task will be assosiated with this shift.
+        /// </summary>
+        internal static string Task_Assosiated {
+            get {
+                return ResourceManager.GetString("Task_Assosiated", resourceCulture);
             }
         }
         
@@ -1888,6 +2131,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Today.
+        /// </summary>
+        internal static string Today {
+            get {
+                return ResourceManager.GetString("Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Shift Completion.
         /// </summary>
         internal static string Total_Shift_Completion {
@@ -1987,6 +2239,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When selected this event is only viewable by you..
+        /// </summary>
+        internal static string Viewable_By_You {
+            get {
+                return ResourceManager.GetString("Viewable_By_You", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View All Events.
+        /// </summary>
+        internal static string View_All_Events {
+            get {
+                return ResourceManager.GetString("View_All_Events", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View All Users.
         /// </summary>
         internal static string View_All_Users {
@@ -2019,6 +2289,15 @@ namespace Resources {
         internal static string Web_API {
             get {
                 return ResourceManager.GetString("Web_API", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web Application.
+        /// </summary>
+        internal static string Web_Application {
+            get {
+                return ResourceManager.GetString("Web_Application", resourceCulture);
             }
         }
         

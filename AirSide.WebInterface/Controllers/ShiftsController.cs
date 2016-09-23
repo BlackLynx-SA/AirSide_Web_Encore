@@ -29,7 +29,7 @@ using System.Web.Mvc;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class ShiftsController : Controller
+    public class ShiftsController : BaseController
     {
         private readonly Entities _db = new Entities();
         private readonly CacheHelper _cache;

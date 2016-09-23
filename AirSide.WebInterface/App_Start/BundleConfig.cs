@@ -27,11 +27,6 @@ namespace ADB.AirSide.Encore.V1
                 "~/scripts/plugin/fastclick/fastclick.min.js",
                 "~/scripts/app.min.js"));
 
-            bundles.Add(new ScriptBundle("~/scripts/full-calendar").Include(
-                "~/scripts/plugin/moment/moment.min.js",
-                "~/scripts/plugin/fullcalendar/jquery.fullcalendar.min.js"
-                ));
-
             bundles.Add(new ScriptBundle("~/scripts/charts").Include(
                 "~/scripts/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js",
                 "~/scripts/plugin/sparkline/jquery.sparkline.min.js",

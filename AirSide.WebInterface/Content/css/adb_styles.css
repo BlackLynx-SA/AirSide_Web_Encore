@@ -98,3 +98,7 @@ a:focus, a:hover {
 .asset_due a {
     color: #fff;
 }
+
+.fc-toolbar {
+    margin: 15px;
+}

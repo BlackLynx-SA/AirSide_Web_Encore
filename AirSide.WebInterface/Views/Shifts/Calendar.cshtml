@@ -1,234 +1,220 @@
 ﻿<div id="content">
-    <div class="row hidden-mobile">
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <h1 class="page-title txt-color-blueDark">
-                <i class="fa-fw fa fa-calendar"></i>
-                Shift Planning <span>
+<div class="row hidden-mobile">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <h1 class="page-title txt-color-blueDark">
+            <i class="fa-fw fa fa-calendar"></i>
+            @Resources.Language.Shift_Planning <span>
                     >
-                    Calendar View
+                    @Resources.Language.Calendar_View
                 </span>
-            </h1>
-        </div>
+        </h1>
     </div>
-    <hr />
+</div>
+<hr/>
 
-    <div class="row">
+<div class="row">
 
-        <div class="col-sm-12 col-md-12 col-lg-3">
-            <div class="well well-sm" id="event-container">
-                <form>
-                    <fieldset>
-                        <legend>
-                            Technician Groups
-                        </legend>
+<div class="col-sm-12 col-md-12 col-lg-3">
+    <div class="well well-sm" id="event-container">
+        <form>
+            <fieldset>
+                <legend>
+                    @Resources.Language.Technician_Groups
+                </legend>
 
-                        <ul id='technician-events' class="list-unstyled"></ul>
-                    </fieldset>
-                </form>
-                <form>
-                    <fieldset>
-                        <legend>
-                            User Events
-                        </legend>
+                <ul id='technician-events' class="list-unstyled"></ul>
+            </fieldset>
+        </form>
+        <form>
+            <fieldset>
+                <legend>
+                    @Resources.Language.User_Events
+                </legend>
 
-                        <ul id='external-events' class="list-unstyled"></ul>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Download to Local Calendar</legend>
-                        <a href="~/shifts/getAirSideCalendar" class="btn btn-sm btn-info"><i class="fa fa-calendar"></i> Calendar Events</a>
-                        <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> You can download and create open shifts in your Microsoft Outlook or iCalendar.</div>
-                    </fieldset>
-                </form>
-                <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="eventsLoader" style="height:20px;" />
-
-            </div>
-
-            <!-- new widget -->
-            <div class="jarviswidget jarviswidget-color-blueDark">
-                <header>
-                    <h2> Add Events </h2>
-                </header>
-
-                <!-- widget div-->
-                <div>
-
-                    <div class="widget-body">
-                        <!-- content goes here -->
-
-                        <form id="add-event-form">
-                            <fieldset>
-
-                                <div class="form-group">
-                                    <label>Select Event Icon</label>
-                                    <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
-                                        <label class="btn btn-default active">
-                                            <input type="radio" name="iconselect" id="icon-1" value="fa-info" checked>
-                                            <i class="fa fa-info text-muted"></i>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" name="iconselect" id="icon-2" value="fa-warning">
-                                            <i class="fa fa-warning text-muted"></i>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" name="iconselect" id="icon-3" value="fa-check">
-                                            <i class="fa fa-check text-muted"></i>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" name="iconselect" id="icon-4" value="fa-user">
-                                            <i class="fa fa-user text-muted"></i>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" name="iconselect" id="icon-5" value="fa-lock">
-                                            <i class="fa fa-lock text-muted"></i>
-                                        </label>
-                                        <label class="btn btn-default">
-                                            <input type="radio" name="iconselect" id="icon-6" value="fa-clock-o">
-                                            <i class="fa fa-clock-o text-muted"></i>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Event Title</label>
-                                    <input class="form-control" id="title" name="title" maxlength="40" type="text" placeholder="Event Title">
-                                </div>
-                                <div class="form-group">
-                                    <label>Event Description</label>
-                                    <textarea class="form-control" placeholder="Please be brief" rows="3" maxlength="40" id="description"></textarea>
-                                    <p class="note">Maxlength is set to 40 characters</p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Select Event Color</label>
-                                    <div class="btn-group btn-group-justified btn-select-tick" data-toggle="buttons">
-                                        <label class="btn bg-color-darken active">
-                                            <input type="radio" name="priority" id="option1" value="bg-color-darken txt-color-white" checked>
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                        <label class="btn bg-color-blue">
-                                            <input type="radio" name="priority" id="option2" value="bg-color-blue txt-color-white">
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                        <label class="btn bg-color-orange">
-                                            <input type="radio" name="priority" id="option3" value="bg-color-orange txt-color-white">
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                        <label class="btn bg-color-greenLight">
-                                            <input type="radio" name="priority" id="option4" value="bg-color-greenLight txt-color-white">
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                        <label class="btn bg-color-blueLight">
-                                            <input type="radio" name="priority" id="option5" value="bg-color-blueLight txt-color-white">
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                        <label class="btn bg-color-red">
-                                            <input type="radio" name="priority" id="option6" value="bg-color-red txt-color-white">
-                                            <i class="fa fa-check txt-color-white"></i>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="checkbox style-0" id="privateChk">
-                                            <span>Make Private</span>
-                                        </label>
-                                        <div class="note"><strong>Note:</strong> When selected this event is only viewable by you.</div>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <div class="form-actions">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <button class="btn btn-default" type="button" id="add-event">
-                                            Add Event
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-
-                        <!-- end content -->
-                    </div>
-
-                </div>
-                <!-- end widget div -->
-            </div>
-            <!-- end widget -->
-
-
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-9">
-
-            <!-- new widget -->
-            <div class="jarviswidget jarviswidget-color-blueDark">
-
-                <!-- widget options:
-                usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-                data-widget-colorbutton="false"
-                data-widget-editbutton="false"
-                data-widget-togglebutton="false"
-                data-widget-deletebutton="false"
-                data-widget-fullscreenbutton="false"
-                data-widget-custombutton="false"
-                data-widget-collapsed="true"
-                data-widget-sortable="false"
-
-                -->
-                <header>
-                    <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-                    <h2> AirSide&trade; Events </h2>
-                    <div class="widget-toolbar">
-                        <!-- add: non-hidden - to disable auto hide -->
-                        <div class="btn-group">
-                            <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-                                Showing <i class="fa fa-caret-down"></i>
-                            </button>
-                            <ul class="dropdown-menu js-status-update pull-right">
-                                <li>
-                                    <a href="javascript:void(0);" id="mt">Month</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" id="ag">Agenda</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:void(0);" id="td">Today</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </header>
-
-                <!-- widget div-->
-                <div>
-
-                    <div class="widget-body no-padding">
-                        <!-- content goes here -->
-                        <div class="widget-body-toolbar">
-
-                            <div id="calendar-buttons">
-
-                                <div class="btn-group">
-                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="calendar"></div>
-
-                        <!-- end content -->
-                    </div>
-
-                </div>
-                <!-- end widget div -->
-            </div>
-            <!-- end widget -->
-
-        </div>
+                <ul id='external-events' class="list-unstyled"></ul>
+            </fieldset>
+            <fieldset>
+                <legend>@Resources.Language.Download_to_Local_Calendar</legend>
+                <a href="~/shifts/getAirSideCalendar" class="btn btn-sm btn-info"><i class="fa fa-calendar"></i> @Resources.Language.Calendar_Events</a>
+                <div class="note"><strong><i class="fa fa-lightbulb-o"></i> @Resources.Language.Note:</strong> @Resources.Language.Download_Outlook</div>
+            </fieldset>
+        </form>
+        <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="eventsLoader" style="height: 20px;"/>
 
     </div>
+
+    <!-- new widget -->
+    <div class="jarviswidget jarviswidget-color-blueDark">
+        <header>
+            <h2> @Resources.Language.Add_Event </h2>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+            <div class="widget-body">
+                <!-- content goes here -->
+
+                <form id="add-event-form">
+                    <fieldset>
+
+                        <div class="form-group">
+                            <label>@Resources.Language.Select_Event_Icon</label>
+                            <div class="btn-group btn-group-sm btn-group-justified" data-toggle="buttons">
+                                <label class="btn btn-default active">
+                                    <input type="radio" name="iconselect" id="icon-1" value="fa-info" checked>
+                                    <i class="fa fa-info text-muted"></i>
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-2" value="fa-warning">
+                                    <i class="fa fa-warning text-muted"></i>
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-3" value="fa-check">
+                                    <i class="fa fa-check text-muted"></i>
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-4" value="fa-user">
+                                    <i class="fa fa-user text-muted"></i>
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-5" value="fa-lock">
+                                    <i class="fa fa-lock text-muted"></i>
+                                </label>
+                                <label class="btn btn-default">
+                                    <input type="radio" name="iconselect" id="icon-6" value="fa-clock-o">
+                                    <i class="fa fa-clock-o text-muted"></i>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>@Resources.Language.Event_Title</label>
+                            <input class="form-control" id="title" name="title" maxlength="40" type="text" placeholder="Event Title">
+                        </div>
+                        <div class="form-group">
+                            <label>@Resources.Language.Event_Description</label>
+                            <textarea class="form-control" placeholder="Please be brief" rows="3" maxlength="40" id="description"></textarea>
+                            <p class="note">@Resources.Language.Max_Length</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>@Resources.Language.Select_Event_Color</label>
+                            <div class="btn-group btn-group-justified btn-select-tick" data-toggle="buttons">
+                                <label class="btn bg-color-darken active">
+                                    <input type="radio" name="priority" id="option1" value="bg-color-darken txt-color-white" checked>
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                                <label class="btn bg-color-blue">
+                                    <input type="radio" name="priority" id="option2" value="bg-color-blue txt-color-white">
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                                <label class="btn bg-color-orange">
+                                    <input type="radio" name="priority" id="option3" value="bg-color-orange txt-color-white">
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                                <label class="btn bg-color-greenLight">
+                                    <input type="radio" name="priority" id="option4" value="bg-color-greenLight txt-color-white">
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                                <label class="btn bg-color-blueLight">
+                                    <input type="radio" name="priority" id="option5" value="bg-color-blueLight txt-color-white">
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                                <label class="btn bg-color-red">
+                                    <input type="radio" name="priority" id="option6" value="bg-color-red txt-color-white">
+                                    <i class="fa fa-check txt-color-white"></i>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="checkbox style-0" id="privateChk">
+                                    <span>@Resources.Language.Make_Private</span>
+                                </label>
+                                <div class="note"><strong>@Resources.Language.Note:</strong> @Resources.Language.Viewable_By_You</div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="btn btn-default" type="button" id="add-event">
+                                    @Resources.Language.Add_Event
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- end content -->
+            </div>
+
+        </div>
+        <!-- end widget div -->
+    </div>
+    <!-- end widget -->
+
+
+</div>
+<div class="col-sm-12 col-md-12 col-lg-9">
+
+    <!-- new widget -->
+    <div class="jarviswidget jarviswidget-color-blueDark">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
+            <h2> AirSide&trade; @Resources.Language.Events </h2>
+            <div class="widget-toolbar">
+                <!-- add: non-hidden - to disable auto hide -->
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
+                        @Resources.Language.Showing <i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="dropdown-menu js-status-update pull-right">
+                        <li>
+                            <a href="javascript:void(0);" id="mt">@Resources.Language.Month</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" id="ag">@Resources.Language.Agenda</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" id="td">@Resources.Language.Today</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+            <div class="widget-body no-padding">
+                <!-- content goes here -->
+                @*<div class="widget-body-toolbar">
+
+                    <div id="calendar-buttons">
+
+                        @*<div class="btn-group">
+                            <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
+                            <a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </div>*@
+                <div id="calendar"></div>
+
+                <!-- end content -->
+            </div>
+
+        </div>
+        <!-- end widget div -->
+    </div>
+    <!-- end widget -->
+
+</div>
+
+</div>
 
 @{
     //Render Partials for all modal windows
@@ -238,9 +224,18 @@
 
 </div>
 
+@*@section pagestyles{
+    <link href="~/Content/fullcalendar.min.css" rel="stylesheet" />
+}*@
+
 <!-- end row -->
 @section pagespecific{
-    <script src="~/scripts/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
+   
+    <script src="~/Scripts/lib/jquery-ui.min.js"></script>
+    <script src="~/Scripts/lib/moment.min.js"></script>
+    <script src="~/Scripts/fullcalendar.js"></script>
+    <script src="~/Scripts/locale/de.js"></script>
+    <script src="~/Scripts/locale/en-gb.js"></script>
     <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
     <script src="~/scripts/plugin/date/date.js"></script>
 
@@ -457,9 +452,6 @@
 
         function getUserEvents() {
             var initDrag = function (e) {
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-
                 var eventObject = {
                     title: $.trim(e.children().text()), // use the element's text as the event title
                     description: $.trim(e.children('span').attr('data-description')),
@@ -663,16 +655,18 @@
             /* initialize the calendar
              -----------------------------------------------------------------*/
 
-            $('#calendar').fullCalendar({
+            var locale = $.cookie('_culture');
 
+            if (locale === undefined) locale = 'en-gb'; else if (locale === null) locale = 'en-gb';
+
+            if (locale === 'en') locale = 'en-gb';
+
+            $('#calendar').fullCalendar({
+                locale: locale,
                 header: hdr,
-                buttonText: {
-                    prev: '<i class="fa fa-chevron-left"></i>',
-                    next: '<i class="fa fa-chevron-right"></i>'
-                },
 
                 //TODO: This functionality needs to build out to allow editing from the calendar view
-                // editable: true,
+                //editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
 
                 drop: function (date, allDay) { // this function is called when something is dropped
