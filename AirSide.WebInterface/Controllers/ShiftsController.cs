@@ -64,7 +64,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CultureInfo provider = CultureInfo.InvariantCulture;
+                var provider = CultureInfo.InvariantCulture;
 
                 //2015/01/19 - Custom Shift Creation
                 //  Types:
@@ -82,7 +82,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 var aspUser = _db.AspNetUsers.FirstOrDefault(q => q.UserName == User.Identity.Name);
                 var user = _db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
-                as_shifts newShift = new as_shifts
+                var newShift = new as_shifts
                 {
                     bt_completed = false,
                     dt_completionDate = new DateTime(1970, 1, 1),
@@ -102,7 +102,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 _db.SaveChanges();
 
                 var assets = await FindAssets(shift, bounds);
-                foreach (as_shiftsCustomProfile shiftProfile in assets.Select(asset => new as_shiftsCustomProfile
+                foreach (var shiftProfile in assets.Select(asset => new as_shiftsCustomProfile
                 {
                     i_assetId = asset,
                     i_shiftId = newShift.i_shiftId
@@ -135,7 +135,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Create Date: 2015/01/19
                 //Author: Bernard Willer
 
-                List<int> assets = new List<int>(); 
+                var assets = new List<int>(); 
 
                 switch (shift.filterType)
                 {   case 101:   //Process All
@@ -164,7 +164,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                List<int> assets = new List<int>();
+                var assets = new List<int>();
                 _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
                 return assets;
             }
@@ -183,12 +183,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<int> ProcessVisualSurveyor(CustomShiftClass shift, CustomShiftBounds bounds)
         {
             //Disseminate the date range
-            string[] dates = shift.dateRange.Split(char.Parse("-"));
-            DateTime startDate = DateTime.ParseExact(dates[0], "yyyy/MM/dd", CultureInfo.InvariantCulture);
-            DateTime endDate = DateTime.ParseExact(dates[1], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+            var dates = shift.dateRange.Split(char.Parse("-"));
+            var startDate = DateTime.ParseExact(dates[0], "yyyy/MM/dd", CultureInfo.InvariantCulture);
+            var endDate = DateTime.ParseExact(dates[1], "yyyy/MM/dd", CultureInfo.InvariantCulture);
 
-            List<int> assetList = new List<int>();
-            List<AssetObject> assets = new List<AssetObject>();
+            var assetList = new List<int>();
+            var assets = new List<AssetObject>();
 
             //Get Images Elements
             if(shift.imageChk)
@@ -207,7 +207,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach(var item in assetSelect)
                 {
-                    AssetObject obj = new AssetObject
+                    var obj = new AssetObject
                     {
                         assetId = item.assetId,
                         latitude = item.latitude,
@@ -263,7 +263,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in assetSelect)
                 {
-                    AssetObject obj = new AssetObject
+                    var obj = new AssetObject
                     {
                         assetId = item.assetId,
                         latitude = item.latitude,
@@ -279,8 +279,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             foreach (var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
                 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
@@ -302,8 +302,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
@@ -325,8 +325,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude  >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
@@ -348,14 +348,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (!latFlag || !longFlag || asset.subAreaId != shift.filterValue) continue;
-                int task = (from x in _db.as_assetClassProfile
+                var task = (from x in _db.as_assetClassProfile
                     join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
                     join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                     where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
@@ -375,15 +375,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.location.latitude >= bounds.SWLat && asset.location.latitude <= bounds.NELat) latFlag = true;
                 if (asset.location.longitude >= bounds.SWLong && asset.location.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.location.areaId == shift.filterValue)
                 {
-                    int task = (from x in _db.as_assetClassProfile
+                    var task = (from x in _db.as_assetClassProfile
                                 join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
                                 join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                                 where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
@@ -400,19 +400,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<List<int>> ProcessAssetType(CustomShiftClass shift, CustomShiftBounds bounds)
         {
-            List<mongoFullAsset> assets = await _cache.GetAllAssetDownload();
-            List<int> assetList = new List<int>();
+            var assets = await _cache.GetAllAssetDownload();
+            var assetList = new List<int>();
             foreach (var asset in assets)
             {
-                Boolean latFlag = false;
-                Boolean longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (latFlag && longFlag && asset.assetClassId == shift.filterValue)
                 {
-                    int task = (from x in _db.as_assetClassProfile
+                    var task = (from x in _db.as_assetClassProfile
                                 join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
                                 join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                                 where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
@@ -433,14 +433,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var assetList = new List<int>();
             foreach(var asset in assets)
             {
-                bool latFlag = false;
-                bool longFlag = false;
+                var latFlag = false;
+                var longFlag = false;
 
                 if (asset.latitude >= bounds.SWLat && asset.latitude <= bounds.NELat) latFlag = true;
                 if (asset.longitude >= bounds.SWLong && asset.longitude <= bounds.NELong) longFlag = true;
 
                 if (!latFlag || !longFlag) continue;
-                int task = (from x in _db.as_assetClassProfile
+                var task = (from x in _db.as_assetClassProfile
                     join y in _db.as_assetProfile on x.i_assetClassId equals y.i_assetClassId
                     join z in _db.as_assetClassMaintenanceProfile on x.i_assetClassId equals z.i_assetClassId
                     where y.i_assetId == asset.assetId && z.i_maintenanceId == shift.maintenanceFilter
@@ -498,7 +498,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 validation = c.i_maintenanceValidationId
                               }).ToList();
 
-                List<shiftInfo> shiftList = shifts.Select(item => new shiftInfo
+                var shiftList = shifts.Select(item => new shiftInfo
                 {
                     description = item.description, dateTime = item.dateTime.ToString("yyyy/MM/dd h:mm tt"), groupName = item.groupName, validationId = item.validation
                 }).ToList();
@@ -558,7 +558,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                as_eventTypes newEvent = new as_eventTypes
+                var newEvent = new as_eventTypes
                 {
                     vc_color = color,
                     vc_description = description,
@@ -598,7 +598,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                     start = x.dt_dateTimeStart
                               }).ToList();
 
-                List<EventInfo> eventList = events.Select(item => new EventInfo
+                var eventList = events.Select(item => new EventInfo
                 {
                     title = item.title, description = item.description, icon = item.icon, color = item.color, start = item.start.ToString("yyyy/MM/dd h:mm tt")
                 }).ToList();
@@ -624,11 +624,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         public ActionResult GetAirSideCalendar()
         {
-            MemoryStream mStream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(mStream) {AutoFlush = true};
+            var mStream = new MemoryStream();
+            var writer = new StreamWriter(mStream) {AutoFlush = true};
 
 
-            string airportName = _db.as_settingsProfile.Where(q=>q.vc_settingDescription == "Airport Name").Select(q=>q.vc_settingValue).FirstOrDefault();
+            var airportName = _db.as_settingsProfile.Where(q=>q.vc_settingDescription == "Airport Name").Select(q=>q.vc_settingValue).FirstOrDefault();
 
             var shifts = (from x in _db.as_shifts
                           join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
@@ -711,10 +711,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 permit = x.vc_permitNumber
                               }).ToList();
 
-                List<ShiftData> shiftList = new List<ShiftData>();
+                var shiftList = new List<ShiftData>();
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData
+                    var shift = new ShiftData
                     {
                         area = item.area,
                         completed = item.end.ToString("yyyy/MM/dd HH:mm"),
@@ -784,7 +784,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData
+                    var shift = new ShiftData
                     {
                         area = item.area,
                         completed = item.end.ToString("yyyy/MM/dd HH:mm"),
@@ -886,18 +886,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CultureInfo provider = CultureInfo.InvariantCulture;
+                var provider = CultureInfo.InvariantCulture;
 
                 switch (recuring)
                 {
                     case 0:
                         {
-                            as_eventPofile newEvent = new as_eventPofile
+                            var newEvent = new as_eventPofile
                             {
                                 bt_active = true,
                                 bt_viewed = false
                             };
-                            DateTime eventTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
+                            var eventTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
                             newEvent.dt_dateTimeStart = eventTime;
                             newEvent.i_eventId = groupId;
 
@@ -926,7 +926,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CultureInfo provider = CultureInfo.InvariantCulture;
+                var provider = CultureInfo.InvariantCulture;
 
                 switch (recuring)
                 {
@@ -937,7 +937,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             var user = _db.UserProfiles.FirstOrDefault(q => q.aspId == aspUser.Id);
 
                             var newShift = new as_shifts();
-                            DateTime shiftTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
+                            var shiftTime = DateTime.ParseExact(dateTime, "dd/MM/yyyy h:mm tt", provider);
                             newShift.bt_completed = false;
                             newShift.dt_completionDate = new DateTime(1970, 1, 1);
                             newShift.dt_scheduledDate = shiftTime;
@@ -990,12 +990,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference("ExcelDataDump.rdlc");
+                var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                var blobClient = storageAccount.CreateCloudBlobClient();
+                var container = blobClient.GetContainerReference("reportcontent");
+                var blockBlob = container.GetBlockBlobReference("ExcelDataDump.rdlc");
 
-                LocalReport localReport = new LocalReport();
+                var localReport = new LocalReport();
 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -1004,15 +1004,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("AirSide_Reporting", GetReportData(shiftId, type));
+                var reportDataSource = new ReportDataSource("AirSide_Reporting", GetReportData(shiftId, type));
                 localReport.DataSources.Add(reportDataSource);
 
-                string reportType = fileType;
+                var reportType = fileType;
                 string mimeType;
                 string encoding;
                 string fileNameExtension;
 
-                string deviceInfo =
+                var deviceInfo =
                 "<DeviceInfo>" +
                 "  <OutputFormat>" + fileType + "</OutputFormat>" +
                 "  <PageWidth>210mm</PageWidth>" +
@@ -1051,7 +1051,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<BigExcelDump> GetReportData(int shiftId, int type)
         {
-            bool customShift = type == 2;
+            var customShift = type == 2;
             
             //Captured Torque Data
                 var data = (from x in _db.as_shiftData
@@ -1070,7 +1070,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 mainArea = c.vc_description
                             }).ToList();
 
-                List<BigExcelDump> returnList = data.Select(item => new BigExcelDump
+                var returnList = data.Select(item => new BigExcelDump
                 {
                     assetClass = item.assetClass, bt_completed = item.bt_completed, dt_captureDate = item.dt_captureDate, dt_completionDate = item.dt_completionDate, dt_scheduledDate = item.dt_scheduledDate, f_capturedValue = item.f_capturedValue.ToString(CultureInfo.InvariantCulture), f_latitude = item.f_latitude, f_longitude = item.f_longitude, i_assetCheckId = item.i_assetCheckId, mainArea = item.mainArea, subArea = item.subArea, vc_designation = item.vc_designation, vc_manufacturer = item.vc_manufacturer, vc_model = item.vc_model, vc_permitNumber = item.vc_permitNumber, vc_rfidTag = item.vc_rfidTag, vc_serialNumber = item.vc_serialNumber
                 }).ToList();
@@ -1108,12 +1108,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference("ShiftReport.rdlc");
+                var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                var blobClient = storageAccount.CreateCloudBlobClient();
+                var container = blobClient.GetContainerReference("reportcontent");
+                var blockBlob = container.GetBlockBlobReference("ShiftReport.rdlc");
 
-                LocalReport localReport = new LocalReport();
+                var localReport = new LocalReport();
 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -1122,15 +1122,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("ShiftDS", GetShiftReportData(shiftId, type));
+                var reportDataSource = new ReportDataSource("ShiftDS", GetShiftReportData(shiftId, type));
                 localReport.DataSources.Add(reportDataSource);
 
-                string reportType = "PDF";
+                var reportType = "PDF";
                 string mimeType;
                 string encoding;
                 string fileNameExtension;
 
-                string deviceInfo =
+                var deviceInfo =
                 "<DeviceInfo>" +
                 "  <OutputFormat>PDF</OutputFormat>" +
                 "  <PageWidth>210mm</PageWidth>" +
@@ -1169,7 +1169,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<ActiveShiftsReport> GetShiftReportData(int shiftId, int type)
         {
-            bool customShift = type == 2;
+            var customShift = type == 2;
 
             var data = from x in _db.as_shifts
                         join y in _db.as_shiftData on x.i_shiftId equals y.i_shiftId
@@ -1188,7 +1188,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             foreach (var item in data)
             {
-                ActiveShiftsReport newShift = new ActiveShiftsReport
+                var newShift = new ActiveShiftsReport
                 {
                     area = item.area,
                     bt_completed = item.bt_completed,
@@ -1218,7 +1218,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 //Create Report Settings
-                ReportSettings settings = new ReportSettings
+                var settings = new ReportSettings
                 {
                     blobContainer = "reportcontent",
                     blobReference = "EventReport.rdlc",
@@ -1227,7 +1227,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 };
 
                 //Prepare Data Sources for Report
-                ReportDataSource reportDataSource = new ReportDataSource("SheduleTasks", GetEventSheduleData(shiftId, type));
+                var reportDataSource = new ReportDataSource("SheduleTasks", GetEventSheduleData(shiftId, type));
                 settings.dataSources[0] = reportDataSource;
 
                 reportDataSource = new ReportDataSource("AssetInfo", GetEventAssetInfo(shiftId, type));
@@ -1242,14 +1242,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 settings.reportName = "EventReport";
 
                 //Set the host reference for the logo
-                string[] host = Request.Headers["Host"].Split('.');
+                var host = Request.Headers["Host"].Split('.');
                 settings.logoReference = host[0];
 
                 //Create Report Object 
-                ReportingHelper report = new ReportingHelper();
+                var report = new ReportingHelper();
 
                 //Render the report
-                ReportBytes renderedReport = report.GenerateReport(settings);
+                var renderedReport = report.GenerateReport(settings);
 
                 Response.AddHeader(renderedReport.header.name, renderedReport.header.value);
                 _cache.Log("User " + User.Identity.Name + " requested Event Report -> Mime: " + renderedReport.mimeType, "EventReport", CacheHelper.LogTypes.Info, User.Identity.Name);
@@ -1270,7 +1270,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         private List<EventScheduleData> GetEventSheduleData(int shiftId, int type)
         {
             if (type <= 0) throw new ArgumentOutOfRangeException(nameof(type));
-            List<EventScheduleData> returnList = new List<EventScheduleData>();
+            var returnList = new List<EventScheduleData>();
 
             var shiftObject = _db.as_shifts.Find(shiftId);
 
@@ -1280,13 +1280,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             var maintenance = _db.as_maintenanceProfile.Find(shiftObject.i_maintenanceId);
 
-            string shiftType = "";
+            var shiftType = "";
 
             if (maintenance.i_maintenanceValidationId == 1) shiftType = "Validation";
             else if (maintenance.i_maintenanceValidationId == 2) shiftType = "Torque";
 
             //Event Created
-            EventScheduleData item = new EventScheduleData
+            var item = new EventScheduleData
             {
                 DateOfEvent = shiftObject.dt_dateCreated.ToString("yyyy/MM/dd"),
                 TimeOfEvent = shiftObject.dt_dateCreated.ToString("HH:mm:ss"),
@@ -1298,12 +1298,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
             returnList.Add(item);
             
 
-            DateTime firstDate = new DateTime(1970,1,1);
-            DateTime lastDate = new DateTime(1970,1,1);
+            var firstDate = new DateTime(1970,1,1);
+            var lastDate = new DateTime(1970,1,1);
 
             if(maintenance.i_maintenanceValidationId == 1)
             {
-                int count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
+                var count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
                 if (count > 0)
                 {
                     var shiftData = _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
@@ -1313,7 +1313,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             else if (maintenance.i_maintenanceValidationId == 2)
             {
-                int count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
+                var count = _db.as_shiftData.Count(q => q.i_shiftId == shiftId);
                 if (count > 0)
                 {
                     var shiftData = _db.as_shiftData.Where(q => q.i_shiftId == shiftId).OrderBy(q => q.dt_captureDate);
@@ -1356,117 +1356,147 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private async Task<List<EventAssetInfo>> GetEventAssetInfo(int shiftId, int type)
         {
-            if (type <= 0) throw new ArgumentOutOfRangeException(nameof(type));
-            List<EventAssetInfo> returnList = new List<EventAssetInfo>();
-
-            var shift = _db.as_shifts.Find(shiftId);
-            var maintenance = _db.as_maintenanceProfile.Find(shift.i_maintenanceId);
-
-            var assetStatus = await _cache.GetAssetStatusHistory();
-
-            if(maintenance.i_maintenanceValidationId == 2)
+            var returnList = new List<EventAssetInfo>();
+            try
             {
-                var shiftData = _db.as_shiftData.Where(q => q.i_shiftId == shiftId);
+                if (type <= 0) throw new ArgumentOutOfRangeException(nameof(type));
 
-                var dataSet = from x in shiftData
-                              group x by x.i_assetId into asset
-                              select new { 
-                                asset = asset.Key
-                              };
 
-                foreach(var item in dataSet)
+                var shift = _db.as_shifts.Find(shiftId);
+                var maintenance = _db.as_maintenanceProfile.Find(shift.i_maintenanceId);
+
+                var assetStatus = await _cache.GetAssetStatusHistory();
+
+                if (maintenance.i_maintenanceValidationId == 2)
                 {
-                    EventAssetInfo info = new EventAssetInfo();
-                    var asset = _db.as_assetProfile.Find(item.asset);
-                    var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
-                    var dateOfCapture = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shiftId && q.i_assetId == item.asset);
+                    var shiftData = _db.as_shiftData.Where(q => q.i_shiftId == shiftId);
 
-                    var status = assetStatus.FirstOrDefault(q => dateOfCapture != null && (q.lastValid.Date <= dateOfCapture.dt_captureDate.Date && q.assetId == item.asset));
-
-                    info.AssetName = asset.vc_serialNumber;
-                    info.CurrentState = "---";
-                    if (status != null)
-                    {
-                        switch (status.previousCycle)
+                    var dataSet = from x in shiftData
+                        group x by x.i_assetId
+                        into asset
+                        select new
                         {
-                            case 0: info.PriorState = "No Data (Blue)";
-                                break;
-                            case 1: info.PriorState = "Recently Updated (Green)";
-                                break;
-                            case 2: info.PriorState = "Mid Cycle (Yellow)";
-                                break;
-                            case 3: info.PriorState = "Almost Due (Orange)";
-                                break;
-                            case 4: info.PriorState = "Over Due (Red)";
-                                break;
-                        }
-                    } else
+                            asset = asset.Key
+                        };
+
+                    foreach (var item in dataSet)
                     {
-                        info.PriorState = "No Data (Blue)";
+                        var info = new EventAssetInfo();
+                        var asset = _db.as_assetProfile.Find(item.asset);
+                        var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
+                        var dateOfCapture =
+                            _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shiftId && q.i_assetId == item.asset);
+
+                        var status =
+                            assetStatus.FirstOrDefault(
+                                q =>
+                                    dateOfCapture != null &&
+                                    (q.lastValid.Date <= dateOfCapture.dt_captureDate.Date && q.assetId == item.asset));
+
+                        info.AssetName = asset.vc_serialNumber;
+                        info.CurrentState = "---";
+                        if (status != null)
+                        {
+                            switch (status.previousCycle)
+                            {
+                                case 0:
+                                    info.PriorState = "No Data (Blue)";
+                                    break;
+                                case 1:
+                                    info.PriorState = "Recently Updated (Green)";
+                                    break;
+                                case 2:
+                                    info.PriorState = "Mid Cycle (Yellow)";
+                                    break;
+                                case 3:
+                                    info.PriorState = "Almost Due (Orange)";
+                                    break;
+                                case 4:
+                                    info.PriorState = "Over Due (Red)";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            info.PriorState = "No Data (Blue)";
+                        }
+                        if (dateOfCapture != null)
+                            info.DateOfEvent = dateOfCapture.dt_captureDate.ToString("yyy/MM/dd HH:mm");
+                        info.TypeOfAsset = assetClass.vc_description;
+                        info.ValidationType = "Torquing";
+                        returnList.Add(info);
                     }
-                    if (dateOfCapture != null)
-                        info.DateOfEvent = dateOfCapture.dt_captureDate.ToString("yyy/MM/dd HH:mm");
-                    info.TypeOfAsset = assetClass.vc_description;
-                    info.ValidationType = "Torquing";
-                    returnList.Add(info);
                 }
-            } else if(maintenance.i_maintenanceValidationId == 1)
-            {
-                var shiftData = _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
-                var dataSet = from x in shiftData
-                              select new
-                              {
-                                  assetId = x.i_assetId,
-                                  maintenanceDate = x.dt_dateTimeStamp,
-                              };
-
-                foreach (var item in dataSet)
+                else if (maintenance.i_maintenanceValidationId == 1)
                 {
-                    EventAssetInfo info = new EventAssetInfo();
-                    var asset = _db.as_assetProfile.Find(item.assetId);
-                    var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
-
-                    var status = assetStatus.FirstOrDefault(q => q.lastValid.Date == item.maintenanceDate.Date && q.assetId == item.assetId);
-
-                    info.AssetName = asset.vc_serialNumber;
-                    info.CurrentState = "---";
-                    if (status != null)
-                    {
-                        switch (status.previousCycle)
+                    var shiftData = _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId);
+                    var dataSet = from x in shiftData
+                        select new
                         {
-                            case 0: info.PriorState = "No Data (Blue)";
-                                break;
-                            case 1: info.PriorState = "Recently Updated (Green)";
-                                break;
-                            case 2: info.PriorState = "Mid Cycle (Yellow)";
-                                break;
-                            case 3: info.PriorState = "Almost Due (Orange)";
-                                break;
-                            case 4: info.PriorState = "Over Due (Red)";
-                                break;
+                            assetId = x.i_assetId,
+                            maintenanceDate = x.dt_dateTimeStamp,
+                        };
+
+                    foreach (var item in dataSet)
+                    {
+                        var info = new EventAssetInfo();
+                        var asset = _db.as_assetProfile.Find(item.assetId);
+                        var assetClass = _db.as_assetClassProfile.Find(asset.i_assetClassId);
+
+                        var status =
+                            assetStatus.FirstOrDefault(
+                                q => q.lastValid.Date == item.maintenanceDate.Date && q.assetId == item.assetId);
+
+                        info.AssetName = asset.vc_serialNumber;
+                        info.CurrentState = "---";
+                        if (status != null)
+                        {
+                            switch (status.previousCycle)
+                            {
+                                case 0:
+                                    info.PriorState = "No Data (Blue)";
+                                    break;
+                                case 1:
+                                    info.PriorState = "Recently Updated (Green)";
+                                    break;
+                                case 2:
+                                    info.PriorState = "Mid Cycle (Yellow)";
+                                    break;
+                                case 3:
+                                    info.PriorState = "Almost Due (Orange)";
+                                    break;
+                                case 4:
+                                    info.PriorState = "Over Due (Red)";
+                                    break;
+                            }
                         }
-                    } else
-                        info.PriorState = "No Data (Blue)";
+                        else
+                            info.PriorState = "No Data (Blue)";
 
-                    info.DateOfEvent = item.maintenanceDate.ToString("yyy/MM/dd HH:mm");
-                    info.TypeOfAsset = assetClass.vc_description;
-                    info.ValidationType = "Scan Asset";
-                    returnList.Add(info);
+                        info.DateOfEvent = item.maintenanceDate.ToString("yyy/MM/dd HH:mm");
+                        info.TypeOfAsset = assetClass.vc_description;
+                        info.ValidationType = "Scan Asset";
+                        returnList.Add(info);
+                    }
                 }
-            }
-           
 
-            return returnList;
+
+                return returnList;
+            }
+            catch (Exception err)
+            {
+                return returnList;
+            }
         }
         
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         private List<EventCheckList> GetEventCheckList(int shiftId, int type)
         {
-            List<EventCheckList> returnList = new List<EventCheckList>();
-            bool customShift = type == 2;
+            var returnList = new List<EventCheckList>();
+            var customShift = type == 2;
            
-            int maintenanceId = (from x in _db.as_shifts
+            var maintenanceId = (from x in _db.as_shifts
                                     where x.i_shiftId == shiftId && x.bt_custom == customShift
                                     select x.i_maintenanceId).FirstOrDefault();
 
@@ -1476,7 +1506,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
             foreach(var item in checkList)
             {
-                EventCheckList listItem = new EventCheckList {ListItem = item};
+                var listItem = new EventCheckList {ListItem = item};
 
                 returnList.Add(listItem);
             }
@@ -1488,15 +1518,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<EventReportInfo> GetEventReportInfo(int shiftId, int type)
         {
-            List<EventReportInfo> returnList = new List<EventReportInfo>();
-            bool customShift = type == 2;
+            var returnList = new List<EventReportInfo>();
+            var customShift = type == 2;
 
             var shift = _db.as_shifts.Find(shiftId);
             var maintenance = _db.as_maintenanceProfile.Find(shift.i_maintenanceId);
 
             if (maintenance.i_maintenanceValidationId == 2)
             {
-                int count = (from x in _db.as_shiftData
+                var count = (from x in _db.as_shiftData
                              join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                              where y.i_shiftId == shiftId && y.bt_custom == customShift
                              select x).Count();
@@ -1518,7 +1548,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     var firstOrDefault = shiftData.FirstOrDefault();
                     if (firstOrDefault != null)
                     {
-                        int areaId = firstOrDefault.AreaId;
+                        var areaId = firstOrDefault.AreaId;
                         int totalAssets;
 
                         if (areaId != 0)
@@ -1529,30 +1559,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         else
                             totalAssets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == shiftId);
 
-                        int completedAssets = (from x in shiftData
+                        var completedAssets = (from x in shiftData
                             group x by x.AssetId into assetGroup
                             select new
                             {
                                 numberAssets = assetGroup.Count()
                             }).Count();
 
-                        int techGroupId = firstOrDefault.TechGroupId;
+                        var techGroupId = firstOrDefault.TechGroupId;
 
-                        string technicianGroup = (from x in _db.as_technicianGroups
+                        var technicianGroup = (from x in _db.as_technicianGroups
                             where x.i_groupId == techGroupId
                             select x.vc_groupName).FirstOrDefault();
 
-                        decimal percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
+                        var percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
 
-                        string eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
+                        var eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
 
-                        int maintenanceId = firstOrDefault.MaintenanceId;
+                        var maintenanceId = firstOrDefault.MaintenanceId;
 
-                        string maintenanceTask = (from x in _db.as_maintenanceProfile
+                        var maintenanceTask = (from x in _db.as_maintenanceProfile
                             where x.i_maintenanceId == maintenanceId
                             select x.vc_description).FirstOrDefault();
 
-                        EventReportInfo info = new EventReportInfo
+                        var info = new EventReportInfo
                         {
                             EventDate = eventDate,
                             MaintenanceTask = maintenanceTask,
@@ -1567,7 +1597,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 }
             } else if(maintenance.i_maintenanceValidationId == 1)
             {
-                int count = (from x in _db.as_validationTaskProfile
+                var count = (from x in _db.as_validationTaskProfile
                              join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
                              where y.i_shiftId == shiftId && y.bt_custom == customShift
                              select x).Count();
@@ -1589,7 +1619,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     var firstOrDefault = shiftData.FirstOrDefault();
                     if (firstOrDefault != null)
                     {
-                        int areaId = firstOrDefault.AreaId;
+                        var areaId = firstOrDefault.AreaId;
                         int totalAssets;
 
                         if (areaId != 0)
@@ -1600,30 +1630,30 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         else
                             totalAssets = _db.as_shiftsCustomProfile.Count(q => q.i_shiftId == shiftId);
 
-                        int completedAssets = (from x in shiftData
+                        var completedAssets = (from x in shiftData
                             group x by x.AssetId into assetGroup
                             select new
                             {
                                 numberAssets = assetGroup.Count()
                             }).Count();
 
-                        int techGroupId = firstOrDefault.TechGroupId;
+                        var techGroupId = firstOrDefault.TechGroupId;
 
-                        string technicianGroup = (from x in _db.as_technicianGroups
+                        var technicianGroup = (from x in _db.as_technicianGroups
                             where x.i_groupId == techGroupId
                             select x.vc_groupName).FirstOrDefault();
 
-                        decimal percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
+                        var percentage = Math.Round(completedAssets / (decimal)totalAssets * 100, 0);
 
-                        string eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
+                        var eventDate = firstOrDefault.SheduledDate.ToString("yyyy/MM/dd");
 
-                        int maintenanceId = firstOrDefault.MaintenanceId;
+                        var maintenanceId = firstOrDefault.MaintenanceId;
 
-                        string maintenanceTask = (from x in _db.as_maintenanceProfile
+                        var maintenanceTask = (from x in _db.as_maintenanceProfile
                             where x.i_maintenanceId == maintenanceId
                             select x.vc_description).FirstOrDefault();
 
-                        EventReportInfo info = new EventReportInfo
+                        var info = new EventReportInfo
                         {
                             EventDate = eventDate,
                             MaintenanceTask = maintenanceTask,

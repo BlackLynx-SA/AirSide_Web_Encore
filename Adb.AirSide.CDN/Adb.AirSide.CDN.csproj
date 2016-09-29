@@ -60,7 +60,6 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\airsidecdn - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\airsidecdn - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\airsidecdn.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -73,6 +72,7 @@
     <Content Include="Images\birmingham.png" />
     <Content Include="Images\encore.png" />
     <Content Include="Images\hamad.png" />
+    <Content Include="Images\liege.png" />
     <Content Include="Images\manchester.png" />
     <Content Include="Web.config" />
   </ItemGroup>

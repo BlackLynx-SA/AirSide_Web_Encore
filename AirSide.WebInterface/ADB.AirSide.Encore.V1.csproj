@@ -550,6 +550,7 @@
     <Content Include="Images\lights\Generic_2_LightType.png" />
     <Content Include="Images\lights\Generic_4_LightType.png" />
     <Content Include="Images\lights\Generic_Blank_LightType.png" />
+    <Content Include="Images\lights\Guard_Light.png" />
     <Content Include="Images\lights\IREL_LightType.png" />
     <Content Include="Images\lights\LTC2_LightType.png" />
     <Content Include="Images\lights\LTC_LightType.png" />
@@ -595,6 +596,7 @@
     <Content Include="Scripts\app.config.js" />
     <Content Include="Scripts\app.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\Liege.pubxml" />
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />

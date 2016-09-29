@@ -97,7 +97,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 });    
                 db.SaveChanges();
              
+                //Update Cache Web
                 await cache.RebuildAssetProfileForAsset(assetId);
+
+                //Update Cache iOS
+                await cache.CreateAllAssetDownload(assetId);
 
                 return Json(new {status = "success"});
             }
