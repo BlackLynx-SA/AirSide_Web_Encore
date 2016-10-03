@@ -10,9 +10,9 @@ namespace ADB.AirSide.Encore.V1
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new StyleBundle("~/content/smartadmin").IncludeDirectory("~/content/css", "*.min.css"));
+            bundles.Add(new StyleBundle("~/content/encore").IncludeDirectory("~/content/css", "*.min.css"));
 
-            bundles.Add(new ScriptBundle("~/scripts/smartadmin").Include(
+            bundles.Add(new ScriptBundle("~/scripts/encore").Include(
                 "~/scripts/app.config.js",
                 "~/scripts/plugin/jquery-touch/jquery.ui.touch-punch.min.js",
                 "~/scripts/bootstrap/bootstrap.min.js",

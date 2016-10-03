@@ -90,17 +90,21 @@
       <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.4.1\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.6.4\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Data.Edm, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.7.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.6.4\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    <Reference Include="Microsoft.Data.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.7.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.4\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -168,12 +172,12 @@
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=7.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.7.2.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -188,8 +192,8 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Spatial, Version=5.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.6.4\lib\net40\System.Spatial.dll</HintPath>
+    <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
@@ -263,16 +267,11 @@
     <Content Include="Content\css\login\checkbox\orange.css" />
     <Content Include="Content\css\login\checkbox\orange.png" />
     <Content Include="Content\css\login\preview.css" />
-    <Content Include="Content\css\smartadmin-production-plugins.min.css" />
-    <Content Include="Content\css\smartadmin-production.min.css" />
-    <Content Include="Content\css\smartadmin-rtl.min.css" />
-    <Content Include="Content\css\smartadmin-skins.min.css" />
+    <Content Include="Content\css\encore-production-plugins.min.css" />
+    <Content Include="Content\css\encore-production.min.css" />
+    <Content Include="Content\css\encore-rtl.min.css" />
+    <Content Include="Content\css\encore-skins.min.css" />
     <Content Include="ApplicationInsights.config" />
-    <None Include="Content\css\your_style.less" />
-    <Content Include="Content\css\your_style.css" />
-    <Content Include="Content\css\your_style.min.css">
-      <DependentUpon>your_style.css</DependentUpon>
-    </Content>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
@@ -288,48 +287,12 @@
     <Content Include="Content\img\adb_img\startup_loader.GIF" />
     <Content Include="Content\img\ajax-loader.gif" />
     <Content Include="Content\img\alpha.png" />
-    <Content Include="Content\img\avatars\1.png" />
-    <Content Include="Content\img\avatars\2.png" />
-    <Content Include="Content\img\avatars\3.png" />
-    <Content Include="Content\img\avatars\4.png" />
-    <Content Include="Content\img\avatars\5.png" />
-    <Content Include="Content\img\avatars\female.png" />
-    <Content Include="Content\img\avatars\male.png" />
-    <Content Include="Content\img\avatars\sunny-big.png" />
-    <Content Include="Content\img\avatars\sunny.png" />
     <Content Include="Content\img\blank.gif" />
     <Content Include="Content\img\border.png" />
     <Content Include="Content\img\clear.png" />
-    <Content Include="Content\img\demo\64x64.png" />
-    <Content Include="Content\img\demo\basic.png" />
-    <Content Include="Content\img\demo\chat.png" />
-    <Content Include="Content\img\demo\demo-smartbig-alert.png" />
-    <Content Include="Content\img\demo\demo-smartmedium-alert.png" />
-    <Content Include="Content\img\demo\demo-smartsmall-alert.png" />
-    <Content Include="Content\img\demo\hero.png" />
-    <Content Include="Content\img\demo\image-placeholder-64x64.png" />
-    <Content Include="Content\img\demo\iphoneview.png" />
-    <Content Include="Content\img\demo\m1.jpg" />
-    <Content Include="Content\img\demo\m2.jpg" />
-    <Content Include="Content\img\demo\m3.jpg" />
-    <Content Include="Content\img\demo\newsletter.png" />
-    <Content Include="Content\img\demo\responseimg.png" />
-    <Content Include="Content\img\demo\s1.jpg" />
-    <Content Include="Content\img\demo\s2.jpg" />
-    <Content Include="Content\img\demo\s3.jpg" />
-    <Content Include="Content\img\demo\sa-demo.png" />
-    <Content Include="Content\img\demo\sample.jpg" />
-    <Content Include="Content\img\demo\sidebar.png" />
-    <Content Include="Content\img\demo\sidebarhero.png" />
-    <Content Include="Content\img\demo\site-1.jpg" />
-    <Content Include="Content\img\demo\site-2.jpg" />
-    <Content Include="Content\img\demo\widget-colorpicker.png" />
     <Content Include="Content\img\dropzone\spritemap%402x.png" />
     <Content Include="Content\img\dropzone\spritemap.png" />
-    <Content Include="Content\img\favicon\1favicon.ico" />
     <Content Include="Content\img\favicon\ADB_icon.ico" />
-    <Content Include="Content\img\favicon\favicon.ico" />
-    <Content Include="Content\img\favicon\favicon.png" />
     <Content Include="Content\img\flags\de.png" />
     <Content Include="Content\img\flags\es.png" />
     <Content Include="Content\img\flags\flags.png" />
@@ -337,10 +300,6 @@
     <Content Include="Content\img\glass.jpg" />
     <Content Include="Content\img\gradient\login.png" />
     <Content Include="Content\img\hue.png" />
-    <Content Include="Content\img\invoice\americanexpress.png" />
-    <Content Include="Content\img\invoice\mastercard.png" />
-    <Content Include="Content\img\invoice\paypal.png" />
-    <Content Include="Content\img\invoice\visa.png" />
     <Content Include="Content\img\jcrop\Jcrop.gif" />
     <Content Include="Content\img\jqueryui\ui-bg_flat_0_999999_40x100.png" />
     <Content Include="Content\img\jqueryui\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -387,6 +346,7 @@
     <Content Include="Content\img\pattern\sneaker_mesh_fabric.png" />
     <Content Include="Content\img\pattern\tileable_wood_texture-xs.png" />
     <Content Include="Content\img\pattern\tileable_wood_texture.png" />
+    <Content Include="Content\img\photometric\0.jpeg" />
     <Content Include="Content\img\plus.png" />
     <Content Include="Content\img\ribbon.png" />
     <Content Include="Content\img\sa-dark.png" />
@@ -398,68 +358,6 @@
     <Content Include="Content\img\sort_both.png" />
     <Content Include="Content\img\sort_desc.png" />
     <Content Include="Content\img\sort_desc_disabled.png" />
-    <Content Include="Content\img\splash\ipad-landscape.png" />
-    <Content Include="Content\img\splash\ipad-portrait.png" />
-    <Content Include="Content\img\splash\iphone.png" />
-    <Content Include="Content\img\splash\sptouch-icon-iphone.png" />
-    <Content Include="Content\img\splash\touch-icon-ipad-retina.png" />
-    <Content Include="Content\img\splash\touch-icon-ipad.png" />
-    <Content Include="Content\img\splash\touch-icon-iphone-retina.png" />
-    <Content Include="Content\img\superbox\superbox-full-1.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-10.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-11.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-12.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-13.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-14.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-15.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-16.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-17.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-18.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-19.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-2.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-20-bw.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-20.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-21.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-22.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-23.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-24.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-3.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-4.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-5.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-6.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-7.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-8.jpg" />
-    <Content Include="Content\img\superbox\superbox-full-9.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-1.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-10.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-11.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-12.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-13.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-14.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-15.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-16.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-17.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-18.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-19.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-2.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-20.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-21.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-22.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-23.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-24.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-3.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-4.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-5.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-6.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-7.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-8.jpg" />
-    <Content Include="Content\img\superbox\superbox-thumb-9.jpg" />
-    <Content Include="Content\img\versions\ajaxversion.png" />
-    <Content Include="Content\img\versions\angularversion.png" />
-    <Content Include="Content\img\versions\dotnetversion.png" />
-    <Content Include="Content\img\versions\htmlversion.png" />
-    <Content Include="Content\img\versions\phpversion.png" />
-    <Content Include="Content\img\versions\reactversion.png" />
     <Content Include="Content\img\voicecommand\active-btn.gif" />
     <Content Include="Content\img\vt-menu.png" />
     <Content Include="Content\orange%402x.png" />
@@ -592,7 +490,6 @@
     <Content Include="Content\sound\voice_alert.ogg" />
     <Content Include="Content\sound\voice_off.ogg" />
     <Content Include="Content\sound\voice_on.ogg" />
-    <Content Include="Content\data\dataList.json" />
     <Content Include="Scripts\app.config.js" />
     <Content Include="Scripts\app.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
@@ -1236,7 +1133,6 @@
     <Content Include="Views\Account\_ErrorText.cshtml" />
     <Content Include="Views\Account\_LoginText.cshtml" />
     <Content Include="Views\Account\_SocialMedia.cshtml" />
-    <Content Include="Views\Account\Lock.cshtml" />
     <Content Include="Views\Map\AirportMap.cshtml" />
     <None Include="Properties\PublishProfiles\ADB Demo.pubxml" />
     <None Include="Properties\PublishProfiles\airsidebirmingham - FTP.pubxml" />
@@ -1304,6 +1200,8 @@
     <Content Include="Views\Asset\MultiAssets.cshtml" />
     <Content Include="Views\Asset\_MultiAssetInsert.cshtml" />
     <Content Include="Scripts\jquery-1.11.3.min.map" />
+    <Content Include="Views\Photometric\Upload.cshtml" />
+    <Content Include="Views\Photometric\Report.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1319,6 +1217,8 @@
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Map\GeoInfo.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\IMultiAssetProfileViewModel.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Photometric\photometric.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Photometric\ViewModels\PhotometricViewModel.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\SurveyorReport.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Surveyor\SurveyorHelper.ts" />
@@ -1376,6 +1276,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\iOSController.cs" />
     <Compile Include="Controllers\MapController.cs" />
+    <Compile Include="Controllers\PhotometricController.cs" />
     <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\ShiftsController.cs" />
@@ -1403,8 +1304,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
-    <Folder Include="Content\Images\" />
-    <Folder Include="Images\releases\2.0.0.1\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

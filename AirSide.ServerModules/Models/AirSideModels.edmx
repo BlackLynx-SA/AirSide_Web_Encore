@@ -130,24 +130,6 @@
           <Property Name="vc_icon" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_userId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_fbTechProfile">
-          <Key>
-            <PropertyRef Name="i_fbTechId" />
-          </Key>
-          <Property Name="i_fbTechId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="i_assetId" Type="int" Nullable="false" />
-          <Property Name="i_fbTechNumber" Type="int" Nullable="false" />
-          <Property Name="f_averageCandela" Type="float" Nullable="false" />
-          <Property Name="f_maxCandela" Type="float" Nullable="false" />
-          <Property Name="f_persentageICAO" Type="float" Nullable="false" />
-          <Property Name="f_verticalDegree" Type="float" Nullable="false" />
-          <Property Name="f_horizontalDegree" Type="float" Nullable="false" />
-          <Property Name="f_xAxis" Type="float" Nullable="false" />
-          <Property Name="f_yAxis" Type="float" Nullable="false" />
-          <Property Name="i_pictureId" Type="int" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="datetime2" Precision="0" Nullable="false" />
-          <Property Name="bt_pass" Type="bit" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_fileUploadInfo">
           <Key>
             <PropertyRef Name="guid_file" />
@@ -286,6 +268,18 @@
           </Key>
           <Property Name="i_nodeRegion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vc_regionDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="as_photometricRun">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="dateOfRun" Type="datetime" Nullable="false" />
+          <Property Name="assetId" Type="int" Nullable="false" />
+          <Property Name="maxIntensity" Type="int" Nullable="false" />
+          <Property Name="averageIntensity" Type="int" Nullable="false" />
+          <Property Name="icaoPercentage" Type="int" Nullable="false" />
+          <Property Name="pictureUrl" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="as_pictureProfile">
           <Key>
@@ -582,7 +576,6 @@
           <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" Schema="dbo" store:Type="Tables" />
@@ -597,6 +590,7 @@
           <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_multiAssetProfile" EntityType="Self.as_multiAssetProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_photometricRun" EntityType="Self.as_photometricRun" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" Schema="dbo" store:Type="Tables" />
@@ -753,24 +747,6 @@
           <Property Name="vc_color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vc_icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="vc_userId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_fbTechProfile">
-          <Key>
-            <PropertyRef Name="i_fbTechId" />
-          </Key>
-          <Property Name="i_fbTechId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_assetId" Type="Int32" Nullable="false" />
-          <Property Name="i_fbTechNumber" Type="Int32" Nullable="false" />
-          <Property Name="f_averageCandela" Type="Double" Nullable="false" />
-          <Property Name="f_maxCandela" Type="Double" Nullable="false" />
-          <Property Name="f_persentageICAO" Type="Double" Nullable="false" />
-          <Property Name="f_verticalDegree" Type="Double" Nullable="false" />
-          <Property Name="f_horizontalDegree" Type="Double" Nullable="false" />
-          <Property Name="f_xAxis" Type="Double" Nullable="false" />
-          <Property Name="f_yAxis" Type="Double" Nullable="false" />
-          <Property Name="i_pictureId" Type="Int32" Nullable="false" />
-          <Property Name="dt_dateTimeStamp" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="bt_pass" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="as_fileUploadProfile">
           <Key>
@@ -1100,7 +1076,6 @@
           <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" />
-          <EntitySet Name="as_fbTechProfile" EntityType="Self.as_fbTechProfile" />
           <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" />
           <EntitySet Name="as_frequencyProfile" EntityType="Self.as_frequencyProfile" />
           <EntitySet Name="as_geoSpatialProfile" EntityType="Self.as_geoSpatialProfile" />
@@ -1152,6 +1127,7 @@
           <EntitySet Name="as_shiftData" EntityType="airside.encoreModel.as_shiftData" />
           <EntitySet Name="as_multiAssetProfile" EntityType="airside.encoreModel.as_multiAssetProfile" />
           <EntitySet Name="as_assetStatusProfile" EntityType="airside.encoreModel.as_assetStatusProfile" />
+          <EntitySet Name="as_photometricRun" EntityType="airside.encoreModel.as_photometricRun" />
         </EntityContainer>
         <EntityType Name="as_fileUploadInfo">
           <Key>
@@ -1241,6 +1217,18 @@
           <Property Name="bt_assetStatus" Type="Boolean" Nullable="false" />
           <Property Name="i_assetSeverity" Type="Int32" Nullable="false" />
           <Property Name="dt_lastUpdated" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="as_photometricRun">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="dateOfRun" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="assetId" Type="Int32" Nullable="false" />
+          <Property Name="maxIntensity" Type="Int32" Nullable="false" />
+          <Property Name="averageIntensity" Type="Int32" Nullable="false" />
+          <Property Name="icaoPercentage" Type="Int32" Nullable="false" />
+          <Property Name="pictureUrl" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1372,25 +1360,6 @@
                 <ScalarProperty Name="vc_color" ColumnName="vc_color" />
                 <ScalarProperty Name="vc_icon" ColumnName="vc_icon" />
                 <ScalarProperty Name="vc_userId" ColumnName="vc_userId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_fbTechProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_fbTechProfile">
-              <MappingFragment StoreEntitySet="as_fbTechProfile">
-                <ScalarProperty Name="i_fbTechId" ColumnName="i_fbTechId" />
-                <ScalarProperty Name="i_assetId" ColumnName="i_assetId" />
-                <ScalarProperty Name="i_fbTechNumber" ColumnName="i_fbTechNumber" />
-                <ScalarProperty Name="f_averageCandela" ColumnName="f_averageCandela" />
-                <ScalarProperty Name="f_maxCandela" ColumnName="f_maxCandela" />
-                <ScalarProperty Name="f_persentageICAO" ColumnName="f_persentageICAO" />
-                <ScalarProperty Name="f_verticalDegree" ColumnName="f_verticalDegree" />
-                <ScalarProperty Name="f_horizontalDegree" ColumnName="f_horizontalDegree" />
-                <ScalarProperty Name="f_xAxis" ColumnName="f_xAxis" />
-                <ScalarProperty Name="f_yAxis" ColumnName="f_yAxis" />
-                <ScalarProperty Name="i_pictureId" ColumnName="i_pictureId" />
-                <ScalarProperty Name="dt_dateTimeStamp" ColumnName="dt_dateTimeStamp" />
-                <ScalarProperty Name="bt_pass" ColumnName="bt_pass" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1801,6 +1770,19 @@
                 <ScalarProperty Name="i_assetSeverity" ColumnName="i_assetSeverity" />
                 <ScalarProperty Name="bt_assetStatus" ColumnName="bt_assetStatus" />
                 <ScalarProperty Name="i_assetProfileId" ColumnName="i_assetProfileId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="as_photometricRun">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_photometricRun">
+              <MappingFragment StoreEntitySet="as_photometricRun">
+                <ScalarProperty Name="pictureUrl" ColumnName="pictureUrl" />
+                <ScalarProperty Name="icaoPercentage" ColumnName="icaoPercentage" />
+                <ScalarProperty Name="averageIntensity" ColumnName="averageIntensity" />
+                <ScalarProperty Name="maxIntensity" ColumnName="maxIntensity" />
+                <ScalarProperty Name="assetId" ColumnName="assetId" />
+                <ScalarProperty Name="dateOfRun" ColumnName="dateOfRun" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

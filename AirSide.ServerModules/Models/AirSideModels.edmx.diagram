@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_electricalNodeProfile" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_eventPofile" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_eventTypes" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_fbTechProfile" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadProfile" Width="1.5" PointX="6.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_frequencyProfile" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_geoSpatialProfile" Width="1.5" PointX="8.75" PointY="11.75" IsExpanded="true" />
@@ -56,6 +55,7 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="17.375" PointY="17.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_multiAssetProfile" Width="1.5" PointX="7.375" PointY="18.75" />
         <EntityTypeShape EntityType="airside.encoreModel.as_assetStatusProfile" Width="1.5" PointX="0.75" PointY="19.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_photometricRun" Width="1.5" PointX="19.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

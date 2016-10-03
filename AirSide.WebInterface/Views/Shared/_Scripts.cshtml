@@ -6,13 +6,13 @@
 <script src="~/Scripts/jquery.cookie-1.4.1.min.js"></script>
 
 <!-- IMPORTANT: SmartAdmin Core -->
-@Scripts.Render("~/scripts/smartadmin")
+@Scripts.Render("~/scripts/encore")
 
-@*@if (Request.IsAuthenticated)
+@if (Request.IsAuthenticated)
 {
-     PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
+     //PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)
     <script data-pace-options='{ "restartOnRequestAfter": true }' src="~/scripts/plugin/pace/pace.min.js"></script>
-}*@
+}
 
 <!-- Voice command : plugin -->
 <script src="~/scripts/speech/voicecommand.min.js"></script>

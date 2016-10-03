@@ -1,0 +1,117 @@
+﻿<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-sun-o"></i>
+                Photometric <span>
+                    >
+                    Upload
+                </span>
+            </h1>
+        </div>
+    </div>
+    <ul id="uploadTab" class="nav nav-tabs bordered">
+        <li class="active">
+            <a href="#s1" id="UploadDataTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-list-ul"></i> Upload CSV</a>
+        </li>
+        <li class="">
+            <a href="#s2" id="UploadPicturesTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-picture-o"></i> Upload Images</a>
+        </li>
+    </ul>
+
+    <div id="myTabContent1" class="tab-content padding-10">
+        <div class="tab-pane fade active in" id="s1">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <form class="dropzone" id="mydropzone"></form>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade in" id="s2">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <a class="btn btn-primary" id="clearAllBtn">Clear All Files</a>
+                    <hr />
+                    <form class="dropzone" id="mydropzone2"></form>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    </div>
+
+@section pagestyles{
+    <link href="~/Scripts/plugin/fancybox/jquery.fancybox.css" rel="stylesheet" />
+}
+
+@section pagespecific{
+    <script src="~/scripts/plugin/superbox/superbox.js"></script>
+    <script src="~/scripts/plugin/dropzone/dropzone.min.js"></script>
+
+    <!-- Fancy Box Scripts-->
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.js"></script>
+    <script src="~/scripts/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+    <script type="text/javascript">
+        //Global Variables
+
+        $(document).ready(function () {
+            var myDropZone = new Dropzone("#mydropzone", {
+                url: "UploadData?type=1",
+                addRemoveLinks: true,
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictResponseError: 'Error uploading file!',
+                autoProcessQueue: true,
+                init: function () {
+                    this.on('drop', function (e) {
+                        myDropZone.processQueue();
+                    });
+                },
+                accept: function (file, done) {
+                    done();
+                }
+            });
+
+            //FancyBox Init
+            $(".fancybox").fancybox();
+
+            myDropZone.on("complete", function (file) {
+                if (file.accepted) {
+                    $.smallBox({
+                        title: "File Uploaded",
+                        content: "The file was uploaded.",
+                        color: "#5384AF",
+                        timeout: 4000,
+                        icon: "fa fa-thumbs-up"
+                    });
+                    //myDropZone.removeAllFiles();
+                }
+            });
+            
+            var myDropZone2 = new Dropzone("#mydropzone2", {
+                url: "UploadData?type=2",
+                addRemoveLinks: true,
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictResponseError: 'Error uploading file!',
+                autoProcessQueue: true,
+                init: function () {
+                    this.on('drop', function (e) {
+                        myDropZone2.processQueue();
+                    });
+                },
+                accept: function (file, done) {
+                    done();
+                }
+            });
+
+            $(document).on('click', '#clearAllBtn', function () {
+                myDropZone2.removeAllFiles();
+            });
+        });
+
+        //Init DropZone
+        Dropzone.autoDiscover = false;
+        
+    </script>
+}
+
