@@ -23,15 +23,48 @@
                 </label>
             </form>
         </div>
+        <div class="col-md-6">
+            <form class="smart-form">
+                <div class="inline-group">
+                    <label class="checkbox">
+                        <input type="checkbox" name="checkbox-inline" id="failedLightsCheck">
+                        <i></i>Show Failed Lights
+                    </label>
+                    <a class="btn btn-primary" id="redrawBtn" style="padding: 5px;"><i class="fa fa-paint-brush"></i> Redraw</a>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <hr/>
-            <div id="bar-chart" class="chart-large" style="height: 500px !important;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <h4>Photometric Data</h4><br/>
+            <canvas id="bar-chart" width="400" height="100"></canvas>
+        </div>
+        <div class="col-md-2 text-center">
+            <h4>Threshold for failure</h4><br/>
+            <div>
+                <input class="knob" data-width="80" data-height="80" data-displayInput=true value="50" data-displayPrevious=true data-fgColor="#428BCA" style="display: none;">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" id="pictureDiv">
+            
         </div>
     </div>
 </div>
 
 @section PageScripts{
+    <script src="/scripts/plugin/knob/jquery.knob.min.js"></script>
     <script src="~/Scripts/TypeScripts/Photometric/photometric.js"></script>
 }

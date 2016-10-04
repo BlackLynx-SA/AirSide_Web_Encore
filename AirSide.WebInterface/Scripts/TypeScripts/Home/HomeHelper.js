@@ -359,3 +359,4 @@ $(document).on('click', '#ReleaseOkBtn', function (c) {
     $('#releaseNotesModal').modal('hide');
     localStorage.setItem('releasenotes.20160807', 'true');
 });
+//# sourceMappingURL=HomeHelper.js.map

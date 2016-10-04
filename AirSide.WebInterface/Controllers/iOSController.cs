@@ -19,7 +19,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -101,8 +100,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 											where data.UserName == username
 											select data).First();
 
-						iOSLogin user = new iOSLogin();
-						Guid newSession = Guid.NewGuid();
+						var user = new iOSLogin();
+						var newSession = Guid.NewGuid();
 
 						var groupId = (from x in _db.as_technicianGroupProfile
 									   where x.UserId == loggedInUser.UserId
@@ -119,7 +118,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 				default:
 					{
-						iOSLogin user = new iOSLogin
+						var user = new iOSLogin
 						{
 							FirstName = "None",
 							LastName = "None",
@@ -222,9 +221,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/03/04
 				//Author: Bernard Willer
 
-				foreach (TaskCheckUpload entity in entities)
+				foreach (var entity in entities)
 				{
-					as_maintenanceCheckListEntity check = new as_maintenanceCheckListEntity
+					var check = new as_maintenanceCheckListEntity
 					{
 						dt_captureDate = DateTime.Now,
 						i_assetId = entity.i_assetId,
@@ -276,7 +275,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/02/06
 				//Author: Bernard Willer
 
-				List<assetHistory> allHistory = new List<assetHistory>();
+				var allHistory = new List<assetHistory>();
 				allHistory.AddRange(ValidationTasks(assetId));
 				allHistory.AddRange(TorqueTasks(assetId));
 				allHistory.AddRange(VisualSurveys(assetId));
@@ -305,19 +304,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/02/06   
 				//Author: Bernard Willer
 
-				Guid guid = Guid.NewGuid();
-				string filename = guid.ToString();
+				var guid = Guid.NewGuid();
+				var filename = guid.ToString();
 				filename = filename.Replace("-", "");
 				filename = filename.Substring(0, 5) + ".png";
 
 				//Convert received image
-				byte[] bytes = Convert.FromBase64String(imageUpload.image);
-				MemoryStream ms = new MemoryStream(bytes) {Position = 0};
+				var bytes = Convert.FromBase64String(imageUpload.image);
+				var ms = new MemoryStream(bytes) {Position = 0};
 
-				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-				CloudBlobContainer container = blobClient.GetContainerReference("surveyorimages");
-				CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+				var blobClient = storageAccount.CreateCloudBlobClient();
+				var container = blobClient.GetContainerReference("surveyorimages");
+				var blockBlob = container.GetBlockBlobReference(filename);
 				blockBlob.UploadFromStream(ms);
 
 				//Free Memory
@@ -373,7 +372,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		public async Task<JsonResult> InsertAssetValidation(List<ios_validationTaskProfile> validations)
 		{
 			
-			DateTime now = DateTime.Now;
+			var now = DateTime.Now;
 
 			foreach (var item in validations)
 			{
@@ -414,7 +413,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				catch (Exception err)
 				{
-					string tmp = log + "|" + validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
+					var tmp = log + "|" + validation.dt_dateTimeStamp + "|" + validation.i_assetId + "|" + validation.UserId + "|" +
 								 validation.bt_validated
 								 + "|" + validation.i_shiftId + "|" + validation.i_validationProfileId;
 					  
@@ -436,7 +435,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				bool closeShiftsFlag = closeShifts == 1;
+				var closeShiftsFlag = closeShifts == 1;
 				var shifts = (from x in _db.as_shifts
 							  join y in _db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
 							  join z in _db.as_areaProfile on y.i_areaId equals z.i_areaId
@@ -455,7 +454,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								  maintenanceId = x.i_maintenanceId,
 							  }
 							  ).ToList();
-				List<technicianShift> shiftList = shifts.Select(item => new technicianShift
+				var shiftList = shifts.Select(item => new technicianShift
 				{
 					i_shiftId = item.i_shiftId, sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"), i_areaSubId = item.i_areaSubId, sheduleTime = item.sheduleTime.ToString("hh:mm:ss"), permitNumber = item.permitNumber, techGroup = item.techGroup, areaName = item.areaName, validation = item.validation == 1 ? "YES" : "NO", shiftType = 0, assets = new int[0], maintenanceId = item.maintenanceId
 				}).ToList();
@@ -480,7 +479,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				foreach (var item in customShifts)
 				{
-					technicianShift shift = new technicianShift
+					var shift = new technicianShift
 					{
 						i_shiftId = item.i_shiftId,
 						sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"),
@@ -499,8 +498,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								  select x.i_assetId).ToList();
 
 					shift.assets = new int[assets.Count];
-					int i = 0;
-					foreach(int asset in assets)
+					var i = 0;
+					foreach(var asset in assets)
 					{
 						shift.assets[i] = asset;
 						i++;
@@ -526,10 +525,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<int> assets = new List<int>();
-				foreach (shiftDataUpload shift in shiftData)
+				var assets = new List<int>();
+				foreach (var shift in shiftData)
 				{
-					as_shiftData newData = new as_shiftData()
+					var newData = new as_shiftData()
 					{
 						dt_captureDate =
 							shift.vc_dateStamp != null
@@ -660,7 +659,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<mongoFullAsset> assetList = await _cache.GetAllAssetDownload();
+				var assetList = await _cache.GetAllAssetDownload();
 				var jsonResult = Json(assetList);
 				jsonResult.MaxJsonLength = int.MaxValue;
 				return jsonResult;
@@ -680,7 +679,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<mongoAssetClassDownload> assetClassList = await _cache.GetAllAssetClasses();
+				var assetClassList = await _cache.GetAllAssetClasses();
 				return Json(assetClassList);
 			}
 			catch (Exception err)
@@ -698,7 +697,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<AssetTagReply> assetList = new List<AssetTagReply>();
+				var assetList = new List<AssetTagReply>();
 
 				var assetInfo = from x in _db.as_assetProfile
 								join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -712,7 +711,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				foreach (var item in assetInfo)
 				{
-					AssetTagReply asset = new AssetTagReply
+					var asset = new AssetTagReply
 					{
 						assetId = item.i_assetId,
 						serialNumber = item.vc_serialNumber,
@@ -743,11 +742,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<mongoAssetDownload> assetListMongo = await _cache.GetAssetAssosiations(areaSubId);
+				var assetListMongo = await _cache.GetAssetAssosiations(areaSubId);
 
 				if (assetListMongo.Count == 0)
 				{
-					List<AssetDownload> assetList = new List<AssetDownload>();
+					var assetList = new List<AssetDownload>();
 
 					var assets = from x in _db.as_assetProfile
 								 join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -759,7 +758,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 					foreach (var item in assets)
 					{
-						AssetDownload asset = new AssetDownload
+						var asset = new AssetDownload
 						{
 							i_assetId = item.i_assetId,
 							i_assetClassId = item.i_assetClassId,
@@ -798,7 +797,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				List<AssetDownload> assetList = new List<AssetDownload>();
+				var assetList = new List<AssetDownload>();
 
 				var assets = from x in _db.as_assetProfile
 							 join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
@@ -810,7 +809,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				foreach (var item in assets)
 				{
-					AssetDownload asset = new AssetDownload
+					var asset = new AssetDownload
 					{
 						i_assetId = item.i_assetId,
 						i_assetClassId = item.i_assetClassId,
@@ -842,14 +841,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				int i = 0;
-				foreach (AssetAssosiationUpload item in assetList)
+				var i = 0;
+				foreach (var item in assetList)
 				{
-					as_assetProfile asset = _db.as_assetProfile.Find(item.assetId);
+					var asset = _db.as_assetProfile.Find(item.assetId);
 
 					if (asset != null)
 					{
-						string currentTagId = asset.vc_rfidTag;
+						var currentTagId = asset.vc_rfidTag;
 						asset.vc_rfidTag = item.tagId;
 						asset.vc_serialNumber = item.serialNumber;
 						_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
@@ -893,11 +892,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			try
 			{
 
-				as_assetProfile asset = _db.as_assetProfile.Find(assetId);
+				var asset = _db.as_assetProfile.Find(assetId);
 
 				if (asset != null)
 				{
-					string currentTagId = asset.vc_rfidTag;
+					var currentTagId = asset.vc_rfidTag;
 					asset.vc_rfidTag = tagId;
 					asset.vc_serialNumber = serialNumber;
 					_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
@@ -940,9 +939,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				foreach (NewAssetAssosiation asset in assets)
+				foreach (var asset in assets)
 				{
-					as_locationProfile location = new as_locationProfile
+					var location = new as_locationProfile
 					{
 						f_latitude = asset.latitude,
 						f_longitude = asset.longitude,
@@ -953,7 +952,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					_db.as_locationProfile.Add(location);
 					_db.SaveChanges();
 
-					as_assetProfile newAsset = new as_assetProfile
+					var newAsset = new as_assetProfile
 					{
 						i_assetClassId = asset.i_assetClassId,
 						i_locationId = location.i_locationId,
@@ -995,10 +994,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		[HttpPost]
 		public JsonResult GetMapCenter()
 		{
-			string longitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Longitude").Select(q => q.vc_settingValue).FirstOrDefault();
-			string latitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Latitude").Select(q => q.vc_settingValue).FirstOrDefault();
+			var longitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Longitude").Select(q => q.vc_settingValue).FirstOrDefault();
+			var latitude = _db.as_settingsProfile.Where(q => q.vc_settingDescription == "Latitude").Select(q => q.vc_settingValue).FirstOrDefault();
 
-			mapCenter center = new mapCenter();
+			var center = new mapCenter();
 			if (latitude != null) center.latitude = double.Parse(latitude);
 			if (longitude != null) center.longitude = double.Parse(longitude);
 
@@ -1052,7 +1051,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			var wrenchList = (from data in _db.as_wrenchProfile select data).ToList();
 
-			List<iOSwrench> iosWrenchList = wrenchList.Select(wrench => new iOSwrench
+			var iosWrenchList = wrenchList.Select(wrench => new iOSwrench
 			{
 				bt_active = wrench.bt_active, dt_lastCalibrated = wrench.dt_lastCalibrated.ToString("yyyyMMdd"), f_batteryLevel = wrench.f_batteryLevel, i_calibrationCycle = wrench.i_calibrationCycle, i_wrenchId = wrench.i_wrenchId, vc_model = wrench.vc_model, vc_serialNumber = wrench.vc_serialNumber
 			}).ToList();
@@ -1066,9 +1065,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				foreach (WrenchBatteryUpdate battery in batteryUpdate)
+				foreach (var battery in batteryUpdate)
 				{
-					as_wrenchProfile updateWrench = _db.as_wrenchProfile.Find(battery.wrenchId);
+					var updateWrench = _db.as_wrenchProfile.Find(battery.wrenchId);
 					updateWrench.f_batteryLevel = battery.batteryLevel;
 					_db.Entry(updateWrench).State = System.Data.Entity.EntityState.Modified;
 					_db.SaveChanges();
@@ -1088,9 +1087,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				foreach (WrenchAssosiation assosiation in assosiations)
+				foreach (var assosiation in assosiations)
 				{
-					as_technicianWrenchProfile assosiationInsert = new as_technicianWrenchProfile
+					var assosiationInsert = new as_technicianWrenchProfile
 					{
 						dt_dateTime = DateTime.Now,
 						i_wrenchId = assosiation.wrenchId,
@@ -1118,7 +1117,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				Guid guid = Guid.NewGuid();
+				var guid = Guid.NewGuid();
 				if (file.ContentLength > 0)
 				{
 					var fileName = Path.GetFileName(file.FileName);
@@ -1141,9 +1140,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						}
 					}
 
-					string[] fileSplit = file.FileName.Split(char.Parse("."));
-					string extension = fileSplit[1];
-					int fileType = 0;
+					var fileSplit = file.FileName.Split(char.Parse("."));
+					var extension = fileSplit[1];
+					var fileType = 0;
 
 					switch(extension)
 					{
@@ -1156,7 +1155,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 
 
-					as_fileUploadProfile dbFile = new as_fileUploadProfile
+					var dbFile = new as_fileUploadProfile
 					{
 						guid_file = guid,
 						vc_filePath = "../../images/uploads/" + fileName,
@@ -1184,15 +1183,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		private void SaveThumbNails(string file)
 		{
 			// Get a bitmap.
-			Bitmap bmp1 = new Bitmap(file);
-			ImageCodecInfo jgpEncoder = GetEncoder(ImageFormat.Jpeg);
+			var bmp1 = new Bitmap(file);
+			var jgpEncoder = GetEncoder(ImageFormat.Jpeg);
 
 			var myEncoder =
 				Encoder.Quality;
 
-			EncoderParameters myEncoderParameters = new EncoderParameters(1);
+			var myEncoderParameters = new EncoderParameters(1);
 
-			EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+			var myEncoderParameter = new EncoderParameter(myEncoder, 50L);
 			myEncoderParameters.Param[0] = myEncoderParameter;
 			bmp1.Save(file.Replace(".jpg", "_50.jpg"), jgpEncoder, myEncoderParameters);
 
@@ -1210,7 +1209,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				return true;
 			}
 
-			string[] formats = new string[] { ".jpg", ".png", ".gif", ".jpeg" };
+			var formats = new string[] { ".jpg", ".png", ".gif", ".jpeg" };
 
 			// linq
 			return formats.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
@@ -1221,7 +1220,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		private ImageCodecInfo GetEncoder(ImageFormat format)
 		{
 
-			ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
+			var codecs = ImageCodecInfo.GetImageDecoders();
 
 			return codecs.FirstOrDefault(codec => codec.FormatID == format.Guid);
 		}
@@ -1233,10 +1232,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				string lastUpdated = "";
-				foreach (fileUpload item in info)
+				var lastUpdated = "";
+				foreach (var item in info)
 				{
-					as_fileUploadInfo file = new as_fileUploadInfo
+					var file = new as_fileUploadInfo
 					{
 						guid_file = Guid.Parse(item.file_guid),
 						vc_description = item.description,
@@ -1385,7 +1384,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		{
 			try
 			{
-				Boolean flag = await _cache.CreateAssetDownloadCache();
+				var flag = await _cache.CreateAssetDownloadCache();
 				if(flag)
 					return Json(new { status = "success" });
 				else
@@ -1427,19 +1426,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/01/27
 				//Author: Bernard Willer
 
-				Guid uploadGuid = Guid.NewGuid();
-				string fileName = uploadGuid.ToString();
+				var uploadGuid = Guid.NewGuid();
+				var fileName = uploadGuid.ToString();
 				fileName = fileName.Replace("-", "");
 
 				//Upload to Storage Container
-				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-				CloudBlobContainer container = blobClient.GetContainerReference("logs");
-				CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName + ".log");
+				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+				var blobClient = storageAccount.CreateCloudBlobClient();
+				var container = blobClient.GetContainerReference("logs");
+				var blockBlob = container.GetBlockBlobReference(fileName + ".log");
 				blockBlob.UploadFromStream(file.InputStream);
 
 				//Persist to Database
-				as_iosLogProfile log = new as_iosLogProfile
+				var log = new as_iosLogProfile
 				{
 					dt_logCaptureDate = DateTime.Now,
 					UserId = userId,
@@ -1511,18 +1510,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Author: Bernard Willer
 
 				//Upload to Storage Container
-				Guid guid = Guid.NewGuid();
-				string filename = guid.ToString();
+				var guid = Guid.NewGuid();
+				var filename = guid.ToString();
 				filename = filename.Replace("-", "");
 				filename = filename.Substring(0, 5) + "_" + file.FileName;
 
-				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-				CloudBlobContainer container = blobClient.GetContainerReference("iosimages");
-				CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+				var blobClient = storageAccount.CreateCloudBlobClient();
+				var container = blobClient.GetContainerReference("iosimages");
+				var blockBlob = container.GetBlockBlobReference(filename);
 				blockBlob.UploadFromStream(file.InputStream);
 
-				as_iosImageProfile image = new as_iosImageProfile
+				var image = new as_iosImageProfile
 				{
 					dt_dateTimeStamp = DateTime.Now,
 					bt_active = true,
@@ -1557,15 +1556,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Create Date: 2015/01/27
 				//Author: Bernard Willer
 
-				as_iosImageProfile image = _db.as_iosImageProfile.Find(id);
+				var image = _db.as_iosImageProfile.Find(id);
 
 				//Downlaod File
-				CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-				CloudBlobContainer container = blobClient.GetContainerReference("iosimages");
-				CloudBlockBlob blockBlob = container.GetBlockBlobReference(image.vc_fileName);
+				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
+				var blobClient = storageAccount.CreateCloudBlobClient();
+				var container = blobClient.GetContainerReference("iosimages");
+				var blockBlob = container.GetBlockBlobReference(image.vc_fileName);
 
-				MemoryStream memoryStream = new MemoryStream();
+				var memoryStream = new MemoryStream();
 				blockBlob.DownloadToStream(memoryStream);
 				memoryStream.Position = 0;
 				Response.AddHeader("content-disposition", "attachment; filename=" + image.vc_fileName);
@@ -1602,11 +1601,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								 maintenanceTask = z.vc_description
 							 };
 
-			List<assetHistory> tasks = new List<assetHistory>();
+			var tasks = new List<assetHistory>();
 
 			foreach (var item in validation.OrderByDescending(q=>q.date).Take(3))
 			{
-				assetHistory task = new assetHistory
+				var task = new assetHistory
 				{
 					type = 2,
 					maintenance = item.maintenanceTask + "(" + item.user + ")",
@@ -1637,12 +1636,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							  shiftId = x.i_shiftId
 						  }).OrderByDescending(q => q.date).Take(10);
 
-			List<assetHistory> tasks = new List<assetHistory>();
+			var tasks = new List<assetHistory>();
 
-			int shiftId = 0;
-			int pointer = 0;
+			var shiftId = 0;
+			var pointer = 0;
 
-			assetHistory task = new assetHistory();
+			var task = new assetHistory();
 
 			foreach (var item in torque)
 			{
@@ -1678,7 +1677,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		private List<assetHistory> VisualSurveys(int assetId)
 		{
-			List<assetHistory> items = new List<assetHistory>();
+			var items = new List<assetHistory>();
 
 			try
 			{
@@ -1693,7 +1692,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				if (location != null)
 				{
-					as_get_closest_point_to_gps_coordinate1_Result closest = _db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
+					var closest = _db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
 
 					var surveys = (from x in _db.as_fileUploadInfo
 						join y in _db.as_fileUploadProfile on x.guid_file equals y.guid_file
@@ -1711,17 +1710,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				
 					foreach (var item in surveys.OrderByDescending(q => q.date).Take(5))
 					{
-						assetHistory asset = new assetHistory
+						var asset = new assetHistory
 						{
 							datetimeStamp = item.date.ToString("dd MMM, yyyy"),
 							type = 3
 						};
-						string resolved = "Open";
+						var resolved = "Open";
 						if (item.resolved) resolved = "Resolved";
 						asset.valueCaptured = item.user + "(" + resolved + ")";
 
-						string[] filepath = item.fileLocation.Split(char.Parse("."));
-						int place = filepath.Count() - 1;
+						var filepath = item.fileLocation.Split(char.Parse("."));
+						var place = filepath.Count() - 1;
 
 						if (filepath[place] == "jpg")
 						{

@@ -84,10 +84,10 @@
             <li class="@Html.RouteIf("photometric", "active")">
                 <a href="#"><i class="fa fa-lg fa-fw fa-sun-o"></i> <span class="menu-item-parent">@Resources.Language.Photometric</span></a>
                 <ul>
-                    <li class="@Html.RouteIf("photometric", "active")">
+                    <li class="@Html.RouteIf("Report", "active")">
                         <a href="@Url.Action("Report", "Photometric")">Reports</a>
                     </li>
-                    <li class="@Html.RouteIf("photometric", "active")">
+                    <li class="@Html.RouteIf("Upload", "active")">
                         <a href="@Url.Action("Upload", "Photometric")">Data Upload</a>
                     </li>
                 </ul>

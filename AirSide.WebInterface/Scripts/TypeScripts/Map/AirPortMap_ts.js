@@ -61,3 +61,4 @@ var AirSide;
         console.log(assetClass);
     }
 })(AirSide || (AirSide = {}));
+//# sourceMappingURL=AirPortMap_ts.js.map

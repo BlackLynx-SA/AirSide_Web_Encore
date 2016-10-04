@@ -38,7 +38,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             ViewBag.assetClasses = new SelectList(db.as_assetClassProfile.OrderBy(q => q.vc_description).Distinct(), "i_assetClassId", "vc_description");
             ViewBag.mainAreas = new SelectList(db.as_areaProfile.OrderBy(q => q.vc_description).Distinct(), "i_areaId", "vc_description");
             ViewBag.surveyorDates = new SelectList(db.as_fileUploadProfile.OrderByDescending(q => q.dt_datetime).ToList().Select(q => q.dt_datetime.ToString("yyy/MM/dd")).Distinct(), "dt_datetime");
-            //ViewBag.photmetricDates = new SelectList(db.as_fbTechProfile.OrderByDescending(q => q.dt_dateTimeStamp).ToList().Select(q => q.dt_dateTimeStamp.ToString("yyy/MM/dd")).Distinct(), "dt_dateTimeStamp");
+            ViewBag.photmetricDates = new SelectList(db.as_photometricProfile.OrderByDescending(q => q.dateOfRun).ToList().Select(q => q.dateOfRun.ToString("yyy/MM/dd")).Distinct(), "dateOfRun");
             ViewBag.techgroups = new SelectList(db.as_technicianGroups, "i_groupId", "vc_groupName");
             var maintenanceTasks = db.as_maintenanceProfile.ToList();
             
@@ -191,28 +191,27 @@ namespace ADB.AirSide.Encore.V1.Controllers
         public JsonResult getFBTechData(string dateForData)
         {
             //2016/10/03 - Changed FB Tech Upload Methodology
-            //var data = (from x in db.as_fbTechProfile
-            //            join y in db.as_assetProfile on x.i_assetId equals y.i_assetId
-            //            join z in db.as_locationProfile on y.i_locationId equals z.i_locationId
-            //            join a in db.as_pictureProfile on x.i_pictureId equals a.i_pictureId
-            //            select new
-            //            {
-            //                tagid = y.vc_rfidTag,
-            //                longitude = z.f_longitude,
-            //                latitude = z.f_latitude,
-            //                picture = a.vc_fileLocation,
-            //                pass = x.bt_pass,
-            //                avgcd = x.f_averageCandela,
-            //                maxcd = x.f_maxCandela,
-            //                pericao = x.f_persentageICAO,
-            //                vdegree = x.f_verticalDegree,
-            //                hdegree = x.f_horizontalDegree,
-            //                xaxis = x.f_xAxis,
-            //                yaxis = x.f_yAxis,
-            //                dateOfPhoto = x.dt_dateTimeStamp
-            //            }).ToList().Where(q => q.dateOfPhoto.ToString("yyy/MM/dd") == dateForData);
+            var data = (from x in db.as_photometricProfile
+                        join y in db.as_assetProfile on x.assetId equals y.i_assetId
+                        join z in db.as_locationProfile on y.i_locationId equals z.i_locationId
+                        select new
+                        {
+                            tagid = y.vc_rfidTag,
+                            longitude = z.f_longitude,
+                            latitude = z.f_latitude,
+                            picture = x.pictureUrl,
+                            pass = x.averageIntensity > 2500,
+                            avgcd = x.averageIntensity,
+                            maxcd = x.maxIntensity,
+                            pericao = x.icaoPercentage,
+                            vdegree = 0,
+                            hdegree = 0,
+                            xaxis = 0,
+                            yaxis = 0,
+                            dateOfPhoto = x.dateOfRun
+                        }).ToList().Where(q => q.dateOfPhoto.ToString("yyy/MM/dd") == dateForData);
 
-            return Json(new {empty = true});
+            return Json(data);
         }
 
         [HttpGet]

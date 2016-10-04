@@ -19,3 +19,4 @@ var AirSide;
     })(Encore = AirSide.Encore || (AirSide.Encore = {}));
 })(AirSide || (AirSide = {}));
 var geoInfo = new AirSide.Encore.GeoInfo();
+//# sourceMappingURL=GeoInfo.js.map

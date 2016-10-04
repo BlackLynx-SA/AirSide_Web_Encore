@@ -40,7 +40,7 @@ namespace ADB.AirSide.Encore.V1
                 "~/scripts/plugin/flot/jquery.flot.pie.min.js",
                 "~/scripts/plugin/flot/jquery.flot.tooltip.min.js",
                 "~/scripts/plugin/dygraphs/dygraph-combined.min.js",
-                "~/scripts/plugin/chartjs/chart.min.js"
+                "~/scripts/chart.min.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/scripts/datatables").Include(
