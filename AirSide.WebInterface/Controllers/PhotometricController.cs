@@ -65,7 +65,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 }
                                 else
                                 {
-                                    var measurement = new as_photometricRun
+                                    var measurement = new as_photometricProfile
                                     {
                                         id = Guid.NewGuid(),
                                         dateOfRun = dateStr,
@@ -81,18 +81,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                     measurement.assetId = asset.i_assetId;
 
                                     var run =
-                                        _db.as_photometricRun.FirstOrDefault(
+                                        _db.as_photometricProfile.FirstOrDefault(
                                             c => c.assetId == asset.i_assetId && c.dateOfRun == dateStr);
 
                                     //Remove if it already exists
                                     if (run != null)
                                     {
-                                        _db.as_photometricRun.Remove(run);
+                                        _db.as_photometricProfile.Remove(run);
                                         await _db.SaveChangesAsync();
                                     }
 
                                     //Write to DB
-                                    _db.as_photometricRun.Add(measurement);
+                                    _db.as_photometricProfile.Add(measurement);
                                     await _db.SaveChangesAsync();
                                 }
                                 counter++;
@@ -110,7 +110,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         file.SaveAs(path);
 
                         //Update the database with the saved file url
-                        var photo = _db.as_photometricRun.FirstOrDefault(c => c.pictureUrl == file.FileName);
+                        var photo = _db.as_photometricProfile.FirstOrDefault(c => c.pictureUrl == file.FileName);
                         photo.pictureUrl = "../../Content/Img/photometric/" + guidFile;
 
                         _db.Entry(photo).State = EntityState.Modified;
@@ -138,20 +138,37 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpGet]
         public async Task<JsonResult> GetAvailableDates()
         {
-            var data = await (from x in _db.as_photometricRun
-                group x by x.dateOfRun
-                into g
-                select new
-                {
-                    date = g.Key
-                }).ToListAsync();
+            var data =
+                _db.as_photometricProfile.OrderByDescending(q => q.dateOfRun)
+                    .ToList()
+                    .Select(q => q.dateOfRun.ToString("yyyy/MM/dd HH:mm"))
+                    .Distinct();
 
-            var dates = data.Select(date => date.ToString("yyyy/MM/dd")).ToList();
-
-            return Json(dates, JsonRequestBehavior.AllowGet);
+            return Json(data.ToList(), JsonRequestBehavior.AllowGet);
         }
 
         //---------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+        public async Task<JsonResult> GetPhotometricData(string selectedDate)
+        {
+            var date = DateTime.ParseExact(selectedDate, "yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture);
+
+            var data = await (from x in _db.as_photometricProfile
+                       join y in _db.as_assetProfile on x.assetId equals y.i_assetId
+                        where x.dateOfRun == date
+                        select new
+                        {
+                            Id = x.id,
+                            SerialNumber = y.vc_serialNumber,
+                            MaxIntensity = x.maxIntensity,
+                            AvgIntensity = x.averageIntensity,
+                            ICAO = x.icaoPercentage,
+                            PictureUrl = x.pictureUrl
+                        }).ToListAsync();
+
+            return Json(data);
+        }
 
     }
 }

@@ -1,9 +1,36 @@
 ﻿
 @{
-    ViewBag.Title = "Report";
+    ViewBag.Title = "Photometric Reports";
 }
 
-<h2>Report</h2>
+<div id="content">
+    <div class="row ">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h1 class="page-title txt-color-blueDark">
+                <i class="fa-fw fa fa-sun-o"></i>
+                Photometric <span>
+                    >
+                    Reports
+                </span>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="smart-form">
+                <label class="select">
+                    <select id="dateSelect"></select> <i></i>
+                </label>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+            <div id="bar-chart" class="chart-large" style="height: 500px !important;"></div>
+        </div>
+    </div>
+</div>
 
 @section PageScripts{
     <script src="~/Scripts/TypeScripts/Photometric/photometric.js"></script>

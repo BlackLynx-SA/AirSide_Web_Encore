@@ -1,9 +1,8 @@
 ﻿interface IPhotometricViewModel {
-    id: string;
-    dateOfRun: string;
-    assetId: number;
-    maxIntensity: number;
-    averageIntensity: number;
-    icaoPercentage: number;
-    pictureUrl: string;
+    Id: string;
+    SerialNumber: string;
+    MaxIntensity: number;
+    AvgIntensity: number;
+    ICAO: number;
+    PictureUrl: string;
 }

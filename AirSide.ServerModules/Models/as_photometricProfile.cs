@@ -12,12 +12,14 @@ namespace AirSide.ServerModules.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class as_electricalNodeProfile
+    public partial class as_photometricProfile
     {
-        public int i_nodeId { get; set; }
-        public int i_parentNode { get; set; }
-        public string vc_nodeDescription { get; set; }
-        public string vc_externalRef { get; set; }
-        public int i_nodeRegion { get; set; }
+        public System.Guid id { get; set; }
+        public System.DateTime dateOfRun { get; set; }
+        public int assetId { get; set; }
+        public int maxIntensity { get; set; }
+        public int averageIntensity { get; set; }
+        public int icaoPercentage { get; set; }
+        public string pictureUrl { get; set; }
     }
 }

@@ -226,9 +226,6 @@
     <Compile Include="Models\as_cacheProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_electricalNodeProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\as_eventPofile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
@@ -280,7 +277,7 @@
     <Compile Include="Models\as_nodeRegionProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_photometricRun.cs">
+    <Compile Include="Models\as_photometricProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_pictureProfile.cs">

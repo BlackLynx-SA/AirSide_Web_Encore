@@ -99,16 +99,6 @@
           <Property Name="ui_currentHash" Type="uniqueidentifier" Nullable="false" />
           <Property Name="bt_active" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_electricalNodeProfile">
-          <Key>
-            <PropertyRef Name="i_nodeId" />
-          </Key>
-          <Property Name="i_nodeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="i_parentNode" Type="int" Nullable="false" />
-          <Property Name="vc_nodeDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="i_nodeRegion" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="as_eventPofile">
           <Key>
             <PropertyRef Name="i_eventProfileId" />
@@ -269,7 +259,7 @@
           <Property Name="i_nodeRegion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="vc_regionDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="as_photometricRun">
+        <EntityType Name="as_photometricProfile">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -369,7 +359,7 @@
           <Key>
             <PropertyRef Name="i_groupId" />
           </Key>
-          <Property Name="i_groupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="i_groupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="vc_groupName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="vc_externalRef" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -573,7 +563,6 @@
           <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_assetStatusProfile" EntityType="Self.as_assetStatusProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_cacheProfile" EntityType="Self.as_cacheProfile" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_fileUploadInfo" EntityType="Self.as_fileUploadInfo" Schema="dbo" store:Type="Tables" />
@@ -590,7 +579,7 @@
           <EntitySet Name="as_maintenanceValidation" EntityType="Self.as_maintenanceValidation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_multiAssetProfile" EntityType="Self.as_multiAssetProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_nodeRegionProfile" EntityType="Self.as_nodeRegionProfile" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="as_photometricRun" EntityType="Self.as_photometricRun" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="as_photometricProfile" EntityType="Self.as_photometricProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_pictureProfile" EntityType="Self.as_pictureProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportParameters" EntityType="Self.as_reportParameters" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="as_reportProfile" EntityType="Self.as_reportProfile" Schema="dbo" store:Type="Tables" />
@@ -716,16 +705,6 @@
           <Property Name="vc_module" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ui_currentHash" Type="Guid" Nullable="false" />
           <Property Name="bt_active" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="as_electricalNodeProfile">
-          <Key>
-            <PropertyRef Name="i_nodeId" />
-          </Key>
-          <Property Name="i_nodeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="i_parentNode" Type="Int32" Nullable="false" />
-          <Property Name="vc_nodeDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="vc_externalRef" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="i_nodeRegion" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="as_eventPofile">
           <Key>
@@ -1073,7 +1052,6 @@
           <EntitySet Name="as_assetInfoProfile" EntityType="Self.as_assetInfoProfile" />
           <EntitySet Name="as_assetProfile" EntityType="Self.as_assetProfile" />
           <EntitySet Name="as_cacheProfile" EntityType="Self.as_cacheProfile" />
-          <EntitySet Name="as_electricalNodeProfile" EntityType="Self.as_electricalNodeProfile" />
           <EntitySet Name="as_eventPofile" EntityType="Self.as_eventPofile" />
           <EntitySet Name="as_eventTypes" EntityType="Self.as_eventTypes" />
           <EntitySet Name="as_fileUploadProfile" EntityType="Self.as_fileUploadProfile" />
@@ -1127,7 +1105,7 @@
           <EntitySet Name="as_shiftData" EntityType="airside.encoreModel.as_shiftData" />
           <EntitySet Name="as_multiAssetProfile" EntityType="airside.encoreModel.as_multiAssetProfile" />
           <EntitySet Name="as_assetStatusProfile" EntityType="airside.encoreModel.as_assetStatusProfile" />
-          <EntitySet Name="as_photometricRun" EntityType="airside.encoreModel.as_photometricRun" />
+          <EntitySet Name="as_photometricProfile" EntityType="airside.encoreModel.as_photometricProfile" />
         </EntityContainer>
         <EntityType Name="as_fileUploadInfo">
           <Key>
@@ -1218,7 +1196,7 @@
           <Property Name="i_assetSeverity" Type="Int32" Nullable="false" />
           <Property Name="dt_lastUpdated" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="as_photometricRun">
+        <EntityType Name="as_photometricProfile">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -1326,17 +1304,6 @@
                 <ScalarProperty Name="vc_module" ColumnName="vc_module" />
                 <ScalarProperty Name="ui_currentHash" ColumnName="ui_currentHash" />
                 <ScalarProperty Name="bt_active" ColumnName="bt_active" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="as_electricalNodeProfile">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_electricalNodeProfile">
-              <MappingFragment StoreEntitySet="as_electricalNodeProfile">
-                <ScalarProperty Name="i_nodeId" ColumnName="i_nodeId" />
-                <ScalarProperty Name="i_parentNode" ColumnName="i_parentNode" />
-                <ScalarProperty Name="vc_nodeDescription" ColumnName="vc_nodeDescription" />
-                <ScalarProperty Name="vc_externalRef" ColumnName="vc_externalRef" />
-                <ScalarProperty Name="i_nodeRegion" ColumnName="i_nodeRegion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1774,9 +1741,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="as_photometricRun">
-            <EntityTypeMapping TypeName="airside.encoreModel.as_photometricRun">
-              <MappingFragment StoreEntitySet="as_photometricRun">
+          <EntitySetMapping Name="as_photometricProfile">
+            <EntityTypeMapping TypeName="airside.encoreModel.as_photometricProfile">
+              <MappingFragment StoreEntitySet="as_photometricProfile">
                 <ScalarProperty Name="pictureUrl" ColumnName="pictureUrl" />
                 <ScalarProperty Name="icaoPercentage" ColumnName="icaoPercentage" />
                 <ScalarProperty Name="averageIntensity" ColumnName="averageIntensity" />

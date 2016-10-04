@@ -36,7 +36,6 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_assetInfoProfile> as_assetInfoProfile { get; set; }
         public virtual DbSet<as_assetProfile> as_assetProfile { get; set; }
         public virtual DbSet<as_cacheProfile> as_cacheProfile { get; set; }
-        public virtual DbSet<as_electricalNodeProfile> as_electricalNodeProfile { get; set; }
         public virtual DbSet<as_eventPofile> as_eventPofile { get; set; }
         public virtual DbSet<as_eventTypes> as_eventTypes { get; set; }
         public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
@@ -74,7 +73,7 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_shiftData> as_shiftData { get; set; }
         public virtual DbSet<as_multiAssetProfile> as_multiAssetProfile { get; set; }
         public virtual DbSet<as_assetStatusProfile> as_assetStatusProfile { get; set; }
-        public virtual DbSet<as_photometricRun> as_photometricRun { get; set; }
+        public virtual DbSet<as_photometricProfile> as_photometricProfile { get; set; }
     
         public virtual ObjectResult<as_get_closest_point_to_gps_coordinate1_Result> as_get_closest_point_to_gps_coordinate(Nullable<double> latitude, Nullable<double> longitude)
         {
