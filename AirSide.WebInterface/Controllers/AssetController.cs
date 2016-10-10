@@ -26,7 +26,7 @@ using AirSide.ServerModules.Models;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class AssetController : Controller
+    public class AssetController : BaseController
     {
         private readonly Entities _db = new Entities();
         // GET: Asset

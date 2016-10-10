@@ -15,7 +15,7 @@ using AirSide.ServerModules.Models;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
-    public class PhotometricController : Controller
+    public class PhotometricController : BaseController
     {
         private readonly Entities _db = new Entities();
         private readonly CacheHelper _cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);

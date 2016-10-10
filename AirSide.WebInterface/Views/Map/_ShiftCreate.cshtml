@@ -14,14 +14,14 @@
                     <div class="row">
                         <fieldset>
                             <section class="col col-6">
-                                <label class="label">Select a date</label>
+                                <label class="label">@Resources.Language.Select_a_date</label>
                                 <label class="input">
                                     <i class="fa fa-calendar icon-prepend"></i>
                                     <input type="text" id="shiftdate" placeholder="Select a date" class="form-control datepicker" data-dateformat="dd/mm/yy" style="z-index:1051;">
                                 </label>
                             </section>
                             <section class="col col-6">
-                                <label class="label">Time of shift</label>
+                                <label class="label">@Resources.Language.Time_of_Shift</label>
                                 <label class="input">
                                     <i class="fa fa-clock-o icon-prepend"></i>
                                     <input class="form-control" id="timepicker" type="text" placeholder="Select time" style="background:#fff;">
@@ -32,14 +32,13 @@
                     <div class="row">
                         <fieldset>
                             <section class="col col-6">
-                                <label class="label">Technician Group</label>
+                                <label class="label">@Resources.Language.Technician_Group</label>
                                 <label class="select">
                                     @Html.DropDownList("techgroups")<i></i>
                                 </label>
-                                <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> This list contains all the technician groups loaded. To view all click <a href="~/users/techniciangroups">here.</a></div>
                             </section>
                             <section class="col col-6">
-                                <label class="label">Maintenance Task</label>
+                                <label class="label">@Resources.Language.Maintenance_Tasks</label>
                                 <label class="select">
                                     <select id="shiftTasks">
                                         @{ var i = 0;}
@@ -58,27 +57,25 @@
                                         }
                                     </select><i></i>
                                 </label>
-                                <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> This is the list of all maintenance tasks. To view all click <a href="~/shifts/maintenancetasks">here.</a></div>
+                                
                             </section>
                         </fieldset>
                     </div>
                     <div class="row">
                         <fieldset>
                             <section class="col col-6">
-                                <label class="label">Work Permit Number</label>
+                                <label class="label">@Resources.Language.Work_Permit_Number</label>
                                 <label class="input">
                                     <i class="fa fa-road icon-prepend"></i>
                                     <input class="form-control" id="workpermitTxt" type="text" placeholder="Enter a Work Permit">
                                 </label>
-                                <div class="note"><strong>Note:</strong> If a permit was issued to go airside, please fill it in.</div>
-                            </section>
+                                </section>
                             <section class="col col-6">
-                                <label class="label">External Reference</label>
+                                <label class="label">@Resources.Language.External_Reference</label>
                                 <label class="input">
                                     <i class="fa fa-magic icon-prepend"></i>
                                     <input class="form-control" id="externalRefTxt" type="text" placeholder="Enter an External Reference">
                                 </label>
-                                <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Info:</strong> Please supply any external system references here.</div>
                             </section>
                         </fieldset>
                     </div>
@@ -86,8 +83,8 @@
             </div>
             <div class="modal-footer">
                 <img src="~/Content/img/adb_img/adb_loader_tr.gif" id="shiftLoader" style="height:20px; display:none;" />
-                <button class="btn btn-primary" onclick="sendCustomShift()"><i class="fa fa-plus"></i> Add Shift</button>
-                <button class="btn btn-danger" onclick="$('#shiftModal').modal('hide');"><i class="fa fa-times"></i> Cancel</button>
+                <button class="btn btn-primary" onclick="sendCustomShift()"><i class="fa fa-plus"></i> @Resources.Language.Add_Shift</button>
+                <button class="btn btn-danger" onclick="$('#shiftModal').modal('hide');"><i class="fa fa-times"></i> @Resources.Language.Cancel</button>
             </div>
         </div>
     </div>
@@ -177,13 +174,13 @@
                 newDate.getMonth(),
                 newDate.getDate()));
 
-            $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> Create New Shift for ' + selectedAssets.length + ' assets');
+            $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> @Resources.Language.Create_new_shift_for ' + selectedAssets.length + ' assets');
             $('#shiftModal').modal('show');
         }
         else {
             $.smallBox({
-                title: "Not Assets",
-                content: "Please select assets to create a shift",
+                title: "@Resources.Language.No_Assets",
+                content: "@Resources.Language.Select_Assets_For_Shift",
                 color: "#dfb56c",
                 timeout: 4000,
                 icon: "fa fa-warning swing animated"
@@ -274,8 +271,8 @@
             dataType: 'json',
             success: function (json) {
                 $.smallBox({
-                    title: "Shift Created",
-                    content: json.count + " assets were added to this custom shift. You can view all shifts under the Shift Planning section.",
+                    title: "@Resources.Language.Shift_Created",
+                    content: json.count + " @Resources.Language.Custom_Shift_Created",
                     color: "#5384AF",
                     timeout: 4000,
                     icon: "fa fa-calendar"
@@ -285,7 +282,7 @@
             },
             error: function (err) {
                     $.smallBox({
-                        title: "Error creating custom shift",
+                        title: "@Resources.Language.Error_Custom_Shift",
                         content: err.responseText,
                         color: "#f51414",
                         timeout: 5000,

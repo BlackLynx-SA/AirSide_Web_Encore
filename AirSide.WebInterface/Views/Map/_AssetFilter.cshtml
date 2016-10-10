@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title"><i class="fa fa-lightbulb-o txt-color-green fa-2x"></i> Asset Filter</h4>
+                <h4 class="modal-title"><i class="fa fa-lightbulb-o txt-color-green fa-2x"></i> @Resources.Language.Asset_Filter</h4>
             </div>
             <div class="modal-body">
                 <form class="smart-form">
@@ -13,7 +13,7 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="assetFilterRadio" checked="checked" value="allassets" id="allAssetRadio">
-                                <i></i>Show All Assets
+                                <i></i>@Resources.Language.All_Assets
                             </label>
                         </section>
                     </div>
@@ -21,12 +21,12 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="assetFilterRadio" value="asset" id="assetTypeRadio">
-                                <i></i>Show Specific Assets Type
+                                <i></i>@Resources.Language.Show_Specific_Asset_Type
                             </label>
                             <label class="select">
                                 @Html.DropDownList("assetClasses", null, String.Empty)<i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This is all loaded asset types in the system. To view all click <a href="~/assetclass/assetclasses">here.</a></div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.This_Is_All_Asset_Types <a href="~/assetclass/assetclasses">@Resources.Language.Here.</a></div>
                         </section>
                     </div>
 
@@ -34,7 +34,7 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="assetFilterRadio" value="maintain" id="assetMaintenanceRadio">
-                                <i></i>Maintenance Cycle
+                                <i></i>@Resources.Language.Maintenance_Cycle
                             </label>
                         </section>
                     </div>
@@ -43,14 +43,14 @@
                         <section class="col col-10">
                             <label class="select">
                                 <select id="maintenanceSelect">
-                                    <option value="0" selected="selected">No Data</option>
-                                    <option value="1">Recently Updated</option>
-                                    <option value="2">Mid Cycle</option>
-                                    <option value="3">Almost Due</option>
-                                    <option value="4">Over Due</option>
+                                    <option value="0" selected="selected">@Resources.Language.No_Data</option>
+                                    <option value="1">>@Resources.Language.Recently_Updated</option>
+                                    <option value="2">>@Resources.Language.Mid_Cycle</option>
+                                    <option value="3">>@Resources.Language.Almost_Due</option>
+                                    <option value="4">>@Resources.Language.Over_Due</option>
                                 </select><i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This will filter the assets per maintenance cycle for the selected task.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.Filter_According_to_Cycle</div>
                         </section>
                     </div>
                     <hr /><br />
@@ -60,7 +60,7 @@
                                 <input id="clusteredChk" type="checkbox" name="checkbox">
                                 <i></i>Show Asset Clustered
                             </label>
-                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Hint:</strong> This data visualization groups assets together.</div>
+                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> @Resources.Language.Note</strong> @Resources.Language.Cluster_Visualize</div>
                         </section>
 
                     </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="modal-footer">
 
-                <button class="btn btn-sm btn-primary" style="float:right" id="assetFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-primary" style="float:right" id="assetFilterBtn">@Resources.Language.Apply_Filter</button>
             </div>
         </div>
     </div>
@@ -89,11 +89,11 @@
         markerClusterer.clearMarkers();
 
         var clustered = $('#clusteredChk').prop("checked");
-        filterType = "allassets";
+        var filterType = "allassets";
         if (!all)
-            var filterType = $('input[name=assetFilterRadio]:checked').val();
+            filterType = $('input[name=assetFilterRadio]:checked').val();
 
-        var filterType = $('input[name=assetFilterRadio]:checked').val();
+        filterType = $('input[name=assetFilterRadio]:checked').val();
         if (filterType === 'allassets') {
             showAllAssets(clustered);
             filterEnum = 101;
@@ -120,7 +120,7 @@
         $.each(Assets.jsonData, function (i,v) {
             var flag = false;
             $.each(v.maintenance, function (index, value) {
-                if (value.maintenanceId == selectedTask) {
+                if (value.maintenanceId === selectedTask) {
                     addMarker(v);
                     return false;
                 }
@@ -150,8 +150,8 @@
         markers = [];
         $.each(Assets.jsonData, function (i, v) {
             $.each(v.maintenance, function (index, value) {
-                if (value.maintenanceId == selectedTask) {
-                    if (cycle == value.maintenanceCycle) {
+                if (value.maintenanceId === selectedTask) {
+                    if (cycle === value.maintenanceCycle) {
                         //Add Marker to Map
                         addMarker(v);
                         return false;

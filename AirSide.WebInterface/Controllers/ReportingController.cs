@@ -29,7 +29,7 @@ using System.Web.Mvc;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class ReportingController : Controller
+    public class ReportingController : BaseController
     {
         private readonly Entities db = new Entities();
         private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);

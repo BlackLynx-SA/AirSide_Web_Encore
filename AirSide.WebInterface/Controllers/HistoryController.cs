@@ -27,7 +27,7 @@ using Microsoft.Ajax.Utilities;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class HistoryController : Controller
+    public class HistoryController : BaseController
     {
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 

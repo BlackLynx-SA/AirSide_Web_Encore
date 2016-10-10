@@ -5,19 +5,19 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title"><i class="fa fa-sun-o txt-color-red fa-2x"></i> Photometric Filter</h4>
+                <h4 class="modal-title"><i class="fa fa-sun-o txt-color-red fa-2x"></i> @Resources.Language.Photometric</h4>
             </div>
             <div class="modal-body">
                 <form class="smart-form">
                     <div class="row">
                         <section class="col col-10">
                             <label class="label">
-                                Available Dates
+                                @Resources.Language.Available_Dates
                             </label>
                             <label class="select">
                                 @Html.DropDownList("photmetricDates", null, String.Empty)<i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This list only contains dates on which photometric runs were performed.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.Note_Photometric</div>
                         </section>
                     </div>
 
@@ -26,9 +26,9 @@
                         <section class="col col-11">
                             <label class="checkbox">
                                 <input id="failedChk" type="checkbox" name="checkbox">
-                                <i></i>Only Show Failed Lights
+                                <i></i>@Resources.Language.Only_show_faulty_lights
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> This filter will only show failed lights.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.Note_Failed_Lights</div>
                         </section>
                     </div>
                     <div class="row">
@@ -39,7 +39,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary" style="float:right" id="photoFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-primary" style="float:right" id="photoFilterBtn">@Resources.Language.Apply_Filter</button>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
     function generateFBTechContent(json) {
         var content = '<div style="width:450px;">' +
                             '<div style="margin: 10px 10px 10px 10px; overflow:hidden;">' +
-                            '<h3 class="header smaller lighter blue">Photometric data for <strong>' + json.tagid + '</strong></h3>' +
+                            '<h3 class="header smaller lighter blue">@Resources.Language.Photometric_Data_For <strong>' + json.tagid + '</strong></h3>' +
                             '<div class="row">' +
                             '<div class="col-xs-4"><h5>Avg Cd: ' + json.avgcd + '</h5></div>' +
                             '<div class="col-xs-4"><h5>Max Cd: ' + json.maxcd + '</h5></div>' +

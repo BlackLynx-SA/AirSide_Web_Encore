@@ -37,7 +37,7 @@ using System.Data.Entity.Validation;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         // TODO: This should be moved to the constructor of the controller in combination with a DependencyResolver setup
         // NOTE: You can use NuGet to find a strategy for the various IoC packages out there (i.e. StructureMap.MVC5)

@@ -9,11 +9,14 @@ var markerClusterer = new MarkerClusterer(null, null);
 var overlayShow = false;
 var heatMapShow = false;
 var clusterShow = false;
-var centerLat, centerLong;
+var centerLat = 0;
+var centerLong = 0;
 var rectangle;
 var rectFlag = false;
 var selectedTask = 0;
-var lastFilter, filterEnum, filterValue;
+var lastFilter = "";
+var filterEnum = 0;
+var filterValue = "";
 
 initMap();
 

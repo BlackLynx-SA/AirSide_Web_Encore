@@ -23,7 +23,7 @@ using System.Web.Mvc;
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class SurveyorController : Controller
+    public class SurveyorController : BaseController
     {
         private readonly Entities _db = new Entities();
 

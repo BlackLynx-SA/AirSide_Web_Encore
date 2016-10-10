@@ -319,19 +319,19 @@
     <value>Show Specific Asset Type</value>
   </data>
   <data name="Note_All_Assets" xml:space="preserve">
-    <value>Note: This is all asset types loaded in the system. To view all click here</value>
+    <value>This is all asset types loaded in the system. To view all click here</value>
   </data>
   <data name="Maintenance_Cycle" xml:space="preserve">
     <value>Maintenance Cycle</value>
   </data>
   <data name="Note_Maintenance_Filter" xml:space="preserve">
-    <value>Note: This will filter the assets per maintenance cycle for the selected task.</value>
+    <value>This will filter the assets per maintenance cycle for the selected task.</value>
   </data>
   <data name="Show_Assets_Clustered" xml:space="preserve">
     <value>Show Assets Clustered</value>
   </data>
   <data name="Hint_Data_Visualization" xml:space="preserve">
-    <value>Hint: This data visualization groups assets together.</value>
+    <value>This data visualization groups assets together.</value>
   </data>
   <data name="Area_Filter" xml:space="preserve">
     <value>Area Filter</value>
@@ -343,7 +343,7 @@
     <value>Sub Areas</value>
   </data>
   <data name="Note_Area_Filter" xml:space="preserve">
-    <value>Note: These areas are filtered according to the main area.</value>
+    <value>These areas are filtered according to the main area.</value>
   </data>
   <data name="Apply_Filter" xml:space="preserve">
     <value>Apply Filter</value>
@@ -394,10 +394,10 @@
     <value>Available Dates</value>
   </data>
   <data name="Note_Photometric" xml:space="preserve">
-    <value>Note: This list only contains dates on which photometric runs were performed.</value>
+    <value>This list only contains dates on which photometric runs were performed.</value>
   </data>
   <data name="Note_Failed_Lights" xml:space="preserve">
-    <value>Note: This filter will only show failed lights.</value>
+    <value>This filter will only show failed lights.</value>
   </data>
   <data name="Only_show_faulty_lights" xml:space="preserve">
     <value>Only show faulty lights</value>
@@ -436,7 +436,7 @@
     <value>Info: This is the list of all maintenance tasks. To view all click here</value>
   </data>
   <data name="Note_Permit_Issued" xml:space="preserve">
-    <value>Note: If a permit was issued to go airside, please fill it in.</value>
+    <value>If a permit was issued to go airside, please fill it in.</value>
   </data>
   <data name="Info_External_Reference" xml:space="preserve">
     <value>Info: Please supply any external system references here.</value>
@@ -481,7 +481,7 @@
     <value>Make Private</value>
   </data>
   <data name="Note_Viewable" xml:space="preserve">
-    <value>Note: When selected this event is only viewable by you.</value>
+    <value>When selected this event is only viewable by you.</value>
   </data>
   <data name="Add_Event" xml:space="preserve">
     <value>Add Event</value>
@@ -556,10 +556,10 @@
     <value>Asset Picture</value>
   </data>
   <data name="Note_Url_Reference" xml:space="preserve">
-    <value>Note: This is a URL that points to a reference for the asset</value>
+    <value>This is a URL that points to a reference for the asset</value>
   </data>
   <data name="Hint_Load_Images" xml:space="preserve">
-    <value>Hint: You can load up additional images into the library.</value>
+    <value>You can load up additional images into the library.</value>
   </data>
   <data name="Add_Task" xml:space="preserve">
     <value>Add Task</value>
@@ -577,7 +577,7 @@
     <value>Maintenance Frequency</value>
   </data>
   <data name="Hint_Frequency" xml:space="preserve">
-    <value>Hint: This is the maintenance frequency in days.</value>
+    <value>This is the maintenance frequency in days.</value>
   </data>
   <data name="Add_Maintenance_Task" xml:space="preserve">
     <value>Add Maintenance Task</value>
@@ -878,5 +878,83 @@
   </data>
   <data name="Web_Application" xml:space="preserve">
     <value>Web Application</value>
+  </data>
+  <data name="Here" xml:space="preserve">
+    <value>here</value>
+  </data>
+  <data name="This_Is_All_Asset_Types" xml:space="preserve">
+    <value>This is all loaded asset types in the system. To view all click</value>
+  </data>
+  <data name="No_Data" xml:space="preserve">
+    <value>No Data</value>
+  </data>
+  <data name="Recently_Updated" xml:space="preserve">
+    <value>Recently Updated</value>
+  </data>
+  <data name="Add_New_User" xml:space="preserve">
+    <value>Add New User</value>
+  </data>
+  <data name="Asset_Has_No_History" xml:space="preserve">
+    <value>The asset you selected has no history.</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Cluster_Visualize" xml:space="preserve">
+    <value>This data visualization groups assets together.</value>
+  </data>
+  <data name="Complete_Shift" xml:space="preserve">
+    <value>Complete Shift</value>
+  </data>
+  <data name="Custom_Shift_Created" xml:space="preserve">
+    <value>assets were added to this custom shift. You can view all shifts under the Shift Planning section</value>
+  </data>
+  <data name="Error_Custom_Shift" xml:space="preserve">
+    <value>Error creating a custom shift</value>
+  </data>
+  <data name="Error_Retrieve_Asset_Type" xml:space="preserve">
+    <value>Error Retrieving Asset Types</value>
+  </data>
+  <data name="Filter_According_to_Cycle" xml:space="preserve">
+    <value>This will filter the assets per maintenance cycle for the selected task.</value>
+  </data>
+  <data name="No_Assets" xml:space="preserve">
+    <value>No Assets</value>
+  </data>
+  <data name="No_History" xml:space="preserve">
+    <value>No History</value>
+  </data>
+  <data name="Password_Changed" xml:space="preserve">
+    <value>Password Changed</value>
+  </data>
+  <data name="Password_Has_Changed" xml:space="preserve">
+    <value>password has been changed.</value>
+  </data>
+  <data name="Performed" xml:space="preserve">
+    <value>performed</value>
+  </data>
+  <data name="Performed_Following_Checks" xml:space="preserve">
+    <value>performed the following checks</value>
+  </data>
+  <data name="Photometric_Data_For" xml:space="preserve">
+    <value>Photometric data for</value>
+  </data>
+  <data name="Please_Enter_Password" xml:space="preserve">
+    <value>Please enter a password</value>
+  </data>
+  <data name="Reset_Password" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="Select_Assets_For_Shift" xml:space="preserve">
+    <value>Please select assets to create a shift</value>
+  </data>
+  <data name="Shift_Created" xml:space="preserve">
+    <value>Shift Created</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>task</value>
+  </data>
+  <data name="This_Will_Change_Password" xml:space="preserve">
+    <value>This will change the user password. Continue</value>
   </data>
 </root>

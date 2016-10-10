@@ -3,16 +3,16 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-users"></i>
-                Systems Users <span>
+                @Resources.Language.System_Users <span>
                     >
-                    View All Users
+                    @Resources.Language.View_All_Users
                 </span>
             </h1>
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
             <div class="page-title">
-                <a href="~/Users/Register" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> Add New User</a>
+                <a href="~/Users/Register" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> @Resources.Language.Add_New_User</a>
             </div>
         </div>
     </div>
@@ -23,13 +23,13 @@
             <table id="dt_users" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
                 <thead>
                     <tr>
-                        <th data-class="expand" style="width:100px;"><i class="fa fa-fw fa-list-ol txt-color-blue hidden-md hidden-sm hidden-xs"></i> User Id</th>
-                        <th data-hide="expand"><i class="fa fa-fw fa-user txt-color-blue hidden-md hidden-sm hidden-xs"></i> Username</th>
+                        <th data-class="expand" style="width:100px;"><i class="fa fa-fw fa-list-ol txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.User_Id</th>
+                        <th data-hide="expand"><i class="fa fa-fw fa-user txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Username</th>
                         <th data-class="expand">First Name</th>
                         <th data-class="expand">Last Name</th>
-                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-key txt-color-blue hidden-md hidden-sm hidden-xs"></i> Access Level</th>
-                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-plane txt-color-blue hidden-md hidden-sm hidden-xs"></i> Airport</th>
-                        <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-key txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Access_Level</th>
+                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-plane txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Airport</th>
+                        <th style="width:200px;"><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Options</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -93,7 +93,7 @@
                     var html = "";
                     $.each(json, function (i, value) {
                         html += '<tr><td>' + value.userId + '</td><td>' + value.username + '</td><td>' + value.firstName + '</td><td>' + value.lastName + '</td><td>' + value.access + '</td>';
-                        html += '<td>' + value.airport + '</td><td><a href="#" id=options_' + value.userId + ' onclick="showChangePassword(' + value.userId + ')"><i class="fa fa-history txt-color-red"></i> Reset Password</a>';
+                        html += '<td>' + value.airport + '</td><td><a href="#" id=options_' + value.userId + ' onclick="showChangePassword(' + value.userId + ')"><i class="fa fa-history txt-color-red"></i> @Resources.Language.Reset_Password</a>';
                         if (value.access === 'Technician') {
                             html += '<div id=changePass_' + value.userId + ' style="display:none;"><div class="input-group"><input id="passTxt_' + value.userId + '" type="text" class="form-control techPass"/><span class="input-group-addon"><i class="fa fa-lock"></i></span></div><br/><button class="btn btn-primary btn-xs tbl-btn" onclick="changePassword(' + value.userId + ')">Submit</button><button class="btn btn-danger btn-xs tbl-btn" onclick="cancelPassChange(' + value.userId + ')">Cancel</button></div>';
                         } else
@@ -111,7 +111,7 @@
                 },
                 error: function (err) {
                     $.smallBox({
-                        title: "Error Retrieving Asset Types",
+                        title: "Error Retrieving Users",
                         content: err.responseText,
                         color: "#f51414",
                         timeout: 5000,
@@ -135,8 +135,8 @@
             var password = $('#passTxt_' + id).val();
             if (password.length > 0) {
                 $.SmartMessageBox({
-                    title: '<i class="fa fa-lock fa-lg txt-color-red"></i> Change Password?',
-                    content: "This will change the user password. Continue?",
+                    title: '<i class="fa fa-lock fa-lg txt-color-red"></i> @Resources.Language.Change_Password?',
+                    content: "@Resources.Language.This_Will_Change_Password?",
                     buttons: '[No][Yes]'
                 }, function (ButtonPressed) {
 
@@ -148,8 +148,8 @@
                             data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                             success: function (json) {
                                 $.smallBox({
-                                    title: "Password Changed.",
-                                    content: json.FirstName + " " + json.LastName + "'s password has been changed",
+                                    title: "@Resources.Language.Password_Changed",
+                                    content: json.FirstName + " " + json.LastName + "'s @Resources.Language.Password_Has_Changed",
                                     color: "#5384AF",
                                     timeout: 4000,
                                     icon: "fa fa-thumbs-up"
@@ -159,7 +159,7 @@
                             },
                             error: function (err) {
                                 $.smallBox({
-                                    title: "Error Editing the Asset Class",
+                                    title: "Error Editing User",
                                     content: err.responseText,
                                     color: "#f51414",
                                     timeout: 5000,
@@ -179,8 +179,8 @@
                 $('#loader_' + id).hide();
                 $('#changePass_' + id).fadeIn(500);
                 $.smallBox({
-                    title: "Password?",
-                    content: "Please enter a password.",
+                    title: "@Resources.Language.Password?",
+                    content: "@Resources.Language.Please_Enter_Password.",
                     color: "#f51414",
                     timeout: 5000,
                     icon: "fa fa-bell swing animated"

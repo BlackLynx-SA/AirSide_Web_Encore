@@ -9,9 +9,6 @@
 <!-- #MOBILE -->
 <ul id="mobile-profile-img" class="header-dropdown-list hidden-xs padding-5">
     <li class="">
-        @*<a href="#" class="dropdown-toggle no-margin userdropdown" data-toggle="dropdown">
-            <img src="~/content/img/avatars/sunny.png" alt="John Doe" class="online" />
-        </a>*@
         <ul class="dropdown-menu pull-right">
             <li>
                 <a href="javascript:void(0);" class="padding-10 padding-top-0 padding-bottom-0" data-action="launchFullscreen"><i class="fa fa-arrows-alt"></i> Full <>S</>creen</a>
@@ -26,23 +23,23 @@
 
 <!-- logout button -->
 <div id="logout" class="btn-header transparent pull-right">
-    <span> <a href="javascript:document.getElementById('logoutForm').submit()" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after LogHelper out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+    <span> <a href="javascript:document.getElementById('logoutForm').submit()" title="@Resources.Language.Logout" data-action="userLogout" data-logout-msg="@Resources.Language.Improve_Security"><i class="fa fa-sign-out"></i></a> </span>
 </div>
 <!-- end logout button -->
 
 <!-- input: search field -->
 <div class="header-search pull-right" id="searchHeader" style="display: none;">
-    <input id="search-fld" type="text" placeholder="Find assets and more">
+    <input id="search-fld" type="text" placeholder="@Resources.Language.Find_assets_and_more">
     <button id="searchBtn">
         <i class="fa fa-search"></i>
     </button>
-    <a href="javascript:void(0);" id="cancel-search-js" title="Cancel Search"><i class="fa fa-times"></i></a>
+    <a href="javascript:void(0);" id="cancel-search-js" title="@Resources.Language.Cancel"><i class="fa fa-times"></i></a>
 </div>
 <!-- end input: search field -->
 
 <!-- fullscreen button -->
 <div id="fullscreen" class="btn-header transparent pull-right">
-    <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
+    <span> <a href="javascript:void(0);" data-action="launchFullscreen" title="@Resources.Language.Full_Screen"><i class="fa fa-arrows-alt"></i></a> </span>
 </div>
 <!-- end fullscreen button -->
 

@@ -11,13 +11,13 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <label>Select a date (range):</label>
+                        <label>@Resources.Language.Select_a_date_range</label>
                     </div>
                     <div class="col-md-6">
 
                         <div class="form-group">
                             <div class="input-group" style="margin-right:10px;">
-                                <input class="form-control from" type="text" placeholder="From">
+                                <input class="form-control from" type="text" placeholder="@Resources.Language.From">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -27,7 +27,7 @@
 
                         <div class="form-group">
                             <div class="input-group">
-                                <input class="form-control to" type="text" placeholder="Select a date">
+                                <input class="form-control to" type="text" placeholder="@Resources.Language.To">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -36,12 +36,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 hidden-sm" style=" text-align: center;">
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">@Resources.Language.This_Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">@Resources.Language.Last_Week</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">@Resources.Language.This_Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">@Resources.Language.Last_Month</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">@Resources.Language.This_Year</a>
+                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">@Resources.Language.Last_Year</a>
                     </div>
                 </div>
                 <hr />
@@ -49,19 +49,19 @@
                     <div class="col-md-12">
                         <form class="smart-form">
                             <label class="label">
-                                Filter according to:
+                                @Resources.Language.Filter_according_to
                             </label>
                             <label class="checkbox">
                                 <input id="voiceChk" type="checkbox" name="checkbox">
-                                <i></i>Voice Memos
+                                <i></i>@Resources.Language.Voice_Memos
                             </label>
                             <label class="checkbox">
                                 <input id="imageChk" type="checkbox" name="checkbox">
-                                <i></i>Images Taken
+                                <i></i>@Resources.Language.Images_Taken
                             </label>
                             <label class="checkbox">
                                 <input id="textChk" type="checkbox" name="checkbox">
-                                <i></i>Text Notes
+                                <i></i>@Resources.Language.Text_Notes
                             </label>
                         </form>
                     </div>
@@ -73,8 +73,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary" id="surveyorFilterBtn">Apply Filter</button>
-                <button class="btn btn-sm btn-danger" id="faultyFilterBtn"><i class="fa fa-exclamation-triangle"></i> Show All Faulty</button>
+                <button class="btn btn-sm btn-primary" id="surveyorFilterBtn">@Resources.Language.Apply_Filter</button>
+                <button class="btn btn-sm btn-danger" id="faultyFilterBtn"><i class="fa fa-exclamation-triangle"></i> @Resources.Language.Show_All_Faulty</button>
             </div>
         </div>
     </div>
@@ -162,11 +162,11 @@
     function createSurveyorContent(type, content, text) {
         var htmltxt = "";
         if (type === "Image") {
-            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> Image Taken</h4>';
+            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> @Resources.Language.Images_Taken</h4>';
             htmltxt += '<div class="col-md-12"><img src="' + content + '" style="width: 250px; height: 250px;"/></div>';
             htmltxt += '<br/><div class="col-md-12"><span> - ' + text + '</span></div><hr/></div>';
         } else if (type === "Voice") {
-            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> Voice Memo Taken</h4></div>';
+            htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> @Resources.Language.Voice_Memos</h4></div>';
             htmltxt += '<audio width="100%" height="32" style="width:100%;" controls="controls" preload="none">';
             htmltxt += '<source src="' + content + '" type="audio/mp4"></audio><hr />';
             htmltxt += '<div class="col-md-12"><span> - ' + text + '</span></div>';

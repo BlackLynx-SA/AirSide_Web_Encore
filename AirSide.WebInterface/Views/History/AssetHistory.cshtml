@@ -4,11 +4,8 @@
         <div class="col-md-12">
             <ul id="historyTab" class="nav nav-tabs bordered">
                 <li class="active">
-                    <a href="#s2" data-toggle="tab"><i class="fa fa-fw fa-lg fa-map-marker"></i> Asset Map</a>
+                    <a href="#s2" data-toggle="tab"><i class="fa fa-fw fa-lg fa-map-marker"></i> @Resources.Language.Map_View</a>
                 </li>
-                @*<li>
-                    <a href="#s1" data-toggle="tab"><i class="fa fa-search"></i> Search for Asset</a>
-                </li>*@
             </ul>
 
             <div id="historyTabContent" class="tab-content padding-10">
@@ -139,11 +136,11 @@
                         });
                         html += '</p>';
                     } else if (v.type === 1) {
-                        html += '<p><b>' + v.content[0] + '</b> performed "<i>' + v.content[1] + '"</i> task</p>';
+                        html += '<p><b>' + v.content[0] + '</b> @Resources.Language.Performed "<i>' + v.content[1] + '"</i> @Resources.Language.Task</p>';
                     } else if (v.type === 4) {
                         html += '<p>' + v.content[0] + '</p>';
                     } else if (v.type === 5) {
-                        html += '<p><b>' + v.content[0] + '</b> performed the following checks:<br/>' + v.content[1] + '</p>';
+                        html += '<p><b>' + v.content[0] + '</b> @Resources.Language.Performed_Following_Checks:<br/>' + v.content[1] + '</p>';
                     }
 
                     html += '</div></div></li>';
@@ -154,7 +151,7 @@
 
             if (j === 0) {
                 $.smallBox({
-                    title: "No History",
+                    title: "@Resources.Language.No_History",
                     content: "The asset you selected has no history.",
                     color: "#5384AF",
                     timeout: 4000,
@@ -163,7 +160,7 @@
             }
 
             //Add Load more button
-            var html = '<li class="text-center"><a href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-arrow-down text-muted"></i> LOAD MORE</a></li>';
+            var html = '<li class="text-center"><a href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-arrow-down text-muted"></i> @Resources.Language.Load_More</a></li>';
 
             $('#assetTimeLine').append(html);
         }

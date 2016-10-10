@@ -1176,7 +1176,6 @@
     <Content Include="Views\iOS\iOSImages.cshtml" />
     <Content Include="Views\Asset\_MapView.cshtml" />
     <Content Include="Views\iOS\_ReleaseNotes.cshtml" />
-    <Content Include="Views\History\TSTest.cshtml" />
     <Content Include="Views\Shifts\_MaintenanceChecks.cshtml" />
     <Content Include="Views\Reporting\ShiftReport.cshtml" />
     <Content Include="Views\Reporting\_ShiftsDateRange.cshtml" />
@@ -1253,6 +1252,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Language.resx</DependentUpon>
     </Compile>
+    <Compile Include="App_GlobalResources\Language1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Language.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Helpers\HandleAntiforgeryTokenErrorAttribute.cs" />
     <Compile Include="App_Helpers\DashRouteHandler.cs" />
     <Compile Include="App_Helpers\StringExtensions.cs" />
@@ -1320,8 +1324,8 @@
   <ItemGroup>
     <Content Include="App_GlobalResources\Language.resx">
       <Generator>GlobalResourceProxyGenerator</Generator>
-      <LastGenOutput>Language.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Language1.designer.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

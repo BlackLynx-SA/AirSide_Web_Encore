@@ -319,19 +319,19 @@
     <value>Zeige spezielle Bauteile</value>
   </data>
   <data name="Note_All_Assets" xml:space="preserve">
-    <value>Anmerkung: Hier sind alle im System geladenen Bauteile. Um alle anzuzeigen hier klicken</value>
+    <value>Hier sind alle im System geladenen Bauteile. Um alle anzuzeigen hier klicken</value>
   </data>
   <data name="Maintenance_Cycle" xml:space="preserve">
     <value>Wartungszyklus</value>
   </data>
   <data name="Note_Maintenance_Filter" xml:space="preserve">
-    <value>Anmerkung: Filtert alle Bauteile nach Wartungsintervall für die ausgewählte Aufgabe</value>
+    <value>Filtert alle Bauteile nach Wartungsintervall für die ausgewählte Aufgabe</value>
   </data>
   <data name="Show_Assets_Clustered" xml:space="preserve">
     <value>Zeigt alle gruppierten Bauteile</value>
   </data>
   <data name="Hint_Data_Visualization" xml:space="preserve">
-    <value>Hinweis: Diese Daten Visualisierung gruppiert
+    <value>Diese Daten Visualisierung gruppiert
  Bauteile zusammen</value>
   </data>
   <data name="Area_Filter" xml:space="preserve">
@@ -344,7 +344,7 @@
     <value>Teilbereiche</value>
   </data>
   <data name="Note_Area_Filter" xml:space="preserve">
-    <value>Anmerkung: Diese Gebiete sind nach den 
+    <value>Diese Gebiete sind nach den 
 Hauptbereichen gefiltert</value>
   </data>
   <data name="Apply_Filter" xml:space="preserve">
@@ -396,11 +396,11 @@ Hauptbereichen gefiltert</value>
     <value>verfügbare Termine</value>
   </data>
   <data name="Note_Photometric" xml:space="preserve">
-    <value>Anmerkung: Diese Liste enthält nur Daten worauf sich 
+    <value>Diese Liste enthält nur Daten worauf sich 
 die photometrische Messungen beziehen</value>
   </data>
   <data name="Note_Failed_Lights" xml:space="preserve">
-    <value>Anmerkung: Dieser Filter zeigt nur defekte Feuer</value>
+    <value>Dieser Filter zeigt nur defekte Feuer</value>
   </data>
   <data name="Only_show_faulty_lights" xml:space="preserve">
     <value>Zeigt nur fehlerhafte Feuer</value>
@@ -440,7 +440,7 @@ die photometrische Messungen beziehen</value>
 Um alle anzuzeigen hier klicken.</value>
   </data>
   <data name="Note_Permit_Issued" xml:space="preserve">
-    <value>Anmerkung: Bitte ausfüllen, wenn eine Genehmigung zum 
+    <value>Bitte ausfüllen, wenn eine Genehmigung zum 
 Betreten der Flugbetriebsflächen ausgestellt wurde</value>
   </data>
   <data name="Info_External_Reference" xml:space="preserve">
@@ -487,7 +487,7 @@ offene Schichten herunterladen oder erstellen.</value>
     <value>Als vertraulich kennzeichnen</value>
   </data>
   <data name="Note_Viewable" xml:space="preserve">
-    <value>Anmerkung: Wenn dieses Ereignis ausgewählt wir 
+    <value>Wenn dieses Ereignis ausgewählt wir 
 ist es nur von ihnen zu sehen</value>
   </data>
   <data name="Add_Event" xml:space="preserve">
@@ -563,11 +563,11 @@ ist es nur von ihnen zu sehen</value>
     <value>Bild Bauteil</value>
   </data>
   <data name="Note_Url_Reference" xml:space="preserve">
-    <value>Anmerkung: Die ist eine URL die den Bezug zum 
+    <value>Die ist eine URL die den Bezug zum 
 Bauteil herstellt</value>
   </data>
   <data name="Hint_Load_Images" xml:space="preserve">
-    <value>Hinweis: Sie können zusätzliche Abbildungen 
+    <value>Sie können zusätzliche Abbildungen 
 in die Bibliothek laden.</value>
   </data>
   <data name="Add_Task" xml:space="preserve">
@@ -586,7 +586,7 @@ in die Bibliothek laden.</value>
     <value>Wartungsintervalle</value>
   </data>
   <data name="Hint_Frequency" xml:space="preserve">
-    <value>Hinweis: Dies ist die Wartungshäufigkeit in Tagen</value>
+    <value>Dies ist die Wartungshäufigkeit in Tagen</value>
   </data>
   <data name="Add_Maintenance_Task" xml:space="preserve">
     <value>Wartungsaufgaben hinzufügen</value>
@@ -858,7 +858,7 @@ Black Lynx, 2016</value>
     <value>Monat</value>
   </data>
   <data name="Note" xml:space="preserve">
-    <value>Hinweis</value>
+    <value>Anmerkung</value>
   </data>
   <data name="Note_Add_To_List" xml:space="preserve">
     <value>Die Einzelteile werden hinzugefügt werden unten aufgelistet. Wenn Sie bereit sind, können Sie es auf dem Server speichern.</value>
@@ -889,5 +889,83 @@ Black Lynx, 2016</value>
   </data>
   <data name="Web_Application" xml:space="preserve">
     <value>Internetanwendung</value>
+  </data>
+  <data name="Here" xml:space="preserve">
+    <value>klick</value>
+  </data>
+  <data name="This_Is_All_Asset_Types" xml:space="preserve">
+    <value>Dies ist alle geladenen Asset-Typen im system. So zeigen hier alle</value>
+  </data>
+  <data name="No_Data" xml:space="preserve">
+    <value>Keine Daten</value>
+  </data>
+  <data name="Recently_Updated" xml:space="preserve">
+    <value>Kürzlich aktualisiert</value>
+  </data>
+  <data name="Add_New_User" xml:space="preserve">
+    <value>Neuen Benutzer hinzufügen</value>
+  </data>
+  <data name="Asset_Has_No_History" xml:space="preserve">
+    <value>Das Asset, keine Geschichte ausgewählt hat.</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="Cluster_Visualize" xml:space="preserve">
+    <value>Diese Datenvisualisierung Gruppen Vermögenswerte zusammen.</value>
+  </data>
+  <data name="Complete_Shift" xml:space="preserve">
+    <value>Komplette Verschiebung</value>
+  </data>
+  <data name="Custom_Shift_Created" xml:space="preserve">
+    <value>Vermögenswerte wurden zu dieser benutzerdefinierten Verschiebung hinzugefügt. Sie können alle Verschiebungen unter der Einsatzplanung Abschnitt anzuzeigen</value>
+  </data>
+  <data name="Error_Custom_Shift" xml:space="preserve">
+    <value>Fehler eine benutzerdefinierte Verschiebung zu schaffen</value>
+  </data>
+  <data name="Error_Retrieve_Asset_Type" xml:space="preserve">
+    <value>Fehler beim Abrufen der Asset-Typen</value>
+  </data>
+  <data name="Filter_According_to_Cycle" xml:space="preserve">
+    <value>Dadurch werden die Vermögen pro Wartungszyklus für die ausgewählte Aufgabe zu filtern.</value>
+  </data>
+  <data name="No_Assets" xml:space="preserve">
+    <value>Keine Assets</value>
+  </data>
+  <data name="No_History" xml:space="preserve">
+    <value>Keine Geschichte</value>
+  </data>
+  <data name="Password_Changed" xml:space="preserve">
+    <value>Passwort geändert</value>
+  </data>
+  <data name="Password_Has_Changed" xml:space="preserve">
+    <value>Das Passwort wurde geändert</value>
+  </data>
+  <data name="Performed" xml:space="preserve">
+    <value>durchgeführt</value>
+  </data>
+  <data name="Performed_Following_Checks" xml:space="preserve">
+    <value>geführt, um die folgenden Prüfungen</value>
+  </data>
+  <data name="Photometric_Data_For" xml:space="preserve">
+    <value>Photometrisch daten für</value>
+  </data>
+  <data name="Please_Enter_Password" xml:space="preserve">
+    <value>Bitte Passwort eingeben</value>
+  </data>
+  <data name="Reset_Password" xml:space="preserve">
+    <value>Passwort zurücksetzen</value>
+  </data>
+  <data name="Select_Assets_For_Shift" xml:space="preserve">
+    <value>Bitte wählen Sie Vermögenswerte eine Verschiebung zu erstellen</value>
+  </data>
+  <data name="Shift_Created" xml:space="preserve">
+    <value>Erstellt Verschiebung</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>aufgabe</value>
+  </data>
+  <data name="This_Will_Change_Password" xml:space="preserve">
+    <value>Dadurch wird das Benutzerpasswort ändern. Fortsetzen</value>
   </data>
 </root>

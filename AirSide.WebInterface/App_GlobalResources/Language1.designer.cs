@@ -1744,6 +1744,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter a password.
+        /// </summary>
+        internal static string Please_Enter_Password {
+            get {
+                return ResourceManager.GetString("Please_Enter_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Previous .
         /// </summary>
         internal static string Previous_ {

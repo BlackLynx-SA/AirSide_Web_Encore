@@ -33,7 +33,7 @@
             <span class="btn-label">
                 <i class="fa fa-lightbulb-o"></i>
             </span>
-            Assets
+            @Resources.Language.Assets
         </button>
 
         @* Area Filter Buttons *@
@@ -44,7 +44,7 @@
             <span class="btn-label">
                 <i class="fa fa-road"></i>
             </span>
-            Areas
+            @Resources.Language.Areas
         </button>
 
         @* Visual Surveyor Buttons *@
@@ -66,7 +66,7 @@
             <span class="btn-label">
                 <i class="fa fa-sun-o "></i>
             </span>
-            Photometric
+            @Resources.Language.Photometric
         </button>
 
         @* AutoCAD Buttons *@
@@ -86,8 +86,8 @@
                 <i class="fa fa-calendar "></i> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
-                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">Create Shift</a></li>
+                <li><a href="#" onclick="showRectangle();">@Resources.Language.Show_Hide_Selector</a></li>
+                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">@Resources.Language.Create_Shift</a></li>
             </ul>
         </div>
         <div class="btn-group hidden-sm hidden-xs hidden-md">
@@ -95,11 +95,11 @@
                 <span class="btn-label">
                     <i class="fa fa-calendar "></i>
                 </span>
-                Shifts <i class="fa fa-caret-down"></i>
+                @Resources.Language.Shifts <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="showRectangle();">Show/Hide Selector</a></li>
-                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">Create Shift</a></li>
+                <li><a href="#" onclick="showRectangle();">@Resources.Language.Show_Hide_Selector</a></li>
+                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">@Resources.Language.Create_Shift</a></li>
             </ul>
         </div>
 
@@ -149,13 +149,13 @@
                 <span class="btn-label">
                     <i class="fa fa-map-marker "></i>
                 </span>
-                Map Type <i class="fa fa-caret-down"></i>
+                @Resources.Language.Map_Type <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="changeMap('Hybrid');">Hybrid</a></li>
-                <li><a href="#" onclick="changeMap('Satellite');">Satellite</a></li>
-                <li><a href="#" onclick="changeMap('Roadmap');">Road Map</a></li>
-                <li><a href="#" onclick="changeMap('Terrain');">Terrain</a></li>
+                <li><a href="#" onclick="changeMap('Hybrid');">@Resources.Language.Hybrid</a></li>
+                <li><a href="#" onclick="changeMap('Satellite');">@Resources.Language.Satellite</a></li>
+                <li><a href="#" onclick="changeMap('Roadmap');">@Resources.Language.Road_Map</a></li>
+                <li><a href="#" onclick="changeMap('Terrain');">@Resources.Language.Terrain</a></li>
             </ul>
         </div>
     </div>
@@ -174,10 +174,22 @@
     Html.RenderPartial("_ShiftCreate");
 }
 
+
+@{
+    var src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization&language=";
+    if (Request.Cookies["_culture"] != null)
+    {
+        var culture = Request.Cookies["_culture"].Value;
+        src += culture;
+    }
+    else
+    {
+        src += "en";
+    }
+}
+
 @section pagespecific{
-    <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization">
-    </script>
+    <script type="text/javascript" src="@src"></script>
     
     <script src="~/Scripts/TypeScripts/Map/GeoInfo.js"></script>
 

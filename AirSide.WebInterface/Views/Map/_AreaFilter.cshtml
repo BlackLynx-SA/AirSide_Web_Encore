@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title"><i class="fa fa-road txt-color-blue fa-2x"></i> Area Filter</h4>
+                <h4 class="modal-title"><i class="fa fa-road txt-color-blue fa-2x"></i> @Resources.Language.Area_Filter</h4>
             </div>
             <div class="modal-body">
                 <form class="smart-form">
@@ -13,7 +13,7 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="areaFilterRadio" checked="checked" value="main">
-                                <i></i>Main Maintenance Areas
+                                <i></i>@Resources.Language.Main_Maintenance_Areas
                             </label>
                             <label class="select">
                                 @Html.DropDownList("mainAreas", null, String.Empty)<i></i>
@@ -24,12 +24,12 @@
                         <section class="col col-10">
                             <label class="radio">
                                 <input type="radio" name="areaFilterRadio" value="sub">
-                                <i></i>Sub Areas
+                                <i></i>@Resources.Language.Sub_Areas
                             </label>
                             <label class="select">
                                 <select id="subAreas"></select><i></i>
                             </label>
-                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> Note:</strong> These areas are filtered according to the main area.</div>
+                            <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.Note_Area_Filter</div>
                         </section>
                     </div>
                     <hr /><br />
@@ -37,9 +37,9 @@
                         <section class="col col-11">
                             <label class="checkbox">
                                 <input id="clusteredAreaChk" type="checkbox" name="checkbox">
-                                <i></i>Show Asset Clustered
+                                <i></i>@Resources.Language.Show_Assets_Clustered
                             </label>
-                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> Hint:</strong> This data visualization groups assets together.</div>
+                            <div class="note"><strong><i class="fa fa-lightbulb-o"></i> @Resources.Language.Note</strong> @Resources.Language.Hint_Data_Visualization</div>
                         </section>
                     </div>
                     <div class="row">
@@ -50,7 +50,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-sm btn-primary" style="float:right" id="areaFilterBtn">Apply Filter</button>
+                <button class="btn btn-sm btn-primary" style="float:right" id="areaFilterBtn">@Resources.Language.Apply_Filter</button>
             </div>
         </div>
     </div>

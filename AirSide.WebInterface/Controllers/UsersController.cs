@@ -18,21 +18,19 @@ using AirSide.ServerModules.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
     [Authorize]
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
-        private readonly Entities db = new Entities();
-        private readonly CacheHelper cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+        private readonly Entities _db = new Entities();
+        private readonly CacheHelper _cache = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -74,13 +72,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllUsers()
+        public JsonResult GetAllUsers()
         {
             try
             {
-                var users = (from x in db.UserProfiles
-                             join y in db.as_airportProfile on x.i_airPortId equals y.i_airPortId
-                             join z in db.as_accessProfile on x.i_accessLevelId equals z.i_accessLevelId
+                var users = (from x in _db.UserProfiles
+                             join y in _db.as_airportProfile on x.i_airPortId equals y.i_airPortId
+                             join z in _db.as_accessProfile on x.i_accessLevelId equals z.i_accessLevelId
                              select new { 
                                 userId = x.UserId,
                                 firstName = x.FirstName,
@@ -93,7 +91,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch(Exception err)
             {
-                cache.Log("Failed to retrieve all users: " + err.Message, "getAllUsers", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all users: " + err.Message, "getAllUsers", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -107,19 +105,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var systemUser = db.UserProfiles.Find(userId);
-                var userToChange = db.AspNetUsers.Find(systemUser.aspId);
+                var systemUser = _db.UserProfiles.Find(userId);
+                var userToChange = _db.AspNetUsers.Find(systemUser.aspId);
 
-                String hashedNewPassword = UserManager.PasswordHasher.HashPassword(password);
+                var hashedNewPassword = UserManager.PasswordHasher.HashPassword(password);
                 userToChange.PasswordHash = hashedNewPassword;
-                db.Entry(userToChange).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(userToChange).State = EntityState.Modified;
+                _db.SaveChanges();
 
                 return Json(systemUser);
             }
             catch(Exception err)
             {
-                cache.Log("Failed to change password: " + err.Message, "ChangePassword", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to change password: " + err.Message, "ChangePassword", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 return Json(err.Message);
             }
         }
@@ -130,42 +128,42 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             if (Request.IsAuthenticated)
             {
-                var currentUser = from user in db.UserProfiles
+                var currentUser = from user in _db.UserProfiles
                                   where user.UserName == User.Identity.Name
                                   select user;
 
-                int accessLevel = currentUser.First().i_accessLevelId;
-                int airportId = currentUser.First().i_airPortId;
+                var accessLevel = currentUser.First().i_accessLevelId;
+                var airportId = currentUser.First().i_airPortId;
                 if (accessLevel == 1)
                 {
-                    ViewBag.i_airPortId = new SelectList(db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
-                    ViewBag.accessLevel = new SelectList(db.as_accessProfile, "i_accessLevelId", "vc_description");
+                    ViewBag.i_airPortId = new SelectList(_db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile, "i_accessLevelId", "vc_description");
                     return View();
                 }
-                else if (accessLevel == 2)
+                if (accessLevel == 2)
                 {
-                    var airPort = from airports in db.as_airportProfile
-                                  where airports.i_airPortId == airportId
-                                  select airports;
+                    var airPort = from airports in _db.as_airportProfile
+                        where airports.i_airPortId == airportId
+                        select airports;
                     ViewBag.i_airPortId = new SelectList(airPort, "i_airPortId", "vc_airPortDescription");
-                    ViewBag.accessLevel = new SelectList(db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
                     return View();
                 }
-                else return HttpNotFound();
+                return HttpNotFound();
             }
-            else return HttpNotFound();
+            return HttpNotFound();
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult insertGroupAssosiation(int techId, int groupId, int updateType)
+        public JsonResult InsertGroupAssosiation(int techId, int groupId, int updateType)
         {
             try
             {
                 //Find and update current entry
-                var user = db.as_technicianGroupProfile.Find(techId);
+                var user = _db.as_technicianGroupProfile.Find(techId);
                 
                 //Update either Current(0) or Default(1) Group
                 if (updateType == 0)
@@ -173,17 +171,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 else if (updateType == 1)
                     user.i_defaultGroup = groupId;
 
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                _db.Entry(user).State = EntityState.Modified;
+                _db.SaveChanges();
 
                 //update iOS Cache Hash
-                cache.UpdateiOsCache("getGroupsTechnicians");
+                _cache.UpdateiOsCache("getGroupsTechnicians");
 
                 return Json(user);
             }
             catch (Exception err)
             {
-                cache.Log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to insert tech group assosiation: " + err.Message, "insertGroupAssosiation", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -193,21 +191,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult addNewGroup(string groupName)
+        public JsonResult AddNewGroup(string groupName)
         {
             try
             {
-                as_technicianGroups group = new as_technicianGroups();
+                var group = new as_technicianGroups();
                 group.vc_externalRef = groupName;
                 group.vc_groupName = groupName;
-                db.as_technicianGroups.Add(group);
-                db.SaveChanges();
+                _db.as_technicianGroups.Add(group);
+                _db.SaveChanges();
 
                 return Json(group);
             }
             catch(Exception err)
             {
-                cache.Log("Failed to add new technician group: " + err.Message, "addNewGroup", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to add new technician group: " + err.Message, "addNewGroup", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -216,13 +214,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllTechnicians()
+        public JsonResult GetAllTechnicians()
         {
             try
             {
-                var techs = (from x in db.as_technicianGroupProfile
-                             join y in db.UserProfiles on x.UserId equals y.UserId
-                             join z in db.as_technicianGroups on x.i_defaultGroup equals z.i_groupId
+                var techs = (from x in _db.as_technicianGroupProfile
+                             join y in _db.UserProfiles on x.UserId equals y.UserId
+                             join z in _db.as_technicianGroups on x.i_defaultGroup equals z.i_groupId
                              select new { 
                                 techName = y.FirstName + " " + y.LastName,
                                 defaultGroup = x.i_defaultGroup,
@@ -234,7 +232,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                cache.Log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve all technicians: " + err.Message, "getAllTechnicians", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -243,16 +241,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
         [HttpPost]
-        public JsonResult getAllTechnicianGroups()
+        public JsonResult GetAllTechnicianGroups()
         {
             try
             {
-                var techgroups = db.as_technicianGroups.ToList();
+                var techgroups = _db.as_technicianGroups.ToList();
                 return Json(techgroups);
             }
             catch(Exception err)
             {
-                cache.Log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _cache.Log("Failed to retrieve technician groups: " + err.Message, "getAllTechnicianGroups", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -270,8 +268,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 if (model.accessLevel == 3)
                 {
                     model.Password = "1234";
-                    string fName = model.FirstName.ToLower().Replace("-", "").Replace(".","").Replace(" ","").Replace("'", "");
-                    string lName = model.LastName.ToLower().Replace("-", "").Replace(".", "").Replace(" ", "").Replace("'", "").Substring(0, 3);
+                    var fName = model.FirstName.ToLower().Replace("-", "").Replace(".","").Replace(" ","").Replace("'", "");
+                    var lName = model.LastName.ToLower().Replace("-", "").Replace(".", "").Replace(" ", "").Replace("'", "").Substring(0, 3);
                     model.UserName = fName + lName;
                 }
                 else
@@ -279,101 +277,89 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     model.UserName = model.EmailAddress;
                 }
 
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser() { UserName = model.UserName, Email = model.EmailAddress };
                 var result = await UserManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    var createdUser = (from data in db.AspNetUsers
-                                       where data.UserName == model.UserName
-                                       select data).First();
-
                     //Create User Profile
-                    UserProfile newUser = new UserProfile();
-                    newUser.UserName = model.UserName;
-                    newUser.FirstName = model.FirstName;
-                    newUser.LastName = model.LastName;
-                    newUser.EmailAddress = model.EmailAddress;
-                    newUser.i_airPortId = model.i_airPortId;
-                    newUser.i_accessLevelId = model.accessLevel;
-                    newUser.dt_dateCreated = DateTime.Now;
-                    newUser.aspId = createdUser.Id;
-                    db.UserProfiles.Add(newUser);
-                    db.SaveChanges();
-
-                    //Update ASP Table
-                    AspNetUser aspUser = db.AspNetUsers.Find(createdUser.Id);
-                    aspUser.Email = model.EmailAddress;
-                    db.Entry(aspUser).State = EntityState.Modified;
-                    db.SaveChanges();
+                    var newUser = new UserProfile
+                    {
+                        UserName = model.UserName,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        EmailAddress = model.EmailAddress,
+                        i_airPortId = model.i_airPortId,
+                        i_accessLevelId = model.accessLevel,
+                        dt_dateCreated = DateTime.Now,
+                        aspId = user.Id
+                    };
+                    _db.UserProfiles.Add(newUser);
+                    _db.SaveChanges();
 
                     //Create User Default Technician Group
-                    as_technicianGroupProfile newTech = new as_technicianGroupProfile();
-                    newTech.UserId = newUser.UserId;
-                    newTech.i_currentGroup = 10000;
-                    newTech.i_defaultGroup = 10000;
-                    db.as_technicianGroupProfile.Add(newTech);
-                    db.SaveChanges();
+                    var newTech = new as_technicianGroupProfile
+                    {
+                        UserId = newUser.UserId,
+                        i_currentGroup = 10000,
+                        i_defaultGroup = 10000
+                    };
+                    _db.as_technicianGroupProfile.Add(newTech);
+                    _db.SaveChanges();
 
                     ViewBag.message = model.UserName;
                     ViewBag.messageHead = "User Created";
                     return RedirectToAction("ViewAllUsers", "Users");
                 }
-                else
-                {
-                    var currentUser = from data in db.UserProfiles
-                                      where user.UserName == User.Identity.Name
-                                      select data;
+                var currentUser = from data in _db.UserProfiles
+                    where user.UserName == User.Identity.Name
+                    select data;
 
-                    int accessLevel = currentUser.First().i_accessLevelId;
-                    int airportId = currentUser.First().i_airPortId;
-                    if (accessLevel == 1)
-                    {
-                        ViewBag.i_airPortId = new SelectList(db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
-                        ViewBag.accessLevel = new SelectList(db.as_accessProfile, "i_accessLevelId", "vc_description");
-                        return View();
-                    }
-                    else if (accessLevel == 2)
-                    {
-                        var airPort = from airports in db.as_airportProfile
-                                      where airports.i_airPortId == airportId
-                                      select airports;
-                        ViewBag.i_airPortId = new SelectList(airPort, "i_airPortId", "vc_airPortDescription");
-                        ViewBag.accessLevel = new SelectList(db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
-                        return View();
-                    }
-                    else return HttpNotFound();
+                var accessLevel = currentUser.First().i_accessLevelId;
+                var airportId = currentUser.First().i_airPortId;
+                if (accessLevel == 1)
+                {
+                    ViewBag.i_airPortId = new SelectList(_db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile, "i_accessLevelId", "vc_description");
+                    return View();
                 }
+                if (accessLevel == 2)
+                {
+                    var airPort = from airports in _db.as_airportProfile
+                        where airports.i_airPortId == airportId
+                        select airports;
+                    ViewBag.i_airPortId = new SelectList(airPort, "i_airPortId", "vc_airPortDescription");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
+                    return View();
+                }
+                return HttpNotFound();
             }
-            else
+            if (Request.IsAuthenticated)
             {
-                if (Request.IsAuthenticated)
-                {
-                    var currentUser = from user in db.UserProfiles
-                                      where user.UserName == User.Identity.Name
-                                      select user;
+                var currentUser = from user in _db.UserProfiles
+                    where user.UserName == User.Identity.Name
+                    select user;
 
-                    int accessLevel = currentUser.First().i_accessLevelId;
-                    int airportId = currentUser.First().i_airPortId;
-                    if (accessLevel == 1)
-                    {
-                        ViewBag.i_airPortId = new SelectList(db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
-                        ViewBag.accessLevel = new SelectList(db.as_accessProfile, "i_accessLevelId", "vc_description");
-                        return View();
-                    }
-                    else if (accessLevel == 2)
-                    {
-                        var airPort = from airports in db.as_airportProfile
-                                      where airports.i_airPortId == airportId
-                                      select airports;
-                        ViewBag.i_airPortId = new SelectList(airPort, "i_airPortId", "vc_airPortDescription");
-                        ViewBag.accessLevel = new SelectList(db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
-                        return View();
-                    }
-                    else return HttpNotFound();
+                var accessLevel = currentUser.First().i_accessLevelId;
+                var airportId = currentUser.First().i_airPortId;
+                if (accessLevel == 1)
+                {
+                    ViewBag.i_airPortId = new SelectList(_db.as_airportProfile, "i_airPortId", "vc_airPortDescription");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile, "i_accessLevelId", "vc_description");
+                    return View();
                 }
-                else return HttpNotFound();
+                if (accessLevel == 2)
+                {
+                    var airPort = from airports in _db.as_airportProfile
+                        where airports.i_airPortId == airportId
+                        select airports;
+                    ViewBag.i_airPortId = new SelectList(airPort, "i_airPortId", "vc_airPortDescription");
+                    ViewBag.accessLevel = new SelectList(_db.as_accessProfile.Where(q => q.i_accessLevelId != 1), "i_accessLevelId", "vc_description");
+                    return View();
+                }
+                return HttpNotFound();
             }
+            return HttpNotFound();
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
