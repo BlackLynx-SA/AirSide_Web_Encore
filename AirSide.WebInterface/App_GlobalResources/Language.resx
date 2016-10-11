@@ -501,7 +501,7 @@
   <data name="Start_Date" xml:space="preserve">
     <value>Start Date</value>
   </data>
-  <data name="Previous_" xml:space="preserve">
+  <data name="Previous" xml:space="preserve">
     <value>Previous </value>
   </data>
   <data name="Next" xml:space="preserve">
@@ -709,7 +709,7 @@
     <value>Upload File</value>
   </data>
   <data name="Drop_files" xml:space="preserve">
-    <value>Drop Files to upload (or Click)</value>
+    <value>Drop Files to upload</value>
   </data>
   <data name="File_Description" xml:space="preserve">
     <value>File Description</value>
@@ -956,5 +956,119 @@
   </data>
   <data name="This_Will_Change_Password" xml:space="preserve">
     <value>This will change the user password. Continue</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="Change_Title_To_Update" xml:space="preserve">
+    <value>Change title to update and save instantly!</value>
+  </data>
+  <data name="Create_New_Group" xml:space="preserve">
+    <value>Create New Group</value>
+  </data>
+  <data name="Default_Group_Updated" xml:space="preserve">
+    <value>Default Group Updated</value>
+  </data>
+  <data name="Default_Technician_Group_Updated" xml:space="preserve">
+    <value>Default Technician Group Updated</value>
+  </data>
+  <data name="Delete_File_From_Server" xml:space="preserve">
+    <value>This will delete the file from the server. Continue?</value>
+  </data>
+  <data name="Group_Added" xml:space="preserve">
+    <value>Group Added</value>
+  </data>
+  <data name="Group_Name" xml:space="preserve">
+    <value>Group Name</value>
+  </data>
+  <data name="Name_New_Group" xml:space="preserve">
+    <value>Please enter a name for the new group</value>
+  </data>
+  <data name="New_Tech_Group_Added" xml:space="preserve">
+    <value>New technician group added</value>
+  </data>
+  <data name="Select_Access_Level" xml:space="preserve">
+    <value>Select Access Level</value>
+  </data>
+  <data name="Select_An_Airport" xml:space="preserve">
+    <value>Select an Airport</value>
+  </data>
+  <data name="Select_Default_Group" xml:space="preserve">
+    <value>Please select a default group</value>
+  </data>
+  <data name="Technicians" xml:space="preserve">
+    <value>Technicians</value>
+  </data>
+  <data name="Technician_Added" xml:space="preserve">
+    <value>Technician added</value>
+  </data>
+  <data name="Technician_Added_To_Group" xml:space="preserve">
+    <value>Technician added to selected group.</value>
+  </data>
+  <data name="Technician_Reset" xml:space="preserve">
+    <value>Technician Reset</value>
+  </data>
+  <data name="Technician_To_Default" xml:space="preserve">
+    <value>Technician added to his default group</value>
+  </data>
+  <data name="File_Uploaded" xml:space="preserve">
+    <value>File Uploaded</value>
+  </data>
+  <data name="Image_Deleted" xml:space="preserve">
+    <value>Image Deleted</value>
+  </data>
+  <data name="Image_Updated" xml:space="preserve">
+    <value>Image Updated</value>
+  </data>
+  <data name="No_Title" xml:space="preserve">
+    <value>No Title</value>
+  </data>
+  <data name="Or_Click" xml:space="preserve">
+    <value>(or Click)</value>
+  </data>
+  <data name="Proprietry_Confidential" xml:space="preserve">
+    <value>Proprietary and confidential. Written by BlackLynx</value>
+  </data>
+  <data name="Upload_Cancelled" xml:space="preserve">
+    <value>Upload Cancelled</value>
+  </data>
+  <data name="Add_Asset" xml:space="preserve">
+    <value>Add Asset</value>
+  </data>
+  <data name="Asset_Location" xml:space="preserve">
+    <value>Asset Location</value>
+  </data>
+  <data name="Asset_Selection" xml:space="preserve">
+    <value>Asset Selection</value>
+  </data>
+  <data name="Clear_All_Files" xml:space="preserve">
+    <value>Clear All Files</value>
+  </data>
+  <data name="Light_Faulty" xml:space="preserve">
+    <value>Light Faulty</value>
+  </data>
+  <data name="Maintenance_Status" xml:space="preserve">
+    <value>Maintenance Status</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="Threshold_For_Failure" xml:space="preserve">
+    <value>Threshold for Failure</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Upload_CSV" xml:space="preserve">
+    <value>Upload CSV</value>
+  </data>
+  <data name="Upload_Image" xml:space="preserve">
+    <value>Upload Image</value>
   </data>
 </root>

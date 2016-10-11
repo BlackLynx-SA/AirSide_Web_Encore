@@ -48,8 +48,21 @@
 </div>
 <!-- END MAIN CONTENT -->
 
+@{
+    var src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization&language=";
+    if (Request.Cookies["_culture"] != null)
+    {
+        var culture = Request.Cookies["_culture"].Value;
+        src += culture;
+    }
+    else
+    {
+        src += "en";
+    }
+}
+
 <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=false&libraries=visualization">
+        src="@src">
 </script>
 
 @section PageScripts
@@ -152,7 +165,7 @@
             if (j === 0) {
                 $.smallBox({
                     title: "@Resources.Language.No_History",
-                    content: "The asset you selected has no history.",
+                    content: "@Resources.Language.Asset_Has_No_History",
                     color: "#5384AF",
                     timeout: 4000,
                     icon: "fa fa-history"

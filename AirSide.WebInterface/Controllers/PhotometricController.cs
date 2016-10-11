@@ -141,7 +141,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var data =
                 _db.as_photometricProfile.OrderByDescending(q => q.dateOfRun)
                     .ToList()
-                    .Select(q => q.dateOfRun.ToString("yyyy/MM/dd HH:mm"))
+                    .Select(q => q.dateOfRun.ToString("yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture))
                     .Distinct();
 
             return Json(data.ToList(), JsonRequestBehavior.AllowGet);
@@ -152,22 +152,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public async Task<JsonResult> GetPhotometricData(string selectedDate)
         {
-            var date = DateTime.ParseExact(selectedDate, "yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture);
+            try
+            {
+                var date = DateTime.ParseExact(selectedDate, "yyyy/MM/dd HH:mm", CultureInfo.InvariantCulture);
 
-            var data = await (from x in _db.as_photometricProfile
-                       join y in _db.as_assetProfile on x.assetId equals y.i_assetId
-                        where x.dateOfRun == date
-                        select new
-                        {
-                            Id = x.id,
-                            SerialNumber = y.vc_serialNumber,
-                            MaxIntensity = x.maxIntensity,
-                            AvgIntensity = x.averageIntensity,
-                            ICAO = x.icaoPercentage,
-                            PictureUrl = x.pictureUrl
-                        }).ToListAsync();
+                var data = await (from x in _db.as_photometricProfile
+                    join y in _db.as_assetProfile on x.assetId equals y.i_assetId
+                    where x.dateOfRun == date
+                    select new
+                    {
+                        Id = x.id,
+                        SerialNumber = y.vc_serialNumber,
+                        MaxIntensity = x.maxIntensity,
+                        AvgIntensity = x.averageIntensity,
+                        ICAO = x.icaoPercentage,
+                        PictureUrl = x.pictureUrl
+                    }).ToListAsync();
 
-            return Json(data);
+                return Json(data);
+            }
+            catch (Exception err)
+            {
+                return Json(new {message = err.Message});
+            }
         }
 
     }

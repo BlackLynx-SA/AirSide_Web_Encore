@@ -968,4 +968,118 @@ Black Lynx, 2016</value>
   <data name="This_Will_Change_Password" xml:space="preserve">
     <value>Dadurch wird das Benutzerpasswort ändern. Fortsetzen</value>
   </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Veränderung</value>
+  </data>
+  <data name="Change_Title_To_Update" xml:space="preserve">
+    <value>Ändern Sie Titel zu aktualisieren und zu speichern sofort!</value>
+  </data>
+  <data name="Create_New_Group" xml:space="preserve">
+    <value>Erstelle eine neue Gruppe</value>
+  </data>
+  <data name="Default_Group_Updated" xml:space="preserve">
+    <value>Standardgruppe Aktualisiert</value>
+  </data>
+  <data name="Default_Technician_Group_Updated" xml:space="preserve">
+    <value>Standard Techniker Gruppe aktualisiert</value>
+  </data>
+  <data name="Delete_File_From_Server" xml:space="preserve">
+    <value>Dadurch wird die Datei vom Server zu löschen. Fortsetzen?</value>
+  </data>
+  <data name="File_Uploaded" xml:space="preserve">
+    <value>Dateien hochgeladen</value>
+  </data>
+  <data name="Group_Added" xml:space="preserve">
+    <value>Gruppe hinzugefügt</value>
+  </data>
+  <data name="Group_Name" xml:space="preserve">
+    <value>Gruppenname</value>
+  </data>
+  <data name="Image_Deleted" xml:space="preserve">
+    <value>Bild gelöscht</value>
+  </data>
+  <data name="Image_Updated" xml:space="preserve">
+    <value>Bild aktualisiert</value>
+  </data>
+  <data name="Name_New_Group" xml:space="preserve">
+    <value>Bitte geben Sie einen Namen für die neue Gruppe</value>
+  </data>
+  <data name="New_Tech_Group_Added" xml:space="preserve">
+    <value>New Techniker Gruppe hinzugefügt</value>
+  </data>
+  <data name="No_Title" xml:space="preserve">
+    <value>Kein Titel</value>
+  </data>
+  <data name="Or_Click" xml:space="preserve">
+    <value>oder klicken Sie auf</value>
+  </data>
+  <data name="Proprietry_Confidential" xml:space="preserve">
+    <value>Urheberrechtlich geschützt und vertraulich. Geschrieben von BlackLynx</value>
+  </data>
+  <data name="Select_Access_Level" xml:space="preserve">
+    <value>Wählen Sie Zugriffsebene</value>
+  </data>
+  <data name="Select_An_Airport" xml:space="preserve">
+    <value>Wählen Sie einen Flughafen</value>
+  </data>
+  <data name="Select_Default_Group" xml:space="preserve">
+    <value>Bitte wählen Sie eine Standardgruppe</value>
+  </data>
+  <data name="Technicians" xml:space="preserve">
+    <value>Techniker</value>
+  </data>
+  <data name="Technician_Added" xml:space="preserve">
+    <value>Techniker hinzugefügt</value>
+  </data>
+  <data name="Technician_Added_To_Group" xml:space="preserve">
+    <value>Techniker hinzugefügt, um ausgewählte Gruppe</value>
+  </data>
+  <data name="Technician_Reset" xml:space="preserve">
+    <value>Techniker zurücksetzen</value>
+  </data>
+  <data name="Technician_To_Default" xml:space="preserve">
+    <value>Techniker hinzugefügt, um seine Standardgruppe</value>
+  </data>
+  <data name="Upload_Cancelled" xml:space="preserve">
+    <value>hochladen Cancelled</value>
+  </data>
+  <data name="Add_Asset" xml:space="preserve">
+    <value>Hinzufügen Bauteil</value>
+  </data>
+  <data name="Asset_Location" xml:space="preserve">
+    <value>Bauteil Speicherort</value>
+  </data>
+  <data name="Asset_Selection" xml:space="preserve">
+    <value>Wählen Sie Asset</value>
+  </data>
+  <data name="Clear_All_Files" xml:space="preserve">
+    <value>Alles Files</value>
+  </data>
+  <data name="Light_Faulty" xml:space="preserve">
+    <value>Licht defekt</value>
+  </data>
+  <data name="Maintenance_Status" xml:space="preserve">
+    <value>Wartungsstatus</value>
+  </data>
+  <data name="Manual" xml:space="preserve">
+    <value>Handbuch</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Auffrischen</value>
+  </data>
+  <data name="Threshold_For_Failure" xml:space="preserve">
+    <value>Schwelle für Ausfall</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Hochladen</value>
+  </data>
+  <data name="Upload_CSV" xml:space="preserve">
+    <value>Laden CSV</value>
+  </data>
+  <data name="Upload_Image" xml:space="preserve">
+    <value>Bild hochladen</value>
+  </data>
 </root>

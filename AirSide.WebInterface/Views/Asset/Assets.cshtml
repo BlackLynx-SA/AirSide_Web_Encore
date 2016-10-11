@@ -3,44 +3,36 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-th"></i>
-                Assets<span>
+                @Resources.Language.Assets<span>
                     >
-                    Loaded Assets
+                    @Resources.Language.Loaded_Assets
                 </span>
             </h1>
         </div>
-
-        @*2015/06/18 Github Issue #60 - Will add this functionality later
-
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
-                <div class="page-title">
-                    <a href="~/Asset/CreateAsset" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> New Asset</a>
-                </div>
-            </div>*@
     </div>
 
     <div class="row">
         <div class="col-md-12">
 
-            <table id="dt_assets" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
+            <table id="dt_assets" class="table table-striped table-bordered table-hover" style="display: none;" width="100%">
                 <thead>
-                    <tr>
-                        <th data-hide="expand" style="width:20px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
-                        <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> Area</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> Sub Area</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-barcode txt-color-blue"></i> Reference</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-wifi txt-color-blue hidden-md hidden-sm hidden-xs"></i> RFID</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Asset Type</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Previous</th>
-                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> Next</th>
-                        <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
-                    </tr>
+                <tr>
+                    <th data-hide="expand" style="width: 20px;"><i class="fa fa-fw fa-heart-o txt-color-blue hidden-md hidden-sm hidden-xs"></i></th>
+                    <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Area</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-map-marker txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Sub_Areas</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-barcode txt-color-blue"></i> @Resources.Language.Reference</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-wifi txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.RFID</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Description</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Asset_Types</th>
+                    <th data-class="expand"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Previous</th>
+                    <th data-hide="phone,tablet"><i class="fa fa-fw fa-calendar txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Next</th>
+                    <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Options</th>
+                </tr>
                 </thead>
                 <tbody></tbody>
 
             </table>
-            <img id="adbloader" src="~/content/img/adb_img/adb_loader.gif" />
+            <img id="adbloader" src="~/content/img/adb_img/adb_loader.gif"/>
         </div>
     </div>
 
@@ -49,6 +41,20 @@
     }
 
 </div>
+
+@{
+    var src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization&language=";
+    if (Request.Cookies["_culture"] != null)
+    {
+        var culture = Request.Cookies["_culture"].Value;
+        src += culture;
+    }
+    else
+    {
+        src += "en";
+    }
+}
+
 @section pagespecific{
     <script src="~/scripts/plugin/datatables/jquery.dataTables.min.js"></script>
     <script src="~/scripts/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -58,7 +64,7 @@
 
     <!--Google Maps-->
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=true&libraries=visualization&v=3">
+            src="@src">
     </script>
 
     <script type="text/javascript">

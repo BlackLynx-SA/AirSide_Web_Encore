@@ -12,9 +12,9 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-user"></i>
-                System Users <span>
+                @Resources.Language.System_Users <span>
                     >
-                    Create New User
+                    @Resources.Language.Create_New_User
                 </span>
             </h1>
         </div>
@@ -25,9 +25,9 @@
         <div class="col-sm-12 col-md-6">
             <div class="alert alert-block alert-success">
                 <a class="close" data-dismiss="alert" href="#">×</a>
-                <h4 class="alert-heading"><i class="fa fa-wrench"></i> Technician Users!</h4>
+                <h4 class="alert-heading"><i class="fa fa-wrench"></i> @Resources.Language.Technician_Users!</h4>
                 <p>
-                    When loading a technician, the system will user the following combination for the username: First Name + 3 Characters of the Surname. A default access code of 1234 will also be allocated for the AirSide™ iPad application. You can change or reset the password under the “View All Users” section.
+                    @Resources.Language.When_loading_Technician
                 </p>
             </div>
             @using (Html.BeginForm("Register", "Users", FormMethod.Post, new { @class = "form-horizontal smart-form", @role = "form" }))
@@ -43,22 +43,22 @@
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="FirstName"> First Name </label>
+                        <label class="label" for="FirstName"> @Resources.Language.First_Name </label>
 
                         <label class="input">
                             <i class="icon-prepend fa fa-user"></i>
-                            <input type="text" id="FirstName" name="FirstName" placeholder="First Name" />
+                            <input type="text" id="FirstName" name="FirstName" placeholder="@Resources.Language.First_Name" />
                         </label>
                     </section>
                 </div>
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="LastName"> Last Name </label>
+                        <label class="label" for="LastName"> @Resources.Language.Last_Name </label>
 
                         <label class="input">
                             <i class="icon-prepend fa fa-user"></i>
-                            <input type="text" id="LastName" name="LastName" placeholder="Last Name" />
+                            <input type="text" id="LastName" name="LastName" placeholder="@Resources.Language.Last_Name" />
                         </label>
                     </section>
                 </div>
@@ -67,46 +67,46 @@
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="EmailAddress"> Email Address </label>
+                        <label class="label" for="EmailAddress"> @Resources.Language.Email_Address </label>
 
                         <label class="input">
                             <i class="icon-prepend fa fa-envelope-o"></i>
-                            <input type="email" id="EmailAddress" name="EmailAddress" placeholder="Email Address" />
+                            <input type="email" id="EmailAddress" name="EmailAddress" placeholder="@Resources.Language.Email_Address" />
                         </label>
                     </section>
                 </div>
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="Password"> Password </label>
+                        <label class="label" for="Password"> @Resources.Language.Password </label>
 
                         <label class="input">
                             <i class="icon-prepend fa fa-lock"></i>
-                            <input type="password" id="Password" name="Password" placeholder="Password" />
+                            <input type="password" id="Password" name="Password" placeholder="@Resources.Language.Password" />
                         </label>
                     </section>
                 </div>
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="ConfirmPassword"> Confirm Password </label>
+                        <label class="label" for="ConfirmPassword"> @Resources.Language.Confirm_Password </label>
 
                         <label class="input">
                             <i class="icon-prepend fa fa-lock"></i>
-                            <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm" />
+                            <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="@Resources.Language.Confirm_Password" />
                         </label>
                     </section>
                 </div>
 
                 <div class="field-set">
                     <section>
-                        <label class="label" for="accessLevel"> Access Level </label>
+                        <label class="label" for="accessLevel"> @Resources.Language.Access_Level </label>
 
                         <label class="select">
-                            @Html.DropDownList("accessLevel", null, "Select a Access Level")
+                            @Html.DropDownList("accessLevel", null, Resources.Language.Select_Access_Level)
                             <i></i>
                             <div class="note">
-                                <strong>Note:</strong> When you register a technician a default password of "1234" will be assigned, they can change it on the iPad.
+                                <strong>@Resources.Language.Note:</strong> @Resources.Language.When_loading_Technician
                             </div>
                         </label>
                     </section>
@@ -118,14 +118,14 @@
                         @Html.LabelFor(m => m.i_airPortId, new { @class = "label" })
 
                         <label class="select">
-                            @Html.DropDownList("i_airPortId", null, "Select an Airport")
+                            @Html.DropDownList("i_airPortId", null, Resources.Language.Select_An_Airport)
                             <i></i>
                         </label>
                     </section>
                 </div>
 
                 <footer>
-                    <input type="submit" value="Register" class="btn btn-primary" />
+                    <input type="submit" value="@Resources.Language.Register" class="btn btn-primary" />
                 </footer>
 
             }

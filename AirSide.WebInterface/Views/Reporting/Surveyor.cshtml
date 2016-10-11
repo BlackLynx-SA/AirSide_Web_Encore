@@ -15,16 +15,16 @@
 
                             <li class="active">
 
-                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-camera"></i> <span class="hidden-mobile hidden-tablet"> Pictures Taken </span> </a>
+                                <a data-toggle="tab" href="#hr1"> <i class="fa fa-lg fa-camera"></i> <span class="hidden-mobile hidden-tablet"> @Resources.Language.Pictures_Taken </span> </a>
 
                             </li>
 
                             <li>
-                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-microphone"></i> <span class="hidden-mobile hidden-tablet"> Voice Memos </span> </a>
+                                <a data-toggle="tab" href="#hr2"> <i class="fa fa-lg fa-microphone"></i> <span class="hidden-mobile hidden-tablet"> @Resources.Language.Voice_Memos </span> </a>
                             </li>
 
                             <li>
-                                <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-file-text-o"></i> <span class="hidden-mobile hidden-tablet"> Text Captured </span> </a>
+                                <a data-toggle="tab" href="#hr3"> <i class="fa fa-lg fa-file-text-o"></i> <span class="hidden-mobile hidden-tablet"> @Resources.Language.Text_Captured </span> </a>
                             </li>
 
                         </ul>
@@ -70,7 +70,7 @@
                 <!-- Widget ID (each widget will need unique ID)-->
                 <div class="jarviswidget" id="surveyor-id-2" data-widget-editbutton="false" data-widget-fullscreenbutton="true" data-widget-custombutton="false" data-widget-sortable="false">
                     <header role="heading">
-                        <h2><i class="fa fa-map-marker"></i> Map View</h2>
+                        <h2><i class="fa fa-map-marker"></i> @Resources.Language.Map_View</h2>
                         <span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span>
                     </header>
 
@@ -99,12 +99,24 @@
     </section>
 </div>
 
+@{
+    var src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&libraries=visualization&language=";
+    if (Request.Cookies["_culture"] != null)
+    {
+        var culture = Request.Cookies["_culture"].Value;
+        src += culture;
+    }
+    else
+    {
+        src += "en";
+    }
+}
 
 @section pagespecific
 {
     <!--Google Maps-->
     <script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClaJpRNTFn0RCIn16khYbhiCxChMdzzyA&sensor=true&libraries=visualization&v=3">
+        src="@src">
     </script>
 
     <script src="~/Scripts/plugin/PDF.js/pdf.js"></script>

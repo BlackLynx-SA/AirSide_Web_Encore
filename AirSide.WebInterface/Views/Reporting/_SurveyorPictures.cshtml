@@ -2,14 +2,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="well well-sm bg-color-darken txt-color-white">
-            <h5>Date Range</h5>
+            <h5>@Resources.Language.Select_a_date_range</h5>
             <fieldset>
 
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <input class="form-control from" type="text" placeholder="From">
+                                <input class="form-control from" type="text" placeholder="@Resources.Language.From">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -18,7 +18,7 @@
 
                         <div class="form-group">
                             <div class="input-group">
-                                <input class="form-control to" type="text" placeholder="Select a date">
+                                <input class="form-control to" type="text" placeholder="@Resources.Language.To">
                                 <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -26,23 +26,23 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 hidden-sm">
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">This Week</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">Last Week</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">This Month</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">Last Month</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">This Year</a>
-                        <a href="#" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">Last Year</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(1)">@Resources.Language.This_Week</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(2)">@Resources.Language.Last_Week</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(3)">@Resources.Language.This_Month</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(4)">@Resources.Language.Last_Month</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(5)">@Resources.Language.This_Year</a>
+                        <a href="javascript:void(0)" class="btn btn-xs btn-info dateselect" onclick="setDateRange(6)">@Resources.Language.Last_Year</a>
                     </div>
                 </div>
             </fieldset>
             <div class="row">
                 <div class="col-sm-12">
                     <div style="  display: inline-flex; margin-top:10px;">
-                        <a href="#" class="btn btn-success" id="picturesBtn"><i class="fa fa-check"></i> Get Report</a>
+                        <a href="javascript:void(0)" class="btn btn-success" id="picturesBtn"><i class="fa fa-check"></i> @Resources.Language.Get_Report</a>
                         <form class="smart-form">
                             <label class="checkbox allAnomalies" style="margin-top:5px; margin-left:10px;">
                                 <input id="picturesAll" type="checkbox" name="checkbox">
-                                <i></i>Get All Anomalies
+                                <i></i>@Resources.Language.Get_All_Anomalies
                             </label>
                         </form>
                     </div>
@@ -61,10 +61,10 @@
         <table class="table table-bordered table-hover table-responsive" id="pictureTbl">
             <thead>
                 <tr>
-                    <th>Date Reported</th>
-                    <th>Reported By</th>
-                    <th>Severity</th>
-                    <th>Options</th>
+                    <th>@Resources.Language.Date_Reported</th>
+                    <th>@Resources.Language.Reported_By</th>
+                    <th>@Resources.Language.Severity</th>
+                    <th>@Resources.Language.Options</th>
                 </tr>
             </thead>
             <tbody></tbody>

@@ -3,19 +3,19 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-sun-o"></i>
-                Photometric <span>
+                @Resources.Language.Photometric <span>
                     >
-                    Upload
+                    @Resources.Language.Upload
                 </span>
             </h1>
         </div>
     </div>
     <ul id="uploadTab" class="nav nav-tabs bordered">
         <li class="active">
-            <a href="#s1" id="UploadDataTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-list-ul"></i> Upload CSV</a>
+            <a href="#s1" id="UploadDataTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-list-ul"></i> @Resources.Language.Upload_CSV</a>
         </li>
         <li class="">
-            <a href="#s2" id="UploadPicturesTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-picture-o"></i> Upload Images</a>
+            <a href="#s2" id="UploadPicturesTab" data-toggle="tab"><i class="fa fa-fw fa-lg fa-picture-o"></i> @Resources.Language.Upload_Image</a>
         </li>
     </ul>
 
@@ -30,7 +30,7 @@
         <div class="tab-pane fade in" id="s2">
             <div class="row">
                 <div class="col-md-6 col-sm-12">
-                    <a class="btn btn-primary" id="clearAllBtn">Clear All Files</a>
+                    <a class="btn btn-primary" id="clearAllBtn">@Resources.Language.Clear_All_Files</a>
                     <hr />
                     <form class="dropzone" id="mydropzone2"></form>
                 </div>
@@ -59,7 +59,7 @@
             var myDropZone = new Dropzone("#mydropzone", {
                 url: "UploadData?type=1",
                 addRemoveLinks: true,
-                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> @Resources.Language.Drop_files</span><span>&nbsp&nbsp<h4 class="display-inline"> @Resources.Language.Or_Click</h4></span>',
                 dictResponseError: 'Error uploading file!',
                 autoProcessQueue: true,
                 init: function () {
@@ -91,7 +91,7 @@
             var myDropZone2 = new Dropzone("#mydropzone2", {
                 url: "UploadData?type=2",
                 addRemoveLinks: true,
-                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> @Resources.Language.Drop_files</span><span>&nbsp&nbsp<h4 class="display-inline"> @Resources.Language.Or_Click</h4></span>',
                 dictResponseError: 'Error uploading file!',
                 autoProcessQueue: true,
                 init: function () {

@@ -404,6 +404,32 @@
     <Content Include="Images\adbimages\TasksIcon.jpg" />
     <Content Include="Images\adbimages\UsersIcon.jpg" />
     <Content Include="Images\blank.gif" />
+    <Content Include="Images\favico\android-icon-144x144.png" />
+    <Content Include="Images\favico\android-icon-192x192.png" />
+    <Content Include="Images\favico\android-icon-36x36.png" />
+    <Content Include="Images\favico\android-icon-48x48.png" />
+    <Content Include="Images\favico\android-icon-72x72.png" />
+    <Content Include="Images\favico\android-icon-96x96.png" />
+    <Content Include="Images\favico\apple-icon-114x114.png" />
+    <Content Include="Images\favico\apple-icon-120x120.png" />
+    <Content Include="Images\favico\apple-icon-144x144.png" />
+    <Content Include="Images\favico\apple-icon-152x152.png" />
+    <Content Include="Images\favico\apple-icon-180x180.png" />
+    <Content Include="Images\favico\apple-icon-57x57.png" />
+    <Content Include="Images\favico\apple-icon-60x60.png" />
+    <Content Include="Images\favico\apple-icon-72x72.png" />
+    <Content Include="Images\favico\apple-icon-76x76.png" />
+    <Content Include="Images\favico\apple-icon-precomposed.png" />
+    <Content Include="Images\favico\apple-icon.png" />
+    <Content Include="Images\favico\browserconfig.xml" />
+    <Content Include="Images\favico\favicon-16x16.png" />
+    <Content Include="Images\favico\favicon-32x32.png" />
+    <Content Include="Images\favico\favicon-96x96.png" />
+    <Content Include="Images\favico\favicon.ico" />
+    <Content Include="Images\favico\ms-icon-144x144.png" />
+    <Content Include="Images\favico\ms-icon-150x150.png" />
+    <Content Include="Images\favico\ms-icon-310x310.png" />
+    <Content Include="Images\favico\ms-icon-70x70.png" />
     <Content Include="Images\icons\excel_ico.png" />
     <Content Include="Images\icons\map_icon_blue.png" />
     <Content Include="Images\icons\map_icon_green.png" />
@@ -469,6 +495,7 @@
     <Content Include="fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="Images\favico\manifest.json" />
     <None Include="Images\uploads\empty.text" />
     <Content Include="Images\uploads\IREL_LightType.jpg" />
     <Content Include="packages.config" />
@@ -1246,11 +1273,6 @@
       <DependentUpon>Language.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="App_GlobalResources\Language.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Language.resx</DependentUpon>
     </Compile>
     <Compile Include="App_GlobalResources\Language1.designer.cs">
       <AutoGen>True</AutoGen>

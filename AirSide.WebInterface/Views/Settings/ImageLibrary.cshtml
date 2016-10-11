@@ -3,9 +3,9 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-picture-o"></i>
-                Image Library <span>
+                @Resources.Language.Image_Library <span>
                     >
-                    AirSide&trade; Library
+                    AirSide&trade; @Resources.Language.Library
                 </span>
             </h1>
         </div>
@@ -26,7 +26,7 @@
     <hr />
     <div class="row">
         <div class="col-md-6 col-sm-12">
-            <h1><i class="fa fa-upload"></i> Upload File</h1>
+            <h1><i class="fa fa-upload"></i> @Resources.Language.Upload_File</h1>
             <form class="dropzone" id="mydropzone"></form>
         </div>
     </div>
@@ -84,11 +84,11 @@
 
         function deleteImage(id) {
             $.SmartMessageBox({
-                title: '<i class="fa fa-times fa-lg txt-color-red"></i> Delete File?',
-                content: "This will delete the file from the server. Continue?",
-                buttons: '[No][Yes]'
+                title: '<i class="fa fa-times fa-lg txt-color-red"></i> @Resources.Language.Delete_File?',
+                content: "@Resources.Language.Delete_File_From_Server",
+                buttons: '[@Resources.Language.No][@Resources.Language.Yes]'
             }, function (ButtonPressed) {
-                if (ButtonPressed === "Yes") {
+                if (ButtonPressed === "@Resources.Language.Yes") {
                     $('.superbox-list').removeClass('active');
                     $('.superbox-current-img').animate({ opacity: 0 }, 200, function () {
                         $('.superbox-show').slideUp();
@@ -100,8 +100,8 @@
                         dataType: "json",
                         success: function (json) {
                             $.smallBox({
-                                title: "Image Deleted",
-                                content: "The image was deleted.",
+                                title: "@Resources.Language.Image_Deleted",
+                                content: "<label></label>",
                                 color: "#5384AF",
                                 timeout: 4000,
                                 icon: "fa fa-thumbs-up"
@@ -131,22 +131,22 @@
         function editImage(id) {
             var title = $('div [data-imgid=' + id + '] > img').attr('alt');
             $.SmartMessageBox({
-                title: "Edit the Title",
-                content: "Please enter a title for the file",
-                buttons: "[Cancel][Accept]",
+                title: "@Resources.Language.Edit_the_Title",
+                content: "@Resources.Language.Title_File",
+                buttons: "[@Resources.Language.Cancel][@Resources.Language.Accept]",
                 input: "text",
                 inputValue: title,
                 placeholder: "File Title"
             }, function (ButtonPress, Value) {
-                if (ButtonPress === "Accept") {
+                if (ButtonPress === "@Resources.Language.Accept") {
                     $.ajax({
                         url: "EditImage?imageId=" + id + "&description=" + Value,
                         type: "POST",
                         dataType: "json",
                         success: function (json) {
                             $.smallBox({
-                                title: "Image Updated",
-                                content: "The image was edited.",
+                                title: "@Resources.Language.Image_Updated",
+                                content: "<label></label>",
                                 color: "#5384AF",
                                 timeout: 5000,
                                 icon: "fa fa-thumbs-up"
@@ -175,28 +175,28 @@
                 url: "uploadClientImage?description=New",
                 addRemoveLinks: true,
                 maxFilesize: 3,
-                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> Drop files <span class="font-xs">to upload</span></span><span>&nbsp&nbsp<h4 class="display-inline"> (Or Click)</h4></span>',
+                dictDefaultMessage: '<span class="text-center"><span class="font-lg visible-xs-block visible-sm-block visible-lg-block"><span class="font-lg"><i class="fa fa-caret-right text-danger"></i> @Resources.Language.Drop_files</span><span>&nbsp&nbsp<h4 class="display-inline"> @Resources.Language.Or_Click</h4></span>',
                 dictResponseError: 'Error uploading file!',
                 maxFiles: 1,
                 autoProcessQueue: false,
                 init: function () {
                     this.on('drop', function (e) {
                         $.SmartMessageBox({
-                            title: "File Description",
-                            content: "Please enter a title for the file",
-                            buttons: "[Cancel][Accept]",
+                            title: "@Resources.Language.File_Description",
+                            content: "@Resources.Language.Title_File",
+                            buttons: "[@Resources.Language.Cancel][@Resources.Language.Accept]",
                             input: "text",
                             inputValue: "",
-                            placeholder: "File Title"
+                            placeholder: "@Resources.Language.File_Title"
                         }, function (ButtonPress, Value) {
-                            if (ButtonPress === "Accept") {
+                            if (ButtonPress === "@Resources.Language.Accept") {
                                 if (Value !== "") {
                                     myDropZone.options.url = 'uploadClientImage?description=' + Value;
                                     myDropZone.processQueue();
                                 } else {
                                     $.smallBox({
-                                        title: "No Title",
-                                        content: "No title was provided for the file.",
+                                        title: "@Resources.Language.No_Title",
+                                        content: "<label></label>",
                                         color: "#ff0000",
                                         timeout: 4000,
                                         icon: "fa fa-file-o"
@@ -204,8 +204,8 @@
                                 }
                             } else {
                                 $.smallBox({
-                                    title: "Upload Cancelled",
-                                    content: "The file upload was cancelled.",
+                                    title: "@Resources.Language.Upload_Cancelled",
+                                    content: "<label></label>",
                                     color: "#ff0000",
                                     timeout: 4000,
                                     icon: "fa fa-file-o"
@@ -228,8 +228,8 @@
             myDropZone.on("complete", function (file) {
                 if (file.accepted) {
                     $.smallBox({
-                        title: "File Uploaded",
-                        content: "The image was uploaded.",
+                        title: "@Resources.Language.File_Uploaded",
+                        content: "<label></label>",
                         color: "#5384AF",
                         timeout: 4000,
                         icon: "fa fa-thumbs-up"

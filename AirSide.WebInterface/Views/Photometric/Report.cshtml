@@ -1,16 +1,11 @@
-﻿
-@{
-    ViewBag.Title = "Photometric Reports";
-}
-
-<div id="content">
+﻿<div id="content">
     <div class="row ">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-sun-o"></i>
-                Photometric <span>
+                @Resources.Language.Photometric <span>
                     >
-                    Reports
+                    @Resources.Language.Reports
                 </span>
             </h1>
         </div>
@@ -28,9 +23,9 @@
                 <div class="inline-group">
                     <label class="checkbox">
                         <input type="checkbox" name="checkbox-inline" id="failedLightsCheck">
-                        <i></i>Show Failed Lights
+                        <i></i>@Resources.Language.Show_All_Faulty
                     </label>
-                    <a class="btn btn-primary" id="redrawBtn" style="padding: 5px;"><i class="fa fa-paint-brush"></i> Redraw</a>
+                    <a class="btn btn-primary" id="redrawBtn" style="padding: 5px;"><i class="fa fa-refresh"></i> @Resources.Language.Refresh</a>
                 </div>
             </form>
         </div>
@@ -42,11 +37,11 @@
     </div>
     <div class="row">
         <div class="col-md-10">
-            <h4>Photometric Data</h4><br/>
+            <h4>@Resources.Language.Photometric</h4><br/>
             <canvas id="bar-chart" width="400" height="100"></canvas>
         </div>
         <div class="col-md-2 text-center">
-            <h4>Threshold for failure</h4><br/>
+            <h4>@Resources.Language.Threshold_For_Failure</h4><br/>
             <div>
                 <input class="knob" data-width="80" data-height="80" data-displayInput=true value="50" data-displayPrevious=true data-fgColor="#428BCA" style="display: none;">
             </div>

@@ -3,9 +3,9 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-cogs"></i>
-                Settings <span>
+                @Resources.Language.System_Settings <span>
                     >
-                    About AirSide&trade;
+                    @Resources.Language.About_AirSide&trade;
                 </span>
             </h1>
         </div>
@@ -18,25 +18,24 @@
                 <img src="~/Images/adbimages/ADB_Safegate.png"/>
             </div>
             <div class="col-md-8">
-                <h3><i class="fa fa-plane"></i> AirSide&trade; Asset Management<br/>
-                    <small>Airfield ground lighting asset management solution</small>
+                <h3><i class="fa fa-plane"></i> AirSide&trade; @Resources.Language.Asset_Management<br/>
+                    <small>@Resources.Language.AGL_Asset_Solution</small>
                 </h3>
                 <p style="text-align: justify">
-                    In this new area of information and accountability, it's hard to make sense of data if it's not relevant. AirSide™ helps you to maximise your investment in current infrastructure, by providing detailed, accountable accurate information.
+                    @Resources.Language.New_Era
                 </p>
                 <hr/>
-                <h4><i class="fa fa-code-fork"></i> Version Information</h4>
+                <h4><i class="fa fa-code-fork"></i> @Resources.Language.Version_Information</h4>
                 <p>
-                    <strong>Web API: </strong>@ViewBag.Version<br/>
-                    <strong>iOS Application: </strong> Ver. 4.2.0001
+                    <strong>@Resources.Language.Web_API: </strong>Ver. @ViewBag.Version<br/>
+                    <strong>@Resources.Language.iOS_Application: </strong> Ver. 4.2.0001
                 </p>
                 <hr/>
-                <h4><i class="fa fa-copyright"></i> Copyright</h4>
+                <h4><i class="fa fa-copyright"></i> @Resources.Language.Copyright</h4>
                 <p>
-                    Copyright &copy; ADB Airfield Solutions - All Rights Reserved<br/>
-                    Unauthorized copying of this site, or any part of the site via any medium is strickly prohibited.<br/>
-                    Proprietary and confidential.
-                    Written by BlackLynx, @DateTime.Now.Year
+                    @Resources.Language.Copyright &copy; ADB Airfield Solutions - @Resources.Language.All_Rights_Reserved<br/>
+                    @Resources.Language.Unauthorized<br/>
+                    @Resources.Language.Proprietry_Confidential, @DateTime.Now.Year
                 </p>
             </div>
         </div>
