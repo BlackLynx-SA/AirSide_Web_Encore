@@ -258,6 +258,44 @@ namespace ADB.AirSide.Encore.V1.Controllers
         }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private List<AssetHistory> AdhocValidationTasks(int assetId)
+        {
+            var validation = (from x in db.as_validationTaskProfile
+                              join y in db.UserProfiles on x.UserId equals y.UserId
+                              join z in db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+                              where x.i_assetId == assetId
+                              select new
+                              {
+                                  user = y.FirstName + " " + y.LastName,
+                                  date = x.dt_dateTimeStamp,
+                                  maintenanceTask = z.vc_description
+                              }).ToList();
+
+            List<AssetHistory> tasks = new List<AssetHistory>();
+
+            foreach (var item in validation.DistinctBy(x => x.maintenanceTask))
+            {
+                var task = new AssetHistory
+                {
+                    colour = "#ff7700",
+                    heading = "Validation Task Performed",
+                    icon = "fa-check",
+                    content = new string[2]
+                };
+                task.content[0] = item.user;
+                task.content[1] = item.maintenanceTask;
+                task.dateString = item.date.ToString("dd MMM, yyyy");
+                task.dateStamp = item.date;
+                task.type = 1;
+                tasks.Add(task);
+            }
+
+            return tasks;
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
         private List<AssetHistory> torqueTasks(int assetId)
         {
             var torque = (from x in db.as_shiftData
