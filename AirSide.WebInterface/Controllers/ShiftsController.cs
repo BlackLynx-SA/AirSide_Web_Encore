@@ -114,7 +114,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 _db.SaveChanges();
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getTechnicianShifts");
+                //Todo: Don't know where this went
+                //_cache.UpdateiOsCache("getTechnicianShifts");
 
                 return Json(new { message = "Success", count = assets.Count });
             }
@@ -864,7 +865,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 _db.SaveChanges();
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getTechnicianShifts");
+                //todo: This has changed
+                //_cache.UpdateiOsCache("getTechnicianShifts");
 
                 return Json(new { message = "success" });
             }
@@ -955,7 +957,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
                             _db.SaveChanges();
 
                             //update iOS Cache Hash
-                            _cache.UpdateiOsCache("getTechnicianShifts");
+                            //todo: this has changed
+                            //_cache.UpdateiOsCache("getTechnicianShifts");
                         }
                         break;
                     case 1:

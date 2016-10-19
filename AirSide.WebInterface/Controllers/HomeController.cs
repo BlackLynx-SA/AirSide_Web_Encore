@@ -25,7 +25,6 @@ using System.Web;
 using Microsoft.WindowsAzure.Storage;
 using System.Configuration;
 using System.Globalization;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
 using AirSide.ServerModules.Models;
 using AirSide.ServerModules.Helpers;
@@ -56,15 +55,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         public ActionResult UploadBlobFile(HttpPostedFileBase file)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+            var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
 
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            var blobClient = storageAccount.CreateCloudBlobClient();
 
             // Retrieve reference to a previously created container.
-            CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+            var container = blobClient.GetContainerReference("reportcontent");
 
             // Retrieve reference to a blob named "myblob".
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(file.FileName);
+            var blockBlob = container.GetBlockBlobReference(file.FileName);
 
             blockBlob.UploadFromStream(file.InputStream);
 
@@ -79,7 +78,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             var maintenanceTasks = _db.as_maintenanceProfile.ToList();
            
             //Add Worst Case Category
-            as_maintenanceProfile worstCase = new as_maintenanceProfile
+            var worstCase = new as_maintenanceProfile
             {
                 i_maintenanceCategoryId = 0,
                 i_maintenanceId = 0,
@@ -109,22 +108,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> GetCompletedAssets()
         {
-            List<mongoAssetProfile> assets = await _cache.GetAllAssets();
+            var assets = await _cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
 
             if (assets != null)
             {
-                foreach (mongoAssetProfile asset in assets)
+                foreach (var asset in assets)
                 {
-                    foreach (maintenance maint in asset.maintenance)
+                    foreach (var maint in asset.maintenance)
                     {
                         if (maint.maintenanceCycle == 1) assetCount++;
                         total++;
                     }
                 }
 
-                double persentage = ((assetCount / total) * 100);
+                var persentage = ((assetCount / total) * 100);
                 return Math.Round(persentage, 2).ToString(CultureInfo.InvariantCulture);
             }
             else
@@ -138,21 +137,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                List<mongoAssetProfile> assets = await _cache.GetAllAssets();
+                var assets = await _cache.GetAllAssets();
                 double assetCount = 0;
                 double total = 0;
                 if (assets != null)
                 {
-                    foreach (mongoAssetProfile asset in assets)
+                    foreach (var asset in assets)
                     {
-                        foreach (maintenance maint in asset.maintenance)
+                        foreach (var maint in asset.maintenance)
                         {
                             if (maint.maintenanceCycle == 2) assetCount++;
                             total++;
                         }
                     }
 
-                    double persentage = ((assetCount / total) * 100);
+                    var persentage = ((assetCount / total) * 100);
 
                     return Math.Round(persentage, 2).ToString(CultureInfo.InvariantCulture);
                 }
@@ -171,14 +170,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                List<mongoAssetProfile> assets = await _cache.GetAllAssets();
-                int assetCount = 0;
-                int total = 0;
+                var assets = await _cache.GetAllAssets();
+                var assetCount = 0;
+                var total = 0;
                 if (assets != null)
                 {
-                    foreach (mongoAssetProfile asset in assets)
+                    foreach (var asset in assets)
                     {
-                        foreach (maintenance maint in asset.maintenance)
+                        foreach (var maint in asset.maintenance)
                         {
                             if (maint.maintenanceCycle == 3) assetCount++;
                             total++;
@@ -201,21 +200,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> GetDueAssets()
         {
-            List<mongoAssetProfile> assets = await _cache.GetAllAssets();
+            var assets = await _cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
             if (assets != null)
             {
-                foreach (mongoAssetProfile asset in assets)
+                foreach (var asset in assets)
                 {
-                    foreach (maintenance maint in asset.maintenance)
+                    foreach (var maint in asset.maintenance)
                     {
                         if (maint.maintenanceCycle == 4) assetCount++;
                         total++;
                     }
                 }
 
-                double persentage = ((assetCount / total) * 100);
+                var persentage = ((assetCount / total) * 100);
 
                 return Math.Round(persentage, 2).ToString(CultureInfo.InvariantCulture);
             }
@@ -226,28 +225,28 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private async Task<string> GetNoDataAssets()
         {
-            List<mongoAssetProfile> assets = await _cache.GetAllAssets();
+            var assets = await _cache.GetAllAssets();
             double assetCount = 0;
             double total = 0;
-            foreach (mongoAssetProfile asset in assets)
+            foreach (var asset in assets)
             {
-                foreach (maintenance maint in asset.maintenance)
+                foreach (var maint in asset.maintenance)
                 {
                     if (maint.maintenanceCycle == 0) assetCount++;
                     total++;
                 }
             }
 
-            double persentage = ((assetCount / total) * 100);
+            var persentage = ((assetCount / total) * 100);
 
             return Math.Round(persentage, 2).ToString(CultureInfo.InvariantCulture);
         }
 
         private async Task<string> GetTotalTasks()
         {
-            List<mongoAssetProfile> assets = await _cache.GetAllAssets();
+            var assets = await _cache.GetAllAssets();
 
-            double total = assets.Aggregate<mongoAssetProfile, double>(0, (current, asset) => current + asset.maintenance.Count());
+            var total = assets.Aggregate<mongoAssetProfile, double>(0, (current, asset) => current + asset.maintenance.Length);
 
             return total.ToString(CultureInfo.InvariantCulture);
         }
@@ -258,7 +257,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                           join y in _db.as_shiftData on x.i_shiftId equals y.i_shiftId
                           group x by new { y = y.dt_captureDate.Year, m = y.dt_captureDate.Month, d = y.dt_captureDate.Day } into shiftGroup
                           select shiftGroup.Count()).Take(10);
-            string valueString = "";
+            var valueString = "";
             foreach (var shift in shifts)
             {
                 valueString += shift + ",";
@@ -280,7 +279,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult GetActivities()
         {
-            List<ActivityChart> activities = _database.GetActivitiesForMonth();
+            var activities = _database.GetActivitiesForMonth();
 
             return Json(activities);
         }
@@ -288,7 +287,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         [HttpPost]
         public JsonResult GetAnomalies()
         {
-            List<ActivityChart> activities = _database.GetAnomaliesForMonth();
+            var activities = _database.GetAnomaliesForMonth();
 
             return Json(activities);
         }
@@ -301,14 +300,14 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                UserProfile userDetail = (from x in _db.UserProfiles
+                var userDetail = (from x in _db.UserProfiles
                                   where x.EmailAddress == User.Identity.Name
                                   select x).FirstOrDefault();
 
-                MD5 emailMd5 = MD5.Create();
+                var emailMd5 = MD5.Create();
                 if (userDetail != null)
                 {
-                    string emailHash = GetMd5Hash(emailMd5, userDetail.EmailAddress);
+                    var emailHash = GetMd5Hash(emailMd5, userDetail.EmailAddress);
 
                     return Json(new { client = userDetail.FirstName + " " + userDetail.LastName, email = emailHash });
                 } else
@@ -324,34 +323,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         #region AJAX Calls for Dashboard
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult SetToDoStatus(int todoId)
-        {
-            try
-            {
-                //This procedure sets the To-Do item to inactive and sets the date
-                //Create Date: 2014/12/09
-                //Author: Bernard Willer
-
-                var todo = _db.as_todoProfile.Find(todoId);
-                todo.bt_active = false;
-                todo.dt_completedDate = DateTime.Now;
-
-                _db.Entry(todo).State = System.Data.Entity.EntityState.Modified;
-                _db.SaveChanges();
-
-                return Json(new { status = "Success" });
-            }
-            catch (Exception err)
-            {
-                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-                Response.StatusCode = 500;
-                return Json(new { message = err.Message });
-            }
-        
-        }
-
-        [HttpPost]
         public JsonResult GetMetricsforActivity()
         {
             try
@@ -359,7 +330,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 //Get All Metrics for Activity Dashboard
                 //Create Date: 2015/03/19
                 //Author: Bernard Willer
-                DateTime monthDate = DateTime.Now.AddDays(-30);
+                var monthDate = DateTime.Now.AddDays(-30);
 
                 //create conversion set
                 var shifts = (from x in _db.as_shifts
@@ -368,11 +339,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                 completed = x.bt_completed,
                               });
 
-                List<DashboardActivityMetrics> metrics = new List<DashboardActivityMetrics>();
-                int totalComplete = shifts.Count(q => q.completed);
-                int totalOpen = shifts.Count(q => q.completed == false);
+                var metrics = new List<DashboardActivityMetrics>();
+                var totalComplete = shifts.Count(q => q.completed);
+                var totalOpen = shifts.Count(q => q.completed == false);
 
-                DashboardActivityMetrics conversion = new DashboardActivityMetrics
+                var conversion = new DashboardActivityMetrics
                 {
                     indicatorEnum = DashboardMetrics.ShiftsCompleted,
                     value = totalComplete
@@ -421,102 +392,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         }
 
-        [HttpPost]
-        public JsonResult GetAllTodos()
-        {
-            try
-            {
-                var user = _db.UserProfiles.First(q => q.UserName == User.Identity.Name);
-                var todos = _db.as_todoProfile.Where(q => (q.UserId == user.UserId && q.bt_active) || (q.bt_private == false && q.bt_active)).ToList();
-                var todosDone = _db.as_todoProfile.Where(q => (q.UserId == user.UserId && q.bt_active == false)).OrderByDescending(q=>q.dt_completedDate).Take(5).ToList();
-                List<ToDoList> todoItems = todos.Select(item => new ToDoList
-                {
-                    date = item.dt_dateTime.ToString("yyyy/MM/dd"), vc_description = item.vc_description, i_todoProfileId = item.i_todoProfileId, i_todoCatId = item.i_todoCatId, bt_active = item.bt_active
-                }).ToList();
-                todoItems.AddRange(todosDone.Select(item => new ToDoList
-                {
-                    date = item.dt_dateTime.ToString("yyyy/MM/dd"), vc_description = item.vc_description, i_todoProfileId = item.i_todoProfileId, i_todoCatId = item.i_todoCatId, bt_active = item.bt_active
-                }));
-
-                return Json(todoItems);
-            }
-            catch (Exception err)
-            {
-                _cache.LogError(err, Request.UserHostAddress);
-                return Json(new { error = err.Message });
-            }
-        }
-
-        [HttpPost]
-        public JsonResult GetTodoCategories()
-        {
-            try
-            {
-                var user = _db.UserProfiles.First(q => q.UserName == User.Identity.Name);
-                var categories = _db.as_todoCategories.Where(q => q.UserId == user.UserId || q.bt_private == false).ToList();
-                return Json(categories);
-            }
-            catch (Exception err)
-            {
-                _cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-                return Json(new { error = err.Message });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult InsertNewTodo(string description, string category)
-        {
-            try
-            {
-                var categoryObject = _db.as_todoCategories.First(q => q.vc_description == category);
-                var user = _db.UserProfiles.First(q => q.UserName == User.Identity.Name);
-
-                as_todoProfile todo = new as_todoProfile
-                {
-                    UserId = user.UserId,
-                    dt_dateTime = DateTime.Now,
-                    bt_private = true,
-                    bt_active = true,
-                    vc_description = description,
-                    i_todoCatId = categoryObject.i_todoCatId,
-                    dt_completedDate = new DateTime(1970, 1, 1)
-                };
-
-                _db.as_todoProfile.Add(todo);
-                _db.SaveChanges();
-
-                return Json(new { 
-                    date = todo.dt_dateTime.ToString("yyyy/MM/dd"), todo.vc_description, todo.i_todoProfileId, todo.i_todoCatId, todo.bt_active
-                });
-            }
-            catch (Exception err)
-            {
-                _cache.Log("Failed to insert user todos: " + err.Message + "|" + err.InnerException.Message, "insertNewTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
-                return Json(new { error = err.InnerException.Message });
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult UpdateTodo(int todoId, Boolean active)
-        {
-            try
-            {
-                var todo = _db.as_todoProfile.Find(todoId);
-                todo.bt_active = active;
-                _db.Entry(todo).State = System.Data.Entity.EntityState.Modified;
-                _db.SaveChanges();
-
-                return Json(new { status = "success", item = todo.vc_description });
-            }
-            catch (Exception err)
-            {
-                _cache.Log("Failed to update user todos: " + err.Message + "|" + err.InnerException.Message, "updateTodo", CacheHelper.LogTypes.Error, User.Identity.Name);
-                return Json(new { error = err.InnerException.Message });
-            }
-        }
-
         #endregion
 
         #region Helpers
@@ -525,15 +400,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
 
             // Convert the input string to a byte array and compute the hash. 
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
 
             // Create a new Stringbuilder to collect the bytes 
             // and create a string.
-            StringBuilder sBuilder = new StringBuilder();
+            var sBuilder = new StringBuilder();
 
             // Loop through each byte of the hashed data  
             // and format each one as a hexadecimal string. 
-            foreach (byte t in data)
+            foreach (var t in data)
             {
                 sBuilder.Append(t.ToString("x2"));
             }
@@ -550,12 +425,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
-                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-                CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
+                var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+                var blobClient = storageAccount.CreateCloudBlobClient();
+                var container = blobClient.GetContainerReference("reportcontent");
+                var blockBlob = container.GetBlockBlobReference("AnalyticsReport.rdlc");
 
-                LocalReport localReport = new LocalReport {EnableExternalImages = true};
+                var localReport = new LocalReport {EnableExternalImages = true};
 
                 using (var memoryStream = new MemoryStream())
                 {
@@ -564,24 +439,24 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     localReport.LoadReportDefinition(memoryStream);
                 }
 
-                ReportDataSource reportDataSource = new ReportDataSource("MaintenanceDS", await GetAnalyticReportCycles());
+                var reportDataSource = new ReportDataSource("MaintenanceDS", await GetAnalyticReportCycles());
                 localReport.DataSources.Add(reportDataSource);
 
                 reportDataSource = new ReportDataSource("ShiftsDS", GetShifts().OrderBy(q=>q.start));
                 localReport.DataSources.Add(reportDataSource);
 
                 //Set the host reference for the logo
-                string[] host = Request.Headers["Host"].Split('.');
-                ReportParameter paramLogo = new ReportParameter {Name = "AirportLogo"};
+                var host = Request.Headers["Host"].Split('.');
+                var paramLogo = new ReportParameter {Name = "AirportLogo"};
                 paramLogo.Values.Add(@"http://airsidecdn.azurewebsites.net/images/" + host[0].ToLower() + ".png");
                 localReport.SetParameters(paramLogo);
 
-                string reportType = fileType;
+                var reportType = fileType;
                 string mimeType;
                 string encoding;
                 string fileNameExtension;
 
-                string deviceInfo =
+                var deviceInfo =
                 "<DeviceInfo>" +
                 "  <OutputFormat>" + fileType + "</OutputFormat>" +
                 "  <PageWidth>210mm</PageWidth>" +
@@ -610,7 +485,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                _cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", CacheHelper.LogTypes.Error, User.Identity.Name);
+                if (err.InnerException != null)
+                    _cache.Log("Faile to generate report: " + err.Message + "|" + err.InnerException.Message, "AirSideAnalyticReport", CacheHelper.LogTypes.Error, User.Identity.Name);
                 Response.StatusCode = 500;
                 return Json(new { error = err.Message }, JsonRequestBehavior.AllowGet);
             }
@@ -618,17 +494,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private MemoryStream GetBlobStream(string reportName)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
+            var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsidereporting;AccountKey=mCK8CqoLGGIu1c3BQ8BQEI4OtIKllkiwJQv4lMB4A6811TxLXsYzTITL8W7Z2gMztfrkbLUFuqDSe6+ZzPTGpg==");
 
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            var blobClient = storageAccount.CreateCloudBlobClient();
 
             // Retrieve reference to a previously created container.
-            CloudBlobContainer container = blobClient.GetContainerReference("reportcontent");
+            var container = blobClient.GetContainerReference("reportcontent");
 
             // Retrieve reference to a blob named "myblob.txt"
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(reportName);
+            var blockBlob = container.GetBlockBlobReference(reportName);
 
-            MemoryStream memoryStream = new MemoryStream();
+            var memoryStream = new MemoryStream();
             blockBlob.DownloadToStream(memoryStream);
             
             return memoryStream;
@@ -676,10 +552,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
                                   subAreaId = z.i_areaSubId
                               }).ToList();
 
-                List<ShiftData> shiftList = new List<ShiftData>();
+                var shiftList = new List<ShiftData>();
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData
+                    var shift = new ShiftData
                     {
                         area = item.area,
                         completed = item.end.ToString("dd-MM-yyyy h:mm tt"),
@@ -717,7 +593,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                 foreach (var item in shifts)
                 {
-                    ShiftData shift = new ShiftData
+                    var shift = new ShiftData
                     {
                         area = item.area,
                         completed = item.end.ToString("dd-MM-yyyy h:mm tt"),
@@ -740,7 +616,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             }
             catch (Exception err)
             {
-                List<ShiftData> shiftList = new List<ShiftData>();
+                var shiftList = new List<ShiftData>();
                 _cache.Log("Failed to retrieve shifts: " + err.Message, "getShifts", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 return shiftList;
             }
@@ -753,7 +629,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             // Validate input
             culture = CultureHelper.GetImplementedCulture(culture);
             // Save culture in a cookie
-            HttpCookie cookie = Request.Cookies["_culture"];
+            var cookie = Request.Cookies["_culture"];
             if (cookie != null)
                 cookie.Value = culture;   // update cookie value
             else

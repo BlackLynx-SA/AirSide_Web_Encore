@@ -53,7 +53,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        public UserManager<ApplicationUser> UserManager { get; private set; }
+        public UserManager<ApplicationUser> UserManager { get; }
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -175,7 +175,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 _db.SaveChanges();
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getGroupsTechnicians");
+                //_cache.UpdateiOsCache("getGroupsTechnicians");
 
                 return Json(user);
             }

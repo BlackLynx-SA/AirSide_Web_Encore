@@ -282,9 +282,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 				if (allHistory.Count == 1)
 					if (allHistory[0].maintenance == null)
-						allHistory.Clear();
+						allHistory = new List<assetHistory>();
 
-				return Json(allHistory);
+                return Json(allHistory);
 			}
 			catch (Exception err)
 			{
@@ -382,6 +382,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					i_assetId = item.i_assetId,
 					i_shiftId = item.i_shiftId,
 					UserId = item.UserId,
+                    i_maintenanceId = item.i_maintenanceId,
 					dt_dateTimeStamp =
 						item.dt_dateTimeStamp != null
 							? DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
@@ -401,9 +402,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					{
 						log = "Assset Status";
 						status.bt_assetStatus = false;
-						_db.Entry(status).State = EntityState.Modified;
+					    var tmp = status;
+					    _db.as_assetStatusProfile.Add(tmp);
 						_db.SaveChanges();
-
 					}
 
 					//rebuild cache for asset
@@ -1046,39 +1047,40 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		[HttpPost]
-		public JsonResult GetWrenches()
-		{
-			var wrenchList = (from data in _db.as_wrenchProfile select data).ToList();
+		//[HttpPost]
+		//public JsonResult GetWrenches()
+		//{
+		//	var wrenchList = (from data in _db.as_wrenchProfile select data).ToList();
 
-			var iosWrenchList = wrenchList.Select(wrench => new iOSwrench
-			{
-				bt_active = wrench.bt_active, dt_lastCalibrated = wrench.dt_lastCalibrated.ToString("yyyyMMdd"), f_batteryLevel = wrench.f_batteryLevel, i_calibrationCycle = wrench.i_calibrationCycle, i_wrenchId = wrench.i_wrenchId, vc_model = wrench.vc_model, vc_serialNumber = wrench.vc_serialNumber
-			}).ToList();
-			return Json(iosWrenchList);
-		}
+		//	var iosWrenchList = wrenchList.Select(wrench => new iOSwrench
+		//	{
+		//		bt_active = wrench.bt_active, dt_lastCalibrated = wrench.dt_lastCalibrated.ToString("yyyyMMdd"), f_batteryLevel = wrench.f_batteryLevel, i_calibrationCycle = wrench.i_calibrationCycle, i_wrenchId = wrench.i_wrenchId, vc_model = wrench.vc_model, vc_serialNumber = wrench.vc_serialNumber
+		//	}).ToList();
+		//	return Json(iosWrenchList);
+		//}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-		[HttpPost]
-		public JsonResult UpdateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
-		{
-			try
-			{
-				foreach (var battery in batteryUpdate)
-				{
-					var updateWrench = _db.as_wrenchProfile.Find(battery.wrenchId);
-					updateWrench.f_batteryLevel = battery.batteryLevel;
-					_db.Entry(updateWrench).State = System.Data.Entity.EntityState.Modified;
-					_db.SaveChanges();
-				}
-				return Json("Success");
-			}
-			catch
-			{
-				return Json("Failed");
-			}
-		}
+        //This was changed as release for Encore to clean up DB
+		//[HttpPost]
+		//public JsonResult UpdateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
+		//{
+		//	try
+		//	{
+		//		foreach (var battery in batteryUpdate)
+		//		{
+		//			var updateWrench = _db.as_wrenchProfile.Find(battery.wrenchId);
+		//			updateWrench.f_batteryLevel = battery.batteryLevel;
+		//			_db.Entry(updateWrench).State = System.Data.Entity.EntityState.Modified;
+		//			_db.SaveChanges();
+		//		}
+		//		return Json("Success");
+		//	}
+		//	catch
+		//	{
+		//		return Json("Failed");
+		//	}
+		//}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
@@ -1351,8 +1353,6 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		#endregion
 
-		#region Cache and Views
-
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
 		public ActionResult RebuildCache()
@@ -1418,172 +1418,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		public string UploadLogFile(HttpPostedFileBase file, int userId, string uid)
-		{
-			try
-			{
-				//This module persists the log files to Azure Stroage Container and ref to SQL
-				//Create Date: 2015/01/27
-				//Author: Bernard Willer
-
-				var uploadGuid = Guid.NewGuid();
-				var fileName = uploadGuid.ToString();
-				fileName = fileName.Replace("-", "");
-
-				//Upload to Storage Container
-				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				var blobClient = storageAccount.CreateCloudBlobClient();
-				var container = blobClient.GetContainerReference("logs");
-				var blockBlob = container.GetBlockBlobReference(fileName + ".log");
-				blockBlob.UploadFromStream(file.InputStream);
-
-				//Persist to Database
-				var log = new as_iosLogProfile
-				{
-					dt_logCaptureDate = DateTime.Now,
-					UserId = userId,
-					vc_deviceUID = uid,
-					vc_logContainer = container.Name,
-					vc_logName = fileName + ".log"
-				};
-
-				_db.as_iosLogProfile.Add(log);
-				_db.SaveChanges();
-
-				return "Success";
-			}
-			catch (Exception err)
-			{
-				_cache.LogError(err, "iOS");
-				Response.StatusCode = 500;
-				return err.Message;
-			}
-		
-		}
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
-		public JsonResult GetCacheStatus()
-		{
-			
-			try
-			{
-				//Sends the current hashes of the different download sets
-				//Create Date: 2015/01/27   
-				//Author: Bernard Willer
-
-				var cache = _db.as_cacheProfile.Where(q => q.bt_active).ToList();
-				return Json(cache);
-			}
-			catch (Exception err)
-			{
-				_cache.LogError(err, "iOS");
-				Response.StatusCode = 500;
-				return Json(new { message = err.Message });
-			}
-		
-		}
-
-		#endregion
-
-		#region Web Views
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		public ActionResult IosImages()
-		{
-			//Send List of Images
-			var allFiles = _db.as_iosImageProfile.Where(q => q.bt_active).OrderByDescending(q => q.dt_dateTimeStamp).ToList();
-			ViewData["iosImages"] = allFiles;
-			return View();
-		}
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		public ActionResult UploadiOsFile(HttpPostedFileBase file, string description, string version, string releaseNotes)
-		{
-
-			try
-			{
-				//Upload iOS files for testing during development
-				//Create Date: 2015/01/27
-				//Author: Bernard Willer
-
-				//Upload to Storage Container
-				var guid = Guid.NewGuid();
-				var filename = guid.ToString();
-				filename = filename.Replace("-", "");
-				filename = filename.Substring(0, 5) + "_" + file.FileName;
-
-				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				var blobClient = storageAccount.CreateCloudBlobClient();
-				var container = blobClient.GetContainerReference("iosimages");
-				var blockBlob = container.GetBlockBlobReference(filename);
-				blockBlob.UploadFromStream(file.InputStream);
-
-				var image = new as_iosImageProfile
-				{
-					dt_dateTimeStamp = DateTime.Now,
-					bt_active = true,
-					vc_description = description,
-					vc_fileName = filename,
-					vc_version = version,
-					vc_releaseNotes = releaseNotes
-				};
-
-				_db.as_iosImageProfile.Add(image);
-				_db.SaveChanges();
-
-				Response.StatusCode = 200;
-				return Json(new { message = "success" });
-			}
-			catch (Exception err)
-			{
-				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-				Response.StatusCode = 500;
-				return Json(new { message = err.Message });
-			}
-
-		}
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		public ActionResult DownloadFile(int id)
-		{
-			try
-			{
-				//This function allows the user to download a file from Azure Storage
-				//Create Date: 2015/01/27
-				//Author: Bernard Willer
-
-				var image = _db.as_iosImageProfile.Find(id);
-
-				//Downlaod File
-				var storageAccount = CloudStorageAccount.Parse("DefaultEndpointsProtocol=https;AccountName=airsideios;AccountKey=mv73114kNAR2ZtJhZWwpU8W/tzVjH3R7rgtNc5LGQNeCUqR/UGpS3bBwwdX/L6ieG/Hi99JHJSwdxPWYRydYHA==");
-				var blobClient = storageAccount.CreateCloudBlobClient();
-				var container = blobClient.GetContainerReference("iosimages");
-				var blockBlob = container.GetBlockBlobReference(image.vc_fileName);
-
-				var memoryStream = new MemoryStream();
-				blockBlob.DownloadToStream(memoryStream);
-				memoryStream.Position = 0;
-				Response.AddHeader("content-disposition", "attachment; filename=" + image.vc_fileName);
-				return File(memoryStream, "application/");
-			}
-			catch (Exception err)
-			{
-				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-				Response.StatusCode = 500;
-				return Json(new { message = err.Message });
-			}
-		
-		}
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		#endregion
-
-		#region Helpers
+	#region Helpers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 

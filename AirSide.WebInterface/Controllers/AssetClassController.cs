@@ -63,7 +63,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 var assosiation = _db.as_assetClassMaintenanceProfile.Find(assetMaintenanceId);
-                int assetClassId = assosiation.i_assetClassId;
+                var assetClassId = assosiation.i_assetClassId;
                 _db.as_assetClassMaintenanceProfile.Remove(assosiation);
                 _db.SaveChanges();
 
@@ -71,7 +71,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getAllAssetClasses");
+                //_cache.UpdateiOsCache("getAllAssetClasses");
 
                 return Json(new { message = "Success" });
             }
@@ -123,13 +123,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 //Get Frequency ID
-                int freqId = _db.as_frequencyProfile.Where(q => q.f_frequency == frequencyId).Select(q => q.i_frequencyId).FirstOrDefault();
+                var freqId = _db.as_frequencyProfile.Where(q => q.f_frequency == frequencyId).Select(q => q.i_frequencyId).FirstOrDefault();
 
                 //Add Assosiation
-                as_assetClassMaintenanceProfile newAssosiation = new as_assetClassMaintenanceProfile();
-                newAssosiation.i_assetClassId = assetClassId;
-                newAssosiation.i_frequencyId = freqId;
-                newAssosiation.i_maintenanceId = maintenanceId;
+                var newAssosiation = new as_assetClassMaintenanceProfile
+                {
+                    i_assetClassId = assetClassId,
+                    i_frequencyId = freqId,
+                    i_maintenanceId = maintenanceId
+                };
 
                 _db.as_assetClassMaintenanceProfile.Add(newAssosiation);
                 _db.SaveChanges();
@@ -138,7 +140,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getAllAssetClasses");
+                //_cache.UpdateiOsCache("getAllAssetClasses");
 
                 return Json(new { message = "Success"});
             }
@@ -160,9 +162,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 var tasks = (from x in _db.as_maintenanceProfile 
                                  join y in _db.as_maintenanceValidation on x.i_maintenanceValidationId equals y.i_maintenanceValidationId
                                  select new {
-                                     vc_description = x.vc_description,
-                                     i_maintenanceId = x.i_maintenanceId,
-                                     i_maintenanceCategoryId = x.i_maintenanceCategoryId,
+                                     x.vc_description, x.i_maintenanceId, x.i_maintenanceCategoryId,
                                      vc_validation = y.vc_validationName,
                                      i_validationId = y.i_maintenanceValidationId
                                  }).ToList();
@@ -184,10 +184,12 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                as_maintenanceCategory newCat = new as_maintenanceCategory();
-                newCat.i_categoryType = type;
-                newCat.vc_categoryDescription = description;
-                newCat.vc_maintenanceCategory = name;
+                var newCat = new as_maintenanceCategory
+                {
+                    i_categoryType = type,
+                    vc_categoryDescription = description,
+                    vc_maintenanceCategory = name
+                };
 
                 _db.as_maintenanceCategory.Add(newCat);
                 _db.SaveChanges();
@@ -234,16 +236,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                var validation = _db.as_maintenanceValidation.Where(q => q.vc_validationName == validationName).FirstOrDefault();
+                var validation = _db.as_maintenanceValidation.FirstOrDefault(q => q.vc_validationName == validationName);
                 var task = _db.as_maintenanceProfile.Find(id);
                 task.vc_description = taskName;
-                task.i_maintenanceValidationId = validation.i_maintenanceValidationId;
+                if (validation != null) task.i_maintenanceValidationId = validation.i_maintenanceValidationId;
 
                 _db.Entry(task).State = EntityState.Modified;
                 _db.SaveChanges();
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getMaintenanceProfile");
+                //_cache.UpdateiOsCache("getMaintenanceProfile");
 
                 return Json(new { message = "Task successfully edited and saved." });
             }
@@ -263,7 +265,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                int maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
+                var maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
                                          join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
                                          join z in _db.as_maintenanceCategory on y.i_maintenanceCategoryId equals z.i_maintenanceCategoryId
                                          where z.i_maintenanceCategoryId == id
@@ -284,7 +286,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     }
 
                     //update iOS Cache Hash
-                    _cache.UpdateiOsCache("getMaintenanceProfile");
+                    //_cache.UpdateiOsCache("getMaintenanceProfile");
 
                     Response.StatusCode = 200;
                     return Json(new { message = category.vc_maintenanceCategory + " category successfully removed" });
@@ -311,7 +313,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                int maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
+                var maintenaceProfile = (from x in _db.as_assetClassMaintenanceProfile
                                          join y in _db.as_maintenanceProfile on x.i_maintenanceId equals y.i_maintenanceId
                                          where y.i_maintenanceId == id
                                          select x).Count();
@@ -323,7 +325,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    _cache.UpdateiOsCache("getMaintenanceProfile");
+                    //_cache.UpdateiOsCache("getMaintenanceProfile");
 
                     Response.StatusCode = 200;
                     return Json(new { message = task.vc_description + " task successfully removed" });
@@ -351,16 +353,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
         {
             try
             {
-                as_maintenanceProfile newTask = new as_maintenanceProfile();
-                newTask.i_maintenanceCategoryId = catId;
-                newTask.vc_description = description;
-                newTask.i_maintenanceValidationId = validationId;
+                var newTask = new as_maintenanceProfile
+                {
+                    i_maintenanceCategoryId = catId,
+                    vc_description = description,
+                    i_maintenanceValidationId = validationId
+                };
 
                 _db.as_maintenanceProfile.Add(newTask);
                 _db.SaveChanges();
 
                 //update iOS Cache Hash
-                _cache.UpdateiOsCache("getMaintenanceProfile");
+                //_cache.UpdateiOsCache("getMaintenanceProfile");
 
                 return Json(new { message = "Success" });
             }
@@ -469,7 +473,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 var assetClass = _db.as_assetClassProfile.Find(id);
 
                 //Check if this asset class is being used
-                int assets = _db.as_assetProfile.Where(q => q.i_assetClassId == assetClass.i_assetClassId).Count();
+                var assets = _db.as_assetProfile.Count(q => q.i_assetClassId == assetClass.i_assetClassId);
 
                 //Remove Asset Class
                 if (assets == 0)
@@ -478,7 +482,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    _cache.UpdateiOsCache("getAllAssetClasses");
+                    //_cache.UpdateiOsCache("getAllAssetClasses");
 
                     return Json(assetClass.vc_description);
                 } else
@@ -512,7 +516,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
                     if (existingAssetClass == null)
                     {
-                        as_assetClassProfile newAssetClass = new as_assetClassProfile
+                        var newAssetClass = new as_assetClassProfile
                         {
                             i_pictureId = pictureId,
                             vc_description = description,
@@ -527,7 +531,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         _db.SaveChanges();
 
                         //Add Asset Info
-                        as_assetInfoProfile newInfo = new as_assetInfoProfile
+                        var newInfo = new as_assetInfoProfile
                         {
                             vc_description = "Fixing Points",
                             i_assetClassId = newAssetClass.i_assetClassId,
@@ -538,7 +542,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                         _db.SaveChanges();
 
                         //update iOS Cache Hash
-                        _cache.UpdateiOsCache("getAllAssetClasses");
+                        //_cache.UpdateiOsCache("getAllAssetClasses");
                         await _cache.RebuildAssetProfileForAssetClass(assetClassId);
 
                         return Json(new {description, assetClassId = newAssetClass.i_assetClassId });
@@ -585,7 +589,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     _db.SaveChanges();
 
                     //update iOS Cache Hash
-                    _cache.UpdateiOsCache("getAllAssetClasses");
+                    //_cache.UpdateiOsCache("getAllAssetClasses");
 
                     return Json(description);
                 }
@@ -687,13 +691,15 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 _db.SaveChanges();
 
                 //Persist New List
-                foreach(string taskCheck in checks.taskChecks)
+                foreach(var taskCheck in checks.taskChecks)
                 {
-                    as_maintenanceCheckListDef newDef = new as_maintenanceCheckListDef();
-                    newDef.bt_active = true;
-                    newDef.i_inputType = 0;
-                    newDef.i_maintenanceId = checks.maintenanceId;
-                    newDef.vc_description = taskCheck;
+                    var newDef = new as_maintenanceCheckListDef
+                    {
+                        bt_active = true,
+                        i_inputType = 0,
+                        i_maintenanceId = checks.maintenanceId,
+                        vc_description = taskCheck
+                    };
 
                     _db.as_maintenanceCheckListDef.Add(newDef);
                 }

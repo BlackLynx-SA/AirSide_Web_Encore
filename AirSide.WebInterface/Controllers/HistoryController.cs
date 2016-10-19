@@ -31,10 +31,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
     {
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public ActionResult TSTest() { return View(); }
-
-        private readonly Entities db = new Entities();
-        private readonly CacheHelper log = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
+        private readonly Entities _db = new Entities();
+        private readonly CacheHelper _log = new CacheHelper(ConfigurationManager.ConnectionStrings["MongoDB"].ConnectionString, ConfigurationManager.ConnectionStrings["MongoServer"].ConnectionString);
 
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,16 +58,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 allHistory.AddRange(ValidationCheckListTasks(assetId));
                 allHistory.AddRange(FaultyLightsTasks(assetId));
                 allHistory.AddRange(AdhocTask(assetId));
+                allHistory.AddRange(AdhocValidationTasks(assetId));
 
-                if (allHistory.Count == 1)
-                    if (allHistory[0].heading == null)
-                        allHistory.Clear();
+                if (allHistory.Count != 1) return Json(allHistory.OrderByDescending(q => q.dateStamp));
+                if (allHistory[0].heading == null)
+                    allHistory.Clear();
 
                 return Json(allHistory.OrderByDescending(q=>q.dateStamp));
             }
             catch (Exception err)
             {
-                log.Log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
+                _log.Log("Failed to retrieve asset history: " + err.Message, "GetAssetHistory", CacheHelper.LogTypes.Error, Request.UserHostAddress);
                 Response.StatusCode = 500;
                 return Json(err.Message);
             }
@@ -83,9 +82,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> ValidationCheckListTasks(int assetId)
         {
-            var validation = (from x in db.as_maintenanceCheckListEntity
-                              join y in db.UserProfiles on x.UserId equals y.UserId
-                              join b in db.as_maintenanceCheckListDef on x.i_maintenanceCheckId equals b.i_maintenanceCheckId
+            var validation = (from x in _db.as_maintenanceCheckListEntity
+                              join y in _db.UserProfiles on x.UserId equals y.UserId
+                              join b in _db.as_maintenanceCheckListDef on x.i_maintenanceCheckId equals b.i_maintenanceCheckId
                               where x.i_assetId == assetId
                               select new
                               {
@@ -132,10 +131,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> validationTasks(int assetId)
         {
-            var validation = (from x in db.as_validationTaskProfile
-                             join y in db.UserProfiles on x.UserId equals y.UserId
-                             join a in db.as_shifts on x.i_shiftId equals a.i_shiftId
-                             join z in db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+            var validation = (from x in _db.as_validationTaskProfile
+                             join y in _db.UserProfiles on x.UserId equals y.UserId
+                             join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
+                             join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
                              where x.i_assetId == assetId
                              select new {
                                  user = y.FirstName + " " + y.LastName,
@@ -169,7 +168,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> FaultyLightsTasks(int assetId)
         {
-            var validation = (from x in db.as_assetStatusProfile
+            var validation = (from x in _db.as_assetStatusProfile
                               where x.i_assetProfileId == assetId
                               select x
                               ).Distinct();
@@ -211,7 +210,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> AdhocTask(int assetId)
         {
-            var torque = (from x in db.as_shiftData
+            var torque = (from x in _db.as_shiftData
                           where x.i_assetId == assetId && x.i_shiftId == 0
                           select new
                           {
@@ -261,9 +260,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> AdhocValidationTasks(int assetId)
         {
-            var validation = (from x in db.as_validationTaskProfile
-                              join y in db.UserProfiles on x.UserId equals y.UserId
-                              join z in db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+            var validation = (from x in _db.as_validationTaskProfile
+                              join y in _db.UserProfiles on x.UserId equals y.UserId
+                              join z in _db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
                               where x.i_assetId == assetId
                               select new
                               {
@@ -279,7 +278,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 var task = new AssetHistory
                 {
                     colour = "#ff7700",
-                    heading = "Validation Task Performed",
+                    heading = "Validation Task Performed (ADHOC)",
                     icon = "fa-check",
                     content = new string[2]
                 };
@@ -298,10 +297,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         private List<AssetHistory> torqueTasks(int assetId)
         {
-            var torque = (from x in db.as_shiftData
-                         join y in db.as_shifts on x.i_shiftId equals y.i_shiftId
-                         join z in db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
-                         join a in db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
+            var torque = (from x in _db.as_shiftData
+                         join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+                         join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
+                         join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
                          where x.i_assetId == assetId
                           select new { 
                             name = z.vc_groupName,
@@ -350,11 +349,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
         
         private List<AssetHistory> visualSurveys(int assetId)
         {
-            var surveys = (from x in db.as_fileUploadInfo
-                          join y in db.as_fileUploadProfile on x.guid_file equals y.guid_file
-                          join z in db.as_locationProfile on new { latitude = x.f_latitude, longitude = x.f_longitude } equals new { latitude = Math.Round(z.f_latitude,6), longitude = Math.Round(z.f_longitude,6) }
-                          join a in db.as_assetProfile on z.i_locationId equals a.i_locationId
-                          join b in db.UserProfiles on x.i_userId_logged equals b.UserId
+            var surveys = (from x in _db.as_fileUploadInfo
+                          join y in _db.as_fileUploadProfile on x.guid_file equals y.guid_file
+                          join z in _db.as_locationProfile on new { latitude = x.f_latitude, longitude = x.f_longitude } equals new { latitude = Math.Round(z.f_latitude,6), longitude = Math.Round(z.f_longitude,6) }
+                          join a in _db.as_assetProfile on z.i_locationId equals a.i_locationId
+                          join b in _db.UserProfiles on x.i_userId_logged equals b.UserId
                           where a.i_assetId == assetId
                           select new { 
                             user = b.FirstName + " " + b.LastName,

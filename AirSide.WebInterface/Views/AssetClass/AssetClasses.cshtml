@@ -12,7 +12,7 @@
 
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 text-align-right">
             <div class="page-title">
-                <a href="~/AssetClass/CreateAssetClass" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> New Asset Type</a>
+                <a href="~/AssetClass/CreateAssetClass" class="btn btn-primary" id="uploadBtn"><i class="fa fa-plus-square-o"></i> @Resources.Language.New_Asset_Type</a>
             </div>
         </div>
     </div>
@@ -23,12 +23,12 @@
             <table id="dt_assets" class="table table-striped table-bordered table-hover" style="display:none;" width="100%">
                 <thead>
                     <tr>
-                        <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Description</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-wrench txt-color-blue hidden-md hidden-sm hidden-xs"></i> Manufacturer</th>
-                        <th data-class="expand"><i class="fa fa-fw fa-cube txt-color-blue hidden-md hidden-sm hidden-xs"></i> Model</th>
-                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> Picture</th>
-                        <th data-hide="expand"><i class="fa fa-fw fa-book txt-color-blue hidden-md hidden-sm hidden-xs"></i> Reference</th>
-                        <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> Options</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-pencil-square-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Description</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-wrench txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Manufacturer</th>
+                        <th data-class="expand"><i class="fa fa-fw fa-cube txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Model</th>
+                        <th data-hide="phone,tablet"><i class="fa fa-fw fa-picture-o txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Picture</th>
+                        <th data-hide="expand"><i class="fa fa-fw fa-book txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Reference</th>
+                        <th><i class="fa fa-fw fa-cogs txt-color-blue hidden-md hidden-sm hidden-xs"></i> @Resources.Language.Options</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -87,7 +87,8 @@
                         html += '<tr class="tr_' + value.assetClassId + '">';
                         html += '<td>' + value.assetDescription + '</td><td>' + value.manufacturer + '</td><td>' + value.model + '</td>';
                         html += '<td><img src="' + value.pictureLocation + '" style="height:50px; width:auto;"/></td>';
-                        html += '<td><a href="' + value.manualURL + '" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-book"></i> Manual</a></td><td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> Delete</a></td></tr>';
+                        html += '<td><a href="' + value.manualURL + '" class="btn btn-xs btn-info" target="_blank"><i class="fa fa-book"></i> @Resources.Language.Manual</a></td>';
+                        html += '<td><a href="../../AssetClass/EditAssetClass/' + value.assetClassId + '" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"></i> @Resources.Language.Edit</a><a href="#" onclick="deleteAssetClass(' + value.assetClassId + ')" class="btn btn-xs btn-danger margin-left-5"><i class="fa fa-times"></i> @Resources.Language.Delete</a></td></tr>';
                     });
 
                     $('#dt_assets tbody').html(html);
@@ -110,12 +111,12 @@
 
         function deleteAssetClass(id) {
             $.SmartMessageBox({
-                title: '<i class="fa fa-times fa-lg txt-color-red"></i> Delete Asset Class?',
-                content: "Do you want to delete this asset class. Continue?",
-                buttons: '[No][Yes]'
+                title: '<i class="fa fa-times fa-lg txt-color-red"></i> @Resources.Language.Remove_Asset_Type?',
+                content: "@Resources.Language.Delete_Asset_Class?",
+                buttons: '[@Resources.Language.No][@Resources.Language.Yes]'
             }, function (ButtonPressed) {
 
-                if (ButtonPressed === "Yes") {
+                if (ButtonPressed === "@Resources.Language.Yes") {
                     //URL For Call
                     var url = "../../assetclass/deleteAssetClass/" + id;
 
@@ -126,7 +127,7 @@
                         data: $('<form>@Html.AntiForgeryToken()</form>').serialize(),
                         success: function (json) {
                             $.smallBox({
-                                title: "Asset Class was deleted.",
+                                title: "@Resources.Language.Asset_Class_Deleted",
                                 content: json,
                                 color: "#5384AF",
                                 timeout: 4000,

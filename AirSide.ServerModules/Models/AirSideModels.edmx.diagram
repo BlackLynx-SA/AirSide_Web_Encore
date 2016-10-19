@@ -13,33 +13,22 @@
         <EntityTypeShape EntityType="airside.encoreModel.as_assetClassProfile" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_assetInfoProfile" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.as_assetProfile" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_cacheProfile" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_eventPofile" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_eventTypes" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadProfile" Width="1.5" PointX="6.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_frequencyProfile" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_geoSpatialProfile" Width="1.5" PointX="8.75" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_iosImageProfile" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_iosLogProfile" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_locationProfile" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCategory" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCheckListDef" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCheckListEntity" Width="1.5" PointX="12.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceProfile" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceValidation" Width="1.5" PointX="4.75" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_nodeRegionProfile" Width="1.5" PointX="12.75" PointY="13.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_pictureProfile" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_reportParameters" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_reportProfile" Width="1.5" PointX="6.75" PointY="14.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_settingsProfile" Width="1.5" PointX="14.75" PointY="9.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroupProfile" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroups" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_technicianWrenchProfile" Width="1.5" PointX="8.75" PointY="15.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_todoCategories" Width="1.5" PointX="2.75" PointY="16.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_todoProfile" Width="1.5" PointX="16.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_userExternalSession" Width="1.5" PointX="16.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_validationTaskProfile" Width="1.5" PointX="16.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_wrenchProfile" Width="1.5" PointX="10.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_eventPofile" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_eventTypes" Width="1.5" PointX="2.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadProfile" Width="1.5" PointX="4.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_frequencyProfile" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_geoSpatialProfile" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_locationProfile" Width="1.5" PointX="6.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCategory" Width="1.5" PointX="8.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCheckListDef" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceCheckListEntity" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceProfile" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_maintenanceValidation" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_pictureProfile" Width="1.5" PointX="12.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_settingsProfile" Width="1.5" PointX="12.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroupProfile" Width="1.5" PointX="12.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_technicianGroups" Width="1.5" PointX="4.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_technicianWrenchProfile" Width="1.5" PointX="6.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="airside.encoreModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
@@ -47,14 +36,15 @@
         <AssociationConnector Association="airside.encoreModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="airside.encoreModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="airside.encoreModel.AspNetUserRoles" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadInfo" Width="1.5" PointX="16.75" PointY="13.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.UserProfile" Width="1.5" PointX="4.75" PointY="17.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_shiftsCustomProfile" Width="1.5" PointX="17.75" PointY="0.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_shifts" Width="1.5" PointX="14.75" PointY="17.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="17.375" PointY="17.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_multiAssetProfile" Width="1.5" PointX="7.375" PointY="18.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_assetStatusProfile" Width="1.5" PointX="0.75" PointY="19.75" />
-        <EntityTypeShape EntityType="airside.encoreModel.as_photometricProfile" Width="1.5" PointX="19.375" PointY="3.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_fileUploadInfo" Width="1.5" PointX="10.75" PointY="13.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.UserProfile" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_shiftsCustomProfile" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_shifts" Width="1.5" PointX="14.75" PointY="3.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_shiftData" Width="1.5" PointX="14.75" PointY="8.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_multiAssetProfile" Width="1.5" PointX="14.75" PointY="12.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_assetStatusProfile" Width="1.5" PointX="0.75" PointY="15.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_photometricProfile" Width="1.5" PointX="14.75" PointY="15.75" />
+        <EntityTypeShape EntityType="airside.encoreModel.as_validationTaskProfile" Width="1.5" PointX="3.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

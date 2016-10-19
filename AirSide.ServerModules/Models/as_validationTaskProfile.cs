@@ -20,5 +20,6 @@ namespace AirSide.ServerModules.Models
         public System.DateTime dt_dateTimeStamp { get; set; }
         public bool bt_validated { get; set; }
         public int i_shiftId { get; set; }
+        public int i_maintenanceId { get; set; }
     }
 }

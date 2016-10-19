@@ -125,8 +125,8 @@ IF OBJECT_ID('dbo.as_iosLogProfile', 'U') IS NOT NULL
 	DROP TABLE [dbo].[as_iosLogProfile];
  go
 
-IF OBJECT_ID('dbo.as_iosLogProfile', 'U') IS NOT NULL 
-	DROP TABLE [dbo].[as_iosLogProfile];
+IF OBJECT_ID('dbo.as_iosImageProfile', 'U') IS NOT NULL 
+	DROP TABLE [dbo].[as_iosImageProfile];
  go
 
 IF OBJECT_ID('dbo.as_nodeRegionProfile', 'U') IS NOT NULL 
@@ -135,6 +135,10 @@ IF OBJECT_ID('dbo.as_nodeRegionProfile', 'U') IS NOT NULL
 
 IF OBJECT_ID('dbo.as_reportParameters', 'U') IS NOT NULL 
 	DROP TABLE [dbo].[as_reportParameters];
+ go
+
+ IF OBJECT_ID('dbo.as_reportProfile', 'U') IS NOT NULL 
+	DROP TABLE [dbo].[as_reportProfile];
  go
 
 IF OBJECT_ID('dbo.as_todoCategories', 'U') IS NOT NULL 

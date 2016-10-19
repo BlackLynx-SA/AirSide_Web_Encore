@@ -115,6 +115,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Asset Type.
+        /// </summary>
+        internal static string Add_Asset_Type {
+            get {
+                return ResourceManager.GetString("Add_Asset_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Event.
         /// </summary>
         internal static string Add_Event {
@@ -349,6 +358,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Asset Class was deleted.
+        /// </summary>
+        internal static string Asset_Class_Deleted {
+            get {
+                return ResourceManager.GetString("Asset_Class_Deleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Asset Class Edited.
+        /// </summary>
+        internal static string Asset_Class_Edited {
+            get {
+                return ResourceManager.GetString("Asset_Class_Edited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Asset Description.
         /// </summary>
         internal static string Asset_Description {
@@ -426,6 +453,24 @@ namespace Resources {
         internal static string Asset_Types {
             get {
                 return ResourceManager.GetString("Asset_Types", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Asset Type was created.
+        /// </summary>
+        internal static string Asset_Type_Created {
+            get {
+                return ResourceManager.GetString("Asset_Type_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assosiation Removed.
+        /// </summary>
+        internal static string Assosiation_Removed {
+            get {
+                return ResourceManager.GetString("Assosiation_Removed", resourceCulture);
             }
         }
         
@@ -610,6 +655,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Continue.
+        /// </summary>
+        internal static string Continue {
+            get {
+                return ResourceManager.GetString("Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Converted / Assigned Shifts.
         /// </summary>
         internal static string Converted_Assigned_Shifts {
@@ -754,6 +808,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to delete this asset class. Continue.
+        /// </summary>
+        internal static string Delete_Asset_Class {
+            get {
+                return ResourceManager.GetString("Delete_Asset_Class", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete File?.
         /// </summary>
         internal static string Delete_File {
@@ -826,6 +889,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to add.
+        /// </summary>
+        internal static string Do_You_Want_To_Add {
+            get {
+                return ResourceManager.GetString("Do_You_Want_To_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to edit .
+        /// </summary>
+        internal static string Do_You_Want_To_Edit {
+            get {
+                return ResourceManager.GetString("Do_You_Want_To_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Drop Files to upload.
         /// </summary>
         internal static string Drop_files {
@@ -880,6 +961,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error creating a custom shift.
         /// </summary>
         internal static string Error_Custom_Shift {
@@ -894,6 +984,15 @@ namespace Resources {
         internal static string Error_Retrieve_Asset_Type {
             get {
                 return ResourceManager.GetString("Error_Retrieve_Asset_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Retrieving Categories.
+        /// </summary>
+        internal static string Error_Retrieving_Categories {
+            get {
+                return ResourceManager.GetString("Error_Retrieving_Categories", resourceCulture);
             }
         }
         
@@ -1123,6 +1222,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go Back.
+        /// </summary>
+        internal static string Go_Back {
+            get {
+                return ResourceManager.GetString("Go_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Group Added.
         /// </summary>
         internal static string Group_Added {
@@ -1240,7 +1348,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Info: This is the list of all maintenance tasks. To view all click here.
+        ///   Looks up a localized string similar to This is the list of all maintenance tasks. To view all click here.
         /// </summary>
         internal static string Infor_Maintenace_Tasks {
             get {
@@ -1249,7 +1357,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Info: This list contains all the technician groups loaded. To view all click here..
+        ///   Looks up a localized string similar to This list contains all the technician groups loaded. To view all click here..
         /// </summary>
         internal static string Info_All_Technicians {
             get {
@@ -1258,7 +1366,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Info: Please supply any external system references here..
+        ///   Looks up a localized string similar to Please supply any external system references here..
         /// </summary>
         internal static string Info_External_Reference {
             get {
@@ -1267,7 +1375,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Info: You can download and create open shifts in your Microsoft Outlook or iCalendar..
+        ///   Looks up a localized string similar to You can download and create open shifts in your Microsoft Outlook or iCalendar..
         /// </summary>
         internal static string Info_Outlook {
             get {
@@ -1627,6 +1735,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You need to create the asset class before you can associate additional maintenance tasks to it..
+        /// </summary>
+        internal static string Need_To_Create {
+            get {
+                return ResourceManager.GetString("Need_To_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Asset Type.
+        /// </summary>
+        internal static string New_Asset_Type {
+            get {
+                return ResourceManager.GetString("New_Asset_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In this new area of information and accountability, it&quot;s hard to make sense of data if it&quot;s not relevant. AirSide™ helps you to maximise your investment in current infrastructure, by providing detailed, accountable accurate information..
         /// </summary>
         internal static string New_Era {
@@ -1771,11 +1897,47 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Description.
+        /// </summary>
+        internal static string No_Description {
+            get {
+                return ResourceManager.GetString("No_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No History.
         /// </summary>
         internal static string No_History {
             get {
                 return ResourceManager.GetString("No_History", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Manufacturer.
+        /// </summary>
+        internal static string No_Manufacturer {
+            get {
+                return ResourceManager.GetString("No_Manufacturer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Model.
+        /// </summary>
+        internal static string No_Model {
+            get {
+                return ResourceManager.GetString("No_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Picture Selected.
+        /// </summary>
+        internal static string No_Picture_Selected {
+            get {
+                return ResourceManager.GetString("No_Picture_Selected", resourceCulture);
             }
         }
         
@@ -2059,6 +2221,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Asset Type.
+        /// </summary>
+        internal static string Remove_Asset_Type {
+            get {
+                return ResourceManager.GetString("Remove_Asset_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove File.
         /// </summary>
         internal static string Remove_File {
@@ -2235,6 +2406,15 @@ namespace Resources {
         internal static string Select_Event_Icon {
             get {
                 return ResourceManager.GetString("Select_Event_Icon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Image.
+        /// </summary>
+        internal static string Select_Image {
+            get {
+                return ResourceManager.GetString("Select_Image", resourceCulture);
             }
         }
         

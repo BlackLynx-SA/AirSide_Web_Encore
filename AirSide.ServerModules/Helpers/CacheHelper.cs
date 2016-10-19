@@ -1240,34 +1240,6 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        #region iOS Cache
-
-        public void UpdateiOsCache(string module)
-        {
-            try
-            {
-                //This will update the cache hash for downloads
-                //Create Date: 2015/01/27
-                //Author: Bernard Willer
-
-                var cacheModule = _db.as_cacheProfile.FirstOrDefault(q => q.vc_module == module);
-                var newHash = Guid.NewGuid();
-                if (cacheModule != null)
-                {
-                    cacheModule.ui_currentHash = newHash;
-                    _db.Entry(cacheModule).State = EntityState.Modified;
-                }
-                _db.SaveChanges();
-            }
-            catch (Exception err)
-            {
-                LogError(err, "SYSTEM");
-            }
-
-        }
-
-        #endregion
-
         #region Logging
         
         public enum LogTypes

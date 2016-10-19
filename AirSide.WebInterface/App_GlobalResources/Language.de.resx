@@ -1082,4 +1082,64 @@ Black Lynx, 2016</value>
   <data name="Upload_Image" xml:space="preserve">
     <value>Bild hochladen</value>
   </data>
+  <data name="Add_Asset_Type" xml:space="preserve">
+    <value>Hinzufügen Vermögenswertart</value>
+  </data>
+  <data name="Asset_Class_Deleted" xml:space="preserve">
+    <value>Anlageklasse wurde gelöscht</value>
+  </data>
+  <data name="Asset_Class_Edited" xml:space="preserve">
+    <value>Anlageklasse wurde bearbeitet.</value>
+  </data>
+  <data name="Asset_Type_Created" xml:space="preserve">
+    <value>Anlagentyp erstellt wurde</value>
+  </data>
+  <data name="Assosiation_Removed" xml:space="preserve">
+    <value>Verband entfernt</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Delete_Asset_Class" xml:space="preserve">
+    <value>Wollen Sie diese Anlageklasse zu löschen. Fortsetzen</value>
+  </data>
+  <data name="Do_You_Want_To_Add" xml:space="preserve">
+    <value>Wollen Sie hinzufügen</value>
+  </data>
+  <data name="Do_You_Want_To_Edit" xml:space="preserve">
+    <value>Wollen Sie bearbeiten</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Error_Retrieving_Categories" xml:space="preserve">
+    <value>Fehler beim Abrufen der Kategorien</value>
+  </data>
+  <data name="Go_Back" xml:space="preserve">
+    <value>Geh Zurück</value>
+  </data>
+  <data name="Need_To_Create" xml:space="preserve">
+    <value>Sie müssen die Asset-Klasse zu erstellen, bevor Sie eine zusätzliche Wartung Aufgaben, die ihm zuordnen können.</value>
+  </data>
+  <data name="New_Asset_Type" xml:space="preserve">
+    <value>Neue Nutzungsart</value>
+  </data>
+  <data name="No_Description" xml:space="preserve">
+    <value>Keine Beschreibung</value>
+  </data>
+  <data name="No_Manufacturer" xml:space="preserve">
+    <value>Kein Hersteller</value>
+  </data>
+  <data name="No_Model" xml:space="preserve">
+    <value>Nein Modell</value>
+  </data>
+  <data name="No_Picture_Selected" xml:space="preserve">
+    <value>Kein Bild ausgewählt</value>
+  </data>
+  <data name="Remove_Asset_Type" xml:space="preserve">
+    <value>Entfernen Nutzungsart</value>
+  </data>
+  <data name="Select_Image" xml:space="preserve">
+    <value>Bild auswählen</value>
+  </data>
 </root>

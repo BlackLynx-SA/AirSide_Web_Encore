@@ -35,33 +35,22 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_assetClassProfile> as_assetClassProfile { get; set; }
         public virtual DbSet<as_assetInfoProfile> as_assetInfoProfile { get; set; }
         public virtual DbSet<as_assetProfile> as_assetProfile { get; set; }
-        public virtual DbSet<as_cacheProfile> as_cacheProfile { get; set; }
         public virtual DbSet<as_eventPofile> as_eventPofile { get; set; }
         public virtual DbSet<as_eventTypes> as_eventTypes { get; set; }
         public virtual DbSet<as_fileUploadProfile> as_fileUploadProfile { get; set; }
         public virtual DbSet<as_frequencyProfile> as_frequencyProfile { get; set; }
         public virtual DbSet<as_geoSpatialProfile> as_geoSpatialProfile { get; set; }
-        public virtual DbSet<as_iosImageProfile> as_iosImageProfile { get; set; }
-        public virtual DbSet<as_iosLogProfile> as_iosLogProfile { get; set; }
         public virtual DbSet<as_locationProfile> as_locationProfile { get; set; }
         public virtual DbSet<as_maintenanceCategory> as_maintenanceCategory { get; set; }
         public virtual DbSet<as_maintenanceCheckListDef> as_maintenanceCheckListDef { get; set; }
         public virtual DbSet<as_maintenanceCheckListEntity> as_maintenanceCheckListEntity { get; set; }
         public virtual DbSet<as_maintenanceProfile> as_maintenanceProfile { get; set; }
         public virtual DbSet<as_maintenanceValidation> as_maintenanceValidation { get; set; }
-        public virtual DbSet<as_nodeRegionProfile> as_nodeRegionProfile { get; set; }
         public virtual DbSet<as_pictureProfile> as_pictureProfile { get; set; }
-        public virtual DbSet<as_reportParameters> as_reportParameters { get; set; }
-        public virtual DbSet<as_reportProfile> as_reportProfile { get; set; }
         public virtual DbSet<as_settingsProfile> as_settingsProfile { get; set; }
         public virtual DbSet<as_technicianGroupProfile> as_technicianGroupProfile { get; set; }
         public virtual DbSet<as_technicianGroups> as_technicianGroups { get; set; }
         public virtual DbSet<as_technicianWrenchProfile> as_technicianWrenchProfile { get; set; }
-        public virtual DbSet<as_todoCategories> as_todoCategories { get; set; }
-        public virtual DbSet<as_todoProfile> as_todoProfile { get; set; }
-        public virtual DbSet<as_userExternalSession> as_userExternalSession { get; set; }
-        public virtual DbSet<as_validationTaskProfile> as_validationTaskProfile { get; set; }
-        public virtual DbSet<as_wrenchProfile> as_wrenchProfile { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
@@ -74,6 +63,7 @@ namespace AirSide.ServerModules.Models
         public virtual DbSet<as_multiAssetProfile> as_multiAssetProfile { get; set; }
         public virtual DbSet<as_assetStatusProfile> as_assetStatusProfile { get; set; }
         public virtual DbSet<as_photometricProfile> as_photometricProfile { get; set; }
+        public virtual DbSet<as_validationTaskProfile> as_validationTaskProfile { get; set; }
     
         public virtual ObjectResult<as_get_closest_point_to_gps_coordinate1_Result> as_get_closest_point_to_gps_coordinate(Nullable<double> latitude, Nullable<double> longitude)
         {

@@ -3,9 +3,9 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa-fw fa fa-th"></i>
-                Asset Types <span>
+                @Resources.Language.Asset_Types <span>
                     >
-                    Create New Asset Type
+                    @Resources.Language.New_Asset_Type
                 </span>
             </h1>
         </div>
@@ -18,65 +18,65 @@
                     ×
                 </button>
                 <i class="fa-fw fa fa-warning"></i>
-                <strong>Please Note</strong> You need to create the asset type before you can assosiate additional maintenance tasks to it.
+                <strong>@Resources.Language.Note</strong> @Resources.Language.Need_To_Create
             </div>
             <form id="checkout-form" class="smart-form" novalidate="novalidate">
 
                 <fieldset>
                     <div class="row">
                         <section class="col col-6">
-                            <label>Asset Description</label>
+                            <label>@Resources.Language.Asset_Description</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-pencil-square-o"></i>
-                                <input type="text" name="description" id="description" placeholder="Description" class="invalid">
+                                <input type="text" name="description" id="description" placeholder="@Resources.Language.Description" class="invalid">
                             </label>
 
                         </section>
                         <section class="col col-6">
-                            <label>Manufacturer</label>
+                            <label>@Resources.Language.Manufacturer</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-industry"></i>
-                                <input type="text" name="manufacturer" id="manufacturer" placeholder="Manufacturer" class="invalid">
+                                <input type="text" name="manufacturer" id="manufacturer" placeholder="@Resources.Language.Manufacturer" class="invalid">
                             </label>
                         </section>
                     </div>
 
                     <div class="row">
                         <section class="col col-6">
-                            <label>Model</label>
+                            <label>@Resources.Language.Model</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-cube"></i>
-                                <input type="text" name="model" id="model" placeholder="Model" class="invalid">
+                                <input type="text" name="model" id="model" placeholder="@Resources.Language.Model" class="invalid">
                             </label>
                         </section>
 
                         <section class="col col-6">
-                            <label>Web Reference</label>
+                            <label>@Resources.Language.Web_Reference</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-globe"></i>
                                 <input type="url" name="manualUrl" id="manualUrl" placeholder="Manual Reference" class="invalid">
                             </label>
                             <div class="note">
-                                <strong>Note: </strong> This is a URL that points to a reference for the asset
+                                <strong>@Resources.Language.Note: </strong> @Resources.Language.Note_Url_Reference
                             </div>
                         </section>
                     </div>
 
                     <div class="row">
                         <section class="col col-6">
-                            <label>Fixing Points</label>
+                            <label>@Resources.Language.Fixing_Points</label>
                             <label class="input">
                                 <i class="icon-prepend fa fa-wrench"></i>
-                                <input type="text" name="fixingpoints" id="fixingpoints" placeholder="Fixing Points" class="invalid">
+                                <input type="text" name="fixingpoints" id="fixingpoints" placeholder="@Resources.Language.Fixing_Points" class="invalid">
                             </label>
                         </section>
 
                         <section class="col col-6">
-                            <label>Asset Picture</label>
+                            <label>@Resources.Language.Asset_Picture</label>
                             <div id="assetPic" class="dd-container" style="display: none;"></div>
                             <img src="~/content/img/adb_img/adb_loader.gif" id="adbloader" style="zoom: 0.5;"/>
                             <div class="note">
-                                <strong>Hint: </strong> You can load up additional images into the library.
+                                <strong>@Resources.Language.Note</strong> @Resources.Language.Hint_Load_Images
                             </div>
 
                         </section>
@@ -84,8 +84,8 @@
 
                 </fieldset>
                 <footer>
-                    <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> Go Back</a>
-                    <a id="createBtn" class="btn btn-success"><i class="fa fa-plus"></i> Add Asset Type</a>
+                    <a class="btn btn-danger" id="backBtn"><i class="fa fa-arrow-left"></i> @Resources.Language.Go_Back</a>
+                    <a id="createBtn" class="btn btn-success"><i class="fa fa-plus"></i> @Resources.Language.Add_Asset_Type</a>
                 </footer>
             </form>
          
@@ -126,7 +126,7 @@
                         width: 300,
                         height: 500,
                         imagePosition: "left",
-                        selectText: "Select Picture",
+                        selectText: "@Resources.Language.Select_Image",
                         onSelected: function (data) {
                             console.log(data);
                         }
@@ -170,8 +170,8 @@
 
             if (assetPic === "") {
                 $.smallBox({
-                    title: "No Picture Selected",
-                    content: "Please select a picture",
+                    title: "@Resources.Language.No_Picture_Selected",
+                    content: "<label></label>",
                     color: "#f51414",
                     timeout: 5000,
                     icon: "fa fa-bell swing animated"
@@ -181,8 +181,8 @@
 
             if (description === "" && flag) {
                 $.smallBox({
-                    title: "No Description",
-                    content: "Please enter a description",
+                    title: "@Resources.Language.No_Description",
+                    content: "<label></label>",
                     color: "#f51414",
                     timeout: 5000,
                     icon: "fa fa-bell swing animated"
@@ -192,8 +192,8 @@
 
             if (manufacturer === "" && flag) {
                 $.smallBox({
-                    title: "No Manufacturer",
-                    content: "Please enter a manufacturer",
+                    title: "@Resources.Language.No_Manufacturer",
+                    content: "<label></label>",
                     color: "#f51414",
                     timeout: 5000,
                     icon: "fa fa-bell swing animated"
@@ -203,8 +203,8 @@
 
             if (model === "" && flag) {
                 $.smallBox({
-                    title: "No Model",
-                    content: "Please enter a model",
+                    title: "@Resources.Language.No_Model",
+                    content: "<label></label>",
                     color: "#f51414",
                     timeout: 5000,
                     icon: "fa fa-bell swing animated"
@@ -214,12 +214,12 @@
 
             if (flag) {
                 $.SmartMessageBox({
-                    title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> Add New Asset Class?',
-                    content: "Do you want to add " + description + " (" + model + "). Continue?",
-                    buttons: '[No][Yes]'
+                    title: '<i class="fa fa-floppy-o fa-lg txt-color-blue"></i> @Resources.Language.Add_Asset_Type?',
+                    content: "@Resources.Language.Do_You_Want_To_Add " + description + " (" + model + "). @Resources.Language.Continue?",
+                    buttons: '[@Resources.Language.No][@Resources.Language.Yes]'
                 }, function (ButtonPressed) {
 
-                    if (ButtonPressed === "Yes") {
+                    if (ButtonPressed === "@Resources.Language.Yes") {
                         var token = $("input[name='__RequestVerificationToken']").val();
 
                         var data = {
@@ -242,7 +242,7 @@
                             dataType: "json",
                             success: function (json) {
                                 $.smallBox({
-                                    title: "Asset Class was created.",
+                                    title: "@Resources.Language.Asset_Type_Created.",
                                     content: json.description,
                                     color: "#5384AF",
                                     timeout: 4000,
@@ -263,7 +263,7 @@
                             }
                         });
                     }
-                    if (ButtonPressed === "No") {
+                    if (ButtonPressed === "@Resources.Language.No") {
                         $('#adbloader3').fadeOut(300);
                     }
                 });

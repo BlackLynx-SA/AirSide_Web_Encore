@@ -223,9 +223,6 @@
     <Compile Include="Models\as_assetStatusProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_cacheProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\as_eventPofile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
@@ -245,12 +242,6 @@
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_get_closest_point_to_gps_coordinate1_Result.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_iosImageProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_iosLogProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_locationProfile.cs">
@@ -274,19 +265,10 @@
     <Compile Include="Models\as_multiAssetProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_nodeRegionProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\as_photometricProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_pictureProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_reportParameters.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_reportProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\as_settingsProfile.cs">
@@ -310,19 +292,7 @@
     <Compile Include="Models\as_technicianWrenchProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\as_todoCategories.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_todoProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_userExternalSession.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\as_validationTaskProfile.cs">
-      <DependentUpon>AirSideModels.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\as_wrenchProfile.cs">
       <DependentUpon>AirSideModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GeneralDataShapes.cs" />
