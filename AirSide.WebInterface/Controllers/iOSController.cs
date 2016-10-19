@@ -264,10 +264,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			return Json(maintenanceProfiles);
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		[HttpPost]
-		public JsonResult GetAssetHistory(int assetId)
+	    [HttpGet]
+	    public async Task<JsonResult> TestTorqueTask(int id)
+	    {
+	        return Json(await TorqueTasks(id), JsonRequestBehavior.AllowGet);
+	    }
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        [HttpPost]
+		public async Task<JsonResult> GetAssetHistory(int assetId)
 		{
 			try
 			{
@@ -276,21 +285,53 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				//Author: Bernard Willer
 
 				var allHistory = new List<assetHistory>();
-				allHistory.AddRange(ValidationTasks(assetId));
-				allHistory.AddRange(TorqueTasks(assetId));
-				allHistory.AddRange(VisualSurveys(assetId));
+				allHistory.AddRange(await ValidationTasks(assetId));
+				allHistory.AddRange(await TorqueTasks(assetId));
+				allHistory.AddRange(await VisualSurveys(assetId));
 
 				if (allHistory.Count == 1)
-					if (allHistory[0].maintenance == null)
-						allHistory = new List<assetHistory>();
+				    if (allHistory[0].maintenance == null)
+				    {
+				        allHistory = new List<assetHistory>
+				        {
+				            new assetHistory
+				            {
+				                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+				                maintenance = "No History for this asset",
+				                type = 1,
+				                valueCaptured = "---"
+				            }
+				        };
+				    }
+
+                if (allHistory.Count == 0)
+                    allHistory = new List<assetHistory>
+                        {
+                            new assetHistory
+                            {
+                                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+                                maintenance = "No History for this asset",
+                                type = 1,
+                                valueCaptured = "---"
+                            }
+                        };
 
                 return Json(allHistory);
 			}
 			catch (Exception err)
 			{
 				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-				Response.StatusCode = 500;
-				return Json(new { message = err.Message });
+                var allHistory = new List<assetHistory>
+                        {
+                            new assetHistory
+                            {
+                                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+                                maintenance = "No History for this asset",
+                                type = 1,
+                                valueCaptured = "---"
+                            }
+                        };
+                return Json(allHistory);
 			}
 		
 		}
@@ -1422,114 +1463,124 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		private List<assetHistory> ValidationTasks(int assetId)
+		private async Task<List<assetHistory>> ValidationTasks(int assetId)
 		{
-			var validation = from x in _db.as_validationTaskProfile
-							 join y in _db.UserProfiles on x.UserId equals y.UserId
-							 join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
-							 join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
-							 where x.i_assetId == assetId
-							 select new
-							 {
-								 user = y.FirstName + " " + y.LastName,
-								 date = x.dt_dateTimeStamp,
-								 maintenanceTask = z.vc_description
-							 };
+            var tasks = new List<assetHistory>();
 
-			var tasks = new List<assetHistory>();
+		        try
+		        {
+		            var validation = await (from x in _db.as_validationTaskProfile
+		                join y in _db.UserProfiles on x.UserId equals y.UserId
+		                join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
+		                join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+		                where x.i_assetId == assetId
+		                select new
+		                {
+		                    user = y.FirstName + " " + y.LastName,
+		                    date = x.dt_dateTimeStamp,
+		                    maintenanceTask = z.vc_description
+		                }).ToListAsync();
 
-			foreach (var item in validation.OrderByDescending(q=>q.date).Take(3))
-			{
-				var task = new assetHistory
-				{
-					type = 2,
-					maintenance = item.maintenanceTask + "(" + item.user + ")",
-					valueCaptured = item.user + " performed a " + item.maintenanceTask + " task",
-					datetimeStamp = item.date.ToString("dd MMM, yyyy")
-				};
-				tasks.Add(task);
-			}
+		            tasks.AddRange(validation.OrderByDescending(q => q.date).Take(3).Select(item => new assetHistory
+		            {
+		                type = 2, maintenance = item.maintenanceTask + "(" + item.user + ")", valueCaptured = item.user + " performed a " + item.maintenanceTask + " task", datetimeStamp = item.date.ToString("dd MMM, yyyy")
+		            }));
+		        }
+		        catch (Exception err)
+                {
+                    _cache.LogError(err, User.Identity.Name);
+                }
 
-			return tasks;
+            return tasks;
+		}
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        private async Task<List<assetHistory>> TorqueTasks(int assetId)
+		{
+            var tasks = new List<assetHistory>();
+
+		    try
+		    {
+		        var torque = await (from x in _db.as_shiftData
+		            join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+		            join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
+		            join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
+		            where x.i_assetId == assetId
+		            select new
+		            {
+		                name = z.vc_groupName,
+		                date = x.dt_captureDate,
+		                maintenanceTask = a.vc_description,
+		                value = x.f_capturedValue,
+		                shiftId = x.i_shiftId
+		            }).OrderByDescending(q => q.date).Take(10).ToListAsync();
+
+
+		        var shiftId = -1;
+		        var pointer = 0;
+
+		        var task = new assetHistory();
+
+		        foreach (var item in torque)
+		        {
+		            if (item.shiftId != shiftId || shiftId == -1)
+		            {
+		                if (shiftId != -1)
+		                    tasks.Add(task);
+
+		                task = new assetHistory
+		                {
+		                    maintenance = "Fitting was torqued (" + item.name + ")",
+		                    datetimeStamp = item.date.ToString("dd MMM, yyyy"),
+		                    type = 1
+		                };
+		                shiftId = item.shiftId;
+		                pointer = 0;
+		            }
+
+		            if (pointer != 0)
+		                task.valueCaptured += "," + item.value.ToString(CultureInfo.InvariantCulture);
+		            else
+		                task.valueCaptured = item.value.ToString(CultureInfo.InvariantCulture);
+
+		            pointer++;
+		        }
+
+                if(task.maintenance != null)
+		            tasks.Add(task);
+		    }
+		    catch (Exception err)
+		    {
+				_cache.LogError(err, User.Identity.Name);
+
+            }
+
+            return tasks;
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-		private List<assetHistory> TorqueTasks(int assetId)
-		{
-			var torque = (from x in _db.as_shiftData
-						  join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
-						  join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
-						  join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
-						  where x.i_assetId == assetId
-						  select new
-						  {
-							  name = z.vc_groupName,
-							  date = x.dt_captureDate,
-							  maintenanceTask = a.vc_description,
-							  value = x.f_capturedValue,
-							  shiftId = x.i_shiftId
-						  }).OrderByDescending(q => q.date).Take(10);
-
-			var tasks = new List<assetHistory>();
-
-			var shiftId = 0;
-			var pointer = 0;
-
-			var task = new assetHistory();
-
-			foreach (var item in torque)
-			{
-				if (item.shiftId != shiftId || shiftId == 0)
-				{
-					if (shiftId != 0)
-						tasks.Add(task);
-
-					task = new assetHistory
-					{
-						maintenance = "Fitting was torqued (" + item.name + ")",
-						datetimeStamp = item.date.ToString("dd MMM, yyyy"),
-						type = 1
-					};
-					shiftId = item.shiftId;
-					pointer = 0;
-				}
-
-				if(pointer != 0)
-					task.valueCaptured += "," + item.value.ToString(CultureInfo.InvariantCulture);
-				else
-					task.valueCaptured = item.value.ToString(CultureInfo.InvariantCulture);
-
-				pointer++;
-			}
-
-			tasks.Add(task);
-
-			return tasks;
-		}
-
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-		private List<assetHistory> VisualSurveys(int assetId)
+		private async Task<List<assetHistory>> VisualSurveys(int assetId)
 		{
 			var items = new List<assetHistory>();
 
 			try
 			{
-				var location = (from x in _db.as_assetProfile
+				var location = await (from x in _db.as_assetProfile
 								join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
 								where x.i_assetId == assetId
 								select new
 								{
 									longitude = y.f_longitude,
 									latitude = y.f_latitude
-								}).FirstOrDefault();
+								}).FirstOrDefaultAsync();
 
 				if (location != null)
 				{
 					var closest = _db.as_get_closest_point_to_gps_coordinate(location.latitude, location.longitude).FirstOrDefault();
 
-					var surveys = (from x in _db.as_fileUploadInfo
+					var surveys = await (from x in _db.as_fileUploadInfo
 						join y in _db.as_fileUploadProfile on x.guid_file equals y.guid_file
 						join b in _db.UserProfiles on x.i_userId_logged equals b.UserId
 						where x.f_longitude == closest.longitude && x.f_latitude == closest.latitude
@@ -1540,7 +1591,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							fileLocation = y.vc_filePath,
 							type = y.i_fileType,
 							resolved = x.bt_resolved
-						}).OrderByDescending(q => q.date).Take(10);
+						}).OrderByDescending(q => q.date).Take(10).ToListAsync();
 
 				
 					foreach (var item in surveys.OrderByDescending(q => q.date).Take(5))
@@ -1557,17 +1608,17 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						var filepath = item.fileLocation.Split(char.Parse("."));
 						var place = filepath.Count() - 1;
 
-						if (filepath[place] == "jpg")
+						switch (filepath[place])
 						{
-							asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
-						}
-						else if (filepath[place] == "m4a")
-						{
-							asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
-						}
-						else if (filepath[place] == "text")
-						{
-							asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+						    case "jpg":
+						        asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
+						        break;
+						    case "m4a":
+						        asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
+						        break;
+						    case "text":
+						        asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+						        break;
 						}
 
 						items.Add(asset);
