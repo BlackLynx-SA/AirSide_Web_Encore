@@ -95,4 +95,3 @@ var dateRange = new AirSide.Components.CustomDateRangePicker();
 function setDateRange(typeRange) {
     dateRange.PredefinedClicked(typeRange);
 }
-//# sourceMappingURL=ComponentsHelper.js.map

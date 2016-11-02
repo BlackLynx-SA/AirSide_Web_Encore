@@ -86,8 +86,8 @@
                 <i class="fa fa-calendar "></i> <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="showRectangle();">@Resources.Language.Show_Hide_Selector</a></li>
-                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">@Resources.Language.Create_Shift</a></li>
+                <li><a href="javascript:void(0)" class="shift_rect_btn">@Resources.Language.Show_Hide_Selector</a></li>
+                <li class="disabled createShift"><a href="javascript:void(0)" class="show_assets_btn">@Resources.Language.Create_Shift</a></li>
             </ul>
         </div>
         <div class="btn-group hidden-sm hidden-xs hidden-md">
@@ -98,13 +98,12 @@
                 @Resources.Language.Shifts <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu">
-                <li><a href="#" onclick="showRectangle();">@Resources.Language.Show_Hide_Selector</a></li>
-                <li class="disabled createShift"><a href="#" onclick="getSelectedAssets();">@Resources.Language.Create_Shift</a></li>
+                <li><a href="javascript:void(0)" class="shift_rect_btn">@Resources.Language.Show_Hide_Selector</a></li>
+                <li class="disabled createShift"><a href="javascript:void(0)" class="show_assets_btn">@Resources.Language.Create_Shift</a></li>
             </ul>
         </div>
 
         @*Maintenance Task Buttons*@
-        @* Map Type Buttons *@
         <div class="btn-group  hidden-lg">
             <button type="button" class="btn btn-primary dropdown-toggle maintenanceBtn" data-toggle="dropdown">
                 <i class="fa fa-wrench"></i> <i class="fa fa-caret-down"></i>
@@ -190,102 +189,50 @@
 
 @section pagespecific{
     <script type="text/javascript" src="@src"></script>
-    
-    <script src="~/Scripts/TypeScripts/Map/GeoInfo.js"></script>
-
     <script src="~/scripts/plugin/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>
-    
+    <script src="~/Scripts/plugin/googlemaps/MarkerCluster.min.js"></script>
+    <script src="~/Scripts/plugin/date-time/moment.min.js"></script>
+    <script src="~/scripts/plugin/date/date.js"></script>
+
     <script src="~/Scripts/TypeScripts/Components/ComponentsHelper.js"></script>
-
-    @Scripts.Render("~/scripts/googlemaps")
-
-    <script src="~/Scripts/TypeScripts/Map/AirPortMap.js"></script>
+    <script src="~/Scripts/TypeScripts/Map/Services/AirportMap.Service.js"></script>
+    <script src="~/Scripts/TypeScripts/Map/Controllers/AirportMap.Controller.js"></script>
+    <script src="~/Scripts/TypeScripts/Map/Views/AirportMap.js"></script>
+    <script src="~/Scripts/TypeScripts/Map/Controllers/AirportMap.Language.js"></script>
 
     <script>
-        $('#searchHeader').show();
+        $(document).ready(function() {
+            //Populate Language Class
+            var language = new AirSide.Encore.AirportMap.Language();
+            language.almostDue = '@Resources.Language.Almost_Due';
+            language.assetType = '@Resources.Language.Asset_Types';
+            language.history = '@Resources.Language.History';
+            language.lightFaulty = '@Resources.Language.Light_Faulty';
+            language.maintenanceStatus = '@Resources.Language.Maintenance_Status';
+            language.maintenanceTask = '@Resources.Language.Maintenance_Task';
+            language.manual = '@Resources.Language.Manual';
+            language.midCycle = '@Resources.Language.Mid_Cycle';
+            language.multiAsset = '@Resources.Language.Multi_Asset';
+            language.next = '@Resources.Language.Next';
+            language.noData = '@Resources.Language.No_Data';
+            language.overDue = '@Resources.Language.Over_Due';
+            language.previous = '@Resources.Language.Previous';
+            language.updated = '@Resources.Language.Recently_Updated';
+            language.photometricData = '@Resources.Language.Photometric_Data_For';
+            language.imagesTaken = '@Resources.Language.Images_Taken';
+            language.voiceMemos = '@Resources.Language.Voice_Memos';
+            language.createNewShift = '@Resources.Language.Create_new_shift_for';
+            language.noAssets = '@Resources.Language.No_Assets';
+            language.selectAssets = '@Resources.Language.Select_Assets_For_Shift';
+            language.shiftCreated = '@Resources.Language.Shift_Created';
+            language.customShiftCreated = '@Resources.Language.Custom_Shift_Created';
+            language.errorCustomShift = '@Resources.Language.Error_Custom_Shift';
 
-        function markerInfo(json) {
-
-            var previousDate, nextDate, cycle;
-
-            if (selectedTask !== 0) {
-                $.each(json.maintenance, function(i, v) {
-                    if (v.maintenanceId === selectedTask) {
-                        previousDate = v.previousDate;
-                        nextDate = v.nextDate;
-                        cycle = v.maintenanceCycle;
-                    }
-                });
-            } else {
-                var v = json.maintenance[0];
-                previousDate = v.previousDate;
-                nextDate = v.nextDate;
-                cycle = v.maintenanceCycle;
-            }
-
-            //Header
-            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.serialNumber + '<small> - (' + json.rfidTag + ')</small></h3>';
-
-            //Image of Asset
-            content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
-            content += "<h5 class='txt-color-blue'>Summary</h4>"
-            content += "@Resources.Language.Maintenance_Status: " + getMaintenanceStatus(cycle) + "<br />";
-            content += "@Resources.Language.Previous: <strong>" + previousDate + "</strong><br />";
-            content += "@Resources.Language.Next: <strong>" + nextDate + "</strong><br />";
-            content += "@Resources.Language.Asset_Types: <strong>" + json.assetClass.description + "</strong><br />";
-            if (selectedTask === 0)
-                content += "@Resources.Language.Maintenance_Task: <strong>" + json.maintenance[0].maintenanceTask + "</strong><br />";
-            content += "<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> @Resources.Language.History</a>";
-            content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "' target='_blank'><i class='fa fa-book'></i> @Resources.Language.Manual</a><br />";
-
-            content += "</ul>";
-            content += '<hr/>';
-            if (json.status === true) {
-                content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>@Resources.Language.Light_Faulty</label></form>';
-            } else {
-                content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>@Resources.Language.Light_Faulty</label></form>';
-            }
-            //End
-            content += '</div>';
-
-            return content;
-        }
-
-        function getMaintenanceStatus(status) {
-            var img;
-            switch (status) {
-                case 0:
-                    img = "<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> @Resources.Language.No_Data</span>";
-                    break;
-                case 1:
-                    img = "<span class='txt-color-green'><i class='fa fa-thumbs-o-up'></i> @Resources.Language.Recently_Updated</span>";
-                    break;
-                case 2:
-                    img = "<span class='txt-color-yellow'><i class='fa fa-ellipsis-h'></i> @Resources.Language.Mid_Cycle</span>";
-                    break;
-                case 3:
-                    img = "<span class='txt-color-orange'><i class='fa fa-bell icon-animated-bell'></i> @Resources.Language.Almost_Due</span>";
-                    break;
-                case 4:
-                    img = "<span class='txt-color-red'><i class='fa fa-thumbs-o-down'></i> @Resources.Language.Over_Due</span>";
-                    break;
-                default:
-                    break;
-            }
-
-            return img
-        }
-
-        function markerInfoForMultiAsset(json) {
-            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue"><li class="fa fa-list"></li> @Resources.Language.Multi_Asset<small> - (' + json.rfidTag + ')</small></h3><hr/>';
-            getMultiAssets(json.assetId).forEach(function (c) {
-                var asset = getAsset(c);
-                content += '<h5><img src="' + getImage(json.maintenance, json.status) + '"/> ' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
-            });
-            content += '</div>';
-            return content;
-        }
+            var controller = new AirSide.Encore.AirportMap.Controller(language);
+            $(document).trigger('airportmap.init', [controller]);
+        });
 
     </script>
 
-}
+    
+}s

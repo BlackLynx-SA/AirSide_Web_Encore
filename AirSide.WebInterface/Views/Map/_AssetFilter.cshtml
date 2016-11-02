@@ -44,10 +44,10 @@
                             <label class="select">
                                 <select id="maintenanceSelect">
                                     <option value="0" selected="selected">@Resources.Language.No_Data</option>
-                                    <option value="1">>@Resources.Language.Recently_Updated</option>
-                                    <option value="2">>@Resources.Language.Mid_Cycle</option>
-                                    <option value="3">>@Resources.Language.Almost_Due</option>
-                                    <option value="4">>@Resources.Language.Over_Due</option>
+                                    <option value="1">@Resources.Language.Recently_Updated</option>
+                                    <option value="2">@Resources.Language.Mid_Cycle</option>
+                                    <option value="3">@Resources.Language.Almost_Due</option>
+                                    <option value="4">@Resources.Language.Over_Due</option>
                                 </select><i></i>
                             </label>
                             <div class="note"><strong><i class="fa fa-hand-o-right"></i> @Resources.Language.Note</strong> @Resources.Language.Filter_According_to_Cycle</div>
@@ -79,87 +79,3 @@
     </div>
 </div>
 
-<script type="text/javascript">
-
-    function filterAssets(all) {
-        $('#assetLoader').fadeIn(500);
-
-        //Clear Map
-        clearAllMarkers();
-        markerClusterer.clearMarkers();
-
-        var clustered = $('#clusteredChk').prop("checked");
-        var filterType = "allassets";
-        if (!all)
-            filterType = $('input[name=assetFilterRadio]:checked').val();
-
-        filterType = $('input[name=assetFilterRadio]:checked').val();
-        if (filterType === 'allassets') {
-            showAllAssets(clustered);
-            filterEnum = 101;
-            filterValue = 0;
-        } else if (filterType === 'maintain') {
-            var cycle = $('#maintenanceSelect').val();
-            showMaintenanceCycle(cycle, clustered);
-            filterEnum = 103;
-            filterValue = cycle;
-        } else if (filterType === 'asset') {
-            var asset = $('#assetClasses').val();
-            showAssetClass(asset, clustered);
-            filterEnum = 102;
-            filterValue = asset;
-        }
-        $('#assetFilterModal').modal('hide');
-        $('#assetLoader').hide();
-        lastFilter = "assets";
-    }
-
-    //Asset Filters
-    function showAllAssets(clustered) {
-        markers = [];
-        $.each(Assets.jsonData, function (i,v) {
-            var flag = false;
-            $.each(v.maintenance, function (index, value) {
-                if (value.maintenanceId === selectedTask) {
-                    addMarker(v);
-                    return false;
-                }
-            });
-        });
-        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
-    }
-
-    function showAssetClass(asset, clustered) {
-        markers = [];
-        $.each(Assets.jsonData, function (i,v) {
-            if (asset === v.assetClass.assetClassId.toString()) {
-                $.each(v.maintenance, function (index, value) {
-                    if (value.maintenanceId === selectedTask) {
-                        addMarker(v);
-                        return false;
-                    }
-                });
-            }
-        });
-
-        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
-    }
-
-    function showMaintenanceCycle(cycle, clustered) {
-        var i = 0;
-        markers = [];
-        $.each(Assets.jsonData, function (i, v) {
-            $.each(v.maintenance, function (index, value) {
-                if (value.maintenanceId === selectedTask) {
-                    if (cycle === value.maintenanceCycle) {
-                        //Add Marker to Map
-                        addMarker(v);
-                        return false;
-                    }
-                }
-            });
-        });
-
-        if (clustered) markerClusterer = new MarkerClusterer(map, markers);
-    }
-</script>

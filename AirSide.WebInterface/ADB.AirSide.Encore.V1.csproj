@@ -23,7 +23,8 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <ApplicationInsightsResourceId>/subscriptions/7a64b313-2774-4b61-a5e0-d9b83ba97657/resourcegroups/Default-Web-NorthEurope/providers/microsoft.insights/components/airsideencore</ApplicationInsightsResourceId>
-    <NuGetPackageImportStamp>75c498bb</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>1.9</TypeScriptToolsVersion>
     <TypeScriptProjectDir>$(MSBuildProjectDirectory)\</TypeScriptProjectDir>
     <TargetFrameworkProfile />
@@ -86,8 +87,8 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.4.1\lib\net40\Microsoft.Azure.Documents.Client.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.10.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.10.0\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -95,16 +96,16 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.7.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.7.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.7.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -159,8 +160,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Configuration">
-      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
@@ -188,8 +190,8 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
+    <Reference Include="System.Spatial, Version=5.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.0\lib\net40\System.Spatial.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
@@ -364,6 +366,15 @@
     <Content Include="Content\sound\voice_alert.mp3" />
     <Content Include="Content\sound\voice_off.mp3" />
     <Content Include="Content\sound\voice_on.mp3" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -374,23 +385,28 @@
     <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
     <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
-    <Content Include="Content\themes\base\jquery.ui.all.css" />
-    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\base\jquery.ui.base.css" />
-    <Content Include="Content\themes\base\jquery.ui.button.css" />
-    <Content Include="Content\themes\base\jquery.ui.core.css" />
-    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
-    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
-    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
-    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
-    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
-    <Content Include="Content\themes\base\jquery.ui.slider.css" />
-    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
-    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\adbimages\ADB_Logo_100.jpg" />
@@ -496,6 +512,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="Images\favico\manifest.json" />
+    <None Include="bundleconfig.json" />
     <None Include="Images\uploads\empty.text" />
     <Content Include="Images\uploads\IREL_LightType.jpg" />
     <Content Include="packages.config" />
@@ -522,10 +539,13 @@
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\gcal.js" />
-    <Content Include="Scripts\jquery-1.11.3.js" />
-    <Content Include="Scripts\jquery-1.11.3.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
     <Content Include="Scripts\jquery.cookie-1.4.1.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
@@ -1080,6 +1100,9 @@
     <Content Include="Scripts\plugin\gmap3\gmap3.min.js" />
     <Content Include="Scripts\plugin\gmapjs\gmapjs.js" />
     <Content Include="Scripts\plugin\googlemaps\MarkerCluster.js" />
+    <Content Include="Scripts\plugin\googlemaps\MarkerCluster.min.js">
+      <DependentUpon>MarkerCluster.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\plugin\ion-slider\ion.rangeSlider.min.js" />
     <Content Include="Scripts\plugin\jcrop\jquery.color.min.js" />
     <Content Include="Scripts\plugin\jcrop\jquery.Jcrop.min.js" />
@@ -1222,9 +1245,10 @@
     <Content Include="Views\Home\_ReleaseNotes.cshtml" />
     <Content Include="Views\Asset\MultiAssets.cshtml" />
     <Content Include="Views\Asset\_MultiAssetInsert.cshtml" />
-    <Content Include="Scripts\jquery-1.11.3.min.map" />
     <Content Include="Views\Photometric\Upload.cshtml" />
     <Content Include="Views\Photometric\Report.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1236,10 +1260,18 @@
     <TypeScriptCompile Include="Scripts\TypeScripts\Assets\ViewModels\MultiAsset.ViewModel.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Assets\Views\MultiAsset.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Components\ComponentsHelper.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Core\coreinterfaces.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\HomeHelper.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Home\SharedHelper.ts" />
-    <TypeScriptCompile Include="Scripts\TypeScripts\Map\GeoInfo.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Controller.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Language.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\Services\AirportMap.Service.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\IAssetMasterViewModel.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\IFBTechViewModel.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\IMultiAssetProfileViewModel.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\ISubAreaViewModel.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\ViewModels\ISurveyorViewModel.ts" />
+    <TypeScriptCompile Include="Scripts\TypeScripts\Map\Views\AirportMap.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Photometric\photometric.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Photometric\ViewModels\PhotometricViewModel.ts" />
     <TypeScriptCompile Include="Scripts\TypeScripts\Reporting\ShiftReport.ts" />
@@ -1249,19 +1281,22 @@
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\chartjs\chart.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\flot\jquery.flot.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\google-maps\google-maps.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps.infobubble\google.maps.infobubble.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\googlemaps\google.maps.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery-knob\jquery-knob.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.timepicker\jquery.timepicker.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.ui.layout\jquery.ui.layout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jqueryui\jqueryui.d.ts" />
-    <TypeScriptCompile Include="Scripts\TypeScripts\Map\AirPortMap_ts.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.bridge.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout.projections\knockout.projections.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\knockout\tests\jasmine.extensions.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\morris.js\morris.js.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\PDFJS\pdfjs.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\select2\select2.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\typescript-services\typescriptServices.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config">
@@ -1390,8 +1425,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.1.10.0\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.1.10.0\build\Microsoft.Azure.DocumentDB.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.10.0\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.10.0\build\Microsoft.Azure.DocumentDB.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

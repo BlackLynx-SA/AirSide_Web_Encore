@@ -110,4 +110,3 @@ var AirSide;
         })(Assets = Encore.Assets || (Encore.Assets = {}));
     })(Encore = AirSide.Encore || (AirSide.Encore = {}));
 })(AirSide || (AirSide = {}));
-//# sourceMappingURL=MultiAsset.Controller.js.map

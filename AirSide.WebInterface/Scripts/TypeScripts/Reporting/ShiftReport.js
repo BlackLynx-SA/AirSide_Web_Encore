@@ -87,4 +87,3 @@ $(document).on('click', '#dateRangeBtn', function (c) {
     var toDate = $('input.to').val();
     ShiftReport.generateReport(fromDate, toDate);
 });
-//# sourceMappingURL=ShiftReport.js.map

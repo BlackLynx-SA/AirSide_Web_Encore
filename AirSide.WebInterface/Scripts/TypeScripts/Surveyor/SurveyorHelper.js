@@ -123,4 +123,3 @@ var AirSide;
 $(document).on('ready', function (c) {
     var Survey = new AirSide.Surveyor.SingleView();
 });
-//# sourceMappingURL=SurveyorHelper.js.map

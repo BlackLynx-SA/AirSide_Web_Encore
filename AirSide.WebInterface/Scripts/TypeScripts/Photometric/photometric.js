@@ -219,4 +219,3 @@ $(document).ready(function () {
     });
     $('.knob').fadeIn(300);
 });
-//# sourceMappingURL=photometric.js.map

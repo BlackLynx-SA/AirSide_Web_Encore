@@ -70,12 +70,6 @@ namespace ADB.AirSide.Encore.V1
                 "~/scripts/plugin/vectormap/jquery-jvectormap-world-mill-en.js"
                 ));
 
-            //Google Maps
-            bundles.Add(new ScriptBundle("~/scripts/googlemaps").Include(
-               "~/scripts/plugin/googlemaps/MarkerCluster.js",
-               "~/scripts/plugin/date-time/moment.min.js"
-               ));
-
             //Login Page Bundles
             bundles.Add(new ScriptBundle("~/scripts/loginscripts").Include(
                 "~/scripts/bootstrap/bootstrap.min.js",
