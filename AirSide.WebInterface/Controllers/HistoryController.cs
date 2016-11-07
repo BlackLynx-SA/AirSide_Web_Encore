@@ -12,15 +12,13 @@
 // SUMMARY: This class contains all controller calls for any history related queries
 #endregion
 
-using ADB.AirSide.Encore.V1.Models;
 using AirSide.ServerModules.Helpers;
 using AirSide.ServerModules.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 
@@ -52,9 +50,9 @@ namespace ADB.AirSide.Encore.V1.Controllers
             try
             {
                 List<AssetHistory> allHistory = new List<AssetHistory>();
-                allHistory.AddRange(validationTasks(assetId));
-                allHistory.AddRange(torqueTasks(assetId));
-                allHistory.AddRange(visualSurveys(assetId));
+                allHistory.AddRange(ValidationTasks(assetId));
+                allHistory.AddRange(TorqueTasks(assetId));
+                allHistory.AddRange(VisualSurveys(assetId));
                 allHistory.AddRange(ValidationCheckListTasks(assetId));
                 allHistory.AddRange(FaultyLightsTasks(assetId));
                 allHistory.AddRange(AdhocTask(assetId));
@@ -129,7 +127,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<AssetHistory> validationTasks(int assetId)
+        private List<AssetHistory> ValidationTasks(int assetId)
         {
             var validation = (from x in _db.as_validationTaskProfile
                              join y in _db.UserProfiles on x.UserId equals y.UserId
@@ -235,19 +233,21 @@ namespace ADB.AirSide.Encore.V1.Controllers
                     if (shiftId != 0)
                         tasks.Add(task);
 
-                    task = new AssetHistory();
-                    task.colour = "#8800c8";
-                    task.heading = "Fitting was torqued(ADHOC) - " + item.name;
-                    task.icon = "fa-wrench";
-                    task.dateString = item.date.ToString("dd MMM, yyyy");
-                    task.dateStamp = item.date;
-                    task.content = new String[10];
-                    task.type = 2;
+                    task = new AssetHistory
+                    {
+                        colour = "#8800c8",
+                        heading = "Fitting was torqued(ADHOC)",
+                        icon = "fa-wrench",
+                        dateString = item.date.ToString("dd MMM, yyyy"),
+                        dateStamp = item.date,
+                        content = new String[10],
+                        type = 2
+                    };
                     shiftId = item.shiftId;
                     pointer = 0;
                 }
 
-                task.content[pointer] = item.value.ToString();
+                task.content[pointer] = item.value.ToString(CultureInfo.InvariantCulture);
                 pointer++;
             }
 
@@ -295,7 +295,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private List<AssetHistory> torqueTasks(int assetId)
+        private List<AssetHistory> TorqueTasks(int assetId)
         {
             var torque = (from x in _db.as_shiftData
                          join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
@@ -323,20 +323,22 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 {
                     if(shiftId != 0)
                         tasks.Add(task);
-                    
-                    task = new AssetHistory();
-                    task.colour = "#0074c8";
-                    task.heading = "Fitting was torqued - " + item.name;
-                    task.icon = "fa-wrench";
-                    task.dateString = item.date.ToString("dd MMM, yyyy");
-                    task.dateStamp = item.date;
-                    task.content = new String[10];
-                    task.type = 2;
+
+                    task = new AssetHistory
+                    {
+                        colour = "#0074c8",
+                        heading = "Fitting was torqued - " + item.name,
+                        icon = "fa-wrench",
+                        dateString = item.date.ToString("dd MMM, yyyy"),
+                        dateStamp = item.date,
+                        content = new String[10],
+                        type = 2
+                    };
                     shiftId = item.shiftId;
                     pointer = 0;
                 }
 
-                task.content[pointer] = item.value.ToString();
+                task.content[pointer] = item.value.ToString(CultureInfo.InvariantCulture);
                 pointer++;
             }
 
@@ -347,7 +349,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         
-        private List<AssetHistory> visualSurveys(int assetId)
+        private List<AssetHistory> VisualSurveys(int assetId)
         {
             var surveys = (from x in _db.as_fileUploadInfo
                           join y in _db.as_fileUploadProfile on x.guid_file equals y.guid_file
@@ -375,7 +377,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
                 };
 
                 string[] filepath = item.fileLocation.Split(char.Parse("."));
-                int place = filepath.Count() - 1;
+                int place = filepath.Length - 1;
 
                 if(filepath[place] == "jpg")
                 {

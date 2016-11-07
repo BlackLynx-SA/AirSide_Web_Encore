@@ -1,6 +1,10 @@
-var _this = this;
 var controller;
 $(document).ready(function () {
+    //Remove Worscase from Shift Creation
+    $("#shiftTasks option[value='0']").each(function () {
+        $(this).remove();
+    });
+    //-------------------------------------------------------------------------------------
     $('#timepicker').timepicker();
     //-------------------------------------------------------------------------------------
     $(document).on('airportmap.init', function (e, c) {
@@ -87,7 +91,7 @@ $(document).ready(function () {
     });
     //-------------------------------------------------------------------------------------
     $(document).on('change', '#mainAreas', function () {
-        var area = $(_this).val();
+        var area = $('#mainAreas').val();
         controller.filterSubAreas(area);
     });
     //-------------------------------------------------------------------------------------
@@ -209,3 +213,4 @@ function changeMap(type) {
         controller.map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
     }
 }
+//# sourceMappingURL=AirportMap.js.map

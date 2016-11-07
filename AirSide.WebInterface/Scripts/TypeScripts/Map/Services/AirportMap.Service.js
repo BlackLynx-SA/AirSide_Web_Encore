@@ -65,3 +65,4 @@ var AirSide;
         })(AirportMap = Encore.AirportMap || (Encore.AirportMap = {}));
     })(Encore = AirSide.Encore || (AirSide.Encore = {}));
 })(AirSide || (AirSide = {}));
+//# sourceMappingURL=AirportMap.Service.js.map

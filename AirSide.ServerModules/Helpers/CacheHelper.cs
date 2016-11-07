@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AirSide.ServerModules.Models;
@@ -46,12 +45,10 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> CreateAssetClassDownloadCache()
+        public async Task<bool> CreateAssetClassDownloadCache()
         {
             try
             {
-                //List<assetClassDownload> assetList = new List<assetClassDownload>();
-
                 var assets = (from x in _db.as_assetClassProfile
                               select x);
 
@@ -91,7 +88,7 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> CreateAllAssetDownload()
+        public async Task<bool> CreateAllAssetDownload()
         {
             try
             {
@@ -167,7 +164,7 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        public async Task<Boolean> CreateAllAssetDownload(int id)
+        public async Task<bool> CreateAllAssetDownload(int id)
         {
             try
             {
@@ -242,7 +239,7 @@ namespace AirSide.ServerModules.Helpers
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> CreateAllAssetDownloadForAsset(int assetId)
+        public async Task<bool> CreateAllAssetDownloadForAsset(int assetId)
         {
             try
             {
@@ -310,7 +307,7 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
         //Converted to new Mongo API 2015/08/11
-        public async Task<Boolean> CreateAssetDownloadCache()
+        public async Task<bool> CreateAssetDownloadCache()
         {
             try
             {
@@ -363,200 +360,6 @@ namespace AirSide.ServerModules.Helpers
 
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //public async Task<bool> rebuildShiftAgregation()
-        //{
-        //    try
-        //    {
-               
-        //        var shifts = (from x in db.as_shifts
-        //                      join y in db.as_areaSubProfile on x.i_areaSubId equals y.i_areaSubId
-        //                      join z in db.as_areaProfile on y.i_areaId equals z.i_areaId
-        //                      join a in db.as_technicianGroups on x.i_technicianGroup equals a.i_groupId
-        //                      where x.bt_completed == false
-        //                      select new
-        //                      {
-        //                          i_shiftId = x.i_shiftId,
-        //                          sheduledDate = x.dt_scheduledDate,
-        //                          i_areaSubId = x.i_areaSubId,
-        //                          sheduleTime = x.dt_scheduledDate,
-        //                          permitNumber = x.vc_permitNumber,
-        //                          techGroup = a.vc_groupName,
-        //                          areaName = z.vc_description,
-        //                          techGroupId = a.i_groupId
-        //                      }
-        //                      ).ToList();
-
-        //        if (shifts != null)
-        //        {
-        //            BsonArray shiftArray = new BsonArray();
-        //            DatabaseHelper dbHelper = new DatabaseHelper();
-
-        //            foreach (var item in shifts)
-        //            {
-        //                BsonDocument shiftsCollection = new BsonDocument();
-        //                shiftsCollection.Add("i_shiftId", item.i_shiftId);
-        //                shiftsCollection.Add("sheduledDate", item.sheduledDate.ToString("yyy/MM/dd"));
-        //                shiftsCollection.Add("i_areaSubId", item.i_areaSubId);
-        //                shiftsCollection.Add("sheduleTime", item.sheduleTime.ToString("hh:mm:ss"));
-        //                shiftsCollection.Add("permitNumber", item.permitNumber);
-        //                shiftsCollection.Add("techGroup", item.techGroup);
-        //                shiftsCollection.Add("areaName", item.areaName);
-        //                shiftsCollection.Add("techGroupId", item.techGroupId);
-
-        //                shiftArray.Add(shiftsCollection);
-        //            }
-
-        //            Drop Existing
-        //            database.DropCollection("md_shiftdata");
-
-        //            Recreate New
-        //            MongoCollection collection = database.GetCollection<shiftInfo>("md_shiftdata");
-        //            collection.InsertBatch(shiftArray);
-        //            return true;
-        //        }
-        //        else return false;
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        LogHelper log = new LogHelper();
-        //        log("Failed to rebuild shift aggregation: " + err.Message, "rebuildShiftAgregation", logTypes.Error, "SYSTEM");
-        //    }
-        //}
-
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //public void rebuildUserProfile()
-        //{
-        //    try
-        //    {
-        //        BsonArray usersArray = new BsonArray();
-        //        var users = db.UserProfiles.ToList();
-        //        foreach (var item in users)
-        //        {
-        //            var groupId = (from x in db.as_technicianGroupProfile
-        //                           where x.UserId == item.UserId
-        //                           select x.i_currentGroup).DefaultIfEmpty(0).First();
-        //            Guid sessionkey = Guid.NewGuid();
-
-        //            BsonDocument userCollection = new BsonDocument();
-        //            userCollection.Add("Username", item.UserName);
-        //            userCollection.Add("FirstName", item.FirstName);
-        //            userCollection.Add("LastName", item.LastName);
-        //            userCollection.Add("UserId", item.UserId);
-        //            userCollection.Add("i_accessLevel", item.i_accessLevelId);
-        //            userCollection.Add("i_airPortId", item.i_airPortId);
-        //            userCollection.Add("SessionKey", sessionkey.ToString());
-        //            userCollection.Add("i_groupId", groupId);
-
-        //            usersArray.Add(userCollection);
-        //        }
-
-        //        Drop Existing
-        //        database.DropCollection("md_usersprofile");
-
-        //        Recreate New
-        //        MongoCollection collection = database.GetCollection<mongoAssetDownload>("md_usersprofile");
-        //        collection.InsertBatch(usersArray);
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        LogHelper log = new LogHelper();
-        //        log("Failed to rebuild users: " + err.Message, "rebuildUserProfile", logTypes.Error, "SYSTEM");
-        //    }
-        //}
-
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //public void rebuildWrenchProfile()
-        //{
-        //    try
-        //    {
-        //        BsonArray wrenchArray = new BsonArray();
-        //        DatabaseHelper dbHelper = new DatabaseHelper();
-
-        //        List<as_wrenchProfile> wrenchList = new List<as_wrenchProfile>();
-
-        //        wrenchList = (from data in db.as_wrenchProfile select data).ToList();
-
-        //        foreach (as_wrenchProfile item in wrenchList)
-        //        {
-        //            BsonDocument wrenchCollection = new BsonDocument();
-        //            wrenchCollection.Add("bt_active", item.bt_active);
-        //            wrenchCollection.Add("dt_lastCalibrated", item.dt_lastCalibrated.ToString("yyyyMMdd"));
-        //            wrenchCollection.Add("f_batteryLevel", item.f_batteryLevel);
-        //            wrenchCollection.Add("i_calibrationCycle", item.i_calibrationCycle);
-        //            wrenchCollection.Add("i_wrenchId", item.i_wrenchId);
-        //            wrenchCollection.Add("vc_model", item.vc_model);
-        //            wrenchCollection.Add("vc_serialNumber", item.vc_serialNumber);
-
-        //            wrenchArray.Add(wrenchCollection);
-        //        }
-
-        //        Drop Existing
-        //        database.DropCollection("md_wrenchprofile");
-
-        //        Recreate New
-        //        MongoCollection collection = database.GetCollection<mongoAssetDownload>("md_wrenchprofile");
-        //        collection.InsertBatch(wrenchArray);
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        LogHelper log = new LogHelper();
-        //        log("Failed to rebuild wrench profile: " + err.Message, "rebuildWrenchProfile", logTypes.Error, "SYSTEM");
-        //    }
-        //}
-
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //public void rebuildTechnicianGroups()
-        //{
-        //    try
-        //    {
-        //        BsonArray techArray = new BsonArray();
-        //        DatabaseHelper dbHelper = new DatabaseHelper();
-
-        //        var technicians = (from x in db.UserProfiles
-        //                           join y in db.as_technicianGroupProfile on x.UserId equals y.UserId
-        //                           where x.i_accessLevelId == 3
-        //                           select new
-        //                           {
-        //                               x.UserId,
-        //                               x.FirstName,
-        //                               x.LastName,
-        //                               x.UserName,
-        //                               y.i_currentGroup,
-        //                               y.i_defaultGroup,
-        //                           }).ToList();
-
-        //        foreach (var item in technicians)
-        //        {
-        //            BsonDocument techGroupCollection = new BsonDocument();
-        //            techGroupCollection.Add("UserId", item.UserId);
-        //            techGroupCollection.Add("FirstName", item.FirstName);
-        //            techGroupCollection.Add("LastName", item.LastName);
-        //            techGroupCollection.Add("UserName", item.UserName);
-        //            techGroupCollection.Add("i_currentGroup", item.i_currentGroup);
-        //            techGroupCollection.Add("i_defaultGroup", item.i_defaultGroup);
-
-        //            techArray.Add(techGroupCollection);
-        //        }
-
-        //        //Drop Existing
-        //        database.DropCollection("md_techgroups");
-
-        //        //Recreate New
-        //        MongoCollection collection = database.GetCollection<mongoAssetDownload>("md_techgroups");
-        //        collection.InsertBatch(techArray);
-        //    }
-        //    catch (Exception err)
-        //    {
-        //        LogHelper log = new LogHelper();
-        //        log("Failed to rebuild technician cache: " + err.Message, "rebuildTechnicianGroups", logTypes.Error, "SYSTEM");
-        //    }
-        //}
-
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-        //Converted to new Mongo API 2015/08/11
         public async Task<bool> RebuildAssetProfileForAssetClass(int assetClassId)
         {
             try
@@ -903,7 +706,11 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception err)
             {
-                Log("Failed to rebuild asset profile" + err.InnerException.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
+                if (err.InnerException != null)
+                    Log("Failed to rebuild asset profile" + err.InnerException.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
+                else
+                    Log("Failed to rebuild asset profile" + err.Message, "rebuildAssetProfile", LogTypes.Error, "SYSTEM");
+
                 return false;
             }
         }
@@ -1008,7 +815,7 @@ namespace AirSide.ServerModules.Helpers
 
                 return settings;
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 return settings;
             }

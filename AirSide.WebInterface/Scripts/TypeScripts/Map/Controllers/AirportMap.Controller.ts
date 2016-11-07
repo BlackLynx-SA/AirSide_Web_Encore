@@ -26,10 +26,10 @@
         lastFilter: string;
         filterEnum: number;
         filterValue: string;
-        NeLat: number;
-        NeLong: number;
-        SwLat: number;
-        SwLong: number;
+        neLat: number;
+        neLong: number;
+        swLat: number;
+        swLong: number;
         rectFlag: boolean;
 
         //-------------------------------------------------------------------------------------
@@ -51,10 +51,10 @@
             this.lastFilter = '---';
             this.filterEnum = 0;
             this.filterValue = '---';
-            this.NeLat = 0;
-            this.NeLong = 0;
-            this.SwLat = 0;
-            this.SwLong = 0;
+            this.neLat = 0;
+            this.neLong = 0;
+            this.swLat = 0;
+            this.swLong = 0;
             this.rectFlag = false;
 
             this.initMap();
@@ -102,8 +102,8 @@
             var long = json.location.longitude;
             var lat = json.location.latitude;
             var latLongMarker = new google.maps.LatLng(lat, long);
-            var image: string = '';
-            var content: string = '';
+            var image: string;
+            var content: string;
 
             if (!this.checkMultiAsset(json.assetId)) {
                 image = $this.getImage(json.maintenance, json.status);
@@ -192,12 +192,32 @@
 
         //-------------------------------------------------------------------------------------
 
-        private getImage(value, status) {
+        private getWorstCase(maintenance: Array<IMaintenanceProfile>): IMaintenanceProfile {
+            var maintenanceTask: IMaintenanceProfile = {
+                maintenanceTask: '---',
+                maintenanceCycle: 0,
+                maintenanceId: -1,
+                nextDate: '---',
+                previousDate: '---'
+            };
+
+            var cycle: number = 0;
+            maintenance.forEach(c => {
+                if (c.maintenanceCycle > cycle)
+                    maintenanceTask = c;
+            });
+            return maintenanceTask;
+        }
+
+        //-------------------------------------------------------------------------------------
+
+        private getImage(value: Array<IMaintenanceProfile>, status: boolean) {
             var image: string = '';
             var cycle: number = -1;
+            var $this = this;
             if (status === false) {
                 if (this.selectedTask === 0) {
-                    cycle = value[0].maintenanceCycle;
+                    cycle = $this.getWorstCase(value).maintenanceCycle;
                 } else {
                     $.each(value, (i, v) => {
                         if (v.maintenanceId === this.selectedTask)
@@ -337,6 +357,7 @@
         //-------------------------------------------------------------------------------------
 
         filterAssets(all?: boolean) {
+            if (all === undefined) all = false;
             $('#assetLoader').fadeIn(500);
 
             //Clear Map
@@ -347,8 +368,7 @@
             var filterType = "allassets";
             if (!all)
                 filterType = $('input[name=assetFilterRadio]:checked').val();
-
-            filterType = $('input[name=assetFilterRadio]:checked').val();
+           
             if (filterType === 'allassets') {
                 this.showAllAssets(clustered);
                 this.filterEnum = 101;
@@ -409,11 +429,11 @@
 
         //-------------------------------------------------------------------------------------
 
-        filterSubAreas(areaId) {
+        filterSubAreas(areaId: string) {
             var i = 0;
             var options = "";
             $.each(this.subAreas, () => {
-                if (this.subAreas[i].i_areaId === areaId) {
+                if (this.subAreas[i].i_areaId.toString() === areaId) {
                     options += '<option value="' + this.subAreas[i].i_areaSubId + '">' + this.subAreas[i].vc_description + '</option>';
                 }
                 i++;
@@ -451,18 +471,20 @@
 
         //-------------------------------------------------------------------------------------
 
-        //Area Filters
-        showMainAreas(main, clustered) {
+        showMainAreas(main: string, clustered: boolean) {
             this.markers = [];
             var $this = this;
             $.each(this.assets, (i, v) => {
-                if (v.location.areaId === main) {
-                    v.maintenance.forEach((value) => {
-                        if (value.maintenanceId === $this.selectedTask) {
-                            $this.addMarker(v);
-                            return false;
-                        }
-                    });
+                if (v.location.areaId.toString() === main) {
+                    if ($this.selectedTask !== 0) {
+                        v.maintenance.forEach((value) => {
+                            if (value.maintenanceId === $this.selectedTask) {
+                                $this.addMarker(v);
+                            }
+                        });
+                    } else {
+                        $this.addMarker(v);
+                    }
                 }
             });
             if (clustered) this.markerClusterer = new MarkerClusterer(this.map, this.markers);
@@ -470,17 +492,20 @@
 
         //-------------------------------------------------------------------------------------
 
-        showSubAreas(sub, clustered) {
+        showSubAreas(sub: string, clustered: boolean) {
             this.markers = [];
             var $this = this;
             $.each(this.assets, (i, v) => {
-                if (v.location.areaSubId === sub) {
-                    v.maintenance.forEach((value) => {
-                        if (value.maintenanceId === $this.selectedTask) {
-                            $this.addMarker(v);
-                            return false;
-                        }
-                    });
+                if (v.location.areaSubId.toString() === sub) {
+                    if ($this.selectedTask !== 0) {
+                        v.maintenance.forEach((value) => {
+                            if (value.maintenanceId === $this.selectedTask) {
+                                $this.addMarker(v);
+                            }
+                        });
+                    } else {
+                        $this.addMarker(v);
+                    }
                 }
             });
             if (clustered) this.markerClusterer = new MarkerClusterer(this.map, this.markers);
@@ -512,7 +537,7 @@
             this.fbTechData.forEach(c => {
                 //Generate Info Screen
                 var contentString = this.generateFbTechContent(c);
-                var image = null;
+                var image;
 
                 if (c.pass !== false)
                     image = '/Images/icons/map_icon_green.png';
@@ -625,11 +650,10 @@
                 success: (text) => {
                     var htmltxt = '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote></div>';
                     var latLongMarker = new google.maps.LatLng(lat, long);
-                    var contentString = "";
                     var image = '/Images/icons/map_icon_red.png';
 
                     //Generate content for info window
-                    contentString = htmltxt;
+                    var contentString = htmltxt;
 
                     var marker = new google.maps.Marker({
                         position: latLongMarker,
@@ -639,7 +663,7 @@
                     });
 
                     //Add click event handler for info window
-                    google.maps.event.addListener(marker, 'click', function () {
+                    google.maps.event.addListener(marker, 'click', () => {
                         if ($this.infoWindow) $this.infoWindow.close();
                         $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
                         $this.infoWindow.open(map, marker);
@@ -677,7 +701,7 @@
             this.markers = [];
 
             this.assets.forEach((v) => {
-                if (v.status === true) {
+                if (v.status) {
                     $this.addMarker(v);
                 }
             });
@@ -689,7 +713,6 @@
 
         private addSurveyorMarker(long, lat, type, url, text) {
             var latLongMarker = new google.maps.LatLng(lat, long);
-            var contentString = "";
             var image = "";
             var $this = this;
 
@@ -699,7 +722,7 @@
                 image = '/Images/icons/map_icon_blue.png';
 
             //Generate content for info window
-            contentString = this.createSurveyorContent(type, url, text);
+            var contentString = this.createSurveyorContent(type, url, text);
 
             var marker = new google.maps.Marker({
                 position: latLongMarker,
@@ -766,17 +789,14 @@
             var selectorSwLong = this.rectangle.bounds.getSouthWest().lng();
 
             //set globals
-            this.NeLat = selectorNeLat;
-            this.NeLong = selectorNeLong;
-            this.SwLat = selectorSwLat;
-            this.SwLong = selectorSwLong;
+            this.neLat = selectorNeLat;
+            this.neLong = selectorNeLong;
+            this.swLat = selectorSwLat;
+            this.swLong = selectorSwLong;
 
             this.markers.forEach((v) => {
-                var markerLat = 0;
-                var markerLong = 0;
-
-                markerLat = v.position.lat();
-                markerLong = v.position.lng();
+                var markerLat: number = v.position.lat();
+                var markerLong: number = v.position.lng();
 
                 var latFlag = false;
                 var longFlag = false;
@@ -830,7 +850,7 @@
             var externalRef = $('#externalRefTxt').val();
             var permitNumber = $('#workpermitTxt').val();
             var maintenanceFilter = this.selectedTask;
-            var _antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
+            var antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
 
             if (externalRef === '') externalRef = '---';
             if (permitNumber === '') permitNumber = '---';
@@ -851,12 +871,12 @@
                     imageChk: false
                 },
                 bounds: {
-                    NELat: this.NeLat,
-                    NELong: this.NeLong,
-                    SWLat: this.SwLat,
-                    SWLong: this.SwLong
+                    NELat: this.neLat,
+                    NELong: this.neLong,
+                    SWLat: this.swLat,
+                    SWLong: this.swLong
                 },
-                __RequestVerificationToken: _antiforgeryToken
+                __RequestVerificationToken: antiforgeryToken
             }
 
             //FilterEnum = 107 Visual Surveyor
@@ -885,12 +905,12 @@
                         imageChk: imageChk
                     },
                     bounds: {
-                        NELat: this.NeLat,
-                        NELong: this.NeLong,
-                        SWLat: this.SwLat,
-                        SWLong: this.SwLong
+                        NELat: this.neLat,
+                        NELong: this.neLong,
+                        SWLat: this.swLat,
+                        SWLong: this.swLong
                     },
-                    __RequestVerificationToken: _antiforgeryToken
+                    __RequestVerificationToken: antiforgeryToken
                 }
             }
 
@@ -952,9 +972,9 @@
                 if (e.assetId.toString() === id) {
                     e.status = flag;
                     var i = 0;
-                    markers.forEach((d) => {
+                    $this.markers.forEach((d) => {
                         if (d.title === e.assetId.toString())
-                            markers[i].setMap(null);
+                            $this.markers[i].setMap(null);
                         i++;
                     });
 

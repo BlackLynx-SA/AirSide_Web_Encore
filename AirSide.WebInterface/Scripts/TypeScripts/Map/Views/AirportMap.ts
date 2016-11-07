@@ -1,6 +1,14 @@
 ﻿var controller: AirSide.Encore.AirportMap.Controller;
 
 $(document).ready((): void => {
+
+    //Remove Worscase from Shift Creation
+    $("#shiftTasks option[value='0']").each(function () {
+        $(this).remove();
+    });
+
+    //-------------------------------------------------------------------------------------
+
     $('#timepicker').timepicker();
 
     //-------------------------------------------------------------------------------------
@@ -112,7 +120,7 @@ $(document).ready((): void => {
     //-------------------------------------------------------------------------------------
 
     $(document).on('change', '#mainAreas', () => {
-        var area = $(this).val();
+        var area = $('#mainAreas').val();
         controller.filterSubAreas(area);
     });
 

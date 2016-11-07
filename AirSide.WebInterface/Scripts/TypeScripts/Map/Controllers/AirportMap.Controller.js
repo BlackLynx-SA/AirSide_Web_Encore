@@ -21,10 +21,10 @@ var AirSide;
                     this.lastFilter = '---';
                     this.filterEnum = 0;
                     this.filterValue = '---';
-                    this.NeLat = 0;
-                    this.NeLong = 0;
-                    this.SwLat = 0;
-                    this.SwLong = 0;
+                    this.neLat = 0;
+                    this.neLong = 0;
+                    this.swLat = 0;
+                    this.swLong = 0;
                     this.rectFlag = false;
                     this.initMap();
                 }
@@ -63,8 +63,8 @@ var AirSide;
                     var long = json.location.longitude;
                     var lat = json.location.latitude;
                     var latLongMarker = new google.maps.LatLng(lat, long);
-                    var image = '';
-                    var content = '';
+                    var image;
+                    var content;
                     if (!this.checkMultiAsset(json.assetId)) {
                         image = $this.getImage(json.maintenance, json.status);
                         content = $this.markerInfo(json);
@@ -142,13 +142,30 @@ var AirSide;
                     return content;
                 };
                 //-------------------------------------------------------------------------------------
+                Controller.prototype.getWorstCase = function (maintenance) {
+                    var maintenanceTask = {
+                        maintenanceTask: '---',
+                        maintenanceCycle: 0,
+                        maintenanceId: -1,
+                        nextDate: '---',
+                        previousDate: '---'
+                    };
+                    var cycle = 0;
+                    maintenance.forEach(function (c) {
+                        if (c.maintenanceCycle > cycle)
+                            maintenanceTask = c;
+                    });
+                    return maintenanceTask;
+                };
+                //-------------------------------------------------------------------------------------
                 Controller.prototype.getImage = function (value, status) {
                     var _this = this;
                     var image = '';
                     var cycle = -1;
+                    var $this = this;
                     if (status === false) {
                         if (this.selectedTask === 0) {
-                            cycle = value[0].maintenanceCycle;
+                            cycle = $this.getWorstCase(value).maintenanceCycle;
                         }
                         else {
                             $.each(value, function (i, v) {
@@ -270,6 +287,8 @@ var AirSide;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.filterAssets = function (all) {
+                    if (all === undefined)
+                        all = false;
                     $('#assetLoader').fadeIn(500);
                     //Clear Map
                     this.clearAllMarkers();
@@ -278,7 +297,6 @@ var AirSide;
                     var filterType = "allassets";
                     if (!all)
                         filterType = $('input[name=assetFilterRadio]:checked').val();
-                    filterType = $('input[name=assetFilterRadio]:checked').val();
                     if (filterType === 'allassets') {
                         this.showAllAssets(clustered);
                         this.filterEnum = 101;
@@ -337,7 +355,7 @@ var AirSide;
                     var i = 0;
                     var options = "";
                     $.each(this.subAreas, function () {
-                        if (_this.subAreas[i].i_areaId === areaId) {
+                        if (_this.subAreas[i].i_areaId.toString() === areaId) {
                             options += '<option value="' + _this.subAreas[i].i_areaSubId + '">' + _this.subAreas[i].vc_description + '</option>';
                         }
                         i++;
@@ -369,18 +387,21 @@ var AirSide;
                     this.lastFilter = "areas";
                 };
                 //-------------------------------------------------------------------------------------
-                //Area Filters
                 Controller.prototype.showMainAreas = function (main, clustered) {
                     this.markers = [];
                     var $this = this;
                     $.each(this.assets, function (i, v) {
-                        if (v.location.areaId === main) {
-                            v.maintenance.forEach(function (value) {
-                                if (value.maintenanceId === $this.selectedTask) {
-                                    $this.addMarker(v);
-                                    return false;
-                                }
-                            });
+                        if (v.location.areaId.toString() === main) {
+                            if ($this.selectedTask !== 0) {
+                                v.maintenance.forEach(function (value) {
+                                    if (value.maintenanceId === $this.selectedTask) {
+                                        $this.addMarker(v);
+                                    }
+                                });
+                            }
+                            else {
+                                $this.addMarker(v);
+                            }
                         }
                     });
                     if (clustered)
@@ -391,13 +412,17 @@ var AirSide;
                     this.markers = [];
                     var $this = this;
                     $.each(this.assets, function (i, v) {
-                        if (v.location.areaSubId === sub) {
-                            v.maintenance.forEach(function (value) {
-                                if (value.maintenanceId === $this.selectedTask) {
-                                    $this.addMarker(v);
-                                    return false;
-                                }
-                            });
+                        if (v.location.areaSubId.toString() === sub) {
+                            if ($this.selectedTask !== 0) {
+                                v.maintenance.forEach(function (value) {
+                                    if (value.maintenanceId === $this.selectedTask) {
+                                        $this.addMarker(v);
+                                    }
+                                });
+                            }
+                            else {
+                                $this.addMarker(v);
+                            }
                         }
                     });
                     if (clustered)
@@ -427,7 +452,7 @@ var AirSide;
                     this.fbTechData.forEach(function (c) {
                         //Generate Info Screen
                         var contentString = _this.generateFbTechContent(c);
-                        var image = null;
+                        var image;
                         if (c.pass !== false)
                             image = '/Images/icons/map_icon_green.png';
                         else
@@ -528,10 +553,9 @@ var AirSide;
                         success: function (text) {
                             var htmltxt = '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote></div>';
                             var latLongMarker = new google.maps.LatLng(lat, long);
-                            var contentString = "";
                             var image = '/Images/icons/map_icon_red.png';
                             //Generate content for info window
-                            contentString = htmltxt;
+                            var contentString = htmltxt;
                             var marker = new google.maps.Marker({
                                 position: latLongMarker,
                                 map: map,
@@ -573,7 +597,7 @@ var AirSide;
                     var $this = this;
                     this.markers = [];
                     this.assets.forEach(function (v) {
-                        if (v.status === true) {
+                        if (v.status) {
                             $this.addMarker(v);
                         }
                     });
@@ -583,7 +607,6 @@ var AirSide;
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.addSurveyorMarker = function (long, lat, type, url, text) {
                     var latLongMarker = new google.maps.LatLng(lat, long);
-                    var contentString = "";
                     var image = "";
                     var $this = this;
                     if (type === "Image")
@@ -591,7 +614,7 @@ var AirSide;
                     else if (type === "Voice")
                         image = '/Images/icons/map_icon_blue.png';
                     //Generate content for info window
-                    contentString = this.createSurveyorContent(type, url, text);
+                    var contentString = this.createSurveyorContent(type, url, text);
                     var marker = new google.maps.Marker({
                         position: latLongMarker,
                         map: $this.map,
@@ -639,15 +662,13 @@ var AirSide;
                     var selectorSwLat = this.rectangle.bounds.getSouthWest().lat();
                     var selectorSwLong = this.rectangle.bounds.getSouthWest().lng();
                     //set globals
-                    this.NeLat = selectorNeLat;
-                    this.NeLong = selectorNeLong;
-                    this.SwLat = selectorSwLat;
-                    this.SwLong = selectorSwLong;
+                    this.neLat = selectorNeLat;
+                    this.neLong = selectorNeLong;
+                    this.swLat = selectorSwLat;
+                    this.swLong = selectorSwLong;
                     this.markers.forEach(function (v) {
-                        var markerLat = 0;
-                        var markerLong = 0;
-                        markerLat = v.position.lat();
-                        markerLong = v.position.lng();
+                        var markerLat = v.position.lat();
+                        var markerLong = v.position.lng();
                         var latFlag = false;
                         var longFlag = false;
                         if (markerLat >= selectorSwLat && markerLat <= selectorNeLat)
@@ -691,7 +712,7 @@ var AirSide;
                     var externalRef = $('#externalRefTxt').val();
                     var permitNumber = $('#workpermitTxt').val();
                     var maintenanceFilter = this.selectedTask;
-                    var _antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
+                    var antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
                     if (externalRef === '')
                         externalRef = '---';
                     if (permitNumber === '')
@@ -712,12 +733,12 @@ var AirSide;
                             imageChk: false
                         },
                         bounds: {
-                            NELat: this.NeLat,
-                            NELong: this.NeLong,
-                            SWLat: this.SwLat,
-                            SWLong: this.SwLong
+                            NELat: this.neLat,
+                            NELong: this.neLong,
+                            SWLat: this.swLat,
+                            SWLong: this.swLong
                         },
-                        __RequestVerificationToken: _antiforgeryToken
+                        __RequestVerificationToken: antiforgeryToken
                     };
                     //FilterEnum = 107 Visual Surveyor
                     if (this.filterEnum === 107) {
@@ -743,12 +764,12 @@ var AirSide;
                                 imageChk: imageChk
                             },
                             bounds: {
-                                NELat: this.NeLat,
-                                NELong: this.NeLong,
-                                SWLat: this.SwLat,
-                                SWLong: this.SwLong
+                                NELat: this.neLat,
+                                NELong: this.neLong,
+                                SWLat: this.swLat,
+                                SWLong: this.swLong
                             },
-                            __RequestVerificationToken: _antiforgeryToken
+                            __RequestVerificationToken: antiforgeryToken
                         };
                     }
                     //Ajax Call
@@ -802,9 +823,9 @@ var AirSide;
                         if (e.assetId.toString() === id) {
                             e.status = flag;
                             var i = 0;
-                            markers.forEach(function (d) {
+                            $this.markers.forEach(function (d) {
                                 if (d.title === e.assetId.toString())
-                                    markers[i].setMap(null);
+                                    $this.markers[i].setMap(null);
                                 i++;
                             });
                             $this.addMarker(e);
@@ -817,3 +838,4 @@ var AirSide;
         })(AirportMap = Encore.AirportMap || (Encore.AirportMap = {}));
     })(Encore = AirSide.Encore || (AirSide.Encore = {}));
 })(AirSide || (AirSide = {}));
+//# sourceMappingURL=AirportMap.Controller.js.map
