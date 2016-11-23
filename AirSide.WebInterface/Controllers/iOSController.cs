@@ -31,6 +31,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using ADB.AirSide.Encore.V1.Models.ViewModels;
 
 namespace ADB.AirSide.Encore.V1.Controllers
 {
@@ -46,29 +47,29 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		#region Authentication
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		public IosController()
 			: this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
 		{
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		public IosController(UserManager<ApplicationUser> userManager)
 		{
 			UserManager = userManager;
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		public UserManager<ApplicationUser> UserManager { get; private set; }
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		private ApplicationSignInManager _signInManager;
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		public ApplicationSignInManager SignInManager
 		{
 			get
@@ -83,7 +84,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		[HttpPost]
 		[AllowAnonymous]
 		public async Task<ActionResult> Login(string username, string password)
@@ -264,18 +265,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			return Json(maintenanceProfiles);
 		}
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	    [HttpGet]
-	    public async Task<JsonResult> TestTorqueTask(int id)
-	    {
-	        return Json(await TorqueTasks(id), JsonRequestBehavior.AllowGet);
-	    }
+		[HttpGet]
+		public async Task<JsonResult> TestTorqueTask(int id)
+		{
+			return Json(await TorqueTasks(id), JsonRequestBehavior.AllowGet);
+		}
 
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        [HttpPost]
+		[HttpPost]
 		public async Task<JsonResult> GetAssetHistory(int assetId)
 		{
 			try
@@ -290,48 +291,48 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				allHistory.AddRange(await VisualSurveys(assetId));
 
 				if (allHistory.Count == 1)
-				    if (allHistory[0].maintenance == null)
-				    {
-				        allHistory = new List<assetHistory>
-				        {
-				            new assetHistory
-				            {
-				                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
-				                maintenance = "No History for this asset",
-				                type = 1,
-				                valueCaptured = "---"
-				            }
-				        };
-				    }
+					if (allHistory[0].maintenance == null)
+					{
+						allHistory = new List<assetHistory>
+						{
+							new assetHistory
+							{
+								datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+								maintenance = "No History for this asset",
+								type = 1,
+								valueCaptured = "---"
+							}
+						};
+					}
 
-                if (allHistory.Count == 0)
-                    allHistory = new List<assetHistory>
-                        {
-                            new assetHistory
-                            {
-                                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
-                                maintenance = "No History for this asset",
-                                type = 1,
-                                valueCaptured = "---"
-                            }
-                        };
+				if (allHistory.Count == 0)
+					allHistory = new List<assetHistory>
+						{
+							new assetHistory
+							{
+								datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+								maintenance = "No History for this asset",
+								type = 1,
+								valueCaptured = "---"
+							}
+						};
 
-                return Json(allHistory);
+				return Json(allHistory);
 			}
 			catch (Exception err)
 			{
 				_cache.LogError(err, User.Identity.Name + "(" + Request.UserHostAddress + ")");
-                var allHistory = new List<assetHistory>
-                        {
-                            new assetHistory
-                            {
-                                datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
-                                maintenance = "No History for this asset",
-                                type = 1,
-                                valueCaptured = "---"
-                            }
-                        };
-                return Json(allHistory);
+				var allHistory = new List<assetHistory>
+						{
+							new assetHistory
+							{
+								datetimeStamp = DateTime.Now.ToString("dd MMM, yyyy"),
+								maintenance = "No History for this asset",
+								type = 1,
+								valueCaptured = "---"
+							}
+						};
+				return Json(allHistory);
 			}
 		
 		}
@@ -423,7 +424,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					i_assetId = item.i_assetId,
 					i_shiftId = item.i_shiftId,
 					UserId = item.UserId,
-                    i_maintenanceId = item.i_maintenanceId,
+					i_maintenanceId = item.i_maintenanceId,
 					dt_dateTimeStamp =
 						item.dt_dateTimeStamp != null
 							? DateTime.ParseExact(item.dt_dateTimeStamp, "yyyyMMdd HHmmss", CultureInfo.InvariantCulture)
@@ -443,8 +444,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					{
 						log = "Assset Status";
 						status.bt_assetStatus = false;
-					    var tmp = status;
-					    _db.as_assetStatusProfile.Add(tmp);
+						var tmp = status;
+						_db.as_assetStatusProfile.Add(tmp);
 						_db.SaveChanges();
 					}
 
@@ -471,7 +472,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
 		[HttpPost]
 		public JsonResult GetTechnicianShifts(int userId, int closeShifts)
 		{
@@ -487,7 +488,8 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							  select new
 							  {
 								  x.i_shiftId,
-								  sheduledDate = x.dt_scheduledDate, x.i_areaSubId,
+								  sheduledDate = x.dt_scheduledDate,
+								  x.i_areaSubId,
 								  sheduleTime = x.dt_scheduledDate,
 								  permitNumber = x.vc_permitNumber,
 								  techGroup = a.vc_groupName,
@@ -496,32 +498,46 @@ namespace ADB.AirSide.Encore.V1.Controllers
 								  maintenanceId = x.i_maintenanceId,
 							  }
 							  ).ToList();
-				var shiftList = shifts.Select(item => new technicianShift
+
+
+				var shiftList = shifts.Select(item => new TechnicianShiftViewModel
 				{
-					i_shiftId = item.i_shiftId, sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"), i_areaSubId = item.i_areaSubId, sheduleTime = item.sheduleTime.ToString("hh:mm:ss"), permitNumber = item.permitNumber, techGroup = item.techGroup, areaName = item.areaName, validation = item.validation == 1 ? "YES" : "NO", shiftType = 0, assets = new int[0], maintenanceId = item.maintenanceId
+					i_shiftId = item.i_shiftId,
+					sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"),
+					i_areaSubId = item.i_areaSubId,
+					sheduleTime = item.sheduleTime.ToString("hh:mm:ss"),
+					permitNumber = item.permitNumber,
+					techGroup = item.techGroup,
+					areaName = item.areaName,
+					validation = item.validation == 1 ? "YES" : "NO",
+					shiftType = 0,
+					assets = new int[0],
+					maintenanceId = item.maintenanceId,
+					CompletedAssets = GetCompletedAssets(item.i_shiftId),
+					TotalAssets = GetAssetCount(item.i_shiftId)
 				}).ToList();
 
 				//Add custom shifts to array
 				var customShifts = (from x in _db.as_shifts
-								   join y in _db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
-								   join z in _db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
-								   where y.i_groupId == userId && x.bt_completed == closeShiftsFlag && x.bt_custom
-								   select new
-								   {
-									   x.i_shiftId,
-									   sheduledDate = x.dt_scheduledDate,
-									   i_areaSubId = 0,
-									   sheduleTime = x.dt_scheduledDate,
-									   permitNumber = x.vc_permitNumber,
-									   techGroup = y.vc_groupName,
-									   areaName = "Custom",
-									   validation = z.i_maintenanceValidationId,
-									   maintenanceId = x.i_maintenanceId
-								   }).ToList();
+									join y in _db.as_technicianGroups on x.i_technicianGroup equals y.i_groupId
+									join z in _db.as_maintenanceProfile on x.i_maintenanceId equals z.i_maintenanceId
+									where y.i_groupId == userId && x.bt_completed == closeShiftsFlag && x.bt_custom
+									select new
+									{
+										x.i_shiftId,
+										sheduledDate = x.dt_scheduledDate,
+										i_areaSubId = 0,
+										sheduleTime = x.dt_scheduledDate,
+										permitNumber = x.vc_permitNumber,
+										techGroup = y.vc_groupName,
+										areaName = "Custom",
+										validation = z.i_maintenanceValidationId,
+										maintenanceId = x.i_maintenanceId
+									}).ToList();
 
 				foreach (var item in customShifts)
 				{
-					var shift = new technicianShift
+					var shift = new TechnicianShiftViewModel
 					{
 						i_shiftId = item.i_shiftId,
 						sheduledDate = item.sheduledDate.ToString("yyy/MM/dd"),
@@ -532,16 +548,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						areaName = item.areaName,
 						validation = item.validation == 1 ? "YES" : "NO",
 						shiftType = 1,
-						maintenanceId = item.maintenanceId
+						maintenanceId = item.maintenanceId,
+						CompletedAssets = GetCompletedAssets(item.i_shiftId)
 					};
 
 					var assets = (from x in _db.as_shiftsCustomProfile
 								  where x.i_shiftId == item.i_shiftId
 								  select x.i_assetId).ToList();
+					shift.TotalAssets = assets.Count;
 
 					shift.assets = new int[assets.Count];
 					var i = 0;
-					foreach(var asset in assets)
+					foreach (var asset in assets)
 					{
 						shift.assets[i] = asset;
 						i++;
@@ -561,7 +579,250 @@ namespace ADB.AirSide.Encore.V1.Controllers
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
-		
+
+
+		private int GetAssetCount(int shiftId)
+		{
+			var shift = _db.as_shifts.FirstOrDefault(q => q.i_shiftId == shiftId);
+			var assetCount = (from x in _db.as_assetProfile join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId where y.i_areaSubId == shift.i_areaSubId select x.i_assetId).Count();
+			return assetCount;
+		}
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+        private int GetCompletedAssets(int shiftId)
+		{
+			var shift = _db.as_shifts.FirstOrDefault(q => q.i_shiftId == shiftId);
+			var maintenanceType = (from x in _db.as_maintenanceProfile
+										 where x.i_maintenanceId == shift.i_maintenanceId
+										 select x.i_maintenanceValidationId).FirstOrDefault();
+
+			var completed = 0;
+			if (shift != null && shift.bt_custom)
+			{
+				var assetsCompleted = _db.as_shiftData.Where(q => q.i_shiftId == shiftId).GroupBy(
+					p => p.i_assetId,
+					(key, g) => new
+					{
+						assetId = key,
+						values = g.Count()
+					}
+				).ToList();
+
+				var assetsValidated =
+					_db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId).GroupBy(
+						p => p.i_assetId,
+						(key, g) => new
+						{
+							assetId = key,
+							values = g.Count()
+						}
+					).ToList();
+
+				switch (maintenanceType)
+				{
+					case 2:
+						completed = assetsCompleted.Count;
+						break;
+					case 1:
+						completed = assetsValidated.Count;
+						break;
+				}
+			}
+			else
+			{
+
+				var assetsCompleted = _db.as_shiftData.Where(q => q.i_shiftId == shiftId).GroupBy(
+					p => p.i_assetId,
+					(key, g) => new
+					{
+						assetId = key,
+						values = g.Count()
+					}
+				).ToList();
+
+				var assetsValidated =
+					_db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId).GroupBy(
+						p => p.i_assetId,
+						(key, g) => new
+						{
+							assetId = key,
+							values = g.Count()
+						}
+					).ToList();
+
+				switch (maintenanceType)
+				{
+					case 2:
+						completed = assetsCompleted.Count;
+						break;
+					case 1:
+						completed = assetsValidated.Count;
+						break;
+				}
+			}
+
+			return completed;
+		}
+
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+		[HttpPost]
+		public async Task<JsonResult> GetShiftStatus(int shiftId)
+		{
+			var shift = await _db.as_shifts.FirstOrDefaultAsync(q => q.i_shiftId == shiftId);
+			var shiftAssets = new ShiftStatusViewModel();
+			var maintenanceType = await (from x in _db.as_maintenanceProfile
+										 where x.i_maintenanceId == shift.i_maintenanceId
+										select x.i_maintenanceValidationId).FirstOrDefaultAsync();
+
+
+			if (shift.bt_custom)
+			{
+				shiftAssets.Assets = new List<ShiftAssetStatus>();
+				var assets = await _db.as_shiftsCustomProfile.Where(q => q.i_shiftId == shiftId).ToListAsync();
+				var assetsCompleted = await _db.as_shiftData.Where(q => q.i_shiftId == shiftId).GroupBy(
+					p => p.i_assetId,
+					(key, g) => new
+					{
+						assetId = key,
+						values = g.Count()
+					}
+				).ToListAsync();
+
+				var assetsValidated =
+					await _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId).GroupBy(
+						p => p.i_assetId,
+						(key, g) => new
+						{
+							assetId = key,
+							values = g.Count()
+						}
+					).ToListAsync();
+
+				shiftAssets.TotalAssets = assets.Count;
+				if (maintenanceType == 2)
+					shiftAssets.CompletedAssets = assetsCompleted.Count;
+				else if (maintenanceType == 1)
+					shiftAssets.CompletedAssets = assetsValidated.Count;
+
+				foreach (var asset in assets)
+				{
+					var flag = false;
+					var values = 0;
+
+					if (maintenanceType == 2)
+					{
+						foreach (var completed in assetsCompleted)
+						{
+							if (asset.i_assetId == completed.assetId)
+							{
+								flag = true;
+								values = completed.values;
+							}
+						}
+					} else if (maintenanceType == 1)
+					{
+						foreach (var completed in assetsValidated)
+						{
+							if (asset.i_assetId == completed.assetId)
+							{
+								flag = true;
+								values = completed.values;
+							}
+						}
+					}
+
+
+					var assetStatus = new ShiftAssetStatus
+					{
+						AssetId = asset.i_assetId,
+						Completed = flag,
+						Values = values
+					};
+
+					shiftAssets.Assets.Add(assetStatus);
+				}
+			}
+			else
+			{
+				shiftAssets.Assets = new List<ShiftAssetStatus>();
+				var assets = await (from x in _db.as_assetProfile
+					join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
+					where y.i_areaSubId == shift.i_areaSubId
+					select x.i_assetId
+				).ToListAsync();
+
+				var assetsCompleted = await _db.as_shiftData.Where(q => q.i_shiftId == shiftId).GroupBy(
+					p => p.i_assetId,
+					(key, g) => new
+					{
+						assetId = key,
+						values = g.Count()
+					}
+				).ToListAsync();
+
+				var assetsValidated =
+					await _db.as_validationTaskProfile.Where(q => q.i_shiftId == shiftId).GroupBy(
+						p => p.i_assetId,
+						(key, g) => new
+						{
+							assetId = key,
+							values = g.Count()
+						}
+					).ToListAsync();
+
+				shiftAssets.TotalAssets = assets.Count;
+				switch (maintenanceType)
+				{
+					case 2:
+						shiftAssets.CompletedAssets = assetsCompleted.Count;
+						break;
+					case 1:
+						shiftAssets.CompletedAssets = assetsValidated.Count;
+						break;
+				}
+
+				foreach (var asset in assets)
+				{
+					var flag = false;
+					var values = 0;
+
+					switch (maintenanceType)
+					{
+						case 2:
+							foreach (var completed in assetsCompleted)
+							{
+								if (asset != completed.assetId) continue;
+								flag = true;
+								values = completed.values;
+							}
+							break;
+						case 1:
+							foreach (var completed in assetsValidated)
+							{
+								if (asset != completed.assetId) continue;
+								flag = true;
+								values = completed.values;
+							}
+							break;
+					}
+
+					var assetStatus = new ShiftAssetStatus
+					{
+						AssetId = asset,
+						Completed = flag,
+						Values = values
+					};
+
+					shiftAssets.Assets.Add(assetStatus);
+				}
+			}
+
+			return Json(new { shiftAssets = shiftAssets });
+		}
+
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
 		[HttpPost]
 		public async Task<JsonResult> InsertShiftData(List<shiftDataUpload> shiftData)
 		{
@@ -583,15 +844,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						i_shiftId = shift.i_shiftId
 					};
 
-					//var data = _db.as_shiftData.FirstOrDefault(q => q.i_shiftId == shift.i_shiftId && q.i_assetId == shift.i_assetId);
-
-					//if (data != null)
-					//{
-					//    _db.as_shiftData.Remove(data);
-					//    _db.SaveChanges();
-					//}
-
-					_db.as_shiftData.Add(newData);
+				    _db.as_shiftData.Add(newData);
 					_db.SaveChanges();
 
 					try
@@ -600,7 +853,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 					catch (Exception err)
 					{
-						_cache.Log("Failed to update cache for asset " + shift.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						if (err.InnerException != null)
+							_cache.Log("Failed to update cache for asset " + shift.i_assetId + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						else
+							_cache.Log("Failed to update cache for asset " + shift.i_assetId + " - " + err.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+
 					}
 
 					assets.Add(shift.i_assetId);
@@ -893,7 +1150,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						var currentTagId = asset.vc_rfidTag;
 						asset.vc_rfidTag = item.tagId;
 						asset.vc_serialNumber = item.serialNumber;
-						_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+						_db.Entry(asset).State = EntityState.Modified;
 						_db.SaveChanges();
 
 						//Log the change
@@ -907,7 +1164,10 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						}
 						catch (Exception err)
 						{
-							_cache.Log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+							if (err.InnerException != null)
+								_cache.Log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+							else
+								_cache.Log("Failed to update cache for asset " + item.assetId.ToString() + " - " + err.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
 						}
 					}
 					else
@@ -941,7 +1201,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					var currentTagId = asset.vc_rfidTag;
 					asset.vc_rfidTag = tagId;
 					asset.vc_serialNumber = serialNumber;
-					_db.Entry(asset).State = System.Data.Entity.EntityState.Modified;
+					_db.Entry(asset).State = EntityState.Modified;
 					_db.SaveChanges();
 
 					//Log the change
@@ -954,7 +1214,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 					catch (Exception err)
 					{
-						_cache.Log("Failed to update cache for asset " + asset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						if (err.InnerException != null)
+							_cache.Log("Failed to update cache for asset " + asset.i_assetId + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						else
+							_cache.Log("Failed to update cache for asset " + asset.i_assetId + " - " + err.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+
 					}
 
 					return Json("[{success:1}]");
@@ -1012,7 +1276,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 					}
 					catch (Exception err)
 					{
-						_cache.Log("Failed to update cache for asset " + newAsset.i_assetId.ToString() + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						if (err.InnerException != null)
+							_cache.Log("Failed to update cache for asset " + newAsset.i_assetId + " - " + err.InnerException.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+						else
+							_cache.Log("Failed to update cache for asset " + newAsset.i_assetId + " - " + err.Message, "insertShiftData", CacheHelper.LogTypes.Error, "SYSTEM");
+
 					}
 				}
 
@@ -1021,7 +1289,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				_cache.Log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				if (err.InnerException != null)
+					_cache.Log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.InnerException.Message, "insertAssetAssosiation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+				else
+					_cache.Log("Failed to insert asset assosiation: " + err.Message + "|Inner: |" + err.Message, "insertAssetAssosiation(iOS)", CacheHelper.LogTypes.Error, "iOS Device");
+
 				Response.StatusCode = 500;
 				return Json("[{error:" + err.Message + "}]");
 			}
@@ -1102,7 +1374,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
-        //This was changed as release for Encore to clean up DB
+		//This was changed as release for Encore to clean up DB
 		//[HttpPost]
 		//public JsonResult UpdateBatteryLevel(List<WrenchBatteryUpdate> batteryUpdate)
 		//{
@@ -1177,8 +1449,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							}
 							catch (Exception err)
 							{
+								if (err.InnerException != null)
+									_cache.Log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+								else
+									_cache.Log("Failed to upload File (Image Check): " + err.Message + " | " + err.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
 
-								_cache.Log("Failed to upload File (Image Check): " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
 							}
 						}
 					}
@@ -1215,7 +1490,11 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				_cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+				if (err.InnerException != null)
+					_cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+				else
+					_cache.Log("Failed to upload File: " + err.Message + " | " + err.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1252,7 +1531,7 @@ namespace ADB.AirSide.Encore.V1.Controllers
 				return true;
 			}
 
-			var formats = new string[] { ".jpg", ".png", ".gif", ".jpeg" };
+			var formats = new[] { ".jpg", ".png", ".gif", ".jpeg" };
 
 			// linq
 			return formats.Any(item => file.FileName.EndsWith(item, StringComparison.OrdinalIgnoreCase));
@@ -1300,7 +1579,13 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				_cache.Log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", CacheHelper.LogTypes.Error, "iOS");
+				if (err.InnerException != null)
+					_cache.Log("Failed to upload File Info: " + err.Message + " | " + err.InnerException.Message, "updateFileInfo", CacheHelper.LogTypes.Error, "iOS");
+				else
+				{
+					_cache.Log("Failed to upload File Info: " + err.Message + " | " + err.Message, "updateFileInfo", CacheHelper.LogTypes.Error, "iOS");
+
+				}
 				Response.StatusCode = 500;
 				return err.Message;
 			}
@@ -1328,9 +1613,16 @@ namespace ADB.AirSide.Encore.V1.Controllers
 							}
 							catch (Exception err)
 							{
-								_cache.Log(
-									"Failed to upload File (Image Check): " + err.Message + " | " +
-									err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+								if (err.InnerException != null)
+									_cache.Log(
+										"Failed to upload File (Image Check): " + err.Message + " | " +
+										err.InnerException.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+								else
+								{
+									_cache.Log(
+									   "Failed to upload File (Image Check): " + err.Message + " | " +
+									   err.Message, "UploadFile", CacheHelper.LogTypes.Error, "iOS");
+								}
 							}
 						}
 					}
@@ -1386,13 +1678,18 @@ namespace ADB.AirSide.Encore.V1.Controllers
 			}
 			catch (Exception err)
 			{
-				_cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadSingleFile", CacheHelper.LogTypes.Error, "iOS");
+				if (err.InnerException != null)
+					_cache.Log("Failed to upload File: " + err.Message + " | " + err.InnerException.Message, "UploadSingleFile", CacheHelper.LogTypes.Error, "iOS");
+				else
+					_cache.Log("Failed to upload File: " + err.Message + " | " + err.Message, "UploadSingleFile", CacheHelper.LogTypes.Error, "iOS");
+
 				Response.StatusCode = 500;
 				return Json(new {success = false});
 			}
 		}
 
 		#endregion
+
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 		
@@ -1465,98 +1762,98 @@ namespace ADB.AirSide.Encore.V1.Controllers
 
 		private async Task<List<assetHistory>> ValidationTasks(int assetId)
 		{
-            var tasks = new List<assetHistory>();
+			var tasks = new List<assetHistory>();
 
-		        try
-		        {
-		            var validation = await (from x in _db.as_validationTaskProfile
-		                join y in _db.UserProfiles on x.UserId equals y.UserId
-		                join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
-		                join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
-		                where x.i_assetId == assetId
-		                select new
-		                {
-		                    user = y.FirstName + " " + y.LastName,
-		                    date = x.dt_dateTimeStamp,
-		                    maintenanceTask = z.vc_description
-		                }).ToListAsync();
+				try
+				{
+					var validation = await (from x in _db.as_validationTaskProfile
+						join y in _db.UserProfiles on x.UserId equals y.UserId
+						join a in _db.as_shifts on x.i_shiftId equals a.i_shiftId
+						join z in _db.as_maintenanceProfile on a.i_maintenanceId equals z.i_maintenanceId
+						where x.i_assetId == assetId
+						select new
+						{
+							user = y.FirstName + " " + y.LastName,
+							date = x.dt_dateTimeStamp,
+							maintenanceTask = z.vc_description
+						}).ToListAsync();
 
-		            tasks.AddRange(validation.OrderByDescending(q => q.date).Take(3).Select(item => new assetHistory
-		            {
-		                type = 2, maintenance = item.maintenanceTask + "(" + item.user + ")", valueCaptured = item.user + " performed a " + item.maintenanceTask + " task", datetimeStamp = item.date.ToString("dd MMM, yyyy")
-		            }));
-		        }
-		        catch (Exception err)
-                {
-                    _cache.LogError(err, User.Identity.Name);
-                }
+					tasks.AddRange(validation.OrderByDescending(q => q.date).Take(3).Select(item => new assetHistory
+					{
+						type = 2, maintenance = item.maintenanceTask + "(" + item.user + ")", valueCaptured = item.user + " performed a " + item.maintenanceTask + " task", datetimeStamp = item.date.ToString("dd MMM, yyyy")
+					}));
+				}
+				catch (Exception err)
+				{
+					_cache.LogError(err, User.Identity.Name);
+				}
 
-            return tasks;
+			return tasks;
 		}
 
-        //-----------------------------------------------------------------------------------------------------------------------------------------------------------
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        private async Task<List<assetHistory>> TorqueTasks(int assetId)
+		private async Task<List<assetHistory>> TorqueTasks(int assetId)
 		{
-            var tasks = new List<assetHistory>();
+			var tasks = new List<assetHistory>();
 
-		    try
-		    {
-		        var torque = await (from x in _db.as_shiftData
-		            join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
-		            join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
-		            join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
-		            where x.i_assetId == assetId
-		            select new
-		            {
-		                name = z.vc_groupName,
-		                date = x.dt_captureDate,
-		                maintenanceTask = a.vc_description,
-		                value = x.f_capturedValue,
-		                shiftId = x.i_shiftId
-		            }).OrderByDescending(q => q.date).Take(10).ToListAsync();
+			try
+			{
+				var torque = await (from x in _db.as_shiftData
+					join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
+					join z in _db.as_technicianGroups on y.i_technicianGroup equals z.i_groupId
+					join a in _db.as_maintenanceProfile on y.i_maintenanceId equals a.i_maintenanceId
+					where x.i_assetId == assetId
+					select new
+					{
+						name = z.vc_groupName,
+						date = x.dt_captureDate,
+						maintenanceTask = a.vc_description,
+						value = x.f_capturedValue,
+						shiftId = x.i_shiftId
+					}).OrderByDescending(q => q.date).Take(10).ToListAsync();
 
 
-		        var shiftId = -1;
-		        var pointer = 0;
+				var shiftId = -1;
+				var pointer = 0;
 
-		        var task = new assetHistory();
+				var task = new assetHistory();
 
-		        foreach (var item in torque)
-		        {
-		            if (item.shiftId != shiftId || shiftId == -1)
-		            {
-		                if (shiftId != -1)
-		                    tasks.Add(task);
+				foreach (var item in torque)
+				{
+					if (item.shiftId != shiftId || shiftId == -1)
+					{
+						if (shiftId != -1)
+							tasks.Add(task);
 
-		                task = new assetHistory
-		                {
-		                    maintenance = "Fitting was torqued (" + item.name + ")",
-		                    datetimeStamp = item.date.ToString("dd MMM, yyyy"),
-		                    type = 1
-		                };
-		                shiftId = item.shiftId;
-		                pointer = 0;
-		            }
+						task = new assetHistory
+						{
+							maintenance = "Fitting was torqued (" + item.name + ")",
+							datetimeStamp = item.date.ToString("dd MMM, yyyy"),
+							type = 1
+						};
+						shiftId = item.shiftId;
+						pointer = 0;
+					}
 
-		            if (pointer != 0)
-		                task.valueCaptured += "," + item.value.ToString(CultureInfo.InvariantCulture);
-		            else
-		                task.valueCaptured = item.value.ToString(CultureInfo.InvariantCulture);
+					if (pointer != 0)
+						task.valueCaptured += "," + item.value.ToString(CultureInfo.InvariantCulture);
+					else
+						task.valueCaptured = item.value.ToString(CultureInfo.InvariantCulture);
 
-		            pointer++;
-		        }
+					pointer++;
+				}
 
-                if(task.maintenance != null)
-		            tasks.Add(task);
-		    }
-		    catch (Exception err)
-		    {
+				if(task.maintenance != null)
+					tasks.Add(task);
+			}
+			catch (Exception err)
+			{
 				_cache.LogError(err, User.Identity.Name);
 
-            }
+			}
 
-            return tasks;
+			return tasks;
 		}
 
 		//-----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1606,19 +1903,19 @@ namespace ADB.AirSide.Encore.V1.Controllers
 						asset.valueCaptured = item.user + "(" + resolved + ")";
 
 						var filepath = item.fileLocation.Split(char.Parse("."));
-						var place = filepath.Count() - 1;
+						var place = filepath.Length - 1;
 
 						switch (filepath[place])
 						{
-						    case "jpg":
-						        asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
-						        break;
-						    case "m4a":
-						        asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
-						        break;
-						    case "text":
-						        asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
-						        break;
+							case "jpg":
+								asset.maintenance = "Image taken by " + item.user + "(" + resolved + ")";
+								break;
+							case "m4a":
+								asset.maintenance = "Voice memo taken by" + item.user + "(" + resolved + ")";
+								break;
+							case "text":
+								asset.maintenance = "Text captured by " + item.user + "(" + resolved + ")";
+								break;
 						}
 
 						items.Add(asset);

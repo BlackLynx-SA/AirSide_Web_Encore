@@ -13,7 +13,7 @@ namespace AirSide.ServerModules.Helpers
 
         public int GetAssetCountPerSubArea(int subArea)
         {
-            int assetCount = (from x in _db.as_assetProfile
+            var assetCount = (from x in _db.as_assetProfile
                               join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
                               join z in _db.as_areaSubProfile on y.i_areaSubId equals z.i_areaSubId
                               where z.i_areaSubId == subArea
@@ -23,27 +23,25 @@ namespace AirSide.ServerModules.Helpers
 
         public int GetAssetCountPerCustomShift(int shiftId)
         {
-            int assetCount = (from x in _db.as_shiftsCustomProfile where x.i_shiftId == shiftId select x).Count();
+            var assetCount = (from x in _db.as_shiftsCustomProfile where x.i_shiftId == shiftId select x).Count();
             return assetCount;
         }
 
         public int GetCompletedAssetsForShift(int shiftId)
         {
-            //TODO: This is a short term hack and needs to be fixed to identify the shifts properly
-            int shiftCount = (from x in _db.as_shiftData where x.i_shiftId == shiftId && x.i_shiftId > 8999 select x).GroupBy(q => q.i_assetId).Count();
+            var shiftCount = (from x in _db.as_shiftData join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId where x.i_shiftId == shiftId && y.i_areaSubId != 0 select x).GroupBy(q => q.i_assetId).Count();
             return shiftCount;
         }
 
         public int GetCompletedAssetsForCustomShift(int shiftId)
         {
-            //TODO: This is a short term hack and needs to be fixed to identify the shifts properly
-            int shiftCount = (from x in _db.as_shiftData where x.i_shiftId == shiftId && x.i_shiftId < 9000 select x).GroupBy(q => q.i_assetId).Count();
+            var shiftCount = (from x in _db.as_shiftData join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId where x.i_shiftId == shiftId && y.i_areaSubId == 0 select x).GroupBy(q => q.i_assetId).Count();
             return shiftCount;
         }
 
         public int GetAssetCountPerArea(int areaId)
         {
-            int assetCount = (from x in _db.as_assetProfile
+            var assetCount = (from x in _db.as_assetProfile
                               join y in _db.as_locationProfile on x.i_locationId equals y.i_locationId
                               join z in _db.as_areaSubProfile on y.i_areaSubId equals z.i_areaSubId
                               where z.i_areaId == areaId
@@ -53,10 +51,10 @@ namespace AirSide.ServerModules.Helpers
 
         public DateTime GetFirstMaintanedDate(int assetId)
         {
-            DateTime newDate = new DateTime(1970, 1, 1);
+            var newDate = new DateTime(1970, 1, 1);
             try
             {
-                DateTime firstDate = (from x in _db.as_shiftData
+                var firstDate = (from x in _db.as_shiftData
                     join y in _db.as_assetProfile on x.i_assetId equals y.i_assetId
                     where y.i_assetId == assetId
                     select x.dt_captureDate).DefaultIfEmpty(newDate).First();
@@ -84,17 +82,17 @@ namespace AirSide.ServerModules.Helpers
                          });
 
             {
-                maintenance[] maintenanceArray = new maintenance[asset.Count()];
-                List<maintenance> allTasks = new List<maintenance>();
-                int i = 0;
+                var maintenanceArray = new maintenance[asset.Count()];
+                var allTasks = new List<maintenance>();
+                var i = 0;
 
                 foreach (var item in asset)
                 {
-                    DateTime previousDate = GetMaintenanceLastDate(item.maintencanceId, assetId);
-                    DateTime nextDate = GetMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
-                    int color = GetMaintenanceColour(previousDate, item.frequency);
+                    var previousDate = GetMaintenanceLastDate(item.maintencanceId, assetId);
+                    var nextDate = GetMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
+                    var color = GetMaintenanceColour(previousDate, item.frequency);
 
-                    maintenance maintenanceTask = new maintenance
+                    var maintenanceTask = new maintenance
                     {
                         maintenanceTask = item.task,
                         previousDate = previousDate.ToString("yyyy/MM/dd"),
@@ -108,7 +106,7 @@ namespace AirSide.ServerModules.Helpers
 
                 foreach (var item in allTasks.OrderByDescending(q => q.maintenanceCycle))
                 {
-                    maintenance maintenanceTask = new maintenance
+                    var maintenanceTask = new maintenance
                     {
                         maintenanceTask = item.maintenanceTask,
                         previousDate = item.previousDate,
@@ -139,15 +137,15 @@ namespace AirSide.ServerModules.Helpers
                              maintencanceId = b.i_maintenanceId,
                          });
 
-            List<maintenance> allTasks = new List<maintenance>();
+            var allTasks = new List<maintenance>();
 
             foreach (var item in asset)
             {
-                DateTime previousDate = GetMaintenanceLastDate(item.maintencanceId, assetId);
-                DateTime nextDate = GetMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
-                int color = GetMaintenanceColour(previousDate, item.frequency);
+                var previousDate = GetMaintenanceLastDate(item.maintencanceId, assetId);
+                var nextDate = GetMaintenanceNextDate(item.maintencanceId, assetId, item.frequency);
+                var color = GetMaintenanceColour(previousDate, item.frequency);
 
-                maintenance maintenanceTask = new maintenance
+                var maintenanceTask = new maintenance
                 {
                     maintenanceTask = item.task,
                     previousDate = previousDate.ToString("yyyy/MM/dd"),
@@ -172,12 +170,12 @@ namespace AirSide.ServerModules.Helpers
 
                 var maintenance = _db.as_maintenanceProfile.Find(maintenanceId);
                 
-                Boolean shiftFlag = true;
-                Boolean validationFlag = true;
+                var shiftFlag = true;
+                var validationFlag = true;
 
-                DateTime shiftDate = DateTime.Now;
-                DateTime valDate = DateTime.Now;
-                DateTime returnDate = new DateTime(1970, 1, 1);
+                var shiftDate = DateTime.Now;
+                var valDate = DateTime.Now;
+                var returnDate = new DateTime(1970, 1, 1);
 
                 if (maintenance.i_maintenanceValidationId == 2)
                 {
@@ -199,7 +197,7 @@ namespace AirSide.ServerModules.Helpers
                 {
                     //get last validation date for asset
                     var lastValDate = (from x in _db.as_validationTaskProfile
-                        where x.i_assetId == assetId
+                        where x.i_assetId == assetId && x.i_maintenanceId == maintenanceId
                         select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
 
                     if (lastValDate == null)
@@ -231,12 +229,12 @@ namespace AirSide.ServerModules.Helpers
             {
                 var maintenance = _db.as_maintenanceProfile.Find(maintenanceId);
 
-                Boolean shiftFlag = true;
-                Boolean validationFlag = true;
+                var shiftFlag = true;
+                var validationFlag = true;
 
-                DateTime shiftDate = DateTime.Now;
-                DateTime valDate = DateTime.Now;
-                DateTime returnDate = new DateTime(1970, 1, 1);
+                var shiftDate = DateTime.Now;
+                var valDate = DateTime.Now;
+                var returnDate = new DateTime(1970, 1, 1);
 
                 if (maintenance.i_maintenanceValidationId == 2)
                 {
@@ -257,7 +255,7 @@ namespace AirSide.ServerModules.Helpers
                 {
                     //get last validation date for asset
                     var lastValDate = (from x in _db.as_validationTaskProfile
-                        where x.i_assetId == assetId
+                        where x.i_assetId == assetId && x.i_maintenanceId == maintenanceId
                         select x).OrderByDescending(q => q.dt_dateTimeStamp).FirstOrDefault();
 
                     if (lastValDate == null)
@@ -337,7 +335,7 @@ namespace AirSide.ServerModules.Helpers
                              where x.i_areaId == areaSubId
                              select b).OrderBy(q => q.dt_captureDate).FirstOrDefault();
 
-            DateTime returnDate = new DateTime(1970, 1, 1);
+            var returnDate = new DateTime(1970, 1, 1);
             if (firstDate != null) returnDate = firstDate.dt_captureDate;
             return returnDate;
         }
@@ -349,7 +347,7 @@ namespace AirSide.ServerModules.Helpers
                             where x.i_assetId == assetId
                             select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
 
-            DateTime returnDate = new DateTime(1970, 1, 1);
+            var returnDate = new DateTime(1970, 1, 1);
             if (lastDate != null)
                 returnDate = lastDate.dt_captureDate;
             return returnDate;
@@ -361,7 +359,7 @@ namespace AirSide.ServerModules.Helpers
                             where x.i_assetId == assetId
                             select x).OrderByDescending(q => q.dt_captureDate).FirstOrDefault();
 
-            string returnDate = ("---");
+            var returnDate = ("---");
             if (lastDate != null)
                 returnDate = lastDate.dt_captureDate.ToString("yyyMMdd");
 
@@ -374,22 +372,16 @@ namespace AirSide.ServerModules.Helpers
                                 where x.vc_description == "Fixing Points" && x.i_assetClassId == assetClassId
                                
                                 select x).FirstOrDefault();
-            if (fixingPoints != null)
-                return int.Parse(fixingPoints.vc_value);
-            else
-                return 0;
+            return fixingPoints != null ? int.Parse(fixingPoints.vc_value) : 0;
         }
 
-        public Boolean GetSubmittedShiftData(int assetId)
+        public bool GetSubmittedShiftData(int assetId)
         {
             var completed = (from x in _db.as_shiftData
                              join y in _db.as_shifts on x.i_shiftId equals y.i_shiftId
-                             where y.bt_completed == true && x.i_assetId == assetId
+                             where y.bt_completed && x.i_assetId == assetId
                              select x).FirstOrDefault();
-            if (completed != null)
-                return true;
-            else
-                return false;
+            return completed != null;
         }
 
 
@@ -405,7 +397,7 @@ namespace AirSide.ServerModules.Helpers
                 //Create Date: 2015/03/18
                 //Author: Bernard Willer
 
-                DateTime thisMonth = DateTime.Now.AddDays(-30);
+                var thisMonth = DateTime.Now.AddDays(-30);
 
                 //Get Anomalies
                 var anomalies = (from x in _db.as_fileUploadProfile
@@ -418,7 +410,7 @@ namespace AirSide.ServerModules.Helpers
                                  }).OrderBy(q => q.dateOfActivity).ToList();
 
                 //Add Anomalies
-                List<ActivityChart> activities = new List<ActivityChart>();
+                var activities = new List<ActivityChart>();
 
                 foreach (var item in anomalies)
                 {
@@ -435,7 +427,7 @@ namespace AirSide.ServerModules.Helpers
             }
             catch (Exception)
             {
-                List<ActivityChart> activities = new List<ActivityChart>();
+                var activities = new List<ActivityChart>();
                 //log.logError(err, "SYSTEM");
                 return activities;
             }
@@ -449,7 +441,7 @@ namespace AirSide.ServerModules.Helpers
                 //Create Date: 2015/01/20
                 //Author: Bernard Willer
 
-                DateTime thisMonth = DateTime.Now.AddDays(-30);
+                var thisMonth = DateTime.Now.AddDays(-30);
 
                 //collect all shifts
                 var shifts = (from x in _db.as_shiftData
@@ -471,7 +463,7 @@ namespace AirSide.ServerModules.Helpers
                                 }).OrderBy(q => q.dateOfActivity);
 
 
-                List<ActivityChart> activities = new List<ActivityChart>();
+                var activities = new List<ActivityChart>();
 
                 foreach (var item in filtered)
                 {
@@ -486,10 +478,9 @@ namespace AirSide.ServerModules.Helpers
 
                 return activities;
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                List<ActivityChart> activities = new List<ActivityChart>();
-                //log.logError(err, "SYSTEM");
+                var activities = new List<ActivityChart>();
                 return activities;
             }
 
