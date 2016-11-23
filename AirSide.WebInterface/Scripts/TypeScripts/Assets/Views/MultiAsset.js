@@ -32,3 +32,4 @@ $(document).ready(function () {
         multiAsset.typeAdd = false;
     });
 });
+//# sourceMappingURL=MultiAsset.js.map

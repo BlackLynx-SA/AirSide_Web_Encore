@@ -247,7 +247,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ADB_icon.ico" />
     <Content Include="Content\css\adb_styles.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\font-awesome.css" />
@@ -1153,6 +1152,22 @@
     <Content Include="Scripts\smart-chat-ui\smart.chat.ui.min.js" />
     <Content Include="Scripts\smartwidgets\jarvis.widget.min.js" />
     <Content Include="Scripts\speech\voicecommand.min.js" />
+    <Content Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Controller.js" />
+    <Content Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Controller.min.js">
+      <DependentUpon>AirportMap.Controller.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Language.js" />
+    <Content Include="Scripts\TypeScripts\Map\Controllers\AirportMap.Language.min.js">
+      <DependentUpon>AirportMap.Language.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\TypeScripts\Map\Services\AirportMap.Service.js" />
+    <Content Include="Scripts\TypeScripts\Map\Services\AirportMap.Service.min.js">
+      <DependentUpon>AirportMap.Service.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\TypeScripts\Map\Views\AirportMap.js" />
+    <Content Include="Scripts\TypeScripts\Map\Views\AirportMap.min.js">
+      <DependentUpon>AirportMap.js</DependentUpon>
+    </Content>
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -1396,7 +1411,8 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ADB_icon.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>

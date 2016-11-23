@@ -209,3 +209,4 @@ function changeMap(type) {
         controller.map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
     }
 }
+//# sourceMappingURL=AirportMap.js.map

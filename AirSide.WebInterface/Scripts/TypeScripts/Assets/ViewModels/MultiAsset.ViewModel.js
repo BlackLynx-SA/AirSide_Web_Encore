@@ -1,0 +1,1 @@
+//# sourceMappingURL=MultiAsset.ViewModel.js.map

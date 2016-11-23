@@ -4,5 +4,29 @@
     "inputFiles": [
       "Scripts/plugin/googlemaps/MarkerCluster.js"
     ]
+  },
+  {
+    "outputFileName": "Scripts/TypeScripts/Map/Controllers/AirportMap.Controller.min.js",
+    "inputFiles": [
+      "Scripts/TypeScripts/Map/Controllers/AirportMap.Controller.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/TypeScripts/Map/Controllers/AirportMap.Language.min.js",
+    "inputFiles": [
+      "Scripts/TypeScripts/Map/Controllers/AirportMap.Language.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/TypeScripts/Map/Services/AirportMap.Service.min.js",
+    "inputFiles": [
+      "Scripts/TypeScripts/Map/Services/AirportMap.Service.js"
+    ]
+  },
+  {
+    "outputFileName": "Scripts/TypeScripts/Map/Views/AirportMap.min.js",
+    "inputFiles": [
+      "Scripts/TypeScripts/Map/Views/AirportMap.js"
+    ]
   }
 ]

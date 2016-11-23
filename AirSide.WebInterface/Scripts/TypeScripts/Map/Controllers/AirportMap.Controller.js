@@ -18,9 +18,9 @@ var AirSide;
                     this.surveyorData = [];
                     this.selectedAssets = [];
                     this.selectedTask = 0;
-                    this.lastFilter = '---';
+                    this.lastFilter = "---";
                     this.filterEnum = 0;
-                    this.filterValue = '---';
+                    this.filterValue = "---";
                     this.NeLat = 0;
                     this.NeLong = 0;
                     this.SwLat = 0;
@@ -50,11 +50,11 @@ var AirSide;
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.resize = function () {
                     //Calculate the window height and deduct the menu height
-                    $('#map-canvas').css('height', Math.round($(window).height() - 170));
-                    $('#mapTopMenuBack').css('width', $('#map-canvas').width());
-                    $('#mapMenuItems').css('width', $('#map-canvas').width());
+                    $("#map-canvas").css("height", Math.round($(window).height() - 170));
+                    $("#mapTopMenuBack").css("width", $("#map-canvas").width());
+                    $("#mapMenuItems").css("width", $("#map-canvas").width());
                     if (this.map !== null)
-                        google.maps.event.trigger(this.map, 'resize');
+                        google.maps.event.trigger(this.map, "resize");
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.addMarker = function (json) {
@@ -63,14 +63,14 @@ var AirSide;
                     var long = json.location.longitude;
                     var lat = json.location.latitude;
                     var latLongMarker = new google.maps.LatLng(lat, long);
-                    var image = '';
-                    var content = '';
+                    var image = "";
+                    var content = "";
                     if (!this.checkMultiAsset(json.assetId)) {
                         image = $this.getImage(json.maintenance, json.status);
                         content = $this.markerInfo(json);
                     }
                     else {
-                        image = '/images/map_images/MultiAssetMarker.png';
+                        image = "/images/map_images/MultiAssetMarker.png";
                         content = $this.markerInfoForMultiAsset(json);
                     }
                     var marker = new google.maps.Marker({
@@ -79,7 +79,7 @@ var AirSide;
                         title: json.assetId.toString(),
                         icon: image
                     });
-                    google.maps.event.addListener(marker, 'click', function () {
+                    google.maps.event.addListener(marker, "click", function () {
                         if ($this.infoWindow)
                             $this.infoWindow.close();
                         $this.infoWindow = new google.maps.InfoWindow({ content: content });
@@ -117,9 +117,9 @@ var AirSide;
                         cycle = v.maintenanceCycle;
                     }
                     //Header
-                    var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.serialNumber + '<small> - (' + json.rfidTag + ')</small></h3>';
+                    var content = "<div class=\"mapInfo\" style=\"width:300px;\"><h3 class=\"header smaller lighter blue\">" + json.serialNumber + "<small> - (" + json.rfidTag + ")</small></h3>";
                     //Image of Asset
-                    content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
+                    content += "<div style=\"width:100%; text-align:center;\"><img src=\"" + json.picture.fileLocation + "\"/></div><hr/>";
                     content += "<h5 class='txt-color-blue'>Summary</h4>";
                     content += this.language.maintenanceStatus + ": " + this.getMaintenanceStatus(cycle) + "<br />";
                     content += this.language.previous + ": <strong>" + previousDate + "</strong><br />";
@@ -130,21 +130,21 @@ var AirSide;
                     content += "<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> " + this.language.history + "</a>";
                     content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "' target='_blank'><i class='fa fa-book'></i> " + this.language.manual + "</a><br />";
                     content += "</ul>";
-                    content += '<hr/>';
+                    content += "<hr/>";
                     if (json.status === true) {
-                        content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>' + this.language.lightFaulty + '</label></form>';
+                        content += "<form class=\"smart-form\"><label class=\"toggle\"><input class=\"faultyLightToggle\" type=\"checkbox\" name=\"faultyLightToggle\" data-asset-id=\"" + json.assetId + "_faultyToggle\" checked=\"checked\"><i data-swchon-text=\"ON\" data-swchoff-text=\"OFF\"></i>" + this.language.lightFaulty + "</label></form>";
                     }
                     else {
-                        content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>' + this.language.lightFaulty + '</label></form>';
+                        content += "<form class=\"smart-form\"><label class=\"toggle\"><input class=\"faultyLightToggle\" type=\"checkbox\" name=\"faultyLightToggle\" data-asset-id=\"" + json.assetId + "_faultyToggle\"><i data-swchon-text=\"ON\" data-swchoff-text=\"OFF\"></i>" + this.language.lightFaulty + "</label></form>";
                     }
                     //End
-                    content += '</div>';
+                    content += "</div>";
                     return content;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.getImage = function (value, status) {
                     var _this = this;
-                    var image = '';
+                    var image = "";
                     var cycle = -1;
                     if (status === false) {
                         if (this.selectedTask === 0) {
@@ -158,19 +158,19 @@ var AirSide;
                         }
                         switch (cycle) {
                             case 0:
-                                image = '/images/map_images/NutralMarker.png';
+                                image = "/images/map_images/NutralMarker.png";
                                 break;
                             case 1:
-                                image = '/images/map_images/GreenMarker.png';
+                                image = "/images/map_images/GreenMarker.png";
                                 break;
                             case 2:
-                                image = '/images/map_images/YellowMarker.png';
+                                image = "/images/map_images/YellowMarker.png";
                                 break;
                             case 3:
-                                image = '/images/map_images/OrangeMarker.png';
+                                image = "/images/map_images/OrangeMarker.png";
                                 break;
                             case 4:
-                                image = '/images/map_images/RedMarker.png';
+                                image = "/images/map_images/RedMarker.png";
                                 break;
                             default:
                                 break;
@@ -178,12 +178,12 @@ var AirSide;
                         return image;
                     }
                     else {
-                        return '/images/map_images/exclamation.png';
+                        return "/images/map_images/exclamation.png";
                     }
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.getMaintenanceStatus = function (status) {
-                    var img = '';
+                    var img = "";
                     switch (status) {
                         case 0:
                             img = "<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> " + this.language.noData + "</span>";
@@ -208,12 +208,12 @@ var AirSide;
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.markerInfoForMultiAsset = function (json) {
                     var _this = this;
-                    var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue"><li class="fa fa-list"></li> ' + this.language.multiAsset + '<small> - (' + json.rfidTag + ')</small></h3><hr/>';
+                    var content = "<div class=\"mapInfo\" style=\"width:300px;\"><h3 class=\"header smaller lighter blue\"><li class=\"fa fa-list\"></li> " + this.language.multiAsset + "<small> - (" + json.rfidTag + ")</small></h3><hr/>";
                     this.getMultiAssets(json.assetId).forEach(function (c) {
                         var asset = _this.getAsset(c);
-                        content += '<h5><img src="' + _this.getImage(json.maintenance, json.status) + '"/> ' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
+                        content += "<h5><img src=\"" + _this.getImage(json.maintenance, json.status) + "\"/> " + asset.serialNumber + " ( " + asset.rfidTag + ")</h5>";
                     });
-                    content += '</div>';
+                    content += "</div>";
                     return content;
                 };
                 //-------------------------------------------------------------------------------------
@@ -270,34 +270,34 @@ var AirSide;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.filterAssets = function (all) {
-                    $('#assetLoader').fadeIn(500);
+                    $("#assetLoader").fadeIn(500);
                     //Clear Map
                     this.clearAllMarkers();
                     this.markerClusterer.clearMarkers();
-                    var clustered = $('#clusteredChk').prop("checked");
+                    var clustered = $("#clusteredChk").prop("checked");
                     var filterType = "allassets";
                     if (!all)
-                        filterType = $('input[name=assetFilterRadio]:checked').val();
-                    filterType = $('input[name=assetFilterRadio]:checked').val();
-                    if (filterType === 'allassets') {
+                        filterType = $("input[name=assetFilterRadio]:checked").val();
+                    filterType = $("input[name=assetFilterRadio]:checked").val();
+                    if (filterType === "allassets") {
                         this.showAllAssets(clustered);
                         this.filterEnum = 101;
-                        this.filterValue = '0';
+                        this.filterValue = "0";
                     }
-                    else if (filterType === 'maintain') {
-                        var cycle = $('#maintenanceSelect').val();
+                    else if (filterType === "maintain") {
+                        var cycle = $("#maintenanceSelect").val();
                         this.showMaintenanceCycle(cycle, clustered);
                         this.filterEnum = 103;
                         this.filterValue = cycle;
                     }
-                    else if (filterType === 'asset') {
-                        var asset = $('#assetClasses').val();
+                    else if (filterType === "asset") {
+                        var asset = $("#assetClasses").val();
                         this.showAssetClass(asset, clustered);
                         this.filterEnum = 102;
                         this.filterValue = asset;
                     }
-                    $('#assetFilterModal').modal('hide');
-                    $('#assetLoader').hide();
+                    $("#assetFilterModal").modal("hide");
+                    $("#assetLoader").hide();
                     this.lastFilter = "assets";
                 };
                 //-------------------------------------------------------------------------------------
@@ -338,34 +338,34 @@ var AirSide;
                     var options = "";
                     $.each(this.subAreas, function () {
                         if (_this.subAreas[i].i_areaId === areaId) {
-                            options += '<option value="' + _this.subAreas[i].i_areaSubId + '">' + _this.subAreas[i].vc_description + '</option>';
+                            options += "<option value=\"" + _this.subAreas[i].i_areaSubId + "\">" + _this.subAreas[i].vc_description + "</option>";
                         }
                         i++;
                     });
-                    $('#subAreas').html(options);
+                    $("#subAreas").html(options);
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.filterAreas = function () {
-                    $('#areaLoader').fadeIn(500);
+                    $("#areaLoader").fadeIn(500);
                     //Clear Map
                     this.clearAllMarkers();
                     this.markerClusterer.clearMarkers();
-                    var clustered = $('#clusteredAreaChk').prop("checked");
-                    var filterType = $('input[name=areaFilterRadio]:checked').val();
-                    if (filterType === 'main') {
-                        var main = $('#mainAreas').val();
+                    var clustered = $("#clusteredAreaChk").prop("checked");
+                    var filterType = $("input[name=areaFilterRadio]:checked").val();
+                    if (filterType === "main") {
+                        var main = $("#mainAreas").val();
                         this.showMainAreas(main, clustered);
                         this.filterEnum = 104;
                         this.filterValue = main;
                     }
-                    else if (filterType === 'sub') {
-                        var sub = $('#subAreas').val();
+                    else if (filterType === "sub") {
+                        var sub = $("#subAreas").val();
                         this.showSubAreas(sub, clustered);
                         this.filterEnum = 105;
                         this.filterValue = sub;
                     }
-                    $('#areaFilterModal').modal('hide');
-                    $('#areaLoader').hide();
+                    $("#areaFilterModal").modal("hide");
+                    $("#areaLoader").hide();
                     this.lastFilter = "areas";
                 };
                 //-------------------------------------------------------------------------------------
@@ -405,23 +405,13 @@ var AirSide;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.generateFbTechContent = function (json) {
-                    var content = '<div style="width:450px;">' +
-                        '<div style="margin: 10px 10px 10px 10px; overflow:hidden;">' +
-                        '<h3 class="header smaller lighter blue">' + this.language.photometricData + ' <strong>' + json.tagid + '</strong></h3>' +
-                        '<div class="row">' +
-                        '<div class="col-xs-4"><h5>Avg Cd: ' + json.avgcd + '</h5></div>' +
-                        '<div class="col-xs-4"><h5>Max Cd: ' + json.maxcd + '</h5></div>' +
-                        '<div class="col-xs-4"><h5>ICAO: ' + json.pericao + '</h5></div>' +
-                        '</div><hr/>' +
-                        '<img src="' + json.picture + '" alt="Candela Chart" style="zoom:0.7;"/>' +
-                        '</div>' +
-                        '</div>';
+                    var content = "<div style=\"width:450px;\"><div style=\"margin: 10px 10px 10px 10px; overflow:hidden;\"><h3 class=\"header smaller lighter blue\">" + this.language.photometricData + " <strong>" + json.tagid + "</strong></h3><div class=\"row\"><div class=\"col-xs-4\"><h5>Avg Cd: " + json.avgcd + "</h5></div><div class=\"col-xs-4\"><h5>Max Cd: " + json.maxcd + "</h5></div><div class=\"col-xs-4\"><h5>ICAO: " + json.pericao + "</h5></div></div><hr/><img src=\"" + json.picture + "\" alt=\"Candela Chart\" style=\"zoom:0.7;\"/></div></div>";
                     return content;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.processFbTechData = function () {
                     var _this = this;
-                    var flag = $('#failedChk').prop('checked');
+                    var flag = $("#failedChk").prop("checked");
                     var $this = this;
                     this.markers = [];
                     this.fbTechData.forEach(function (c) {
@@ -429,20 +419,20 @@ var AirSide;
                         var contentString = _this.generateFbTechContent(c);
                         var image = null;
                         if (c.pass !== false)
-                            image = '/Images/icons/map_icon_green.png';
+                            image = "/Images/icons/map_icon_green.png";
                         else
-                            image = '/Images/icons/map_icon_red.png';
+                            image = "/Images/icons/map_icon_red.png";
                         if (!flag) {
                             //Get Lat/Long for marker
                             var latLongMarker1 = new google.maps.LatLng(c.latitude, c.longitude);
                             var marker1 = new google.maps.Marker({
                                 map: _this.map,
                                 position: latLongMarker1,
-                                title: '',
+                                title: "",
                                 icon: image
                             });
                             //Add click event handler for info window
-                            google.maps.event.addListener(marker1, 'click', function () {
+                            google.maps.event.addListener(marker1, "click", function () {
                                 if ($this.infoWindow)
                                     $this.infoWindow.close();
                                 $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
@@ -456,11 +446,11 @@ var AirSide;
                                 var marker = new google.maps.Marker({
                                     position: latLongMarker,
                                     map: $this.map,
-                                    title: '',
+                                    title: "",
                                     icon: image
                                 });
                                 //Add click event handler for info window
-                                google.maps.event.addListener(marker, 'click', function () {
+                                google.maps.event.addListener(marker, "click", function () {
                                     if ($this.infoWindow)
                                         $this.infoWindow.close();
                                     $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
@@ -470,42 +460,42 @@ var AirSide;
                             }
                         }
                     });
-                    $('#photoLoader').fadeOut(500);
-                    $('#photometricFilterModal').modal('hide');
+                    $("#photoLoader").fadeOut(500);
+                    $("#photometricFilterModal").modal("hide");
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.applyFbTechFilter = function () {
                     //Clear Map
                     this.clearAllMarkers();
                     this.markerClusterer.clearMarkers();
-                    $('#photoLoader').fadeIn(500);
-                    var date = $('#photmetricDates').val();
+                    $("#photoLoader").fadeIn(500);
+                    var date = $("#photmetricDates").val();
                     this.services.getFbTechData(date);
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.processSurveyData = function () {
-                    var voiceChk = $('#voiceChk').prop('checked');
-                    var textChk = $('#textChk').prop('checked');
-                    var imageChk = $('#imageChk').prop('checked');
+                    var voiceChk = $("#voiceChk").prop("checked");
+                    var textChk = $("#textChk").prop("checked");
+                    var imageChk = $("#imageChk").prop("checked");
                     var $this = this;
                     this.markers = [];
                     //Images First
                     for (var i = 0; i < this.surveyorData.length; i++) {
-                        if (this.surveyorData[i].type === 'jpg' && imageChk) {
+                        if (this.surveyorData[i].type === "jpg" && imageChk) {
                             var picture = this.surveyorData[i].url;
                             var lrgPicture = picture.replace(".jpg", "_med.jpg");
                             $this.addSurveyorMarker(this.surveyorData[i].longitude, this.surveyorData[i].latitude, "Image", lrgPicture, this.surveyorData[i].technician + " (" + this.surveyorData[i].date + ")");
                         }
-                        else if (this.surveyorData[i].type === 'text' && textChk) {
+                        else if (this.surveyorData[i].type === "text" && textChk) {
                             var textUrl = this.surveyorData[i].url;
                             $this.getTextContent(textUrl, this.surveyorData[i].date, this.surveyorData[i].technician, this.surveyorData[i].longitude, this.surveyorData[i].latitude);
                         }
-                        else if (this.surveyorData[i].type === 'm4a' && voiceChk) {
+                        else if (this.surveyorData[i].type === "m4a" && voiceChk) {
                             $this.addSurveyorMarker(this.surveyorData[i].longitude, this.surveyorData[i].latitude, "Voice", this.surveyorData[i].url, this.surveyorData[i].technician + " (" + this.surveyorData[i].date + ")");
                         }
                     }
-                    $('#surveyorLoader').fadeOut(500);
-                    $('#visualSurveyFilterModal').modal('hide');
+                    $("#surveyorLoader").fadeOut(500);
+                    $("#visualSurveyFilterModal").modal("hide");
                     this.filterEnum = 107;
                 };
                 //-------------------------------------------------------------------------------------
@@ -513,10 +503,10 @@ var AirSide;
                     //Clear Map
                     this.clearAllMarkers();
                     this.markerClusterer.clearMarkers();
-                    var fromDate = $('.from').val();
-                    var toDate = $('.to').val();
+                    var fromDate = $(".from").val();
+                    var toDate = $(".to").val();
                     var surveyDate = fromDate + "-" + toDate;
-                    $('#surveyorLoader').fadeIn(500);
+                    $("#surveyorLoader").fadeIn(500);
                     this.services.getSurveyorData(surveyDate);
                 };
                 //-------------------------------------------------------------------------------------
@@ -526,10 +516,10 @@ var AirSide;
                         type: "GET",
                         url: url,
                         success: function (text) {
-                            var htmltxt = '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote></div>';
+                            var htmltxt = "<div class=\"col-md-12\"><h3 class=\"header smaller lighter pink\">" + date + "</h3><blockquote>" + text + "<small>" + technician + "</small></blockquote></div>";
                             var latLongMarker = new google.maps.LatLng(lat, long);
                             var contentString = "";
-                            var image = '/Images/icons/map_icon_red.png';
+                            var image = "/Images/icons/map_icon_red.png";
                             //Generate content for info window
                             contentString = htmltxt;
                             var marker = new google.maps.Marker({
@@ -539,7 +529,7 @@ var AirSide;
                                 icon: image
                             });
                             //Add click event handler for info window
-                            google.maps.event.addListener(marker, 'click', function () {
+                            google.maps.event.addListener(marker, "click", function () {
                                 if ($this.infoWindow)
                                     $this.infoWindow.close();
                                 $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
@@ -553,15 +543,15 @@ var AirSide;
                 Controller.prototype.createSurveyorContent = function (type, content, text) {
                     var htmltxt = "";
                     if (type === "Image") {
-                        htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> ' + this.language.imagesTaken + '</h4>';
-                        htmltxt += '<div class="col-md-12"><img src="' + content + '" style="width: 250px; height: 250px;"/></div>';
-                        htmltxt += '<br/><div class="col-md-12"><span> - ' + text + '</span></div><hr/></div>';
+                        htmltxt += "<div class=\"col-md-12\"><h4 class=\"header smaller lighter green\"><i class=\"green icon-picture\"></i> " + this.language.imagesTaken + "</h4>";
+                        htmltxt += "<div class=\"col-md-12\"><img src=\"" + content + "\" style=\"width: 250px; height: 250px;\"/></div>";
+                        htmltxt += "<br/><div class=\"col-md-12\"><span> - " + text + "</span></div><hr/></div>";
                     }
                     else if (type === "Voice") {
-                        htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> ' + this.language.voiceMemos + '</h4></div>';
-                        htmltxt += '<audio width="100%" height="32" style="width:100%;" controls="controls" preload="none">';
-                        htmltxt += '<source src="' + content + '" type="audio/mp4"></audio><hr />';
-                        htmltxt += '<div class="col-md-12"><span> - ' + text + '</span></div>';
+                        htmltxt += "<div class=\"col-md-12\"><h4 class=\"header smaller lighter blue\"><i class=\"blue icon-microphone\"></i> " + this.language.voiceMemos + "</h4></div>";
+                        htmltxt += "<audio width=\"100%\" height=\"32\" style=\"width:100%;\" controls=\"controls\" preload=\"none\">";
+                        htmltxt += "<source src=\"" + content + "\" type=\"audio/mp4\"></audio><hr />";
+                        htmltxt += "<div class=\"col-md-12\"><span> - " + text + "</span></div>";
                     }
                     return htmltxt;
                 };
@@ -578,7 +568,7 @@ var AirSide;
                         }
                     });
                     this.filterEnum = 106;
-                    $('#visualSurveyFilterModal').modal('hide');
+                    $("#visualSurveyFilterModal").modal("hide");
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.addSurveyorMarker = function (long, lat, type, url, text) {
@@ -587,9 +577,9 @@ var AirSide;
                     var image = "";
                     var $this = this;
                     if (type === "Image")
-                        image = '/Images/icons/map_icon_green.png';
+                        image = "/Images/icons/map_icon_green.png";
                     else if (type === "Voice")
-                        image = '/Images/icons/map_icon_blue.png';
+                        image = "/Images/icons/map_icon_blue.png";
                     //Generate content for info window
                     contentString = this.createSurveyorContent(type, url, text);
                     var marker = new google.maps.Marker({
@@ -599,7 +589,7 @@ var AirSide;
                         icon: image
                     });
                     //Add click event handler for info window
-                    google.maps.event.addListener(marker, 'click', function () {
+                    google.maps.event.addListener(marker, "click", function () {
                         if ($this.infoWindow)
                             $this.infoWindow.close();
                         $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
@@ -621,13 +611,13 @@ var AirSide;
                         this.rectangle.setMap(this.map);
                         this.rectFlag = true;
                         //enable button
-                        $('.createShift').removeClass("disabled");
+                        $(".createShift").removeClass("disabled");
                     }
                     else {
                         this.rectangle.setMap(null);
                         this.rectFlag = false;
                         //disable creatShift
-                        $('.createShift').addClass("disabled");
+                        $(".createShift").addClass("disabled");
                     }
                 };
                 //-------------------------------------------------------------------------------------
@@ -665,9 +655,9 @@ var AirSide;
                         var $datepicker = $("#shiftdate");
                         $datepicker.datepicker();
                         var newDate = new Date();
-                        $datepicker.datepicker('setDate', new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()));
-                        $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> ' + this.language.createNewShift + ' ' + this.selectedAssets.length + ' assets');
-                        $('#shiftModal').modal('show');
+                        $datepicker.datepicker("setDate", new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate()));
+                        $("#techModalLabel").html("<i class=\"fa fa-calendar txt-color-blueDark\"></i> " + this.language.createNewShift + " " + this.selectedAssets.length + " assets");
+                        $("#shiftModal").modal("show");
                     }
                     else {
                         $.smallBox({
@@ -682,20 +672,20 @@ var AirSide;
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.sendCustomShift = function () {
                     var _this = this;
-                    $('#shiftLoader').fadeIn(300);
-                    var dateTVal = $('#shiftdate').val();
-                    var timeVal = $('#timepicker').val();
-                    var sheduledDate = dateTVal + ' ' + timeVal;
-                    var techGroup = $('#techgroups').val();
-                    var maintenance = $('#shiftTasks').val();
-                    var externalRef = $('#externalRefTxt').val();
-                    var permitNumber = $('#workpermitTxt').val();
+                    $("#shiftLoader").fadeIn(300);
+                    var dateTVal = $("#shiftdate").val();
+                    var timeVal = $("#timepicker").val();
+                    var sheduledDate = dateTVal + " " + timeVal;
+                    var techGroup = $("#techgroups").val();
+                    var maintenance = $("#shiftTasks").val();
+                    var externalRef = $("#externalRefTxt").val();
+                    var permitNumber = $("#workpermitTxt").val();
                     var maintenanceFilter = this.selectedTask;
                     var _antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
-                    if (externalRef === '')
-                        externalRef = '---';
-                    if (permitNumber === '')
-                        permitNumber = '---';
+                    if (externalRef === "")
+                        externalRef = "---";
+                    if (permitNumber === "")
+                        permitNumber = "---";
                     var data = {
                         shift: {
                             scheduledDate: sheduledDate,
@@ -718,15 +708,14 @@ var AirSide;
                             SWLong: this.SwLong
                         },
                         __RequestVerificationToken: _antiforgeryToken
-                    };
-                    //FilterEnum = 107 Visual Surveyor
+                    }; //FilterEnum = 107 Visual Surveyor
                     if (this.filterEnum === 107) {
-                        var fromDate = $('.from').val();
-                        var toDate = $('.to').val();
+                        var fromDate = $(".from").val();
+                        var toDate = $(".to").val();
                         var surveyDate = fromDate + "-" + toDate;
-                        var voiceChk = $('#voiceChk').prop('checked');
-                        var textChk = $('#textChk').prop('checked');
-                        var imageChk = $('#imageChk').prop('checked');
+                        var voiceChk = $("#voiceChk").prop("checked");
+                        var textChk = $("#textChk").prop("checked");
+                        var imageChk = $("#imageChk").prop("checked");
                         data = {
                             shift: {
                                 scheduledDate: sheduledDate,
@@ -753,10 +742,10 @@ var AirSide;
                     }
                     //Ajax Call
                     $.ajax({
-                        url: '../../Shifts/addCustomShift',
+                        url: "../../Shifts/addCustomShift",
                         data: data,
-                        type: 'post',
-                        dataType: 'json',
+                        type: "post",
+                        dataType: "json",
                         success: function (json) {
                             $.smallBox({
                                 title: _this.language.shiftCreated,
@@ -765,8 +754,8 @@ var AirSide;
                                 timeout: 4000,
                                 icon: "fa fa-calendar"
                             });
-                            $('#shiftLoader').fadeOut(300);
-                            $('#shiftModal').modal('hide');
+                            $("#shiftLoader").fadeOut(300);
+                            $("#shiftModal").modal("hide");
                         },
                         error: function (err) {
                             $.smallBox({
@@ -781,7 +770,7 @@ var AirSide;
                 };
                 //-------------------------------------------------------------------------------------
                 Controller.prototype.applySearchFilter = function () {
-                    var searchStr = $('#search-fld').val();
+                    var searchStr = $("#search-fld").val();
                     var $this = this;
                     //Clear all lights from map
                     clearAllMarkers();
@@ -817,3 +806,4 @@ var AirSide;
         })(AirportMap = Encore.AirportMap || (Encore.AirportMap = {}));
     })(Encore = AirSide.Encore || (AirSide.Encore = {}));
 })(AirSide || (AirSide = {}));
+//# sourceMappingURL=AirportMap.Controller.js.map

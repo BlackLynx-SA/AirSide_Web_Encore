@@ -48,9 +48,9 @@
             this.selectedAssets = [];
 
             this.selectedTask = 0;
-            this.lastFilter = '---';
+            this.lastFilter = "---";
             this.filterEnum = 0;
-            this.filterValue = '---';
+            this.filterValue = "---";
             this.NeLat = 0;
             this.NeLong = 0;
             this.SwLat = 0;
@@ -88,11 +88,11 @@
 
         resize() {
             //Calculate the window height and deduct the menu height
-            $('#map-canvas').css('height', Math.round($(window).height() - 170));
-            $('#mapTopMenuBack').css('width', $('#map-canvas').width());
-            $('#mapMenuItems').css('width', $('#map-canvas').width());
+            $("#map-canvas").css("height", Math.round($(window).height() - 170));
+            $("#mapTopMenuBack").css("width", $("#map-canvas").width());
+            $("#mapMenuItems").css("width", $("#map-canvas").width());
             if (this.map !== null)
-                google.maps.event.trigger(this.map, 'resize');
+                google.maps.event.trigger(this.map, "resize");
         }
 
         //-------------------------------------------------------------------------------------
@@ -102,14 +102,14 @@
             var long = json.location.longitude;
             var lat = json.location.latitude;
             var latLongMarker = new google.maps.LatLng(lat, long);
-            var image: string = '';
-            var content: string = '';
+            var image = "";
+            var content = "";
 
             if (!this.checkMultiAsset(json.assetId)) {
                 image = $this.getImage(json.maintenance, json.status);
                 content = $this.markerInfo(json);
             } else {
-                image = '/images/map_images/MultiAssetMarker.png';
+                image = "/images/map_images/MultiAssetMarker.png";
                 content = $this.markerInfoForMultiAsset(json);
             }
 
@@ -120,7 +120,7 @@
                 icon: image
             });
 
-            google.maps.event.addListener(marker, 'click', (): void => {
+            google.maps.event.addListener(marker, "click", (): void => {
                 if ($this.infoWindow) $this.infoWindow.close();
                 $this.infoWindow = new google.maps.InfoWindow({ content: content });
                 $this.infoWindow.open(this.map, marker);
@@ -133,7 +133,7 @@
 
         private checkMultiAsset(id) {
             var flag = false;
-            this.multiAssets.forEach(c=> {
+            this.multiAssets.forEach(c => {
                 if (!flag)
                     if (c.i_assetId === id)
                         flag = true;
@@ -145,7 +145,7 @@
 
         private markerInfo(json) {
 
-            var previousDate, nextDate, cycle;
+            var previousDate: string, nextDate: string, cycle: number;
 
             if (this.selectedTask !== 0) {
                 $.each(json.maintenance, (i, v) => {
@@ -163,10 +163,10 @@
             }
 
             //Header
-            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">' + json.serialNumber + '<small> - (' + json.rfidTag + ')</small></h3>';
+            var content = `<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue">${json.serialNumber}<small> - (${json.rfidTag})</small></h3>`;
 
             //Image of Asset
-            content += '<div style="width:100%; text-align:center;"><img src="' + json.picture.fileLocation + '"/></div><hr/>';
+            content += `<div style="width:100%; text-align:center;"><img src="${json.picture.fileLocation}"/></div><hr/>`;
             content += "<h5 class='txt-color-blue'>Summary</h4>";
             content += this.language.maintenanceStatus + ": " + this.getMaintenanceStatus(cycle) + "<br />";
             content += this.language.previous + ": <strong>" + previousDate + "</strong><br />";
@@ -174,18 +174,18 @@
             content += this.language.assetType + ": <strong>" + json.assetClass.description + "</strong><br />";
             if (this.selectedTask === 0)
                 content += this.language.maintenanceTask + ": <strong>" + json.maintenance[0].maintenanceTask + "</strong><br />";
-            content += "<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=" + json.assetId.toString() + "'><i class='fa fa-clock-o'></i> " + this.language.history + "</a>";
-            content += "<a class='btn btn-sm btn-primary margin-left-5' href='" + json.productUrl + "' target='_blank'><i class='fa fa-book'></i> " + this.language.manual + "</a><br />";
+            content += `<br/><hr/><a class='btn btn-sm btn-success' href='../../History/AssetHistory?id=${json.assetId.toString()}'><i class='fa fa-clock-o'></i> ${this.language.history}</a>`;
+            content += `<a class='btn btn-sm btn-primary margin-left-5' href='${json.productUrl}' target='_blank'><i class='fa fa-book'></i> ${this.language.manual}</a><br />`;
 
             content += "</ul>";
-            content += '<hr/>';
+            content += "<hr/>";
             if (json.status === true) {
-                content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>' + this.language.lightFaulty + '</label></form>';
+                content += `<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="${json.assetId}_faultyToggle" checked="checked"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>${this.language.lightFaulty}</label></form>`;
             } else {
-                content += '<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="' + json.assetId + '_faultyToggle"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>' + this.language.lightFaulty + '</label></form>';
+                content += `<form class="smart-form"><label class="toggle"><input class="faultyLightToggle" type="checkbox" name="faultyLightToggle" data-asset-id="${json.assetId}_faultyToggle"><i data-swchon-text="ON" data-swchoff-text="OFF"></i>${this.language.lightFaulty}</label></form>`;
             }
             //End
-            content += '</div>';
+            content += "</div>";
 
             return content;
         }
@@ -193,8 +193,8 @@
         //-------------------------------------------------------------------------------------
 
         private getImage(value, status) {
-            var image: string = '';
-            var cycle: number = -1;
+            var image = "";
+            var cycle = -1;
             if (status === false) {
                 if (this.selectedTask === 0) {
                     cycle = value[0].maintenanceCycle;
@@ -206,54 +206,54 @@
                 }
 
                 switch (cycle) {
-                    case 0:
-                        image = '/images/map_images/NutralMarker.png';
-                        break;
-                    case 1:
-                        image = '/images/map_images/GreenMarker.png';
-                        break;
-                    case 2:
-                        image = '/images/map_images/YellowMarker.png';
-                        break;
-                    case 3:
-                        image = '/images/map_images/OrangeMarker.png';
-                        break;
-                    case 4:
-                        image = '/images/map_images/RedMarker.png';
-                        break;
+                case 0:
+                    image = "/images/map_images/NutralMarker.png";
+                    break;
+                case 1:
+                    image = "/images/map_images/GreenMarker.png";
+                    break;
+                case 2:
+                    image = "/images/map_images/YellowMarker.png";
+                    break;
+                case 3:
+                    image = "/images/map_images/OrangeMarker.png";
+                    break;
+                case 4:
+                    image = "/images/map_images/RedMarker.png";
+                    break;
 
-                    default:
-                        break;
+                default:
+                    break;
                 }
 
                 return image;
             } else {
-                return '/images/map_images/exclamation.png';
+                return "/images/map_images/exclamation.png";
             }
         }
 
         //-------------------------------------------------------------------------------------
 
         private getMaintenanceStatus(status) {
-            var img: string = '';
+            var img = "";
             switch (status) {
-                case 0:
-                    img = "<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> " + this.language.noData + "</span>";
-                    break;
-                case 1:
-                    img = "<span class='txt-color-green'><i class='fa fa-thumbs-o-up'></i> " + this.language.updated + "</span>";
-                    break;
-                case 2:
-                    img = "<span class='txt-color-yellow'><i class='fa fa-ellipsis-h'></i> " + this.language.midCycle + "</span>";
-                    break;
-                case 3:
-                    img = "<span class='txt-color-orange'><i class='fa fa-bell icon-animated-bell'></i> " + this.language.midCycle + "</span>";
-                    break;
-                case 4:
-                    img = "<span class='txt-color-red'><i class='fa fa-thumbs-o-down'></i> " + this.language.overDue + "</span>";
-                    break;
-                default:
-                    break;
+            case 0:
+                img = `<span class='txt-color-blue'><i class='fa fa-exclamation-triangle'></i> ${this.language.noData}</span>`;
+                break;
+            case 1:
+                img = `<span class='txt-color-green'><i class='fa fa-thumbs-o-up'></i> ${this.language.updated}</span>`;
+                break;
+            case 2:
+                img = `<span class='txt-color-yellow'><i class='fa fa-ellipsis-h'></i> ${this.language.midCycle}</span>`;
+                break;
+            case 3:
+                img = `<span class='txt-color-orange'><i class='fa fa-bell icon-animated-bell'></i> ${this.language.midCycle}</span>`;
+                break;
+            case 4:
+                img = `<span class='txt-color-red'><i class='fa fa-thumbs-o-down'></i> ${this.language.overDue}</span>`;
+                break;
+            default:
+                break;
             }
 
             return img;
@@ -262,18 +262,18 @@
         //-------------------------------------------------------------------------------------
 
         private markerInfoForMultiAsset(json) {
-            var content = '<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue"><li class="fa fa-list"></li> ' + this.language.multiAsset + '<small> - (' + json.rfidTag + ')</small></h3><hr/>';
-            this.getMultiAssets(json.assetId).forEach( c => {
+            var content = `<div class="mapInfo" style="width:300px;"><h3 class="header smaller lighter blue"><li class="fa fa-list"></li> ${this.language.multiAsset}<small> - (${json.rfidTag})</small></h3><hr/>`;
+            this.getMultiAssets(json.assetId).forEach(c => {
                 var asset = this.getAsset(c);
-                content += '<h5><img src="' + this.getImage(json.maintenance, json.status) + '"/> ' + asset.serialNumber + ' ( ' + asset.rfidTag + ')</h5>';
+                content += `<h5><img src="${this.getImage(json.maintenance, json.status)}"/> ${asset.serialNumber} ( ${asset.rfidTag})</h5>`;
             });
-            content += '</div>';
+            content += "</div>";
             return content;
         }
 
         //-------------------------------------------------------------------------------------
 
-        
+
         private getAsset(id) {
             var flag = false;
             var asset = null;
@@ -313,7 +313,7 @@
                     c.maintenance.forEach(d => {
                         if (d.maintenanceId === $this.selectedTask) {
                             $this.addMarker(c);
-                        }       
+                        }
                     });
                 } else $this.addMarker(c);
             });
@@ -323,7 +323,6 @@
 
         //-------------------------------------------------------------------------------------
 
-        
 
         private clearAllMarkers() {
             if (this.markers !== null) {
@@ -337,40 +336,40 @@
         //-------------------------------------------------------------------------------------
 
         filterAssets(all?: boolean) {
-            $('#assetLoader').fadeIn(500);
+            $("#assetLoader").fadeIn(500);
 
             //Clear Map
             this.clearAllMarkers();
             this.markerClusterer.clearMarkers();
 
-            var clustered = $('#clusteredChk').prop("checked");
+            var clustered = $("#clusteredChk").prop("checked");
             var filterType = "allassets";
             if (!all)
-                filterType = $('input[name=assetFilterRadio]:checked').val();
+                filterType = $("input[name=assetFilterRadio]:checked").val();
 
-            filterType = $('input[name=assetFilterRadio]:checked').val();
-            if (filterType === 'allassets') {
+            filterType = $("input[name=assetFilterRadio]:checked").val();
+            if (filterType === "allassets") {
                 this.showAllAssets(clustered);
                 this.filterEnum = 101;
-                this.filterValue = '0';
-            } else if (filterType === 'maintain') {
-                var cycle = $('#maintenanceSelect').val();
+                this.filterValue = "0";
+            } else if (filterType === "maintain") {
+                var cycle = $("#maintenanceSelect").val();
                 this.showMaintenanceCycle(cycle, clustered);
                 this.filterEnum = 103;
                 this.filterValue = cycle;
-            } else if (filterType === 'asset') {
-                var asset = $('#assetClasses').val();
+            } else if (filterType === "asset") {
+                var asset = $("#assetClasses").val();
                 this.showAssetClass(asset, clustered);
                 this.filterEnum = 102;
                 this.filterValue = asset;
             }
-            $('#assetFilterModal').modal('hide');
-            $('#assetLoader').hide();
+            $("#assetFilterModal").modal("hide");
+            $("#assetLoader").hide();
             this.lastFilter = "assets";
         }
 
         //-------------------------------------------------------------------------------------
-        
+
         private showAssetClass(asset, clustered) {
             this.markers = [];
             var $this = this;
@@ -388,7 +387,7 @@
         }
 
         //-------------------------------------------------------------------------------------
-    
+
         private showMaintenanceCycle(cycle: string, clustered: boolean) {
 
             var $this = this;
@@ -404,7 +403,7 @@
             });
 
             if (clustered) this.markerClusterer = new MarkerClusterer(this.map, this.markers);
-            
+
         }
 
         //-------------------------------------------------------------------------------------
@@ -414,38 +413,37 @@
             var options = "";
             $.each(this.subAreas, () => {
                 if (this.subAreas[i].i_areaId === areaId) {
-                    options += '<option value="' + this.subAreas[i].i_areaSubId + '">' + this.subAreas[i].vc_description + '</option>';
+                    options += `<option value="${this.subAreas[i].i_areaSubId}">${this.subAreas[i].vc_description}</option>`;
                 }
                 i++;
             });
 
-            $('#subAreas').html(options);
+            $("#subAreas").html(options);
         }
 
         //-------------------------------------------------------------------------------------
 
         filterAreas() {
-            $('#areaLoader').fadeIn(500);
+            $("#areaLoader").fadeIn(500);
             //Clear Map
             this.clearAllMarkers();
             this.markerClusterer.clearMarkers();
 
-            var clustered = $('#clusteredAreaChk').prop("checked");
-            var filterType = $('input[name=areaFilterRadio]:checked').val();
-            if (filterType === 'main') {
-                var main = $('#mainAreas').val();
+            var clustered = $("#clusteredAreaChk").prop("checked");
+            var filterType = $("input[name=areaFilterRadio]:checked").val();
+            if (filterType === "main") {
+                var main = $("#mainAreas").val();
                 this.showMainAreas(main, clustered);
                 this.filterEnum = 104;
                 this.filterValue = main;
-            }
-            else if (filterType === 'sub') {
-                var sub = $('#subAreas').val();
+            } else if (filterType === "sub") {
+                var sub = $("#subAreas").val();
                 this.showSubAreas(sub, clustered);
                 this.filterEnum = 105;
                 this.filterValue = sub;
             }
-            $('#areaFilterModal').modal('hide');
-            $('#areaLoader').hide();
+            $("#areaFilterModal").modal("hide");
+            $("#areaLoader").hide();
             this.lastFilter = "areas";
         }
 
@@ -489,24 +487,14 @@
         //-------------------------------------------------------------------------------------
 
         generateFbTechContent(json: IFbTechViewModel) {
-            var content = '<div style="width:450px;">' +
-                '<div style="margin: 10px 10px 10px 10px; overflow:hidden;">' +
-                '<h3 class="header smaller lighter blue">' + this.language.photometricData + ' <strong>' + json.tagid + '</strong></h3>' +
-                '<div class="row">' +
-                '<div class="col-xs-4"><h5>Avg Cd: ' + json.avgcd + '</h5></div>' +
-                '<div class="col-xs-4"><h5>Max Cd: ' + json.maxcd + '</h5></div>' +
-                '<div class="col-xs-4"><h5>ICAO: ' + json.pericao + '</h5></div>' +
-                '</div><hr/>' +
-                '<img src="' + json.picture + '" alt="Candela Chart" style="zoom:0.7;"/>' +
-                '</div>' +
-                '</div>';
+            var content = `<div style="width:450px;"><div style="margin: 10px 10px 10px 10px; overflow:hidden;"><h3 class="header smaller lighter blue">${this.language.photometricData} <strong>${json.tagid}</strong></h3><div class="row"><div class="col-xs-4"><h5>Avg Cd: ${json.avgcd}</h5></div><div class="col-xs-4"><h5>Max Cd: ${json.maxcd}</h5></div><div class="col-xs-4"><h5>ICAO: ${json.pericao}</h5></div></div><hr/><img src="${json.picture}" alt="Candela Chart" style="zoom:0.7;"/></div></div>`;
             return content;
         }
 
         //-------------------------------------------------------------------------------------
 
         processFbTechData() {
-            var flag = $('#failedChk').prop('checked');
+            var flag = $("#failedChk").prop("checked");
             var $this = this;
             this.markers = [];
             this.fbTechData.forEach(c => {
@@ -515,9 +503,9 @@
                 var image = null;
 
                 if (c.pass !== false)
-                    image = '/Images/icons/map_icon_green.png';
+                    image = "/Images/icons/map_icon_green.png";
                 else
-                    image = '/Images/icons/map_icon_red.png';
+                    image = "/Images/icons/map_icon_red.png";
 
                 if (!flag) {
                     //Get Lat/Long for marker
@@ -525,12 +513,12 @@
                     var marker1 = new google.maps.Marker({
                         map: this.map,
                         position: latLongMarker1,
-                        title: '',
+                        title: "",
                         icon: image
                     });
 
                     //Add click event handler for info window
-                    google.maps.event.addListener(marker1, 'click', () => {
+                    google.maps.event.addListener(marker1, "click", () => {
                         if ($this.infoWindow) $this.infoWindow.close();
                         $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
                         $this.infoWindow.open(this.map, marker1);
@@ -543,12 +531,12 @@
                         var marker = new google.maps.Marker({
                             position: latLongMarker,
                             map: $this.map,
-                            title: '',
+                            title: "",
                             icon: image
                         });
 
                         //Add click event handler for info window
-                        google.maps.event.addListener(marker, 'click', () => {
+                        google.maps.event.addListener(marker, "click", () => {
                             if ($this.infoWindow) $this.infoWindow.close();
                             $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
                             $this.infoWindow.open(this.map, marker);
@@ -558,9 +546,9 @@
                     }
                 }
             });
-                
-            $('#photoLoader').fadeOut(500);
-            $('#photometricFilterModal').modal('hide');
+
+            $("#photoLoader").fadeOut(500);
+            $("#photometricFilterModal").modal("hide");
         }
 
         //-------------------------------------------------------------------------------------
@@ -569,35 +557,35 @@
             //Clear Map
             this.clearAllMarkers();
             this.markerClusterer.clearMarkers();
-            $('#photoLoader').fadeIn(500);
-            var date = $('#photmetricDates').val();
+            $("#photoLoader").fadeIn(500);
+            var date = $("#photmetricDates").val();
             this.services.getFbTechData(date);
         }
 
         //-------------------------------------------------------------------------------------
 
         processSurveyData() {
-            var voiceChk = $('#voiceChk').prop('checked');
-            var textChk = $('#textChk').prop('checked');
-            var imageChk = $('#imageChk').prop('checked');
+            var voiceChk = $("#voiceChk").prop("checked");
+            var textChk = $("#textChk").prop("checked");
+            var imageChk = $("#imageChk").prop("checked");
             var $this = this;
             this.markers = [];
             //Images First
             for (var i = 0; i < this.surveyorData.length; i++) {
-                if (this.surveyorData[i].type === 'jpg' && imageChk) {
+                if (this.surveyorData[i].type === "jpg" && imageChk) {
                     var picture = this.surveyorData[i].url;
                     var lrgPicture = picture.replace(".jpg", "_med.jpg");
                     $this.addSurveyorMarker(this.surveyorData[i].longitude, this.surveyorData[i].latitude, "Image", lrgPicture, this.surveyorData[i].technician + " (" + this.surveyorData[i].date + ")");
-                } else if (this.surveyorData[i].type === 'text' && textChk) {
+                } else if (this.surveyorData[i].type === "text" && textChk) {
                     var textUrl = this.surveyorData[i].url;
                     $this.getTextContent(textUrl, this.surveyorData[i].date, this.surveyorData[i].technician, this.surveyorData[i].longitude, this.surveyorData[i].latitude);
-                } else if (this.surveyorData[i].type === 'm4a' && voiceChk) {
+                } else if (this.surveyorData[i].type === "m4a" && voiceChk) {
                     $this.addSurveyorMarker(this.surveyorData[i].longitude, this.surveyorData[i].latitude, "Voice", this.surveyorData[i].url, this.surveyorData[i].technician + " (" + this.surveyorData[i].date + ")");
                 }
             }
 
-            $('#surveyorLoader').fadeOut(500);
-            $('#visualSurveyFilterModal').modal('hide');
+            $("#surveyorLoader").fadeOut(500);
+            $("#visualSurveyFilterModal").modal("hide");
             this.filterEnum = 107;
         }
 
@@ -607,10 +595,10 @@
             //Clear Map
             this.clearAllMarkers();
             this.markerClusterer.clearMarkers();
-            var fromDate = $('.from').val();
-            var toDate = $('.to').val();
+            var fromDate = $(".from").val();
+            var toDate = $(".to").val();
             var surveyDate = fromDate + "-" + toDate;
-            $('#surveyorLoader').fadeIn(500);
+            $("#surveyorLoader").fadeIn(500);
 
             this.services.getSurveyorData(surveyDate);
         }
@@ -623,10 +611,10 @@
                 type: "GET",
                 url: url,
                 success: (text) => {
-                    var htmltxt = '<div class="col-md-12"><h3 class="header smaller lighter pink">' + date + '</h3><blockquote>' + text + '<small>' + technician + '</small></blockquote></div>';
+                    var htmltxt = `<div class="col-md-12"><h3 class="header smaller lighter pink">${date}</h3><blockquote>${text}<small>${technician}</small></blockquote></div>`;
                     var latLongMarker = new google.maps.LatLng(lat, long);
                     var contentString = "";
-                    var image = '/Images/icons/map_icon_red.png';
+                    var image = "/Images/icons/map_icon_red.png";
 
                     //Generate content for info window
                     contentString = htmltxt;
@@ -639,7 +627,7 @@
                     });
 
                     //Add click event handler for info window
-                    google.maps.event.addListener(marker, 'click', function () {
+                    google.maps.event.addListener(marker, "click", function() {
                         if ($this.infoWindow) $this.infoWindow.close();
                         $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
                         $this.infoWindow.open(map, marker);
@@ -655,14 +643,14 @@
         private createSurveyorContent(type, content, text) {
             var htmltxt = "";
             if (type === "Image") {
-                htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> ' + this.language.imagesTaken + '</h4>';
-                htmltxt += '<div class="col-md-12"><img src="' + content + '" style="width: 250px; height: 250px;"/></div>';
-                htmltxt += '<br/><div class="col-md-12"><span> - ' + text + '</span></div><hr/></div>';
+                htmltxt += `<div class="col-md-12"><h4 class="header smaller lighter green"><i class="green icon-picture"></i> ${this.language.imagesTaken}</h4>`;
+                htmltxt += `<div class="col-md-12"><img src="${content}" style="width: 250px; height: 250px;"/></div>`;
+                htmltxt += `<br/><div class="col-md-12"><span> - ${text}</span></div><hr/></div>`;
             } else if (type === "Voice") {
-                htmltxt += '<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> ' + this.language.voiceMemos + '</h4></div>';
-                htmltxt += '<audio width="100%" height="32" style="width:100%;" controls="controls" preload="none">';
-                htmltxt += '<source src="' + content + '" type="audio/mp4"></audio><hr />';
-                htmltxt += '<div class="col-md-12"><span> - ' + text + '</span></div>';
+                htmltxt += `<div class="col-md-12"><h4 class="header smaller lighter blue"><i class="blue icon-microphone"></i> ${this.language.voiceMemos}</h4></div>`;
+                htmltxt += "<audio width=\"100%\" height=\"32\" style=\"width:100%;\" controls=\"controls\" preload=\"none\">";
+                htmltxt += `<source src="${content}" type="audio/mp4"></audio><hr />`;
+                htmltxt += `<div class="col-md-12"><span> - ${text}</span></div>`;
             }
             return htmltxt;
         }
@@ -682,7 +670,7 @@
                 }
             });
             this.filterEnum = 106;
-            $('#visualSurveyFilterModal').modal('hide');
+            $("#visualSurveyFilterModal").modal("hide");
         }
 
         //-------------------------------------------------------------------------------------
@@ -694,9 +682,9 @@
             var $this = this;
 
             if (type === "Image")
-                image = '/Images/icons/map_icon_green.png';
+                image = "/Images/icons/map_icon_green.png";
             else if (type === "Voice")
-                image = '/Images/icons/map_icon_blue.png';
+                image = "/Images/icons/map_icon_blue.png";
 
             //Generate content for info window
             contentString = this.createSurveyorContent(type, url, text);
@@ -709,7 +697,7 @@
             });
 
             //Add click event handler for info window
-            google.maps.event.addListener(marker, 'click', () => {
+            google.maps.event.addListener(marker, "click", () => {
                 if ($this.infoWindow) $this.infoWindow.close();
                 $this.infoWindow = new google.maps.InfoWindow({ content: contentString });
                 $this.infoWindow.open($this.map, marker);
@@ -741,20 +729,19 @@
                 this.rectFlag = true;
 
                 //enable button
-                $('.createShift').removeClass("disabled");
+                $(".createShift").removeClass("disabled");
 
             } else {
                 this.rectangle.setMap(null);
                 this.rectFlag = false;
 
                 //disable creatShift
-                $('.createShift').addClass("disabled");
+                $(".createShift").addClass("disabled");
             }
         }
 
-        
 
-        //-------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 
         getSelectedAssets() {
             this.selectedAssets = [];
@@ -798,16 +785,15 @@
                 $datepicker.datepicker();
 
                 var newDate = new Date();
-                $datepicker.datepicker('setDate',
+                $datepicker.datepicker("setDate",
                     new Date(
                         newDate.getFullYear(),
                         newDate.getMonth(),
                         newDate.getDate()));
 
-                $('#techModalLabel').html('<i class="fa fa-calendar txt-color-blueDark"></i> ' + this.language.createNewShift + ' ' + this.selectedAssets.length + ' assets');
-                $('#shiftModal').modal('show');
-            }
-            else {
+                $("#techModalLabel").html(`<i class="fa fa-calendar txt-color-blueDark"></i> ${this.language.createNewShift} ${this.selectedAssets.length} assets`);
+                $("#shiftModal").modal("show");
+            } else {
                 $.smallBox({
                     title: this.language.noAssets,
                     content: this.language.selectAssets,
@@ -821,19 +807,19 @@
         //-------------------------------------------------------------------------------------
 
         sendCustomShift() {
-            $('#shiftLoader').fadeIn(300);
-            var dateTVal = $('#shiftdate').val();
-            var timeVal = $('#timepicker').val();
-            var sheduledDate = dateTVal + ' ' + timeVal;
-            var techGroup = $('#techgroups').val();
-            var maintenance = $('#shiftTasks').val();
-            var externalRef = $('#externalRefTxt').val();
-            var permitNumber = $('#workpermitTxt').val();
+            $("#shiftLoader").fadeIn(300);
+            var dateTVal = $("#shiftdate").val();
+            var timeVal = $("#timepicker").val();
+            var sheduledDate = dateTVal + " " + timeVal;
+            var techGroup = $("#techgroups").val();
+            var maintenance = $("#shiftTasks").val();
+            var externalRef = $("#externalRefTxt").val();
+            var permitNumber = $("#workpermitTxt").val();
             var maintenanceFilter = this.selectedTask;
             var _antiforgeryToken = $("input[name='__RequestVerificationToken']").val();
 
-            if (externalRef === '') externalRef = '---';
-            if (permitNumber === '') permitNumber = '---';
+            if (externalRef === "") externalRef = "---";
+            if (permitNumber === "") permitNumber = "---";
 
             var data = {
                 shift: {
@@ -857,17 +843,15 @@
                     SWLong: this.SwLong
                 },
                 __RequestVerificationToken: _antiforgeryToken
-            }
-
-            //FilterEnum = 107 Visual Surveyor
+            }; //FilterEnum = 107 Visual Surveyor
             if (this.filterEnum === 107) {
-                var fromDate = $('.from').val();
-                var toDate = $('.to').val();
+                var fromDate = $(".from").val();
+                var toDate = $(".to").val();
 
                 var surveyDate = fromDate + "-" + toDate;
-                var voiceChk = $('#voiceChk').prop('checked');
-                var textChk = $('#textChk').prop('checked');
-                var imageChk = $('#imageChk').prop('checked');
+                var voiceChk = $("#voiceChk").prop("checked");
+                var textChk = $("#textChk").prop("checked");
+                var imageChk = $("#imageChk").prop("checked");
 
                 data = {
                     shift: {
@@ -891,15 +875,15 @@
                         SWLong: this.SwLong
                     },
                     __RequestVerificationToken: _antiforgeryToken
-                }
+                };
             }
 
             //Ajax Call
             $.ajax({
-                url: '../../Shifts/addCustomShift',
+                url: "../../Shifts/addCustomShift",
                 data: data,
-                type: 'post',
-                dataType: 'json',
+                type: "post",
+                dataType: "json",
                 success: (json) => {
                     $.smallBox({
                         title: this.language.shiftCreated,
@@ -908,8 +892,8 @@
                         timeout: 4000,
                         icon: "fa fa-calendar"
                     });
-                    $('#shiftLoader').fadeOut(300);
-                    $('#shiftModal').modal('hide');
+                    $("#shiftLoader").fadeOut(300);
+                    $("#shiftModal").modal("hide");
                 },
                 error: (err) => {
                     $.smallBox({
@@ -926,7 +910,7 @@
         //-------------------------------------------------------------------------------------
 
         applySearchFilter() {
-            var searchStr = $('#search-fld').val();
+            var searchStr = $("#search-fld").val();
             var $this = this;
             //Clear all lights from map
             clearAllMarkers();
